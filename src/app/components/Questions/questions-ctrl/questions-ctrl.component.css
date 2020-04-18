@@ -1,0 +1,274 @@
+/* $bg:$grey;
+$fill:$primary; */
+
+/* html,
+body {
+  width: 100%;
+  background: #dad8d2;
+}
+
+
+
+div.questions_parent {
+  display: flex;
+  flex-direction: column;
+  height: 75vh;
+  width: 100%;
+  justify-content: space-around;
+  align-items: center;
+}
+
+div.questionsText {
+  position: absolute;
+  top: 30px;
+  text-align: center;
+  width: 90%;
+  height: 20%;
+  max-height: 25%;
+  align-self: center;
+}
+
+div.questions_Option {
+  position: absolute;
+  top: 23vh;
+  margin-bottom: 20px;
+  text-align: center;
+  width: 90%;
+  text-align: center;
+  height: 55%;
+  max-height: 58%;
+  align-self: center;
+}
+
+div.questions_progressBar {
+  position: absolute;
+  top: 69vh;
+  margin-bottom: 20px;
+  text-align: center;
+  width: 90%;
+  height: 40px;
+}
+
+div.introoverlay {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  top: 0;
+  z-index: 2;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 1);
+  transition: all 0.8s ease-out;
+}
+
+p.text {
+  margin-top: 3px;
+  text-align: center;
+  font-size: calc(100% + 2rem);
+  padding: 10px;
+}
+
+span {
+  font-size: 6rem;
+  color: #ff9500;
+}
+
+a {
+  display: block;
+  background: #2ecd70;
+  font-size: 1.7rem;
+  padding: 10px;
+  width: 100%;
+  text-align: center;
+
+  border-radius: 20px;
+  color: white !important;
+}
+
+
+
+/* styles for small sCREENS
+
+@media screen and (max-width: 500px) {
+  div.introoverlay > p.text > span {
+    font-size: 5rem;
+  }
+
+  p.text {
+    margin-top: 3px;
+    text-align: center;
+    font-size: calc(98% + 1.95rem);
+    font-weight: 300;
+    padding: 10px;
+    margin-bottom: 15px !important;
+  }
+
+  div.beginTestContainer {
+    position: relative;
+    top: -55px !important;
+  }
+
+  div.beginTestContainer > a {
+    display: block;
+    background: #2ecd70;
+    font-size: 1.7rem;
+    padding: 10px;
+    width: 100%;
+    text-align: center;
+    border-radius: 10px;
+    color: white !important;
+    font-weight: 300;
+  }
+
+  div.questionsText {
+    position: absolute;
+    top: 60px;
+    text-align: center;
+    width: 90%;
+    height: 20%;
+    max-height: 25%;
+    align-self: center;
+    font-size: 20px;
+  }
+}
+
+@media screen and (max-width: 430px) {
+  div.introoverlay > p.text > span {
+    font-size: 4.6rem;
+  }
+
+  p.text {
+    margin-top: 3px;
+    text-align: center;
+    font-size: calc(98% + 1.63rem);
+    font-weight: 300;
+    padding: 10px;
+    margin-bottom: 15px !important;
+  }
+
+  div.beginTestContainer {
+    position: relative;
+    top: -58px !important;
+  }
+}
+
+@media screen and (max-width: 330px) {
+  div.introoverlay > p.text > span {
+    font-size: 3.4rem;
+    padding: 0px 5px;
+  }
+
+  p.text {
+    margin-top: 3px;
+    text-align: center;
+    font-size: calc(98% + 1.63rem);
+    font-weight: 300;
+    padding: 10px;
+    margin-bottom: 15px !important;
+  }
+
+  div.beginTestContainer {
+    position: relative;
+    top: -58px !important;
+  }
+
+  div.questionsText {
+    position: absolute;
+    top: 50px;
+    text-align: center;
+    width: 90%;
+    height: 20%;
+    max-height: 25%;
+    align-self: center;
+    font-size: 20px;
+  }
+} */
+
+/* 
+    
+ */
+/* 
+xDQPTnCM
+  */
+
+/* 
+
+  */
+
+/* 
+ 
+*/
+
+div.successful-Analysis {
+  display: none;
+}
+
+div.successful-Analysis-inner {
+  /* position: absolute; */
+  z-index: 10;
+  left: 0;
+  top: -8px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 1);
+  transition: all 0.8s ease-out;
+}
+
+div.successful-Analysis-inner p {
+  padding: 20px;
+  text-align: center;
+  font-size: 1.9rem;
+  font-weight: 200;
+}
+
+div.successful-Analysis-inner p:first-child {
+  font-weight: 350;
+  position: relative;
+  top: 40px;
+}
+
+div.successful-Analysis-inner p:last-child {
+  position: relative;
+  top: -40px;
+}
+
+.hourglass {
+  display: block;
+  background: #dad8d2;
+  margin: 3em auto;
+  width: 2em;
+  height: 4em;
+  animation: hourglass 1s linear infinite;
+}
+
+.outer {
+  fill: #00b7c6;
+}
+
+.middle {
+  fill: #dad8d2;
+}
+
+@keyframes hourglass {
+  0% {
+    transform: rotate(0deg);
+    box-shadow: inset #00b7c6 0 -0em 0 0, inset #dad8d2 0 -2em 0 0,
+      inset #00b7c6 0 -4em 0 0;
+  }
+  80% {
+    transform: rotate(0deg);
+    box-shadow: inset #00b7c6 0 -2em 0 0, inset #dad8d2 0 -2em 0 0,
+      inset #00b7c6 0 -2em 0 0;
+  }
+  100% {
+    transform: rotate(180deg);
+    box-shadow: inset #dad8d2 0 -2em 0 0, inset #00b7c6 0 -2em 0 0,
+      inset #dad8d2 0 -2em 0 0;
+  }
+}

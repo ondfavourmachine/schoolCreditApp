@@ -1,0 +1,21 @@
+<small *ngIf="smallAlert" class="warning">
+  You need to accept the terms and condition!
+</small>
+
+<p class="">
+  You will be required to provide a few information about yourself. Please
+  ensure you have good internet before you begin.
+</p>
+
+<form action="" (submit)="startByAskingForBvn()">
+  <div class="ui checkbox">
+    <input (change)="setCheckBoxState($event)" type="checkbox" name="example" />
+    <label><a class="link">I accept the terms and condition</a></label>
+  </div>
+
+  <br /><br />
+
+  <button class="btn button--no-width" type="submit">
+    Submit
+  </button>
+</form>

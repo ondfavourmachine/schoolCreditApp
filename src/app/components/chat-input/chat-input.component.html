@@ -1,0 +1,41 @@
+<!-- <div class="bottom_wrapper clearfix">
+  <div class="message_input_wrapper">
+    <input
+      #inputFromUser
+      class="message_input"
+      placeholder="Type your message here..."
+      (keyup)="submit($event)"
+    />
+  </div>
+  <div class="send_message">
+    <div class="icon"></div>
+    <div
+      style=""
+      *ngIf="!questionaireButton"
+      (click)="submit($event)"
+      class="text"
+    >
+      Send
+    </div>
+    <div name="buttonForQuestions" *ngIf="questionaireButton" class="text">
+      Send
+    </div>
+  </div>
+</div> -->
+
+<!--  (keyup)="submit($event)" -->
+<footer class="footer">
+  <form class="row form">
+    <input
+      #inputFromUser
+      class="input"
+      type="text"
+      placeholder="Enter your message here"
+    />
+    <button (click)="submit($event)" class="btn btnSend" type="submit">
+      <img src="../../../assets/chatbotImages/send.svg" alt="" />
+    </button>
+  </form>
+</footer>
+
+<!-- (click)="handleQuestionAndAnswerSession()" -->

@@ -1,0 +1,121 @@
+<div *ngIf="errorHouse?.error?.errorBool" class="alertClass">
+  <!-- <strong><i class="ban icon"></i></strong> -->
+  {{ errorHouse?.error?.errorText }}
+  <span type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span style="font-size: 1.4rem;" aria-hidden="true">&times;</span>
+  </span>
+</div>
+
+<div class="introoverlay">
+  <form
+    [style.display]="control == 'entrance' ? 'block' : 'none'"
+    action=""
+    class="ui fluid form"
+  >
+    <img src="../../../../assets/images/exam.svg" class="exam" alt="" />
+
+    <h4 class="ui">
+      In 120 seconds try to answer as many questions as possible
+      <em>
+        <strong>Truthfully</strong>
+      </em>
+    </h4>
+
+    <div class="center">
+      <button (click)="startQuestions()" class="btn button--no-width bt">
+        Begin Test
+      </button>
+    </div>
+  </form>
+  <div [style.display]="control == 'questions' ? 'block' : 'none'">
+    <div class="questions_parent ui fluid form">
+      <!-- <div [hidden]="displayTimer" class="timer">
+                <div class="timerContainer">
+                  <span class="timekeeper"> </span>
+                </div>
+            </div> -->
+
+      <div class="counter">
+        <p class="timekeeper">
+          <!-- 00 min : 34 secs -->
+        </p>
+      </div>
+      <div class="questionsText">
+        <app-questions-text
+          [questionTextFromCtrl]="questionsText"
+        ></app-questions-text>
+      </div>
+      <div class="questions_Option">
+        <app-question-options
+          [questionOptionsFromCtrl]="questionsOptions"
+          (broadCastAnswerChosen)="sendAnswerToApi($event)"
+        ></app-question-options>
+      </div>
+      <div class="questions_progressBar">
+        <app-questions-progress-bar
+          [questionProgressBarFromCtrl]="questionsProgress"
+        ></app-questions-progress-bar>
+      </div>
+    </div>
+  </div>
+
+  <div
+    [style.display]="control == 'successful-Analysis' ? 'block' : 'none'"
+    class="successful-Analysis"
+  >
+    <div class="successful-Analysis-inner" style="position: relative">
+      <p>Analysing your data....</p>
+      <div class="wrapper">
+        <svg
+          class="hourglass"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 120 206"
+          preserveAspectRatio="none"
+        >
+          <path
+            class="middle"
+            d="M120 0H0v206h120V0zM77.1 133.2C87.5 140.9 92 145 92 152.6V178H28v-25.4c0-7.6 4.5-11.7 14.9-19.4 6-4.5 13-9.6 17.1-17 4.1 7.4 11.1 12.6 17.1 17zM60 89.7c-4.1-7.3-11.1-12.5-17.1-17C32.5 65.1 28 61 28 53.4V28h64v25.4c0 7.6-4.5 11.7-14.9 19.4-6 4.4-13 9.6-17.1 16.9z"
+          />
+          <path
+            class="outer"
+            d="M93.7 95.3c10.5-7.7 26.3-19.4 26.3-41.9V0H0v53.4c0 22.5 15.8 34.2 26.3 41.9 3 2.2 7.9 5.8 9 7.7-1.1 1.9-6 5.5-9 7.7C15.8 118.4 0 130.1 0 152.6V206h120v-53.4c0-22.5-15.8-34.2-26.3-41.9-3-2.2-7.9-5.8-9-7.7 1.1-2 6-5.5 9-7.7zM70.6 103c0 18 35.4 21.8 35.4 49.6V192H14v-39.4c0-27.9 35.4-31.6 35.4-49.6S14 81.2 14 53.4V14h92v39.4C106 81.2 70.6 85 70.6 103z"
+          />
+        </svg>
+      </div>
+      <p style="line-height: 1.2">
+        It will take a few seconds for this to be done. Please do not cancel
+        this operation.
+      </p>
+    </div>
+    <!-- <div class="ui segment">
+      <div class="ui active inverted dimmer">
+        <div class="ui large text loader">
+          It will take a few seconds for this to be done. Please do not cancel
+          this operation.
+        </div>
+      </div>
+      <p></p>
+      <p></p>
+      <p></p>
+    </div> -->
+  </div>
+
+  <!-- <p class="text">
+    In 120seconds, try to answer as many questions as is possible
+    <span>
+      truthfully
+    </span>
+  </p>
+
+  <div
+    style="position: relative;
+  bottom: 30px;
+  margin: 0 auto;
+  width: 50%;
+  text-align: center;
+  margin-bottom: 20px;"
+    class="beginTestContainer"
+  >
+    <a class="beginTest" >Begin Test</a>
+  </div> -->
+</div>

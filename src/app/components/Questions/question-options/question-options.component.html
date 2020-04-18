@@ -1,0 +1,32 @@
+<!-- <div class="options_parents">
+  <div
+    *ngFor="let option of questionOptionsFromCtrl; index as i"
+    (click)="sendOptions(option, $event)"
+    class="option"
+  >
+    <span>
+      {{ option?.option }}
+    </span>
+
+    <span>
+      {{ option.value }}
+    </span>
+  </div>
+</div> -->
+
+
+
+<div>
+    <div class="ui selection list">
+        <a *ngFor="let option of questionOptionsFromCtrl; index as i"
+          (click)="sendOptions(option, $event)"
+          class="item">
+            <div class="ui green horizontal label"> {{ option?.option }} </div>
+            <span> {{ option.value }} </span>
+        </a>
+        <!-- <a class="item">
+            <div class="ui green horizontal label">B</div>
+            No
+        </a> -->
+    </div>
+</div>

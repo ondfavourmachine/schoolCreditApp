@@ -1,0 +1,43 @@
+<div class="identifyOrAnonymous">
+  <div><img src="../../assets/images/helpingHands.svg" alt="" /></div>
+  <p>
+    You will be required to provide a few information about yourself. Please
+    ensure you have good internet connection.
+  </p>
+
+  <form [formGroup]="iAForm" (ngSubmit)="submit(iAForm)">
+    <div class="ui form">
+      <div class="field">
+        <label>Name</label>
+        <input formControlName="name" type="text" placeholder="First Name" />
+      </div>
+      <div class="field">
+        <label>Age</label>
+        <input formControlName="age" type="text" placeholder="Middle Name" />
+      </div>
+      <div class="field">
+        <select formControlName="gender">
+          <option value="">Gender</option>
+          <option value="1">Male</option>
+          <option value="0">Female</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <div class="ui checkbox">
+          <input
+            formControlName="tAndC"
+            type="checkbox"
+            tabindex="0"
+            class="hidden"
+          />
+          <label>I agree to the Terms and Conditions</label>
+        </div>
+      </div>
+    </div>
+
+    <button type="submit" class="fluid ui primary button">
+      Start <i hidden class="fas fa-circle-notch fa-spin"></i>
+    </button>
+  </form>
+</div>

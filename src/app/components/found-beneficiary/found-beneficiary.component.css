@@ -1,0 +1,70 @@
+div.parent {
+  display: flex;
+  -webkit-box-pack: center;
+  justify-content: flex-start;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  flex-direction: column;
+  -webkit-box-align: start;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  box-shadow: 0 0 3px 355px rgba(204, 204, 204, 0.35);
+  /* border: 1px solid tomato; */
+}
+
+div.parent p:first-child {
+  padding-top: 20px;
+  width: 100%;
+  height: fit-content;
+  text-align: center;
+  font-size: 2rem;
+  line-height: 0;
+  color: #075e54;
+}
+
+div.parent p.button {
+  text-align: center;
+  font-size: 1.1rem;
+  border: 1px solid #54d38a;
+  line-height: 0;
+  padding: 16px;
+  border-radius: 6px;
+  color: #fff;
+  background: #54d38a;
+}
+
+div.parent div {
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+div.parent ul {
+  width: 100%;
+  padding-left: 0;
+  text-align: center;
+  list-style: none;
+  /* margin: 0 auto; */
+}
+
+div.parent li {
+  width: 100%;
+  padding: 3px;
+  text-align: center !important;
+  display: flex;
+  color: #495057;
+  justify-content: flex-start;
+  align-items: baseline;
+}
+
+div.parent i {
+  text-align: left;
+  margin-right: 7px;
+}
+
+div.parent a {
+  text-decoration: underline;
+  color: #495057;
+}

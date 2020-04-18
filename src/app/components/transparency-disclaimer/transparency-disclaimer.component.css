@@ -1,0 +1,50 @@
+div.parent {
+  display: -webkit-box;
+  display: flex;
+  position: relative;
+  padding-top: 30px;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  justify-content: flex-start;
+  align-items: center;
+  height: 100%;
+  overflow: hidden;
+}
+
+.parent img {
+  height: 100px;
+  text-align: center;
+}
+
+.parent p:nth-child(2) {
+  font-size: 2rem;
+  padding: 1.5rem 0;
+  font-weight: 700;
+}
+.parent p:nth-child(3) {
+  text-align: center;
+  font-size: 1.2rem;
+  font-family: 400;
+  word-spacing: 0.02rem;
+  padding-bottom: 8rem;
+}
+
+.parent form {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+input[type="checkbox"] {
+  z-index: 1 !important;
+}
+
+form a {
+  color: red;
+  text-decoration: underline;
+  text-decoration-color: red;
+}
+
+/* #myModal > div > div.modal-body > div > div > div > div > app-transparency-disclaimer > div > p:nth-child(2) */

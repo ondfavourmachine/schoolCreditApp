@@ -1,0 +1,36 @@
+<div #formsEntryPoint>
+  <div class="generalFormsContainer" [ngSwitch]="whatFormToShow">
+    <!-- these first four forms will go into a component -->
+    <div *ngSwitchCase="'IdentifyOrAnonymousForms'">
+      <app-identify-or-anonymous></app-identify-or-anonymous>
+    </div>
+    <!-- start -->
+    <div *ngSwitchCase="'supportPage'">
+      <app-support-page></app-support-page>
+    </div>
+    <!-- stop -->
+    <div *ngSwitchCase="'uploadPhotoAndStatement'">
+      <!-- <app-upload-photo-and-statement></app-upload-photo-and-statement> -->
+    </div>
+
+    <div *ngSwitchCase="'licensevalidation'">
+      <!-- <app-license-validation-form></app-license-validation-form> -->
+    </div>
+  </div>
+</div>
+
+<!-- <div *ngSwitchCase="'bvnAndDOB'">
+      <app-bvn-and-dobform></app-bvn-and-dobform>
+    </div>
+
+    <div *ngSwitchCase="'bioAndNOK'">
+      <app-bio-and-nokform></app-bio-and-nokform>
+    </div>
+
+    <div *ngSwitchCase="'residentialAddress'">
+      <app-residential-address-form></app-residential-address-form>
+    </div>
+
+    <div *ngSwitchCase="'workInformation'">
+      <app-work-and-income-information-form></app-work-and-income-information-form>
+    </div> -->

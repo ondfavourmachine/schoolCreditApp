@@ -1,0 +1,134 @@
+<!-- NG-ZORRO -->
+<!-- <a href="https://github.com/NG-ZORRO/ng-zorro-antd" target="_blank" style="display: flex;align-items: center;justify-content: center;height: 100%;width: 100%;">
+  <img height="300" src="https://img.alicdn.com/tfs/TB1X.qJJgHqK1RjSZFgXXa7JXXa-89-131.svg">
+</a> -->
+
+<!-- <app-general-forms></app-general-forms> -->
+<router-outlet></router-outlet>
+
+<!-- Button trigger modal -->
+<!-- style="position: fixed; top: 10px; left: 3px;" -->
+
+<!-- <div class="loaderWindow">
+  <nz-spin nzSimple [nzSize]="'large'"></nz-spin>
+</div> -->
+<div
+  *ngIf="errorHouse?.error?.errorBool"
+  class="alert alert-danger customised alert-dismissible fade show"
+  role="alert"
+>
+  <strong><i nz-icon nzType="warning" nzTheme="outline"></i></strong>
+  {{ errorHouse?.error?.errorText }}
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<!-- <button
+  hidden
+  type="button"
+  id="btnTrigger"
+  class="btn btn-primary"
+  data-toggle="modal"
+  data-target="#exampleModalLong"
+>
+  Launch demo modal
+</button> -->
+
+<button
+  (click)="lauchModal()"
+  id="btnTrigger"
+  hidden
+  class="btn btn button--no-width"
+></button>
+
+<div id="myModal" class="modal" [style.display]="showModal">
+  <!-- Modal content -->
+  <div class="modal-content" style="position: relative">
+    <div class="modal-header">
+      <h4 class=""></h4>
+      <span
+        (click)="preventHidingOfbuttons(generalservice.nameOfModal)"
+        class="close"
+        >&times;</span
+      >
+    </div>
+
+    <div class="modal-body" style="display: 'block'">
+      <div [ngSwitch]="flowControlHolder">
+        <div *ngSwitchCase="'termsAndCondition'">
+          <app-terms-and-condition></app-terms-and-condition>
+        </div>
+        <div *ngSwitchCase="'formsContainer'">
+          <app-general-forms></app-general-forms>
+        </div>
+        <div *ngSwitchCase="'QuestionsContainer'">
+          <app-questions-ctrl></app-questions-ctrl>
+        </div>
+        <div *ngSwitchCase="'receiverContainer'">
+          <div class="receiver">
+            <div class="transparencyDisclaimer">
+              <app-transparency-disclaimer></app-transparency-disclaimer>
+            
+            </div>
+          </div>
+        </div>
+
+        <div *ngSwitchCase="'knowYourReceiver'">
+          <div class="receiver">
+            <div class="transparencyDisclaimer">
+                   <app-know-your-receiver ></app-know-your-receiver> 
+            </div>
+          </div>
+        </div>
+
+        <div *ngSwitchCase="'takeAPicture'">
+          <div class="takeAPicture">
+            <app-picture-component></app-picture-component>
+          </div>
+        </div>
+
+        <div *ngSwitchCase="'receiverBankAccount'">
+          <div class="receiverBankAccount">
+            <app-receiver-bank-account></app-receiver-bank-account>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="searchingParent">
+      <div class="inner">
+        <div class="searchingContent">
+          <p>Searching</p>
+
+          <div class="loading">
+            <div class="lds-ellipsis">
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>
+          </div>
+
+          <p><a>cancel search</a></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="foundParent">
+      <div>
+        <div class="grandChild">
+          <app-found-beneficiary></app-found-beneficiary>
+        </div>
+
+        <div class="grandChildTwo">
+          <app-eligibility-checks></app-eligibility-checks>
+        </div>
+
+        <div class="grandChildThree">
+          <app-bank-details></app-bank-details>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

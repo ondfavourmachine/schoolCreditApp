@@ -1,0 +1,192 @@
+<!-- @Input('knowYourReceiver') kyc: object = {nextStage: undefined, previousStage: undefined} -->
+<div [ngSwitch]="toKYCComponent?.nextStage">
+  <div *ngSwitchCase="'fpw'">
+    <div class="parent">
+      <div><img src="../../../assets/images/familyGroup2.svg" alt="" /></div>
+
+      <p>
+        Let us know you on behalf of your family
+      </p>
+
+      <form [formGroup]="familyGroupForm" (ngSubmit)="submit(familyGroupForm)">
+        <div class="ui form">
+          <div class="field">
+            <label>Full name</label>
+            <input
+              type="text"
+              formControlName="fullname"
+              placeholder="Enter fullname"
+            />
+
+            <div
+              *ngIf="fullname.touched && fullname.invalid"
+              class="ng-invalid ng-touched"
+            >
+              <small style="color: #f10b0b9d;" *ngIf="fullnameIsRequired()">
+                Your family full name is required!</small
+              >
+            </div>
+          </div>
+          <div class="field">
+            <label>Phone number</label>
+            <input
+              formControlName="phonenumber"
+              type="number"
+              placeholder="Enter phone number"
+              min="10"
+              max="11"
+            />
+
+            <div
+              *ngIf="phonenumber.touched && phonenumber.invalid"
+              class="ng-invalid ng-touched"
+            >
+              <small style="color: #f10b0b9d;" *ngIf="phoneIsRequired()">
+                Your phone number is required!</small
+              >
+            </div>
+          </div>
+          <div class="field">
+            <label>Occupation</label>
+            <input
+              formControlName="occupation"
+              type="text"
+              placeholder="What do you do for a living?"
+            />
+
+            <div
+              *ngIf="occupation.touched && occupation.invalid"
+              class="ng-invalid ng-touched"
+            >
+              <small style="color: #f10b0b9d;" *ngIf="occupationIsRequired()">
+                Your occupation is required!</small
+              >
+            </div>
+          </div>
+        </div>
+
+        <button
+          [disabled]="!familyGroupForm.valid"
+          type="submit"
+          class="fluid ui primary button"
+        >
+          Continue
+          <i [hidden]="loading" class="fas fa-circle-notch fa-spin"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <div *ngSwitchCase="'familyDetails'">
+    <div class="familyDetails">
+      <p class="modifiableParagraph">
+        Number of people in your immediate family?
+      </p>
+
+      <div
+        class="numberBlock"
+      >
+        <div (click)="selectFamilySize($event)" class="numberBlockOne">
+          <div>
+            <img src="../../../assets/images/user-profile.svg" alt="" />
+          </div>
+          <p>1</p>
+          <!-- <p><i class="fa fa-check"></i></p> -->
+        </div>
+
+        <div (click)="selectFamilySize($event)" class="numberBlockOne">
+          <div>
+            <img src="../../../assets/images/user-profile.svg" alt="" />
+          </div>
+          <p>2-3</p>
+          <!-- <p><i class="fa fa-check"></i></p> -->
+        </div>
+
+        <div (click)="selectFamilySize($event)" class="numberBlockOne">
+          <div>
+            <img src="../../../assets/images/user-profile.svg" alt="" />
+          </div>
+          <p>4-6</p>
+          <!-- <p><i class="fa fa-check"></i></p> -->
+        </div>
+
+        <div (click)="selectFamilySize($event)" class="numberBlockOne">
+          <div>
+            <img src="../../../assets/images/user-profile.svg" alt="" />
+          </div>
+          <p>6+</p>
+          <!-- <p><i class="fa fa-check"></i></p> -->
+        </div>
+      </div>
+
+      <div
+        class="numberBlockAlt"
+      >
+        <div (click)="selectFamilySize($event)" class="numberBlockOneAlt">
+          <div>
+            <img src="../../../assets/images/user-profile.svg" alt="" />
+          </div>
+          <p>Father</p>
+          <!-- <p><i class="fa fa-check"></i></p> -->
+        </div>
+
+        <div (click)="selectFamilySize($event)" class="numberBlockOneAlt">
+          <div>
+            <img src="../../../assets/images/user-profile.svg" alt="" />
+          </div>
+          <p>Mother</p>
+          <!-- <p><i class="fa fa-check"></i></p> -->
+        </div>
+
+        <div (click)="selectFamilySize($event)" class="numberBlockOneAlt">
+          <div>
+            <img src="../../../assets/images/user-profile.svg" alt="" />
+          </div>
+          <p>Son</p>
+          <!-- <p><i class="fa fa-check"></i></p> -->
+        </div>
+
+        <div (click)="selectFamilySize($event)" class="numberBlockOneAlt">
+          <div>
+            <img src="../../../assets/images/user-profile.svg" alt="" />
+          </div>
+          <p>Daughter</p>
+          <!-- <p><i class="fa fa-check"></i></p> -->
+        </div>
+      </div>
+      <div class="translateCoverPlate">
+        <div class="preliminary" style="display: none">
+          <p>
+            We need You and your wife to provide us with any of National ID,
+            Voters ID, BVN
+          </p>
+
+          <p>
+            <a>Yes, i have a wife with ID</a>
+          </p>
+          <p>
+            <a>No, i am a single parent</a>
+          </p>
+          <p>
+            <a>cancel</a>
+          </p>
+        </div>
+
+        <div class="identificationForm">
+          <form>
+            <div class="ui form">
+              <div class="field">
+                <!-- <label>NIN</label> -->
+                <input type="text" placeholder="Enter NIN" />
+              </div>
+            </div>
+
+            <button type="submit" class="fluid ui primary button">
+              Done <i hidden class="fas fa-circle-notch fa-spin"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,206 @@
+import {
+  Component,
+  OnInit,
+  AfterViewInit,
+  ChangeDetectorRef,
+  ViewChild,
+  ElementRef,
+  OnDestroy
+} from "@angular/core";
+import { ChatService } from "src/app/services/ChatService/chat.service";
+import { GeneralService } from "src/app/services/generalService/general.service";
+import { timeout } from "rxjs/operators";
+import { DisplayQuestion } from "src/app/models/Questionaire";
+import { ActivatedRoute } from "@angular/router";
+import { TimeoutError, Subscription } from "rxjs";
+import { ValidateRefResponse } from "../../models/validaterRefRes";
+
+@Component({
+  selector: "app-chat-bot",
+  templateUrl: "./chat-bot.component.html",
+  styleUrls: ["./chat-bot.component.css"]
+})
+export class ChatBotComponent implements OnInit, AfterViewInit, OnDestroy {
+  messages: string | { message: string; direction: string; button?: string };
+  public referenceNumber: string;
+  private destroyAnything: Subscription;
+  actionToTake: string;
+  @ViewChild("parentContainer") parentContainer: ElementRef;
+  // timeHasElapsed: number = 0;
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private chatservice: ChatService,
+    private generalservice: GeneralService,
+    private changeDetection: ChangeDetectorRef
+  ) {
+    activatedRoute.queryParams.subscribe(val => {
+      this.referenceNumber = val["ref_no"];
+      sessionStorage.setItem("ref_no", this.referenceNumber);
+    });
+  }
+
+  ngOnInit() {
+    // this.chatservice.zeroAllSubmit().subscribe();
+    this.destroyAnything = this.generalservice.startAskingAndChangeQuestions$.subscribe(
+      val => {
+        // do something here
+      },
+      err => console.log(err)
+    );
+
+    this.changeDetection.detectChanges();
+  }
+
+  ngAfterViewInit() {
+    const div = this.parentContainer.nativeElement as HTMLDivElement;
+    const scoller = document.querySelector(".chat-box");
+    const chat = document.querySelector(".chat_window");
+    chat.addEventListener("DOMNodeInserted", e => {
+      scoller.scrollBy({
+        left: 0,
+        top: scoller.scrollHeight,
+        behavior: "smooth"
+      });
+    });
+  }
+
+  sendMessageFromInput(event) {
+    this.messages = event;
+  }
+
+  handleReadyOrNot(event: string) {
+    event = event.toLowerCase();
+    switch (event) {
+      case "y":
+        setTimeout(() => {
+          this.sendMessageFromInput({
+            message: `Awesome! Please be aware that you will be timed. 
+          Try to answer as fast and as truthfully as you can. Your time starts now!`,
+            direction: "left"
+          });
+          this.generalservice.timerController("showTimer");
+          this.userWantsToStartAnsweringQuestions();
+        }, 1000);
+        // this.userWantsToStartAnsweringQuestions();
+        break;
+      case "n":
+        break;
+    }
+  }
+
+  changeActionInput(event: string) {
+    this.actionToTake = event;
+    // console.log(this.actionToTake);
+  }
+
+  // showThatYourWorking(event) {
+  //   console.log(event);
+  // }
+
+  // this function was formally supposed to run here.
+  // it now runs in the questionsCtrl component.
+  // notifyTheUserThatTimeForQuestionHasElapsed() {
+  //   if (
+  //     this.generalservice.displayedQuestions.length <
+  //     this.generalservice.totalLengthOfQuestions
+  //   ) {
+  //     let answer: { ref_no?: string; answer?: string } = {};
+  //     answer.ref_no = sessionStorage.getItem("ref_no");
+  //     for (let question of this.generalservice.allQuestions) {
+  //       answer.answer = `${question.id},''`;
+  //       this.chatservice.uploadAnswers(answer).subscribe();
+  //     }
+  //     this.generalservice.timerController("dontShow");
+  //     this.generalservice.declareThatTimeHasElapsed("timeHasElapsed");
+  //     // this.generalservice.responseDisplayNotifier(
+  //     //   "questionAnsweringIncomplete"
+  //     // );
+  //     return;
+  //   }
+  //   this.generalservice.declareThatTimeHasElapsed("timeHasElapsed");
+  //   this.generalservice.timerController("dontShow");
+  // }
+
+  userWantsToStartAnsweringQuestions() {
+    setTimeout(() => {
+      this.userHasStartedQuestions();
+    }, 1500);
+  }
+
+  // this function will kick start the sending of questions to the display component!
+  userHasStartedQuestions() {
+    setTimeout(() => {
+      this.generalservice.handleQuestioningProcess("start");
+      this.generalservice.timerController("startTimer");
+    }, 1000);
+  }
+
+  showUserQuestions(temp: Array<DisplayQuestion>): void {
+    setTimeout(() => {
+      this.sendMessageFromInput({
+        message: `${temp[0].question} 
+         ${temp[0].options}
+           `,
+        direction: "left"
+      });
+      temp.splice(0, 1);
+    }, 500);
+  }
+
+  connectToApi(val: { typeOfApiCall: string; valToSend: string }): void {
+    switch (val.typeOfApiCall) {
+      case "check-ref":
+        this.validateRef(val.valToSend);
+        break;
+      case "kkkk":
+        break;
+    }
+  }
+
+  validateRef(val) {
+    this.chatservice
+      .fetchRefNumber({ ref_no: val })
+      .pipe(timeout(60000))
+      .subscribe(
+        (res: ValidateRefResponse) => {
+          if (!res.valid) {
+            this.messages = {
+              message: res.message,
+              direction: "left"
+            };
+          } else {
+            sessionStorage.setItem("ref_no", val);
+            sessionStorage.setItem("name", res.name);
+            this.messages = this.generalservice.handleValidRef(res);
+
+            if (
+              this.messages &&
+              this.messages.message
+                .toLowerCase()
+                .includes("has already been taken")
+            ) {
+              // console.log("i am here");
+              setTimeout(() => {
+                this.messages = {
+                  message: "Please enter a reference number",
+                  direction: "left"
+                };
+              }, 1000);
+            }
+          }
+        },
+        err => (this.messages = this.generalservice.handleRefCheckingError(err))
+      );
+  }
+
+  // this function will restart the questioning process
+  // when it receives an event from app-chat-messages-display restartProcess eventEmitter
+  callNgOnInitAgain() {
+    sessionStorage.clear();
+    this.ngOnInit();
+  }
+
+  ngOnDestroy() {
+    this.destroyAnything.unsubscribe();
+  }
+}

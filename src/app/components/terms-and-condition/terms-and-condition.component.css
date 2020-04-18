@@ -1,0 +1,14 @@
+.warning {
+  color: tomato;
+  font-size: 15px;
+  text-align: center;
+  width: 90%;
+  position: absolute;
+  background: white;
+  top: 0p;
+  top: -50px;
+  left: 20px;
+  border: 1px solid #54d38a;
+  border-radius: 15px;
+  box-shadow: 0 0 20px 6px #54d38a;
+}

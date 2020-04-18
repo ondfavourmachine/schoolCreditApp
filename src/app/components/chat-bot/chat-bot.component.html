@@ -1,0 +1,29 @@
+<app-header></app-header>
+<div #parentContainer class="parentOfChatWindow">
+    <div class="chat_window">
+        <div>
+            <app-chat-messages-display 
+            [messages]="messages" 
+            [referenceNumberInMsg]="referenceNumber" 
+            (actionDispatched)="changeActionInput($event)" 
+            (restartProcess)="callNgOnInitAgain()">
+           </app-chat-messages-display>
+        </div>
+    </div>
+</div>
+
+<div class="chatInputAndButton">
+    <!-- <span class="poweredByCreditclan">Powered by Creditclan</span> -->
+    <app-chat-input [action]="actionToTake" (sendMessage)="sendMessageFromInput($event)" (makeAnApiCall)="connectToApi($event)" (readyToAnswerOrNot)="handleReadyOrNot($event)"></app-chat-input>
+</div>
+
+<!-- <div class="bottom_wrapper clearfix">
+            <div class="message_input_wrapper"><input class="message_input" placeholder="Type your message here..." /></div>
+            <div class="send_message">
+                <div class="icon"></div>
+                <div class="text">Send</div>
+            </div>
+        </div> -->
+
+
+<!--  (timeHasPassed)="notifyTheUserThatTimeForQuestionHasElapsed()" -->

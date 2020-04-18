@@ -1,0 +1,36 @@
+.supportPage {
+  display: -webkit-box;
+  display: flex;
+  position: relative;
+  padding-top: 30px;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  justify-content: flex-start;
+  align-content: center;
+  height: 520px;
+  overflow: hidden;
+}
+
+.supportPage > div {
+  display: flex;
+  justify-content: center;
+}
+
+.supportPage img {
+  height: 100px;
+  text-align: center;
+}
+
+.supportPage p {
+  text-align: center;
+  margin: 40px auto;
+}
+button {
+  background: #9a99de;
+}
+
+form .form {
+  padding: 20px 0px;
+}

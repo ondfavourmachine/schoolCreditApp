@@ -1,0 +1,33 @@
+div.container {
+  height: 100%;
+
+  display: flex;
+
+  flex-direction: column;
+
+  /* justify-content: center; */
+  -webkit-box-align: center;
+  align-items: center;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+div.container div {
+  padding: 25px;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  background: transparent;
+}
+
+div.container p:first-child {
+  word-spacing: 0.1rem;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+div.container div > img {
+  height: 100px;
+  text-align: center;
+  padding: 10px;
+  /* border-radius: 40%; */
+}

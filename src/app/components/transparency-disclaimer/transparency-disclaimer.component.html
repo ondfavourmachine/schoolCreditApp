@@ -1,0 +1,25 @@
+<div class="parent">
+  <div><img src="../../../assets/images/stop.svg" alt="" /></div>
+  <p>
+    Transparency disclaimer
+  </p>
+
+  <p>
+    You will be required to provide a few information about yourself. Please
+    ensure connection is good to begin.
+  </p>
+
+  <form>
+    <div class="field">
+      <div class="ui checkbox">
+        <input
+          (click)="userAcceptedOrNot($event)"
+          type="checkbox"
+          tabindex="0"
+          class="hidden"
+        />
+        <label> <a>I agree to the Terms and Conditions</a> </label>
+      </div>
+    </div>
+  </form>
+</div>
