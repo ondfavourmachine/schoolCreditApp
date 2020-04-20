@@ -68,6 +68,30 @@ div.familyDetails p:first-child {
   text-align: center;
   line-height: 1.69rem;
 }
+
+/* div.providingID starts here */
+div.providingID {
+  position: relative;
+  display: flex;
+  height: 550px !important;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  overflow: hidden;
+}
+
+div.providingID p {
+  transition: all 0.7s ease-in-out;
+}
+
+div.providingID p:first-child {
+  font-size: 1.75rem;
+  font-weight: 450;
+  word-spacing: 0.09rem;
+  text-align: center;
+  line-height: 1.69rem;
+}
+/* ends here */
 /* Alternate numberBlock  starts here*/
 
 div.numberBlockAlt {
@@ -222,11 +246,15 @@ div.identificationForm form {
 
 /* animations for sliding in and out starts here */
 .animationIn {
-  animation: slideUp 0.7s linear 1 forwards;
+  animation: slideUp 0.4s linear 1 forwards;
 }
 
 .animationOut {
-  animation: slideDown 0.7s linear 1 forwards;
+  animation: slideDown 0.4s linear 1 forwards;
+}
+
+.numberBlock.modifyFontSize p {
+  font-size: 1.3rem !important;
 }
 
 @keyframes slideUp {

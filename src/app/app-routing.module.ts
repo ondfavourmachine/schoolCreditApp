@@ -18,6 +18,12 @@ const routes: Routes = [
     path: "receiver",
     loadChildren: () =>
       import("./modules/receiver/receiver.module").then(m => m.ReceiverModule)
+  },
+
+  {
+    path: "giver",
+    loadChildren: () =>
+      import("./modules/givers/giver/giver.module").then(m => m.GiverModule)
   }
 ];
 

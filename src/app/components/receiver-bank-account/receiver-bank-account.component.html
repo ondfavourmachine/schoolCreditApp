@@ -5,19 +5,58 @@
     Finally, what bank account would you like to receive funds in?
   </p>
 
-  <form>
+  <form [formGroup]="bankForm" (ngSubmit)="submitForm()">
     <div class="ui form">
       <div class="field">
         <label>Bank name</label>
-        <input type="text" placeholder="Enter name of bank" />
+        <div class="field">
+          <select (change)="setBankName($event)" formControlName="bank_name">
+            <option ngValue="Bank Name">Bank Name</option>
+            <option
+              (click)="setBankName(bank?.name)"
+              [value]="bank?.bank_code"
+              *ngFor="let bank of banks; index as i"
+            >
+              {{ bank?.name }}
+            </option>
+          </select>
+
+          <!-- {{  }} -->
+        </div>
+
+        <div
+          *ngIf="bankName.touched && bankName.invalid"
+          class="ng-invalid ng-touched"
+        >
+          <small style="color: #f10b0b9d;" *ngIf="bankNameIsRequired()">
+            Your Bank Name is required!</small
+          >
+        </div>
       </div>
       <div class="field">
         <label>Account number</label>
-        <input type="number" placeholder="Enter accounter number" />
+        <input
+          formControlName="account_no"
+          type="tel"
+          placeholder="Enter accounter number"
+          pattern="[0-9]*"
+        />
+        <div
+          *ngIf="accountNumber.touched && accountNumber.invalid"
+          class="ng-invalid ng-touched"
+        >
+          <small style="color: #f10b0b9d;">
+            Your account number is required and has to be 10!</small
+          >
+        </div>
       </div>
     </div>
 
-    <button type="submit" class="fluid ui primary button">
+    <button
+      [disabled]="!bankForm.valid"
+      type="submit"
+      class="fluid ui primary button"
+    >
       Continue <i hidden class="fas fa-circle-notch fa-spin"></i>
     </button>
   </form>
@@ -25,15 +64,17 @@
   <div class="accountDetailsSearchResult">
     <div class="confirmBankDetails">
       <p>
-        Bejide Femi Akintunde 0234122378 GTB
+        <span>{{ displayAccountDetails?.account_name }}</span>
+        <span> {{ displayAccountDetails?.account_number }}</span>
+        <span>{{ selectedBank }}</span>
       </p>
 
-      <p>
+      <p (click)="moveToNextStage()" class="submitRequest">
         <a>Yes, Submit my request</a>
       </p>
     </div>
 
-    <div class="confirmSubmitRequest">
+    <!-- <div class="confirmSubmitRequest">
       <p>
         Do we Submit Your family request for cash assistance
       </p>
@@ -45,14 +86,18 @@
       <p>
         <a> No, cancel request</a>
       </p>
-    </div>
+    </div> -->
 
-    <div class="requestSuccess">
+    <!-- <div class="requestSuccess">
       <div><img src="../../../assets/images/check-mark.svg" alt="" /></div>
       <p>
         Your request has been sent for assistance. You will get an alert once we
         and a helper.
       </p>
-    </div>
+    </div> -->
   </div>
+
+  <small class="smallNotification" *ngIf="notification?.show">
+    {{ notification?.message }}
+  </small>
 </div>

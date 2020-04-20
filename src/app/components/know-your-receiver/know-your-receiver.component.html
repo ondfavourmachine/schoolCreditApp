@@ -33,8 +33,6 @@
               formControlName="phonenumber"
               type="number"
               placeholder="Enter phone number"
-              min="10"
-              max="11"
             />
 
             <div
@@ -83,18 +81,16 @@
         Number of people in your immediate family?
       </p>
 
-      <div
-        class="numberBlock"
-      >
-        <div (click)="selectFamilySize($event)" class="numberBlockOne">
+      <div class="numberBlock">
+        <div  (click)="selectFamilySize($event, '1')" class="numberBlockOne">
           <div>
             <img src="../../../assets/images/user-profile.svg" alt="" />
           </div>
-          <p>1</p>
+          <p >1</p>
           <!-- <p><i class="fa fa-check"></i></p> -->
         </div>
 
-        <div (click)="selectFamilySize($event)" class="numberBlockOne">
+        <div (click)="selectFamilySize($event, '2-3')" class="numberBlockOne">
           <div>
             <img src="../../../assets/images/user-profile.svg" alt="" />
           </div>
@@ -102,7 +98,7 @@
           <!-- <p><i class="fa fa-check"></i></p> -->
         </div>
 
-        <div (click)="selectFamilySize($event)" class="numberBlockOne">
+        <div (click)="selectFamilySize($event, '4-6')" class="numberBlockOne">
           <div>
             <img src="../../../assets/images/user-profile.svg" alt="" />
           </div>
@@ -110,7 +106,7 @@
           <!-- <p><i class="fa fa-check"></i></p> -->
         </div>
 
-        <div (click)="selectFamilySize($event)" class="numberBlockOne">
+        <div (click)="selectFamilySize($event, '6+')" class="numberBlockOne">
           <div>
             <img src="../../../assets/images/user-profile.svg" alt="" />
           </div>
@@ -119,9 +115,7 @@
         </div>
       </div>
 
-      <div
-        class="numberBlockAlt"
-      >
+      <div class="numberBlockAlt">
         <div (click)="selectFamilySize($event)" class="numberBlockOneAlt">
           <div>
             <img src="../../../assets/images/user-profile.svg" alt="" />
@@ -138,7 +132,7 @@
           <!-- <p><i class="fa fa-check"></i></p> -->
         </div>
 
-        <div (click)="selectFamilySize($event)" class="numberBlockOneAlt">
+        <div (click)="sonOrDaughter()" class="numberBlockOneAlt">
           <div>
             <img src="../../../assets/images/user-profile.svg" alt="" />
           </div>
@@ -146,7 +140,7 @@
           <!-- <p><i class="fa fa-check"></i></p> -->
         </div>
 
-        <div (click)="selectFamilySize($event)" class="numberBlockOneAlt">
+        <div (click)="sonOrDaughter()" class="numberBlockOneAlt">
           <div>
             <img src="../../../assets/images/user-profile.svg" alt="" />
           </div>
@@ -154,35 +148,158 @@
           <!-- <p><i class="fa fa-check"></i></p> -->
         </div>
       </div>
+
       <div class="translateCoverPlate">
         <div class="preliminary" style="display: none">
           <p>
-            We need You and your wife to provide us with any of National ID,
-            Voters ID, BVN
+            We need You and your {{ familyDetailsInfo.spouse }} to provide us
+            with any of National ID, Voters ID, BVN
           </p>
 
           <p>
-            <a>Yes, i have a wife with ID</a>
+            <a (click)="provideID()"
+              >Yes, i have a {{ familyDetailsInfo.nameOfFamilyToDisplay }} with
+              ID</a
+            >
           </p>
           <p>
-            <a>No, i am a single parent</a>
+            <a (click)="cancelPreliminaryPage()">No, i am a single parent</a>
           </p>
-          <p>
+          <p style="cursor: pointer;" (click)="cancelPreliminaryPage()">
             <a>cancel</a>
           </p>
         </div>
 
-        <div class="identificationForm">
+        <!-- <div class="identificationForm">
           <form>
             <div class="ui form">
               <div class="field">
-                <!-- <label>NIN</label> -->
+               
                 <input type="text" placeholder="Enter NIN" />
               </div>
             </div>
 
             <button type="submit" class="fluid ui primary button">
               Done <i hidden class="fas fa-circle-notch fa-spin"></i>
+            </button>
+          </form>
+        </div> -->
+      </div>
+    </div>
+  </div>
+
+  <div *ngSwitchCase="'providingID'">
+    <div class="familyDetails">
+      <p class="modifiableParagraph">
+        Please provide your ID
+      </p>
+
+      <div class="numberBlock modifyFontSize">
+        <div (click)="selectID($event)" class="numberBlockOne">
+          <div>
+            <img src="../../../assets/images/user-profile.svg" alt="" />
+          </div>
+          <p>National ID</p>
+          <!-- <p><i class="fa fa-check"></i></p> -->
+        </div>
+
+        <div (click)="selectID($event)" class="numberBlockOne">
+          <div>
+            <img src="../../../assets/images/user-profile.svg" alt="" />
+          </div>
+          <p>Voters ID</p>
+          <!-- <p><i class="fa fa-check"></i></p> -->
+        </div>
+
+        <div (click)="selectID($event)" class="numberBlockOne">
+          <div>
+            <img src="../../../assets/images/user-profile.svg" alt="" />
+          </div>
+          <p>BVN</p>
+          <!-- <p><i class="fa fa-check"></i></p> -->
+        </div>
+
+        <div (click)="selectID($event)" class="numberBlockOne">
+          <div>
+            <img src="../../../assets/images/user-profile.svg" alt="" />
+          </div>
+          <p style="font-size:18px">Drivers licence</p>
+          <!-- <p><i class="fa fa-check"></i></p> -->
+        </div>
+      </div>
+
+      <div class="numberBlockAlt ">
+        <div (click)="selectFamilySize($event)" class="numberBlockOneAlt">
+          <div>
+            <img src="../../../assets/images/user-profile.svg" alt="" />
+          </div>
+          <p>Father</p>
+          <!-- <p><i class="fa fa-check"></i></p> -->
+        </div>
+
+        <div (click)="selectFamilySize($event)" class="numberBlockOneAlt">
+          <div>
+            <img src="../../../assets/images/user-profile.svg" alt="" />
+          </div>
+          <p>Mother</p>
+          <!-- <p><i class="fa fa-check"></i></p> -->
+        </div>
+
+        <div (click)="sonOrDaughter()" class="numberBlockOneAlt">
+          <div>
+            <img src="../../../assets/images/user-profile.svg" alt="" />
+          </div>
+          <p>Son</p>
+          <!-- <p><i class="fa fa-check"></i></p> -->
+        </div>
+
+        <div (click)="sonOrDaughter()" class="numberBlockOneAlt">
+          <div>
+            <img src="../../../assets/images/user-profile.svg" alt="" />
+          </div>
+          <p>Daughter</p>
+          <!-- <p><i class="fa fa-check"></i></p> -->
+        </div>
+      </div>
+
+      <div id="translateCoverPlateForProvidingID" class="translateCoverPlate">
+        <div class="preliminary" style="display: none">
+          <p>
+            We need You and your {{ spouse }} to provide us with any of National
+            ID, Voters ID, BVN
+          </p>
+
+          <p>
+            <a (click)="provideID()">Yes, i have a wife with ID</a>
+          </p>
+          <p>
+            <a (click)="cancelPreliminaryPage()">No, i am a single parent</a>
+          </p>
+          <p style="cursor: pointer;" (click)="cancelPreliminaryPage()">
+            <a>cancel</a>
+          </p>
+        </div>
+
+        <div class="identificationForm">
+          <form [formGroup]="idForm" (ngSubmit)="submitIdForm(idForm)">
+            <div class="ui form">
+              <div class="field">
+                <input
+                  formControlName="id"
+                  [attr.type]="IdToProvide == 'BVN'? 'number': 'text'"
+                  [attr.placeholder]="'Enter' + ' ' + IdToProvide"
+                />
+              </div>
+            </div>
+
+            <button
+              [disabled]="!idForm.valid"
+              type="submit"
+              class="fluid ui primary button"
+              
+            >
+              Done
+              <i hidden class="fas fa-circle-notch fa-spin"></i>
             </button>
           </form>
         </div>

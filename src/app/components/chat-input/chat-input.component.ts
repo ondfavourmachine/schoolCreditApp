@@ -223,7 +223,7 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     // this.PreventMemoryLeaks.timeHasElapsed.unsubscribe();
-    this.PreventMemoryLeaks.InputToNumber.unsubscribe();
-    this.questionaireButton = false;
+    // this.PreventMemoryLeaks.InputToNumber.unsubscribe();
+    // this.questionaireButton = false;
   }
 }

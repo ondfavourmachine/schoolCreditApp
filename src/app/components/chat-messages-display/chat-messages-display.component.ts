@@ -77,27 +77,18 @@ export class ChatMessagesDisplayComponent
   }
 
   ngOnInit() {
-    // this.observableToTrash.specialCases = this.generalservice.specialScenarios$.subscribe(
-    //   val => {
-    //     if (val == "searchForSpecialCaseButtons") {
-    //       const buttons: NodeList = document.querySelectorAll(".dynamicButton");
-    //       let filtered3 = [];
-    //       buttons.forEach((button: HTMLButtonElement) => {
-    //         if (!button.classList.contains("disabled")) {
-    //           filtered3.push(button);
-    //         }
-    //       });
-    //       this.specialCaseButtons(filtered3);
-    //     }
-    //   }
-    // );
-
-    this.observableToTrash.apiCall = this.generalservice.apiCalls$.subscribe(
-      val => {
-        // this.getQuestionsOrAnswers(val);
-      },
-      err => console.log(err)
-    );
+    this.generalservice.congratsOrRegrets$.subscribe(val => {
+      if (val.length < 1) {
+        return;
+      }
+      if (val.toLowerCase() == "cancelled") {
+        this.generateFailedRequestMsg(this.messagePlaceHolder.nativeElement);
+      } else {
+        this.generateSuccessfulSubmissionOfRequestMsg(
+          this.messagePlaceHolder.nativeElement
+        );
+      }
+    });
 
     this.observableToTrash.displayResponse = this.generalservice.intermediateResponse$.subscribe(
       (val: ReceiversResponse | GiverResponse) => {
@@ -157,21 +148,28 @@ export class ChatMessagesDisplayComponent
 
   ngAfterViewInit(message?: string, direction?: string) {
     const ul = this.messagePlaceHolder.nativeElement as HTMLUListElement;
-    this.generateWelcomeMsgForReceiver(ul);
+    this.generateWelcomeMsgForReceiverOrGiver(ul);
     // this.requestRef(this.referenceNumberInMsg);
     ul.addEventListener("customReceiverEventFromMsgClass", (e: CustomEvent) => {
       const { stage } = e.detail;
       if (String(stage).includes("transparency-disclaimer")) {
-        // console.log("i am here");
-        // this.changeModalTitle(String(e.detail));
         this.generalservice.handleFlowController("receiverContainer");
         // this.disableTheButtonsOfPreviousListElement();
       }
     });
 
+    ul.addEventListener("customGiverEventFromMsgClass", (e: CustomEvent) => {
+      const { typeOfEvent, message } = e.detail;
+      if (String(message).includes("giver")) {
+        sessionStorage.setItem("route", String(message));
+        this.generalservice.receiver = "giver";
+        this.route.navigate(["giver"]);
+      }
+    });
+
     ul.addEventListener("customEventFromMessageClass", (e: CustomEvent) => {
       // console.log(e.detail);
-      if (String(e.detail).includes("terms")) {
+      if (String(e.detail).includes("IdentifyOrAnonymousForms")) {
         // console.log("i am here");
         this.changeModalTitle(String(e.detail));
         this.generalservice.handleFlowController("termsAndCondition");
@@ -637,7 +635,7 @@ export class ChatMessagesDisplayComponent
   }
 
   welcomeMsgCtrl(str: string) {
-    // console.log(str);
+    this.generalservice.typeOfPerson = "";
     let regex = /receiver/;
     if (regex.test(str)) {
       this.receiverIsPresent = true;
@@ -648,36 +646,86 @@ export class ChatMessagesDisplayComponent
     }
   }
 
-  generateWelcomeMsgForReceiver(ul: HTMLUListElement) {
-    if (this.receiverIsPresent) {
-      const msgs = Message.welcomeMsgForReceiver;
-      // const ul = this.messagePlaceHolder.nativeElement as HTMLUListElement;
-      let messageToDisplay: Message;
-      msgs.forEach((msg, index) => {
-        if (index == 2) {
-          this.count = index;
-          messageToDisplay = new Message(
-            `${msg}`,
-            `left`,
-            ul,
-            "Yes,No i am giving",
-            "receive,give"
-          );
-          messageToDisplay.makeAndInsertMessage(this.count);
-          return;
-        }
-        messageToDisplay = new Message(`${msg}`, `left`, ul);
-        messageToDisplay.makeAndInsertMessage(index);
-      });
-      //
-    }
+  generateWelcomeMsgForReceiverOrGiver(
+    ul: HTMLUListElement,
+    giverOrReceiver?: string
+  ) {
+    // console.log(this.receiverIsPresent);
+    setTimeout(() => {
+      if (this.generalservice.receiver == "receiver") {
+        const msgs = Message.welcomeMsgForReceiver;
+        let messageToDisplay: Message;
+        msgs.forEach((msg, index) => {
+          if (index == 2) {
+            this.count = index;
+            messageToDisplay = new Message(
+              `${msg}`,
+              `left`,
+              ul,
+              "Yes,No i am giving",
+              "receive,give"
+            );
+            messageToDisplay.makeAndInsertMessage(this.count);
+            return;
+          }
+          messageToDisplay = new Message(`${msg}`, `left`, ul);
+          messageToDisplay.makeAndInsertMessage(index);
+        });
+      } else {
+        // const giver =  sessionStorage.getItem('route')
+        // if(giver == 'giver'){
+        const msgs = Message.welcomeMessagesForGiver;
+        let messageToDisplay: Message;
+        this.count = 0;
+        msgs.forEach((msg, index) => {
+          if (index == 1) {
+            this.count = index;
+            messageToDisplay = new Message(
+              `${msg}`,
+              `left`,
+              ul,
+              "Yes,No",
+              "picture,give"
+            );
+            messageToDisplay.makeAndInsertMessage(this.count);
+            return;
+          }
+          messageToDisplay = new Message(`${msg}`, `left`, ul);
+          messageToDisplay.makeAndInsertMessage(index);
+        });
+      }
+    }, 1000);
+  }
+
+  generateSuccessfulSubmissionOfRequestMsg(ul: HTMLUListElement) {
+    const msgs = Message.successfulRequestsMade;
+    let messageToDisplay: Message;
+    msgs.forEach((msg, index) => {
+      messageToDisplay = new Message(`${msg}`, `left`, ul);
+      messageToDisplay.makeAndInsertMessage(2);
+    });
+  }
+
+  generateFailedRequestMsg(ul: HTMLUListElement) {
+    const msgs = Message.failedRequests;
+    let messageToDisplay: Message;
+    msgs.forEach((msg, index) => {
+      messageToDisplay = new Message(`${msg}`, `left`, ul);
+      messageToDisplay.makeAndInsertMessage(2);
+    });
   }
 
   ngOnDestroy() {
     // let remove: Subscription
     // this.observableToTrash.displayResponse.unsubscribe
-    for (let sub in this.observableToTrash) {
-      sub["unsubscribe"]();
+    if (
+      this.observableToTrash.apiCall ||
+      this.observableToTrash.preventDisabling ||
+      this.observableToTrash.destroyNextReply
+    ) {
+      this.observableToTrash.apiCall.unsubscribe();
+      this.observableToTrash.preventDisabling.unsubscribe();
+      this.observableToTrash.destroyNextReply.unsubscribe();
     }
   }
 }

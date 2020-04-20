@@ -1,0 +1,38 @@
+<div class="parent">
+  <div class="imgContainer">
+    <img id="imageToDisplay" src="" alt="" />
+  </div>
+
+  <div class="accountDetailsSearchResult">
+    <div *ngIf="submit == 'confirm'" class="confirmSubmitRequest">
+      <p>
+        Do we Submit Your family request for cash assistance?
+      </p>
+      <p (click)="submitRequestForAssistance()">
+        <a>Yes, Submit my request</a>
+      </p>
+      <p (click)="closeTheModal('cancel')">
+        <a> No, cancel request</a>
+      </p>
+    </div>
+
+    <div *ngIf="submit == 'success'" class="requestSuccess">
+      <div><img src="../../../assets/images/check-mark.svg" alt="" /></div>
+      <p>
+        Your request has been sent for assistance. You will get an alert once we
+        and a helper.
+      </p>
+
+      <p (click)="closeTheModal()">
+        <a> ok </a>
+      </p>
+    </div>
+
+    <div *ngIf="submit == 'failed'" class="requestSuccess">
+      <div><img src="../../../assets/images/stop.svg" alt="" /></div>
+      <p>
+        We could not submit your request at this time.
+      </p>
+    </div>
+  </div>
+</div>

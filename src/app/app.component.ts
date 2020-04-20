@@ -1,4 +1,12 @@
-import { Component, OnInit, OnDestroy, AfterViewInit } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  AfterViewInit,
+  ChangeDetectorRef,
+  OnChanges,
+  AfterContentChecked
+} from "@angular/core";
 import { Router, NavigationStart } from "@angular/router";
 import { GeneralService } from "./services/generalService/general.service";
 import { Subscription } from "rxjs";
@@ -13,41 +21,55 @@ interface observableAggregator {
   templateUrl: "./app.component.html",
   styleUrls: ["./app.component.css"]
 })
-export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
+export class AppComponent
+  implements OnInit, AfterViewInit, AfterContentChecked, OnDestroy {
   public flowControlHolder: string = "termsAndCondition";
   public showModal: string = "none";
   public modalHolder: HTMLDivElement;
   public toKYCComponent: any;
   private btnTrigger: HTMLButtonElement;
   private observableAggregator: observableAggregator = {};
-  title = "credibilityDashboardApp";
+  public globalOverlay: string = "none";
   errorHouse: { error: Alert } = { error: new Alert(false, "") };
-  constructor(private router: Router, public generalservice: GeneralService) {}
+  constructor(
+    private router: Router,
+    public generalservice: GeneralService,
+    private cd: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
+    this.generalservice.controlGlobalNotifier$.subscribe(val => {
+      if (val == "on") {
+        this.globalOverlay = "flex";
+      } else {
+        this.globalOverlay = "none";
+      }
+    });
+
     this.observableAggregator.flowControl = this.generalservice.flowCtrl$.subscribe(
       val => {
         this.flowControlHolder = String(val);
         this.clickAButton();
-        // this.flowControlHolder = String(val);
-        // this.clickAButton();
       }
     );
 
     this.observableAggregator.intermediateResponse = this.generalservice.intermediateResponse$.subscribe(
       val => {
-        if (!val) {
+        if (!val || !val["message"]) {
+          // console.log(val);
           return;
         }
-        // console.log(val);
-        const closeBtn = document.querySelector(".close") as HTMLButtonElement;
-        closeBtn.click();
+
+        // closeBtn.click();
       }
     );
 
     this.generalservice.timer$.subscribe(val => {
       // console.log(val);
     });
+  }
+  ngAfterContentChecked() {
+    this.cd.detectChanges();
   }
 
   ngAfterViewInit() {

@@ -18,9 +18,27 @@ export class Message {
     "Time waits for no one! Try to answer as fast as possible",
     "You can do it! Answer the next question faster!"
   ];
-  static welcomeMessages = [
-    "Hey! My name is Dorcas. Thank you for trying to help out in these times."
+  static welcomeMessagesForGiver = [
+    "Hey! My name is Dorcas. Thank you for trying to help out in these times.",
+    "Is this your first time here giving for COVID Relief?"
   ];
+
+  static successfulRequestsMade = [
+    `We have procesed your request and sent it for
+    assistance.`,
+    `Our target is to nd you someone who can give
+    you some money to buy food items during this
+    lockdown.
+    `,
+    `God bless you and your family. God bless
+    Nigeria.`
+  ];
+
+  static failedRequests = [
+    `Sorry, We couldnt process your request at this time.`,
+    `You, can try again later`,
+    `We wish you all the best in this trying times`
+  ]
 
   static welcomeMsgForReceiver: string[] = [
     "Good Morning, My name is Dorcas. I represent a private initiative from concerned Nigerians who want to help",
@@ -264,10 +282,10 @@ export class Message {
     return this.timeOutMessages[number];
   }
 
-  static welcomeMessagesGenerator(): string {
-    let number = Math.floor(Math.random() * this.welcomeMessages.length);
-    return this.welcomeMessages[number];
-  }
+  // static welcomeMessagesGenerator(): string {
+  //   let number = Math.floor(Math.random() * this.welcomeMessages.length);
+  //   return this.welcomeMessages[number];
+  // }
 
   // static welcomeMessagesFor
 
@@ -366,6 +384,9 @@ export class Message {
           ""
         );
         break;
+      case "give":
+        this.giverDispatchEvents("customGiverEventFromMsgClass", "giver");
+        break;
       case " no i do not":
         this.dispatchevent("customEventFromMessageClass", "skip");
         break;
@@ -383,6 +404,14 @@ export class Message {
   ) {
     const event: Event = new CustomEvent(typeOfEvent, {
       detail: { stage, message, text },
+      bubbles: true
+    });
+    this.htmlElement.dispatchEvent(event);
+  }
+
+  giverDispatchEvents(typeOfEvent: string, message: string) {
+    const event: Event = new CustomEvent(typeOfEvent, {
+      detail: { typeOfEvent, message },
       bubbles: true
     });
     this.htmlElement.dispatchEvent(event);

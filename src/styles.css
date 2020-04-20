@@ -1,4 +1,6 @@
 @import url("https://fonts.googleapis.com/css?family=Inter:200,300,400,600&display=swap");
+/* @import url("../node_modules/angular-notifier/styles/types/type-warning.css");
+@import url("../node_modules/angular-notifier/styles/types/type-success.css"); */
 html {
   line-height: 1.15;
   -webkit-text-size-adjust: 100%;

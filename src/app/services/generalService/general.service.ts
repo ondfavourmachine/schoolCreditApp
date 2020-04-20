@@ -69,8 +69,8 @@ export class GeneralService {
   public flowCtrl$ = this.flowControllerSubject.asObservable();
 
   // 7. this observable announces the start of the chatbot
-  private urlSubject = new BehaviorSubject("chatbot");
-  public url$ = this.urlSubject.asObservable();
+  private displayCongratulatoryMsgOrRegretMsgSubject = new BehaviorSubject("");
+  public congratsOrRegrets$ = this.displayCongratulatoryMsgOrRegretMsgSubject.asObservable();
 
   // 7. i dont this observable is still in use and i will delete it soon
   private apiCallInstructionsSubject = new Subject();
@@ -81,10 +81,9 @@ export class GeneralService {
   private timerSubject = new BehaviorSubject("");
   public timer$ = this.timerSubject.asObservable();
 
- //   this observable is for regulating the flow of display in the kyc component
- private commKYCSubject = new BehaviorSubject({});
- public commKYC$ = this.commKYCSubject.asObservable();
-
+  //   this observable is for regulating the flow of display in the kyc component
+  private commKYCSubject = new BehaviorSubject({});
+  public commKYC$ = this.commKYCSubject.asObservable();
 
   //12. special observable for special scenarios
   public specialSubject = new BehaviorSubject("");
@@ -95,7 +94,16 @@ export class GeneralService {
   private nextReplySubject = new BehaviorSubject(this.objToReply);
   public nextReply$ = this.nextReplySubject.asObservable();
 
+  //  toggle app loader
+  public controlGlobalNotificationSubject = new Subject();
+  public controlGlobalNotifier$ = this.controlGlobalNotificationSubject.asObservable();
+
   public typeOfPerson: string;
+  public familyImage: File;
+  public familyImageToConfirm: any;
+  public switchOfModal: boolean = false;
+  public receiver: string = "receiver";
+  public location: any;
   constructor() {}
 
   nextReplyFromCovidRelief(obj: replyGiversOrReceivers) {
@@ -108,16 +116,18 @@ export class GeneralService {
     this.intermediateResponseSubject.next(anything);
   }
 
-  changeUrlValue(anything: string): void {
-    this.urlSubject.next(anything);
+  notifyThatCongratsOrRegrets(anything: string): void {
+    this.displayCongratulatoryMsgOrRegretMsgSubject.next(anything);
   }
 
   controlFormsToDisplay(anything) {
     this.formToDisplayControllerSubject.next(anything);
   }
 
-  communicationForKYC(anything: {nextStage?:string, previousStage?: string} | string) {
-     this.commKYCSubject.next(anything);
+  communicationForKYC(
+    anything: { nextStage?: string; previousStage?: string } | string
+  ) {
+    this.commKYCSubject.next(anything);
   }
 
   timerController(anything: any): void {

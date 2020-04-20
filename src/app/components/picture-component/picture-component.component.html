@@ -1,11 +1,45 @@
-<div class="container">
-  <p>
-    Take a picture with your family
-  </p>
+<div class="parent">
+  <div class="container" id="ImageInsertionPoint">
+    <div class="selectedImageContainer">
+      <img id="imageToDisplay" src="" alt="" />
+    </div>
 
-  <div>
-    <img src="../../../assets/images/upload.svg" alt="" />
+    <p>
+      Take a picture with your family
+    </p>
+
+    <div>
+      <img
+        style="cursor:pointer;"
+        (click)="trigger()"
+        src="../../../assets/images/upload.svg"
+        alt=""
+      />
+    </div>
+
+    <input
+      hidden
+      (change)="mimeController($event)"
+      id="inputFile"
+      type="file"
+      accept="image/png, image/jpeg"
+    />
+
+    <p>Click the icon to upload a picture</p>
+    <small *ngIf="notification">
+      Please upload an image lesser than 2.5mb</small
+    >
+
+    <div class="translateCoverPlate animationOut">
+      <div>
+        <img src="../../../assets/images/check-mark.svg" alt="" />
+      </div>
+
+      <p (click)="next()" class="next">Next</p>
+
+      <p (click)="changePicture()">
+        <a>change Picture</a>
+      </p>
+    </div>
   </div>
-
-  <p>Click the icon to upload a picture</p>
 </div>

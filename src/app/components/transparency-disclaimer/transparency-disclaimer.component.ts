@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { GeneralService } from "src/app/services/generalService/general.service";
-import { ReceiversResponse } from "src/app/models/GiverResponse";
+import { ReceiversResponse, GiverResponse, replyGiversOrReceivers } from "src/app/models/GiverResponse";
 
 @Component({
   selector: "app-transparency-disclaimer",
@@ -25,6 +25,9 @@ export class TransparencyDisclaimerComponent implements OnInit {
           extraInfo: undefined
         }
       );
+      //  const message: replyGiversOrReceivers = {message:'testing', button'right',}
+      // const response1: GiverResponse = new GiverResponse()
+      this.generalservice.controlGlobalNotificationSubject.next("on");
       this.generalservice.responseDisplayNotifier(response);
       this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
 

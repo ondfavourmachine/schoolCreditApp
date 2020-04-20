@@ -13,11 +13,21 @@ div.container {
   overflow: hidden;
 }
 
-/* .container img {
-    height: 100px;
-    text-align: center;
-  } */
-
+.smallNotification {
+  position: absolute !important;
+  display: flex;
+  justify-content: center;
+  margin: 0 auto !important;
+  width: 80% !important;
+  height: 30px !important;
+  border: 1px solid rgba(255, 99, 71, 0.3) !important;
+  top: 0 !important;
+  border-radius: 3px !important;
+  background: rgba(255, 99, 71, 0.5) !important;
+  color: #fff !important;
+  text-align: center;
+  align-items: center;
+}
 .container form {
   margin-top: 3rem;
   width: 100%;
@@ -46,6 +56,8 @@ button[type="submit"]:hover {
   font-weight: 700;
   text-align: center;
   line-height: 2rem;
+  display: flex;
+  flex-direction: column;
 }
 
 div.accountDetailsSearchResult {
@@ -60,7 +72,7 @@ div.accountDetailsSearchResult {
   top: 0;
   left: 0;
   padding: 1.2rem 1rem;
-  display: flex;
+  display: none;
   flex-direction: column;
   justify-content: flex-start;
 }
@@ -71,7 +83,7 @@ div.accountDetailsSearchResult p:last-child {
   background: #fff;
   cursor: pointer;
   border-radius: 5px;
-  margin-top: 7rem;
+  margin-top: 3rem !important;
   padding: 1rem 0;
   border: 1px solid #54d38a;
 }
@@ -81,7 +93,7 @@ div.accountDetailsSearchResult p:last-child > a {
 }
 
 div.confirmBankDetails {
-  display: none;
+  display: "block";
 }
 
 div.confirmSubmitRequest {
@@ -135,4 +147,13 @@ div.requestSuccess p {
   font-weight: bold;
   /* display: flex !important; */
   /* justify-content: center !important; */
+}
+
+p.submitRequest:hover {
+  background: #54d38a !important;
+  color: #fff !important;
+}
+
+p.submitRequest a:hover {
+  color: #fff !important;
 }

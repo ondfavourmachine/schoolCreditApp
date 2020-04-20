@@ -5,6 +5,7 @@ import { FooterComponent } from "src/app/components/footer/footer.component";
 import { ChatBotComponent } from "../../components/chat-bot/chat-bot.component";
 import { ChatInputComponent } from "../../components/chat-input/chat-input.component";
 import { ChatMessagesDisplayComponent } from "../../components/chat-messages-display/chat-messages-display.component";
+import { LoaderComponent } from "../../components/loader/loader.component";
 // import { NzDropDownModule } from "ng-zorro-antd/dropdown";
 
 @NgModule({
@@ -13,7 +14,8 @@ import { ChatMessagesDisplayComponent } from "../../components/chat-messages-dis
     FooterComponent,
     ChatBotComponent,
     ChatInputComponent,
-    ChatMessagesDisplayComponent
+    ChatMessagesDisplayComponent,
+    LoaderComponent
   ],
   imports: [
     CommonModule
@@ -24,7 +26,8 @@ import { ChatMessagesDisplayComponent } from "../../components/chat-messages-dis
     FooterComponent,
     ChatBotComponent,
     ChatInputComponent,
-    ChatMessagesDisplayComponent
+    ChatMessagesDisplayComponent,
+    LoaderComponent
   ]
 })
 export class SharedModule {}

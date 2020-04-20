@@ -29,11 +29,15 @@ import { SupportPageComponent } from "./components/forms/support-page/support-pa
 import { FoundBeneficiaryComponent } from "./components/found-beneficiary/found-beneficiary.component";
 import { EligibilityChecksComponent } from "./components/eligibility-checks/eligibility-checks.component";
 import { BankDetailsComponent } from "./components/bank-details/bank-details.component";
-import { FoodItemsComponent } from './components/food-items/food-items.component';
-import { TransparencyDisclaimerComponent } from './components/transparency-disclaimer/transparency-disclaimer.component';
-import { KnowYourReceiverComponent } from './components/know-your-receiver/know-your-receiver.component';
-import { PictureComponentComponent } from './components/picture-component/picture-component.component';
-import { ReceiverBankAccountComponent } from './components/receiver-bank-account/receiver-bank-account.component';
+import { FoodItemsComponent } from "./components/food-items/food-items.component";
+import { TransparencyDisclaimerComponent } from "./components/transparency-disclaimer/transparency-disclaimer.component";
+import { KnowYourReceiverComponent } from "./components/know-your-receiver/know-your-receiver.component";
+import { PictureComponentComponent } from "./components/picture-component/picture-component.component";
+import { ReceiverBankAccountComponent } from "./components/receiver-bank-account/receiver-bank-account.component";
+import { SharedModule } from "./modules/shared/shared.module";
+import { ConfirmDetailsUploadedComponent } from './components/confirm-details-uploaded/confirm-details-uploaded.component';
+// import { GiverComponentComponent } from './components/giver-component/giver-component.component';
+
 // import { BBRWFormsComponent } from "./components/forms/bbrw-forms/bbrw-forms.component";
 
 registerLocaleData(en);
@@ -44,6 +48,7 @@ registerLocaleData(en);
     TermsAndConditionComponent,
     GeneralFormsComponent,
     IdentifyOrAnonymousComponent,
+    // LoaderComponent,
     // BvnAndDOBFormComponent,
     // LicenseValidationFormComponent,
     // UploadPhotoAndStatementComponent,
@@ -59,14 +64,17 @@ registerLocaleData(en);
     TransparencyDisclaimerComponent,
     KnowYourReceiverComponent,
     PictureComponentComponent,
-    ReceiverBankAccountComponent
+    ReceiverBankAccountComponent,
+    ConfirmDetailsUploadedComponent
+    // GiverComponentComponent
+
     // BBRWFormsComponent
   ],
   imports: [
     BrowserModule,
     ReactiveFormsModule,
     AppRoutingModule,
-    // NgZorroAntdModule,
+    SharedModule,
     FormsModule,
     HttpClientModule,
     BrowserAnimationsModule
