@@ -1,11 +1,18 @@
+.app-wrap {
+  position: relative;
+  width: 95vw;
+  height: 95vh;
+  max-width: 1000px;
+  margin: 20px auto;
+  border-radius: 5px;
+  overflow: hidden;
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.01);
+}
+
 div.searchingParent {
-  background: linear-gradient(
-    to bottom,
-    rgba(118, 118, 118, 0.9),
-    rgba(212, 212, 213, 0.3)
-  );
+  background: linear-gradient(to bottom, rgba(118, 118, 118, 0.9), rgba(212, 212, 213, 0.3));
   display: none;
-  position: absolute;
+  /* position: absolute; */
   z-index: 10;
   top: 0;
   height: 100%;

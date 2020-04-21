@@ -26,14 +26,10 @@
 <!--  (keyup)="submit($event)" -->
 <footer class="footer">
   <form class="row form">
-    <input
-      #inputFromUser
-      class="input"
-      type="text"
-      placeholder="Enter your message here"
-    />
+    <input #inputFromUser class="input" type="text" placeholder="Enter your message here" />
     <button (click)="submit($event)" class="btn btnSend" type="submit">
-      <img src="../../../assets/chatbotImages/send.svg" alt="" />
+      <!-- <img src="../../../assets/chatbotImages/send.svg" alt="" /> -->
+      <i class="fa fa-paper-plane"></i>
     </button>
   </form>
 </footer>
