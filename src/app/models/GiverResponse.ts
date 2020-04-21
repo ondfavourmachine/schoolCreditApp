@@ -1,17 +1,8 @@
 export class GiverResponse {
-  message?: string;
-  text?: string;
-  nextStage?: string;
   reply?: replyGiversOrReceivers;
   constructor(
-    message?: string,
-    text?: string,
-    nextStage?: string,
     reply?: replyGiversOrReceivers
   ) {
-    (this.message = message),
-      (this.text = text),
-      (this.nextStage = nextStage),
       (this.reply = reply);
   }
 }

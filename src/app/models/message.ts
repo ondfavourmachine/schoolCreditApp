@@ -1,3 +1,5 @@
+import { GiverResponse, replyGiversOrReceivers } from "./GiverResponse";
+
 export interface checkDOBResponse {
   data: { name: string; date_of_birth: string };
   message: string;
@@ -38,7 +40,7 @@ export class Message {
     `Sorry, We couldnt process your request at this time.`,
     `You, can try again later`,
     `We wish you all the best in this trying times`
-  ]
+  ];
 
   static welcomeMsgForReceiver: string[] = [
     "Good Morning, My name is Dorcas. I represent a private initiative from concerned Nigerians who want to help",
@@ -361,12 +363,63 @@ export class Message {
         );
         break;
       case "identify":
-        this.dispatchevent(
-          "customEventFromMessageClass",
-          "IdentifyOrAnonymousForms",
-          ""
+        this.giverDispatchEvents(
+          "customGiverEventFromMsgClass",
+          "giver",
+          "IdentifyOrAnonymousForms"
+        );
+        sessionStorage.setItem("anonymous", "2");
+        break;
+      case "stayanonymous":
+        this.giverDispatchEvents(
+          "customGiverEventFromMsgClass",
+          "giver",
+          "IdentifyOrAnonymousForms"
+        );
+        sessionStorage.setItem("anonymous", "1");
+        break;
+      // responses by the giver starts here
+      case "firsttimegiver":
+        this.giverResponsesEvent(
+          "customGiverResponse",
+          new replyGiversOrReceivers(
+            "Would you like to stay anonymous or be an identified giver?",
+            "left",
+            "I want to identify, Incognito",
+            "identify,stayanonymous"
+          ),
+          new GiverResponse(
+            new replyGiversOrReceivers("Yes, i am a first time giver", "right")
+          )
         );
         break;
+      case "notfirsttimegiver": //notFirstTimeGiver
+        this.giverResponsesEvent(
+          "customGiverResponse",
+          new replyGiversOrReceivers(
+            "Would you like to stay anonymous or be an identified giver?",
+            "left",
+            "I want to identify,Incognito",
+            "identify,stayanonymous"
+          ),
+          new GiverResponse(
+            new replyGiversOrReceivers(
+              "No, i am not a first time giver",
+              "right"
+            )
+          )
+        );
+        break;
+      case "givemoney":
+        this.giverDispatchEvents(
+          "customGiverEventFromMsgClass",
+          "giver",
+          "supportPageForms"
+        );
+        break;
+      case "givefood":
+        break;
+      //  ends here
       case "money":
         this.dispatchevent("customEventFromMessageClass", "supportPage", "");
         break;
@@ -385,7 +438,7 @@ export class Message {
         );
         break;
       case "give":
-        this.giverDispatchEvents("customGiverEventFromMsgClass", "giver");
+        this.giverDispatchEvents("customGiverEventFromMsgClass", "giver", "");
         break;
       case " no i do not":
         this.dispatchevent("customEventFromMessageClass", "skip");
@@ -409,9 +462,13 @@ export class Message {
     this.htmlElement.dispatchEvent(event);
   }
 
-  giverDispatchEvents(typeOfEvent: string, message: string) {
+  giverDispatchEvents(
+    typeOfEvent: string,
+    message: string,
+    componentToLoad: string
+  ) {
     const event: Event = new CustomEvent(typeOfEvent, {
-      detail: { typeOfEvent, message },
+      detail: { typeOfEvent, message, componentToLoad },
       bubbles: true
     });
     this.htmlElement.dispatchEvent(event);
@@ -420,6 +477,18 @@ export class Message {
   dispatchevent(typeOfEvent: string, message?: string, text?: string) {
     const event: Event = new CustomEvent(typeOfEvent, {
       detail: { message, text },
+      bubbles: true
+    });
+    this.htmlElement.dispatchEvent(event);
+  }
+
+  giverResponsesEvent(
+    typeOfEvent: string,
+    message: replyGiversOrReceivers,
+    reply: GiverResponse
+  ) {
+    const event: Event = new CustomEvent(typeOfEvent, {
+      detail: { message, typeOfEvent, reply },
       bubbles: true
     });
     this.htmlElement.dispatchEvent(event);

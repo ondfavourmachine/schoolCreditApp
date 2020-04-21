@@ -115,6 +115,9 @@ export class ConfirmDetailsUploadedComponent implements OnInit, AfterViewInit {
           }
           if (err.status == 400) {
             this.generalservice.controlGlobalNotificationSubject.next("off");
+            setTimeout(() => {
+              this.closeTheModal("cancel");
+            }, 2500);
             this.submit = "failed";
             sessionStorage.clear();
           }

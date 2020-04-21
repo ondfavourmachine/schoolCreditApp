@@ -1,4 +1,4 @@
-<div class="supportPage">
+<!-- <div class="supportPage">
   <div><img src="../../assets/images/handshaking2.svg" alt="" /></div>
   <p>
     How much do you want to support with?
@@ -7,11 +7,11 @@
   <form>
     <div class="ui form">
       <div class="field">
-        <!-- <label>Name</label> -->
+       
         <input type="number" placeholder="First Name" />
       </div>
     </div>
-    <!--  9A99DE -->
+   
     <button
       (click)="startSearching()"
       type="submit"
@@ -20,4 +20,60 @@
       Next <i hidden class="fas fa-circle-notch fa-spin"></i>
     </button>
   </form>
+</div> -->
+
+<div class="flex flex-column justify-center align-center h-100">
+  <div class="modal-icon">
+    <img src="../../../../assets/images/svgs/profit.svg" alt="ICON" />
+  </div>
+  <form
+    [formGroup]="supportPageForm"
+    (ngSubmit)="submit()"
+    class="ui form mb-4"
+  >
+    <div class="field">
+      <label>How much do you want to support with?</label>
+      <input
+        formControlName="amount"
+        type="tel"
+        pattern="[0-9]*"
+        name="amount"
+        placeholder="First Name"
+      />
+    </div>
+    <button class="fluid ui primary button mt-4">
+      Next
+    </button>
+  </form>
 </div>
+
+<div *ngIf="stage == '1'" class="inner-modal">
+  <div class="inner-modal-content flex flex-column align-center text-center">
+    <div class="para-title">
+      We will search for a family in need who can be helped
+    </div>
+    <button (click)="getFamily()" class="ui button primary basic mt-4">
+      Next
+    </button>
+  </div>
+</div>
+
+<div *ngIf="stage == '2'" class="inner-modal">
+  <div class="inner-modal-content flex flex-column align-center text-center">
+    <div class="three-dots-loader">
+      <span class="circle"></span>
+      <span class="circle"></span>
+      <span class="circle"></span>
+    </div>
+    <p class="para-title">Searching..</p>
+    <button class="ui button basic mini negative mt-2">Cancel</button>
+  </div>
+</div>
+
+<!-- <div class="inner-modal">
+    <div class="inner-modal-content flex flex-column align-center text-center">
+        <div class="para">We will find 200 families to show their account details</div>
+        <button class="ui button primary basic mt-4">Transfer funds manually</button>
+        <a class="mt-3 link" href="#">Select a bulk method</a>
+    </div>
+</div> -->

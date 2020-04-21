@@ -1,43 +1,90 @@
 <div class="identifyOrAnonymous">
   <div><img src="../../assets/images/helpingHands.svg" alt="" /></div>
-  <p>
-    You will be required to provide a few information about yourself. Please
-    ensure you have good internet connection.
+  <p *ngIf="stayAnonymous == '2'; else identify">
+    We will need some information about you. Be sure you have good internet.
   </p>
+
+  <ng-template #identify>
+    <p>
+      Despite your request to remain incognito, we still need your details for
+      record purposes. We will not share your details with anyone.
+    </p>
+  </ng-template>
 
   <form [formGroup]="iAForm" (ngSubmit)="submit(iAForm)">
     <div class="ui form">
       <div class="field">
         <label>Name</label>
         <input formControlName="name" type="text" placeholder="First Name" />
+        <div *ngIf="name.touched && name.invalid" class="ng-invalid ng-touched">
+          <small style="color: #f10b0b9d;" *ngIf="nameIsRequired()">
+            Your name is required!</small
+          >
+        </div>
       </div>
       <div class="field">
         <label>Age</label>
-        <input formControlName="age" type="text" placeholder="Middle Name" />
+        <input
+          formControlName="age"
+          name="tel2"
+          type="tel"
+          pattern="[0-9]{2}"
+          placeholder="Enter your Age"
+        />
+        <small> </small>
+        <div *ngIf="age.touched && age.invalid" class="ng-invalid ng-touched">
+          <small style="color: #f10b0b9d;" *ngIf="ageIsRequired()">
+            Your Age is required!</small
+          >
+        </div>
       </div>
+
+      <div class="field">
+        <label>Phone Number</label>
+        <input
+          formControlName="phone"
+          name="tel2"
+          type="tel"
+          pattern="[0-9]{11}"
+          placeholder="Enter your Age"
+        />
+        <small> </small>
+        <div
+          *ngIf="phone.touched && phone.invalid"
+          class="ng-invalid ng-touched"
+        >
+          <small style="color: #f10b0b9d;" *ngIf="phoneIsRequired()">
+            Your phone number is required!</small
+          >
+        </div>
+      </div>
+
       <div class="field">
         <select formControlName="gender">
           <option value="">Gender</option>
           <option value="1">Male</option>
-          <option value="0">Female</option>
+          <option value="2">Female</option>
         </select>
       </div>
 
       <div class="field">
         <div class="ui checkbox">
-          <input
-            formControlName="tAndC"
-            type="checkbox"
-            tabindex="0"
-            class="hidden"
-          />
+          <input formControlName="tAndC" type="checkbox" tabindex="0" />
           <label>I agree to the Terms and Conditions</label>
         </div>
       </div>
     </div>
 
-    <button type="submit" class="fluid ui primary button">
+    <button
+      [disabled]="!iAForm.valid"
+      type="submit"
+      class="fluid ui primary button"
+    >
       Start <i hidden class="fas fa-circle-notch fa-spin"></i>
     </button>
   </form>
+
+  <small class="smallNotification" *ngIf="notification?.show">
+      {{ notification?.message }}
+    </small>
 </div>

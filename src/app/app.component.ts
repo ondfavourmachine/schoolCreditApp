@@ -23,7 +23,7 @@ interface observableAggregator {
 })
 export class AppComponent
   implements OnInit, AfterViewInit, AfterContentChecked, OnDestroy {
-  public flowControlHolder: string = "termsAndCondition";
+  public flowControlHolder: string;
   public showModal: string = "none";
   public modalHolder: HTMLDivElement;
   public toKYCComponent: any;
@@ -35,7 +35,15 @@ export class AppComponent
     private router: Router,
     public generalservice: GeneralService,
     private cd: ChangeDetectorRef
-  ) {}
+  ) {
+    router.events.subscribe(val => {
+      if (val instanceof NavigationStart) {
+        const { url } = val;
+        generalservice.receiver = url.substring(1, url.length);
+        // this.welcomeMsgCtrl(url);
+      }
+    });
+  }
 
   ngOnInit() {
     this.generalservice.controlGlobalNotifier$.subscribe(val => {
@@ -86,8 +94,8 @@ export class AppComponent
 
   // this function will choose to grey out buttons added dynamically or not to
   preventHidingOfbuttons(explicitInstruction?: string) {
-    // debugger;
-    // debugger;
+    // sessionStorage.removeItem("anonymous");
+    this.flowControlHolder = "";
     try {
       // try to get the timer if it is in the dom
       const html = document.querySelector(".timer").querySelector("span");

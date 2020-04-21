@@ -1,6 +1,10 @@
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { GeneralService } from "../../../services/generalService/general.service";
+import { HttpClient, HttpErrorResponse } from "@angular/common/http";
+import { timeout } from "rxjs/operators";
+import { TimeoutError } from "rxjs";
+import { replyGiversOrReceivers } from "src/app/models/GiverResponse";
 
 @Component({
   selector: "app-identify-or-anonymous",
@@ -9,31 +13,122 @@ import { GeneralService } from "../../../services/generalService/general.service
 })
 export class IdentifyOrAnonymousComponent implements OnInit {
   public iAForm: FormGroup;
+  stayAnonymous: string;
+  notification = { show: false, message: undefined };
   constructor(
     private fb: FormBuilder,
-    private generalservice: GeneralService
+    private generalservice: GeneralService,
+    private http: HttpClient
   ) {}
 
   ngOnInit(): void {
     this.iAForm = this.fb.group({
       name: ["", Validators.required],
       age: ["", Validators.required],
+      phone: ["", Validators.required],
       gender: [""],
       tAndC: ["", Validators.required]
     });
+    let stayAnonymous = sessionStorage.getItem("anonymous");
+    stayAnonymous == "1"
+      ? (this.stayAnonymous = "1")
+      : (this.stayAnonymous = "2");
+    // console.log(typeof this.stayAnonymous);
   }
 
   submit(form: FormGroup) {
-    this.generalservice.responseDisplayNotifier({
-      message: "",
-      text: "I have provided my details",
-      nextStage: "moneyOrItems",
-      reply: {
-        message: "What Would you like to give. Money or Food items",
-        direction: "left",
-        button: "money,items",
-        extraInfo: "money,items"
-      }
-    });
+    this.generalservice.controlGlobalNotificationSubject.next("on");
+    let formToSubmit = { ...form.value };
+    delete formToSubmit["tAndC"];
+    formToSubmit["anonymous"] = sessionStorage.getItem("anonymous");
+    // console.log(formToSubmit);
+    this.http
+      .post(`${this.generalservice.apiUrl}giver`, formToSubmit)
+      .pipe(timeout(50000))
+      .subscribe(
+        val => {
+          let giverResponse: replyGiversOrReceivers;
+          if (this.stayAnonymous == "1") {
+            giverResponse = new replyGiversOrReceivers(
+              "Please keep me anonymous",
+              "right"
+            );
+          } else {
+            giverResponse = new replyGiversOrReceivers(
+              "I have provided my details",
+              "right"
+            );
+          }
+
+          this.generalservice.ctrlDisableTheButtonsOfPreviousListElement(
+            "allow"
+          );
+          (document.querySelector(".close") as HTMLSpanElement).click();
+          this.generalservice.responseDisplayNotifier(giverResponse);
+          this.generalservice.controlGlobalNotificationSubject.next("off");
+        },
+        err => {
+          if (err instanceof TimeoutError) {
+            this.generalservice.controlGlobalNotificationSubject.next("off");
+            this.notification.show = true;
+            this.notification.message =
+              "it seems you have a poor internet connection. Please check it and try again";
+            this.removeNotification();
+          }
+          if (err instanceof HttpErrorResponse && err.status == 500) {
+            this.generalservice.controlGlobalNotificationSubject.next("off");
+            this.notification.show = true;
+            this.notification.message =
+              "Oops, something went wrong. Please try again later.";
+            this.removeNotification();
+          } else {
+            this.generalservice.controlGlobalNotificationSubject.next("off");
+            this.notification.show = true;
+            this.notification.message =
+              "You seem to have omitted some values. Please check it and try again";
+            this.removeNotification();
+          }
+        }
+      );
+    // this.generalservice.responseDisplayNotifier({
+    //   reply: {
+    //     message: "What Would you like to give. Money or Food items",
+    //     direction: "left",
+    //     button: "money,items",
+    //     extraInfo: "money,items"
+    //   }
+    // });
+  }
+
+  get name() {
+    return this.iAForm.get("name");
+  }
+
+  get age() {
+    return this.iAForm.get("age");
+  }
+  get gender() {
+    return this.iAForm.get("gender");
+  }
+  get phone() {
+    return this.iAForm.get("phone");
+  }
+
+  public nameIsRequired() {
+    return this.name.hasError("required") && this.name.touched;
+  }
+
+  public phoneIsRequired() {
+    return this.phone.hasError("required") && this.phone.touched;
+  }
+  public ageIsRequired() {
+    return this.age.hasError("required") && this.age.touched;
+  }
+
+  removeNotification() {
+    setTimeout(() => {
+      this.notification.show = false;
+      this.notification.message = undefined;
+    }, 2000);
   }
 }

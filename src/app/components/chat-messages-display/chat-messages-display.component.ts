@@ -67,14 +67,7 @@ export class ChatMessagesDisplayComponent
     private chatservice: ChatService,
     private titleCasePipe: TitleCasePipe,
     private route: Router
-  ) {
-    route.events.subscribe(val => {
-      if (val instanceof NavigationEnd) {
-        const { url } = val;
-        this.welcomeMsgCtrl(url);
-      }
-    });
-  }
+  ) {}
 
   ngOnInit() {
     this.generalservice.congratsOrRegrets$.subscribe(val => {
@@ -106,7 +99,17 @@ export class ChatMessagesDisplayComponent
             // this.responseFromGiver({ message, text }, reply);
           }
           return;
-        } else {
+        }
+        if (val instanceof replyGiversOrReceivers) {
+          this.insertGiversResponseIntoDom(
+            val,
+            new replyGiversOrReceivers(
+              "What Would you like to give. Money or items",
+              "left",
+              "Money,Food Stuff",
+              "giveMoney,giveFood"
+            )
+          );
         }
       }
     );
@@ -149,7 +152,7 @@ export class ChatMessagesDisplayComponent
   ngAfterViewInit(message?: string, direction?: string) {
     const ul = this.messagePlaceHolder.nativeElement as HTMLUListElement;
     this.generateWelcomeMsgForReceiverOrGiver(ul);
-    // this.requestRef(this.referenceNumberInMsg);
+
     ul.addEventListener("customReceiverEventFromMsgClass", (e: CustomEvent) => {
       const { stage } = e.detail;
       if (String(stage).includes("transparency-disclaimer")) {
@@ -157,14 +160,27 @@ export class ChatMessagesDisplayComponent
         // this.disableTheButtonsOfPreviousListElement();
       }
     });
-
+    //   IdentifyOrAnonymousForms
     ul.addEventListener("customGiverEventFromMsgClass", (e: CustomEvent) => {
-      const { typeOfEvent, message } = e.detail;
+      const { typeOfEvent, message, componentToLoad } = e.detail;
       if (String(message).includes("giver")) {
         sessionStorage.setItem("route", String(message));
         this.generalservice.receiver = "giver";
         this.route.navigate(["giver"]);
       }
+      if (String(componentToLoad).toLowerCase() == "identifyoranonymousforms") {
+        this.generalservice.handleFlowController(String(componentToLoad));
+      }
+      if (String(componentToLoad).toLowerCase() == "supportpageforms") {
+        this.generalservice.handleFlowController(String(componentToLoad));
+      }
+    });
+
+    ul.addEventListener("customGiverResponse", (e: CustomEvent) => {
+      const { reply, message } = e.detail;
+      // console.log(reply);
+      // console.log(message.trim());
+      this.insertGiversResponseIntoDom(reply, message);
     });
 
     ul.addEventListener("customEventFromMessageClass", (e: CustomEvent) => {
@@ -175,7 +191,7 @@ export class ChatMessagesDisplayComponent
         this.generalservice.handleFlowController("termsAndCondition");
         // this.disableTheButtonsOfPreviousListElement();
       } else if (typeof e.detail == "object") {
-        this.responseFromGiver(e.detail);
+        // this.responseFromGiver(e.detail);
       } else if (String(e.detail).includes("bbrw")) {
         const arr = String(e.detail).split(",");
         this.changeModalTitle(String(e.detail));
@@ -249,177 +265,6 @@ export class ChatMessagesDisplayComponent
           direction: "left"
         });
         break;
-      case "bvn_submitted":
-        if (sessionStorage.getItem("userhasProvidedThisStagePreviously")) {
-          let bvnName = sessionStorage.getItem("name");
-          this.displaySubsequentMessages({
-            message: `Hi ${this.titleCasePipe.transform(bvnName)},
-            We would like to know more about you. Would you like to provide us
-            with your bio, Next of kin, work and address information?`,
-            direction: `left`,
-            button: `Ok begin`
-          });
-          sessionStorage.removeItem("userhasProvidedThisStagePreviously");
-          return;
-        }
-        const bvnName = sessionStorage.getItem("name");
-        this.displaySubsequentMessages({
-          message: `I have provided my bvn and date of birth`,
-          direction: `right`
-        });
-        setTimeout(() => {
-          this.displaySubsequentMessages({
-            message: `Hi ${this.titleCasePipe.transform(bvnName)},
-              We would like to know more about you. Please provide us
-              with your bio, Next of kin, work and address information`,
-            direction: `left`,
-            button: `Ok begin`
-          });
-        }, 500);
-        break;
-      case "bio_submitted":
-        if (sessionStorage.getItem("userhasProvidedThisStagePreviously")) {
-          this.displaySubsequentMessages({
-            message: `Great! Your BioData has been updated. Please provide your address info`,
-            direction: `left`,
-            button: `Enter Address Info`
-          });
-          sessionStorage.removeItem("userhasProvidedThisStagePreviously");
-          return;
-        }
-        this.displaySubsequentMessages({
-          message: `I have provided my biodata`,
-          direction: "right"
-        });
-        setTimeout(() => {
-          this.displaySubsequentMessages({
-            message: `Great! Your BioData has been updated. Please provide your address info`,
-            direction: `left`,
-            button: `Enter Address Info`
-          });
-        }, 500);
-        break;
-      case "address_submitted":
-        if (sessionStorage.getItem("userhasProvidedThisStagePreviously")) {
-          this.displaySubsequentMessages({
-            message: `Awesome! Your address has been updated. Please provide your work and income info`,
-            direction: `left`,
-            button: `Work Information`
-          });
-          sessionStorage.removeItem("userhasProvidedThisStagePreviously");
-        } else {
-          this.displaySubsequentMessages({
-            message: `I have provided my address.`,
-            direction: `right`
-          });
-
-          setTimeout(() => {
-            this.displaySubsequentMessages({
-              message: `Awesome! Your address has been updated. Please provide your work and income info`,
-              direction: `left`,
-              button: `Work Information`
-            });
-          }, 500);
-        }
-        break;
-      case "work_submitted":
-        if (sessionStorage.getItem("userhasProvidedThisStagePreviously")) {
-          this.displaySubsequentMessages({
-            message: `Fantastic! Your work information has been updated. Please upload your photo and statement`,
-            direction: `left`,
-            button: `Upload photo and statement`
-          });
-          sessionStorage.removeItem("userhasProvidedThisStagePreviously");
-          return;
-        }
-        this.displaySubsequentMessages({
-          message: `I have submmitted my work details.`,
-          direction: `right`
-        });
-        setTimeout(() => {
-          this.displaySubsequentMessages({
-            message: `Fantastic! Your work information has been updated. Please upload your photo and statement`,
-            direction: `left`,
-            button: `Upload photo and statement`
-          });
-        }, 500);
-        break;
-      case "selfie_submitted":
-      case "statement_submitted":
-        if (sessionStorage.getItem("userhasProvidedThisStagePreviously")) {
-          this.displaySubsequentMessages({
-            message: `Splendid! Your profile photo and statement have been uploaded. Do you have a drivers license?`,
-            direction: `left`,
-            button: `Yes I have, No I do not`
-          });
-          sessionStorage.removeItem("userhasProvidedThisStagePreviously");
-          this.getQuestions();
-          return;
-        }
-        this.displaySubsequentMessages({
-          message: `I have submitted my profile photo and bankstatement?`,
-          direction: `right`
-        });
-        this.getQuestions();
-        setTimeout(() => {
-          this.displaySubsequentMessages({
-            message: `Splendid! Your profile photo and statement have been uploaded. Do you have a drivers license?`,
-            direction: `left`,
-            button: `Yes I have, No I do not`
-          });
-        }, 500);
-        break;
-      case "license_submitted":
-        if (sessionStorage.getItem("userhasProvidedThisStagePreviously")) {
-          this.displaySubsequentMessages({
-            message: `Superb! You have previously submitted all necessary information we asked for. Would you 
-          like to play a game now?`,
-            direction: `left`,
-            button: "Play, Pause"
-          });
-          sessionStorage.removeItem("userhasProvidedThisStagePreviously");
-          return;
-        }
-        this.getQuestions();
-        this.displaySubsequentMessages({
-          message: `I have given my drivers license`,
-          direction: `right`
-        });
-        setTimeout(() => {
-          this.displaySubsequentMessages({
-            message: `Superb! Let us now play a 120 secs game`,
-            direction: `left`,
-            button: "Play, Pause"
-          });
-        }, 500);
-        break;
-
-      case "questionsHasBeenAnswered":
-        this.displaySubsequentMessages({
-          message: `I have played the game`,
-          direction: `right`
-        });
-        setTimeout(() => {
-          this.displaySubsequentMessages({
-            message: `Your credibilty analysis score has been sent to the requester`,
-            direction: `left`
-          });
-        }, 500);
-        setTimeout(() => {
-          this.displaySubsequentMessages({
-            message: `Please download the app at <a>http://crediblemobileapp.creditclan.com/app-debug.apk</a> to increase your score.`,
-            // Pls download the app to likely increse your score.
-            direction: `left`
-          });
-        }, 1500);
-        break;
-      case "test_already_taken":
-        this.displaySubsequentMessages({
-          message: `You have previously taken the test. Contact your referrer if you wish to know your previous credibilty
-          score or you wish to take the test again, Thank you.`,
-          direction: `left`
-        });
-        break;
     }
   }
 
@@ -433,6 +278,37 @@ export class ChatMessagesDisplayComponent
     });
   }
 
+  // A funtion to control  Givers Response to chatbot questions and also respond accordingly;
+  // so sometimes there would be a reply.reply and at other times there would not
+  // when there is not. The try will run run successfully. Else the catch will run.
+  insertGiversResponseIntoDom(
+    reply: replyGiversOrReceivers,
+    chatbotReply?: replyGiversOrReceivers
+  ) {
+    try {
+      const { message, direction } = reply["reply"];
+      // console.log(chatbotReply);
+      this.displaySubsequentMessages({
+        message: message,
+        direction: direction
+      });
+      this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
+      setTimeout(() => {
+        this.displaySubsequentMessages(chatbotReply);
+      }, 1000);
+    } catch (e) {
+      const { message, direction } = reply;
+      this.displaySubsequentMessages({
+        message: message,
+        direction: direction
+      });
+      this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
+      setTimeout(() => {
+        this.displaySubsequentMessages(chatbotReply);
+      }, 1000);
+    }
+  }
+
   responseFromReceiver(obj: ReceiversResponse) {
     if (typeof obj.messageForUserToDisplayInResponseToPreviousStage) {
       this.displaySubsequentMessages({
@@ -443,27 +319,27 @@ export class ChatMessagesDisplayComponent
     }
   }
 
-  responseFromGiver(obj: GiverResponse, reply?: object) {
-    if (obj.message.length < 1) {
-      this.displaySubsequentMessages({
-        message: obj.text,
-        direction: "right"
-      });
-      if (!reply) {
-        this.generalservice.nextReplyFromCovidRelief({
-          message:
-            "Would you like to stay anonymous or be an identified giver?",
-          direction: "left",
-          button: "Identify,Anonymous",
-          extraInfo: "identify,anonymous"
-        });
-      }
-    } else {
-      this.changeModalTitle(String(obj.message));
-      this.generalservice.controlFormsToDisplay(obj.message);
-      this.generalservice.handleFlowController("formsContainer");
-    }
-  }
+  // responseFromGiver(obj: GiverResponse, reply?: object) {
+  //   if (obj.message.length < 1) {
+  //     this.displaySubsequentMessages({
+  //       message: obj.text,
+  //       direction: "right"
+  //     });
+  //     if (!reply) {
+  //       this.generalservice.nextReplyFromCovidRelief({
+  //         message:
+  //           "Would you like to stay anonymous or be an identified giver?",
+  //         direction: "left",
+  //         button: "Identify,Anonymous",
+  //         extraInfo: "identify,anonymous"
+  //       });
+  //     }
+  //   } else {
+  //     this.changeModalTitle(String(obj.message));
+  //     this.generalservice.controlFormsToDisplay(obj.message);
+  //     this.generalservice.handleFlowController("formsContainer");
+  //   }
+  // }
   displaySubsequentMessages(obj: {
     message: string;
     direction: string;
@@ -672,8 +548,7 @@ export class ChatMessagesDisplayComponent
           messageToDisplay.makeAndInsertMessage(index);
         });
       } else {
-        // const giver =  sessionStorage.getItem('route')
-        // if(giver == 'giver'){
+        // "identify,stayanonymous"
         const msgs = Message.welcomeMessagesForGiver;
         let messageToDisplay: Message;
         this.count = 0;
@@ -685,7 +560,7 @@ export class ChatMessagesDisplayComponent
               `left`,
               ul,
               "Yes,No",
-              "picture,give"
+              "firstTimeGiver,notFirstTimeGiver"
             );
             messageToDisplay.makeAndInsertMessage(this.count);
             return;
@@ -719,11 +594,10 @@ export class ChatMessagesDisplayComponent
     // let remove: Subscription
     // this.observableToTrash.displayResponse.unsubscribe
     if (
-      this.observableToTrash.apiCall ||
       this.observableToTrash.preventDisabling ||
       this.observableToTrash.destroyNextReply
     ) {
-      this.observableToTrash.apiCall.unsubscribe();
+      // this.observableToTrash.apiCall.unsubscribe();
       this.observableToTrash.preventDisabling.unsubscribe();
       this.observableToTrash.destroyNextReply.unsubscribe();
     }

@@ -3,8 +3,6 @@ import { Injectable, Inject } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Observable, forkJoin } from "rxjs";
 import { Reference } from "src/app/models/reference-type";
-import { SandBoxDataModel } from "../../models/sandbox";
-import { sandBoxData } from "../../models/sandboxData";
 import { retry } from "rxjs/operators";
 // import { LgaData } from "../../models/lgaData";
 
@@ -30,22 +28,7 @@ export class ChatService {
     "Content-Type": "application/json"
   });
 
-  // formDataHeader: HttpHeaders = new HttpHeaders({
-  //   "Content-Type": "multipart/form-data"
-  // });
-  public sandBoxContainer: SandBoxDataModel = {
-    sectors: [],
-    banks: [],
-    marital_statuses: [],
-    occupations: [],
-    designations: [],
-    types_of_residence: [],
-    states: [],
-    lgas: []
-  };
-
   constructor(private http: HttpClient) {
-    this.getSandBox();
     // this.zeroAllSubmit().subscribe();
     // this.oneAllSubmit().subscribe();
   }
@@ -101,22 +84,6 @@ export class ChatService {
       {
         headers: this.httpOptions
       }
-    );
-  }
-
-  // gets the sandbox data
-  getSandBox() {
-    let s = sandBoxData();
-    this.sandBoxContainer.banks = [...s.data.banks];
-    this.sandBoxContainer.marital_statuses = [...s.data.marital_statuses];
-    this.sandBoxContainer.occupations = [...s.data.occupations];
-    this.sandBoxContainer.designations = [...s.data.designations];
-    this.sandBoxContainer.types_of_residence = [...s.data.types_of_residence];
-    this.sandBoxContainer.sectors = [...s.data.sectors];
-    this.sandBoxContainer.states = [...s.data.states];
-    sessionStorage.setItem(
-      "sandBoxData",
-      JSON.stringify(this.sandBoxContainer)
     );
   }
 

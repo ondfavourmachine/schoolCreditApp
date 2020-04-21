@@ -21,6 +21,7 @@ import { Message } from "../../models/message";
 })
 export class GeneralService {
   // properties
+  public apiUrl = "http://34.66.141.108/covid/public/index.php/api/";
   public totalLengthOfQuestions: number = 0;
   public counter: number = 0;
   public allQuestions: Array<QuestionsToAsk> = [];
@@ -50,9 +51,10 @@ export class GeneralService {
 
   // 3. this subject is for intermediate responses to notify the user of the
   // next stages
-  private intermediateResponseSubject = new BehaviorSubject(
-    {} as GiverResponse
-  );
+  private intermediateResponseSubject = new BehaviorSubject({} as
+    | GiverResponse
+    | ReceiversResponse
+    | replyGiversOrReceivers);
   public intermediateResponse$ = this.intermediateResponseSubject.asObservable();
 
   // 4. this subject will be used to control the display of forms
@@ -112,7 +114,9 @@ export class GeneralService {
   controlQuestionsFlow(anything) {
     this.questionsCtrlSubject.next(anything);
   }
-  responseDisplayNotifier(anything: GiverResponse | ReceiversResponse) {
+  responseDisplayNotifier(
+    anything: GiverResponse | ReceiversResponse | replyGiversOrReceivers
+  ) {
     this.intermediateResponseSubject.next(anything);
   }
 

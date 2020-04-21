@@ -58,10 +58,11 @@
       <div [ngSwitch]="flowControlHolder">
         <div *ngSwitchCase="'IdentifyOrAnonymousForms'">
           <!-- <app-terms-and-condition></app-terms-and-condition> -->
-          <!-- <app-identify-or-anonymous></app-identify-or-anonymous> -->
+          <app-identify-or-anonymous></app-identify-or-anonymous>
         </div>
-        <div *ngSwitchCase="'formsContainer'">
-          <app-general-forms></app-general-forms>
+        <div *ngSwitchCase="'formsContainer'"></div>
+        <div *ngSwitchCase="'supportPageForms'">
+          <app-support-page></app-support-page>
         </div>
         <div *ngSwitchCase="'QuestionsContainer'">
           <app-questions-ctrl></app-questions-ctrl>

@@ -157,3 +157,7 @@ p.submitRequest:hover {
 p.submitRequest a:hover {
   color: #fff !important;
 }
+
+input:invalid {
+  border: 1px solid red !important;
+}
