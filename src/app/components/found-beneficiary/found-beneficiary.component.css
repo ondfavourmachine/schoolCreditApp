@@ -68,3 +68,9 @@ div.parent a {
   text-decoration: underline;
   color: #495057;
 }
+
+
+.info{
+  padding-bottom: 4px !important;
+  color: #2185D0;
+}

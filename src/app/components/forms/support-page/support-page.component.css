@@ -50,3 +50,31 @@ form .form {
   text-align: center;
   align-items: center;
 }
+
+.moneyBoxes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 10px;
+  width: 100%;
+  /* box-align: center; */
+  padding: 10px 10px;
+  transition: display 1s ease-in-out;
+}
+
+.moneyBoxes p {
+  text-align: center;
+  padding: 1rem 1rem;
+  border: 1px solid rgb(0, 0, 0, 0.5);
+  border-radius: 4px;
+  font-size: 1.1rem;
+  margin-bottom: 0;
+  color: #2185d0;
+  cursor: pointer;
+}
+
+.goBack {
+  margin-top: 10px;
+  text-decoration: underline;
+  color: tomato;
+  cursor: pointer;
+}

@@ -6,13 +6,21 @@
     <img src="/assets/images/svgs/shield.svg" alt="verified icon" />
   </div>
   <img
-    [src]="generalservice.familyToReceiveCashDonation?.family_picture"
+    id="familyPicture"
+    src=""
     alt="Family"
   />
 </div>
 
 <div *ngIf="stage == '1'" class="inner-modal">
   <div class="inner-modal-content flex flex-column align-center text-center">
+    <span
+      *ngIf="this.generalservice.familiesForCashDonation.length > 0"
+      class="info"
+    >
+      You have {{ this.generalservice.familiesForCashDonation.length }} more
+      family to send 5000 each to
+    </span>
     <div class="para-title">
       {{ generalservice.familyToReceiveCashDonation?.family_name }} Family
     </div>
@@ -39,7 +47,9 @@
     <button (click)="stage = '4'" class="ui button primary basic mt-4">
       Transfer N{{ generalservice.familyToReceiveCashDonation?.amount_given }}
     </button>
-    <a (click)="checkEligibilty()" class="mt-3 link">View eligibility check</a>
+    <a (click)="checkEligibilty()" style="cursor: pointer" class="mt-3 link"
+      >View eligibility check</a
+    >
   </div>
 </div>
 
@@ -102,7 +112,7 @@
       </li>
     </ul>
 
-    <a (click)="stage = '1'" class="mt-3 link">Ok</a>
+    <a (click)="stage = '1'" style="cursor: pointer" class="mt-3 link">Ok</a>
   </div>
 </div>
 
@@ -112,10 +122,22 @@
       <img src="/assets/images/svgs/checked.svg" alt="ICON" />
     </div>
     <button
+      *ngIf="
+        generalservice.familiesForCashDonation.length > 0;
+        else noMoreFamilies
+      "
       (click)="iHaveTransferredTheMoney()"
       class="ui button positive basic"
     >
-      Done
+      Goto Next Family
     </button>
+    <ng-template #noMoreFamilies>
+      <button
+        (click)="iHaveTransferredTheMoney()"
+        class="ui button positive basic"
+      >
+        Done
+      </button>
+    </ng-template>
   </div>
 </div>

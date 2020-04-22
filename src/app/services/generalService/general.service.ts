@@ -108,6 +108,8 @@ export class GeneralService {
   public receiver: string = "receiver";
   public nextChatbotReplyToGiver: replyGiversOrReceivers;
   public familyToReceiveCashDonation: any;
+  public flowControlHolder: string;
+  public familiesForCashDonation: Array<any> = [];
 
   public location: any;
   constructor() {}

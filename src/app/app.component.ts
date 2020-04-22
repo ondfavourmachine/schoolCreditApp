@@ -23,7 +23,7 @@ interface observableAggregator {
 })
 export class AppComponent
   implements OnInit, AfterViewInit, AfterContentChecked, OnDestroy {
-  public flowControlHolder: string;
+  // public flowControlHolder: string = 'welcomeModal';
   public showModal: string = "none";
   public modalHolder: HTMLDivElement;
   public toKYCComponent: any;
@@ -56,7 +56,9 @@ export class AppComponent
 
     this.observableAggregator.flowControl = this.generalservice.flowCtrl$.subscribe(
       val => {
-        this.flowControlHolder = String(val);
+        // this.showModal = "block";
+        this.generalservice.flowControlHolder = String(val);
+        if (String(val) == "welcomeModal") return;
         this.clickAButton();
       }
     );
@@ -95,7 +97,7 @@ export class AppComponent
   // this function will choose to grey out buttons added dynamically or not to
   preventHidingOfbuttons(explicitInstruction?: string) {
     // sessionStorage.removeItem("anonymous");
-    this.flowControlHolder = "";
+    this.generalservice.flowControlHolder = "";
     try {
       // try to get the timer if it is in the dom
       const html = document.querySelector(".timer").querySelector("span");

@@ -14,6 +14,8 @@ export class SupportPageComponent implements OnInit {
   stage: string; // 1 2 3 or 4
   supportPageForm: FormGroup;
   notification = { show: false, message: undefined };
+  amount: string;
+  text: string;
   public familyDetails: {
     family_name?: string;
     bank_name?: string;
@@ -40,24 +42,66 @@ export class SupportPageComponent implements OnInit {
     // this.getFamilyToSubmit()
   }
 
-  submit() {
-    console.log(this.supportPageForm.value);
-    if (this.supportPageForm.value["amount"].length < 5) {
-      return;
+  submitAmount(event: Event) {
+    this.amount = (event.srcElement as HTMLParagraphElement).textContent
+      .toString()
+      .split(",")
+      .join("")
+      .substring(1);
+    // console.log(this.amount);
+    if (this.amount == "5000") {
+      this.text = "";
+      this.text = "a family in need who can be helped with N5000";
+    }
+    if (this.amount == "10000") {
+      this.text = "";
+      this.text = "2 families in need who can be helped with N5000 each.";
+    }
+    if (this.amount == "20000") {
+      this.text = "";
+      this.text = "4 families in need who can be helped with N5000 each.";
+    }
+    if (this.amount == "30000") {
+      this.text = "";
+      this.text = "6 families in need who can be helped with N5000 each.";
     }
     this.stage = "1";
   }
 
   getFamily() {
-    console.log(this.supportPageForm.value["amount"]);
+    if (!this.amount) return;
     this.stage = "2";
     const formToSubmit = {
       giver_id: sessionStorage.getItem("giver"),
-      amount_given: String(this.supportPageForm.get("amount").value)
-        .split(",")
-        .join(""),
+      amount_given: this.amount,
       item_given: "1"
     };
+    this.tryAgain();
+    setTimeout(() => {
+      this.fetchFamilies(formToSubmit);
+    }, 500);
+  }
+
+  numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+
+  gotoFamilyDetails() {
+    // this.generalservice.controlGlobalNotificationSubject.next("on");
+    this.generalservice.handleFlowController("foundBeneficiary");
+  }
+
+  getFamilyToSubmit() {
+    // this.familyDetails = FamilyToSupport().data;
+  }
+
+  tryAgain() {
+    this.http
+      .post(`${this.generalservice.apiUrl}zeroallselected`, {})
+      .subscribe();
+  }
+
+  fetchFamilies(formToSubmit) {
     this.http
       .post(`${this.generalservice.apiUrl}transaction`, formToSubmit)
       .subscribe(
@@ -69,54 +113,26 @@ export class SupportPageComponent implements OnInit {
           ) {
             this.tryAgain();
           } else {
-            for (let data of val["data"]) {
-              this.familyDetails = { ...data };
+            let temp = [];
+            if (val["data"].length == 1) {
+              for (let data of val["data"]) {
+                this.familyDetails = { ...data };
+              }
+            } else {
+              temp = val["data"];
+              this.familyDetails = temp[0];
+              temp.splice(0, 1);
+              this.generalservice.familiesForCashDonation = temp;
             }
+
             // console.log(this.familyDetails);
             this.generalservice.familyToReceiveCashDonation = this.familyDetails;
             console.log(this.generalservice.familyToReceiveCashDonation);
+            console.log(this.generalservice.familiesForCashDonation);
             this.stage = "3";
           }
         },
         err => console.log(err)
-      );
-  }
-
-  numberWithCommas(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  }
-
-  gotoFamilyDetails() {
-    this.generalservice.controlGlobalNotificationSubject.next("on");
-    this.generalservice.handleFlowController("foundBeneficiary");
-  }
-
-  getFamilyToSubmit() {
-    // this.familyDetails = FamilyToSupport().data;
-  }
-
-  tryAgain() {
-    this.http
-      .post(`${this.generalservice.apiUrl}zeroallselected `, {})
-      .subscribe(
-        val => {
-          for (let data of val["data"]) {
-            this.familyDetails = { ...data };
-          }
-          console.log(this.familyDetails);
-          this.generalservice.familyToReceiveCashDonation = this.familyDetails;
-          this.stage = "3";
-        },
-        err => {
-          this.stage = "";
-          this.notification.show = true;
-          this.notification.message =
-            "Could not get families at this time. Please try again later";
-          setTimeout(() => {
-            this.notification.show = false;
-            this.notification.message = undefined;
-          }, 2500);
-        }
       );
   }
 }

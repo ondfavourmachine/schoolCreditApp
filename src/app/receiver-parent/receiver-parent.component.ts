@@ -11,6 +11,7 @@ export class ReceiverParentComponent implements OnInit {
 
   ngOnInit(): void {
     this.getLocationFromIp();
+    // this.generalservice.handleFlowController("welcomeModal");
   }
 
   async getLocationFromIp() {
