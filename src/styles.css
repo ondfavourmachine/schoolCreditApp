@@ -706,6 +706,7 @@ small img {
   color: #495057;
   display: none;
   position: relative;
+  min-height: 500px;
 }
 
 .modal-body p {
@@ -1251,7 +1252,7 @@ ul.list li span:nth-child(2) {
 .family-info .verified-icon {
   position: absolute;
   top: 3%;
-  right: 2%;
+  left: 2%;
   z-index: 1;
   width: 50px;
   height: 50px;
