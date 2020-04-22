@@ -548,7 +548,7 @@ export class ChatMessagesDisplayComponent
         let messageToDisplay: Message;
         this.count = 0;
         msgs.forEach((msg, index) => {
-          if (index == 1) {
+          if (index == 2) {
             this.count = index;
             messageToDisplay = new Message(
               `${msg}`,

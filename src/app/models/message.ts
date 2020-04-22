@@ -22,13 +22,14 @@ export class Message {
   ];
   static welcomeMessagesForGiver = [
     "Hey! My name is Dorcas. Thank you for trying to help out in these times.",
+    `Incase you are not a giver but a receiver, type 'i am a receiver' and you will be taken to the receivers section.`,
     "Is this your first time here giving for COVID Relief?"
   ];
 
   static successfulRequestsMade = [
     `We have procesed your request and sent it for
     assistance.`,
-    `Our target is to nd you someone who can give
+    `Our target is to send you someone who can give
     you some money to buy food items during this
     lockdown.
     `,
@@ -44,7 +45,7 @@ export class Message {
 
   static welcomeMsgForReceiver: string[] = [
     "Good Morning, My name is Dorcas. I represent a private initiative from concerned Nigerians who want to help",
-    "In times like these, what makes us a great Nation is our ability to find people who care enough to help",
+    `In times like these, what makes us a great Nation is our ability to find people who care enough to help. Incase you arent a receiver, you can click on the 'no i am giving button' or type i am a giver'`,
     `Would you like me to find someone to assist your
     family?
     `

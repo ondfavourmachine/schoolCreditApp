@@ -28,6 +28,7 @@
   <form class="row form">
     <input
       #inputFromUser
+      (keyup.enter)="submit($event)"
       class="input"
       type="text"
       placeholder="Enter your message here"

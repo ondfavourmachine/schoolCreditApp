@@ -17,6 +17,7 @@ import { Subscription, TimeoutError } from "rxjs";
 import { QuestionsAndAnswers } from "../../models/answersInterface";
 import { Message } from "../../models/message";
 import { timeout } from "rxjs/operators";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-chat-input",
@@ -60,7 +61,8 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
   };
   constructor(
     private chatservice: ChatService,
-    private generalservice: GeneralService
+    private generalservice: GeneralService,
+    private router: Router
   ) {}
 
   ngOnChanges() {}
@@ -80,12 +82,25 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
   submit(event: KeyboardEvent) {
     // debugger;
     event.preventDefault();
+    const input = event.srcElement as HTMLInputElement;
     if (event instanceof KeyboardEvent) {
-      const keyboardEvent = event as KeyboardEvent;
-      this.handleKeyBoardSubmit(keyboardEvent);
-    } else {
-      this.handleClickEvent(event);
+      const ReceiverRegex = /receiver/gi;
+      const giverRegex = /giver/gi;
+      if (ReceiverRegex.test(input.value)) {
+        this.router.navigate(["receiver"]);
+      }
+      if (giverRegex.test(input.value)) {
+        this.router.navigate(["giver"]);
+      }
     }
+
+    // event.preventDefault();
+    // if (event instanceof KeyboardEvent) {
+    //   const keyboardEvent = event as KeyboardEvent;
+    //   this.handleKeyBoardSubmit(keyboardEvent);
+    // } else {
+    //   this.handleClickEvent(event);
+    // }
   }
 
   //
@@ -131,41 +146,6 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
       !this.generalservice.checkIfUserIsOnline() &&
       event.code == "Enter"
     ) {
-      this.newSendMessagesToDisplay({
-        message: input.value,
-        direction: "right"
-      });
-      setTimeout(() => {
-        this.newSendMessagesToDisplay({
-          message: `You seem to be offline. Please check your internet and try again!`,
-          direction: "left"
-        });
-      }, 300);
-    } else {
-      // if he is connected then do all these
-      if (this.action == "refChecking" && event.code == "Enter") {
-        this.newSendMessagesToDisplay({
-          message: input.value,
-          direction: "right"
-        });
-        setTimeout(() => {
-          this.newSendMessagesToDisplay({
-            message: "Please give a moment to confirm",
-            direction: "left"
-          });
-        }, 500);
-        this.makeAnApiCall.emit({
-          typeOfApiCall: "check-ref",
-          valToSend: input.value
-        });
-        input.value = "";
-        let test = sessionStorage.getItem("ref_no");
-        this.sendButton = test == "undefined" ? false : true;
-
-        if (this.sendButton) {
-          // this.generalservice.toggleInput("disable Input");
-        }
-      }
     }
   }
 
@@ -227,3 +207,42 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
     // this.questionaireButton = false;
   }
 }
+
+//
+// {
+//   this.newSendMessagesToDisplay({
+//     message: input.value,
+//     direction: "right"
+//   });
+//   setTimeout(() => {
+//     this.newSendMessagesToDisplay({
+//       message: `You seem to be offline. Please check your internet and try again!`,
+//       direction: "left"
+//     });
+//   }, 300);
+// } else {
+//   // if he is connected then do all these
+//   if (this.action == "refChecking" && event.code == "Enter") {
+//     this.newSendMessagesToDisplay({
+//       message: input.value,
+//       direction: "right"
+//     });
+//     setTimeout(() => {
+//       this.newSendMessagesToDisplay({
+//         message: "Please give a moment to confirm",
+//         direction: "left"
+//       });
+//     }, 500);
+//     this.makeAnApiCall.emit({
+//       typeOfApiCall: "check-ref",
+//       valToSend: input.value
+//     });
+//     input.value = "";
+//     let test = sessionStorage.getItem("ref_no");
+//     this.sendButton = test == "undefined" ? false : true;
+
+//     if (this.sendButton) {
+//       // this.generalservice.toggleInput("disable Input");
+//     }
+//   }
+// }
