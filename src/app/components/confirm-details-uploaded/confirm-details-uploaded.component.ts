@@ -93,10 +93,7 @@ export class ConfirmDetailsUploadedComponent implements OnInit, AfterViewInit {
       this.generateCodeForSubmission(currentState.parent)
     );
     this.http
-      .post(
-        "http://34.66.141.108/covidd/public/index.php/api/receiver",
-        dataToSend
-      )
+      .post(`${this.generalservice.apiUrl}receiver`, dataToSend)
       .subscribe(
         val => {
           this.generalservice.controlGlobalNotificationSubject.next("off");

@@ -21,7 +21,8 @@ import { Message } from "../../models/message";
 })
 export class GeneralService {
   // properties
-  public apiUrl = "http://34.66.141.108/covid/public/index.php/api/";
+  public apiUrl =
+    "https://covidreliefbackend.covidrelief.com.ng/covidd/public/index.php/api/";
   public totalLengthOfQuestions: number = 0;
   public counter: number = 0;
   public allQuestions: Array<QuestionsToAsk> = [];
@@ -105,6 +106,9 @@ export class GeneralService {
   public familyImageToConfirm: any;
   public switchOfModal: boolean = false;
   public receiver: string = "receiver";
+  public nextChatbotReplyToGiver: replyGiversOrReceivers;
+  public familyToReceiveCashDonation: any;
+
   public location: any;
   constructor() {}
 

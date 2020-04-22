@@ -22,7 +22,10 @@
   </form>
 </div> -->
 
-<div class="flex flex-column justify-center align-center h-100">
+<div
+  style="position: relative"
+  class="flex flex-column justify-center align-center h-100"
+>
   <div class="modal-icon">
     <img src="../../../../assets/images/svgs/profit.svg" alt="ICON" />
   </div>
@@ -45,6 +48,9 @@
       Next
     </button>
   </form>
+  <small class="smallNotification" *ngIf="notification?.show">
+    {{ notification?.message }}
+  </small>
 </div>
 
 <div *ngIf="stage == '1'" class="inner-modal">
@@ -66,7 +72,9 @@
       <span class="circle"></span>
     </div>
     <p class="para-title">Searching..</p>
-    <button class="ui button basic mini negative mt-2">Cancel</button>
+    <button (click)="stage = '1'" class="ui button basic mini negative mt-2">
+      Cancel
+    </button>
   </div>
 </div>
 
@@ -77,3 +85,32 @@
         <a class="mt-3 link" href="#">Select a bulk method</a>
     </div>
 </div> -->
+
+<div *ngIf="stage == '3'" class="inner-modal">
+  <div class="inner-modal-content flex flex-column align-center text-center">
+    <div class="para-title">Transfer fund to this family</div>
+    <div class="para-body mt-4 mb-4">
+      Find account details of {{ familyDetails?.family_name }} family below to
+      support them
+    </div>
+
+    <ul class="list w-100 mt-4">
+      <li>
+        <span>Family name:</span>
+        <span> {{ familyDetails?.family_name }}</span>
+      </li>
+      <li>
+        <span>Bank:</span>
+        <span> {{ familyDetails?.bank_name }} </span>
+      </li>
+      <li>
+        <span>Account number:</span>
+        <span>{{ familyDetails?.account_no }}</span>
+      </li>
+    </ul>
+
+    <button class="ui basic button mt-4">
+      <span (click)="gotoFamilyDetails()" class="mr-2"> Next </span>
+    </button>
+  </div>
+</div>

@@ -24,7 +24,7 @@ export class IdentifyOrAnonymousComponent implements OnInit {
   ngOnInit(): void {
     this.iAForm = this.fb.group({
       name: ["", Validators.required],
-      age: ["", Validators.required],
+      email: ["", Validators.required],
       phone: ["", Validators.required],
       gender: [""],
       tAndC: ["", Validators.required]
@@ -47,6 +47,7 @@ export class IdentifyOrAnonymousComponent implements OnInit {
       .pipe(timeout(50000))
       .subscribe(
         val => {
+          sessionStorage.setItem("giver", val["giver"]);
           let giverResponse: replyGiversOrReceivers;
           if (this.stayAnonymous == "1") {
             giverResponse = new replyGiversOrReceivers(
@@ -59,7 +60,12 @@ export class IdentifyOrAnonymousComponent implements OnInit {
               "right"
             );
           }
-
+          this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
+            "What Would you like to give. Money or items",
+            "left",
+            "Money,Food Stuff",
+            "giveMoney,giveFood"
+          );
           this.generalservice.ctrlDisableTheButtonsOfPreviousListElement(
             "allow"
           );
@@ -104,8 +110,8 @@ export class IdentifyOrAnonymousComponent implements OnInit {
     return this.iAForm.get("name");
   }
 
-  get age() {
-    return this.iAForm.get("age");
+  get email() {
+    return this.iAForm.get("email");
   }
   get gender() {
     return this.iAForm.get("gender");
@@ -121,8 +127,8 @@ export class IdentifyOrAnonymousComponent implements OnInit {
   public phoneIsRequired() {
     return this.phone.hasError("required") && this.phone.touched;
   }
-  public ageIsRequired() {
-    return this.age.hasError("required") && this.age.touched;
+  public emailIsRequired() {
+    return this.email.hasError("required") && this.email.touched;
   }
 
   removeNotification() {

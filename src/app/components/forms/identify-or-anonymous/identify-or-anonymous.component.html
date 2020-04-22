@@ -23,17 +23,19 @@
         </div>
       </div>
       <div class="field">
-        <label>Age</label>
+        <label>Email</label>
         <input
-          formControlName="age"
-          name="tel2"
-          type="tel"
-          pattern="[0-9]{2}"
-          placeholder="Enter your Age"
+          formControlName="email"
+          name="email"
+          type="email"
+          placeholder="example@example.com"
         />
         <small> </small>
-        <div *ngIf="age.touched && age.invalid" class="ng-invalid ng-touched">
-          <small style="color: #f10b0b9d;" *ngIf="ageIsRequired()">
+        <div
+          *ngIf="email.touched && email.invalid"
+          class="ng-invalid ng-touched"
+        >
+          <small style="color: #f10b0b9d;" *ngIf="emailIsRequired()">
             Your Age is required!</small
           >
         </div>
@@ -46,7 +48,7 @@
           name="tel2"
           type="tel"
           pattern="[0-9]{11}"
-          placeholder="Enter your Age"
+          placeholder="Enter your Phone number"
         />
         <small> </small>
         <div
@@ -85,6 +87,6 @@
   </form>
 
   <small class="smallNotification" *ngIf="notification?.show">
-      {{ notification?.message }}
-    </small>
+    {{ notification?.message }}
+  </small>
 </div>

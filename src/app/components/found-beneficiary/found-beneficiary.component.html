@@ -1,13 +1,121 @@
-<div class="parent">
-  <p>Ajimobi Family</p>
-  <div>
-    <ul>
-      <li><i class="fas fa-users"></i> <span> Family of 5</span></li>
-      <li><i class="fas fa-street-view"></i> <span> Agege, Lagos</span></li>
-      <li><i class="fas fa-user-hard-hat"></i> <span> Artisan</span></li>
-    </ul>
+<div
+  style="height: 490px;"
+  class="flex flex-column justify-center align-center h-100 family-info"
+>
+  <div class="verified-icon">
+    <img src="/assets/images/svgs/shield.svg" alt="verified icon" />
   </div>
+  <img
+    [src]="generalservice.familyToReceiveCashDonation?.family_picture"
+    alt="Family"
+  />
+</div>
 
-  <p class="button">Transfer amount: N5,000</p>
-  <p><a>view eligibilty check</a></p>
+<div *ngIf="stage == '1'" class="inner-modal">
+  <div class="inner-modal-content flex flex-column align-center text-center">
+    <div class="para-title">
+      {{ generalservice.familyToReceiveCashDonation?.family_name }} Family
+    </div>
+    <ul class="list w-100 mt-4">
+      <li>
+        <span
+          >Family is made up of
+          {{ generalservice.familyToReceiveCashDonation?.members_no }} people
+        </span>
+      </li>
+      <li>
+        <span>{{
+          generalservice.familyToReceiveCashDonation?.full_address
+            ? generalservice.familyToReceiveCashDonation?.full_address
+            : "No address for this person"
+        }}</span>
+      </li>
+      <li>
+        <span>{{
+          generalservice.familyToReceiveCashDonation?.breadwinner_job
+        }}</span>
+      </li>
+    </ul>
+    <button (click)="stage = '4'" class="ui button primary basic mt-4">
+      Transfer N{{ generalservice.familyToReceiveCashDonation?.amount_given }}
+    </button>
+    <a (click)="checkEligibilty()" class="mt-3 link">View eligibility check</a>
+  </div>
+</div>
+
+<div *ngIf="stage == '4'" class="inner-modal">
+  <div class="inner-modal-content flex flex-column align-center text-center">
+    <div class="para-title">Bank account details</div>
+
+    <ul class="list w-100 mt-4">
+      <li>
+        <span>Account name:</span>
+        <span>
+          {{ generalservice.familyToReceiveCashDonation?.family_name }}
+        </span>
+      </li>
+      <li>
+        <span>Bank:</span>
+        <span>{{ generalservice.familyToReceiveCashDonation?.bank_name }}</span>
+      </li>
+      <li>
+        <span>Account number:</span>
+        <span>{{
+          generalservice.familyToReceiveCashDonation?.account_no
+        }}</span>
+      </li>
+    </ul>
+
+    <button (click)="stage = '5'" class="ui button primary basic mt-4">
+      Done
+    </button>
+    <a class="mt-3 link" href="#"><span class="mr-2">←</span>Back</a>
+  </div>
+</div>
+
+<div *ngIf="stage == '3'" class="inner-modal">
+  <div class="inner-modal-content flex flex-column align-center text-center">
+    <ul class="list w-100">
+      <li>
+        <span>Facial recognition</span>
+        <span>✔</span>
+      </li>
+      <li>
+        <span>Account verified</span>
+        <span>✔</span>
+      </li>
+      <li>
+        <span>BVN Confirmed</span>
+        <span>✔</span>
+      </li>
+      <li>
+        <span>Eligibility check</span>
+        <span>✔</span>
+      </li>
+      <li>
+        <span>Location match</span>
+        <span>✔</span>
+      </li>
+      <li>
+        <span>Family member match</span>
+        <span>✔</span>
+      </li>
+    </ul>
+
+    <a (click)="stage = '1'" class="mt-3 link">Ok</a>
+  </div>
+</div>
+
+<div *ngIf="stage == '5'" class="inner-modal">
+  <div class="inner-modal-content flex flex-column align-center text-center">
+    <div class="modal-icon">
+      <img src="/assets/images/svgs/checked.svg" alt="ICON" />
+    </div>
+    <button
+      (click)="iHaveTransferredTheMoney()"
+      class="ui button positive basic"
+    >
+      Done
+    </button>
+  </div>
 </div>

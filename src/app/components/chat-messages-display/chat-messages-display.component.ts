@@ -103,12 +103,7 @@ export class ChatMessagesDisplayComponent
         if (val instanceof replyGiversOrReceivers) {
           this.insertGiversResponseIntoDom(
             val,
-            new replyGiversOrReceivers(
-              "What Would you like to give. Money or items",
-              "left",
-              "Money,Food Stuff",
-              "giveMoney,giveFood"
-            )
+            this.generalservice.nextChatbotReplyToGiver
           );
         }
       }
