@@ -166,6 +166,41 @@ div.numberBlockOne {
   border-bottom-width: thick !important;
   /* border: 1px solid #54d38a !important; ! */
 }
+input:invalid {
+  border: 1px solid red !important;
+}
+
+.goBack {
+  margin-top: 10px;
+  /* text-decoration: underline; */
+  color: tomato;
+  cursor: pointer;
+  grid-column: 1/3;
+  text-align: center;
+  padding: 10px;
+}
+
+.goBack a {
+  padding: 3px 1rem;
+  border: 1px solid #a7a1a1;
+  border-radius: 5px;
+}
+
+.smallNotification {
+  position: absolute !important;
+  display: flex;
+  justify-content: center;
+  margin: 0 auto !important;
+  width: 80% !important;
+  height: 30px !important;
+  border: 1px solid rgba(255, 99, 71, 0.3) !important;
+  top: 0 !important;
+  border-radius: 3px !important;
+  background: rgba(255, 99, 71, 0.5) !important;
+  color: #fff !important;
+  text-align: center;
+  align-items: center;
+}
 
 /* div.translateCoverPlate {
   position: absolute;

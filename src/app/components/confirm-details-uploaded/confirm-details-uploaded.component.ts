@@ -1,6 +1,8 @@
 import { Component, OnInit, AfterViewInit } from "@angular/core";
 import { GeneralService } from "src/app/services/generalService/general.service";
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
+import { timeout } from "rxjs/operators";
+import { TimeoutError } from "rxjs";
 // import { registerLocaleData } from '@angular/common';
 
 @Component({
@@ -94,27 +96,34 @@ export class ConfirmDetailsUploadedComponent implements OnInit, AfterViewInit {
     );
     this.http
       .post(`${this.generalservice.apiUrl}receiver`, dataToSend)
+      .pipe(timeout(60000))
       .subscribe(
         val => {
           this.generalservice.controlGlobalNotificationSubject.next("off");
           this.generalservice.switchOfModal = true;
           this.submit = "success";
           sessionStorage.clear();
-          setTimeout(() => {
-            (document.querySelector(".modal-close") as HTMLSpanElement).click();
-          }, 2000);
+          this.closeTheModal("success");
+          // setTimeout(() => {
+          //   (document.querySelector(".modal-close") as HTMLSpanElement).click();
+          // }, 2000);
         },
-        (err: HttpErrorResponse) => {
-          if (err.status == 500) {
+        (err: HttpErrorResponse | TimeoutError) => {
+          if (err instanceof TimeoutError) {
+            console.log(err);
+            this.generalservice.controlGlobalNotificationSubject.next("off");
+            this.closeTheModal("success");
+          }
+          if (err instanceof HttpErrorResponse && err.status == 500) {
             this.generalservice.controlGlobalNotificationSubject.next("off");
             this.submit = "failed";
             sessionStorage.clear();
           }
-          if (err.status == 400) {
+          if (err instanceof HttpErrorResponse && err.status == 400) {
             this.generalservice.controlGlobalNotificationSubject.next("off");
             setTimeout(() => {
               this.closeTheModal("cancel");
-            }, 2500);
+            }, 1500);
             this.submit = "failed";
             sessionStorage.clear();
           }
@@ -134,6 +143,10 @@ export class ConfirmDetailsUploadedComponent implements OnInit, AfterViewInit {
       value.toString().toLowerCase() == "mother"
     ) {
       return "2";
+    } else if (value.toString().toLowerCase() == "son") {
+      return "3";
+    } else if (value.toString().toLowerCase() == "daughter") {
+      return "4";
     }
   }
 

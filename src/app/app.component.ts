@@ -56,9 +56,8 @@ export class AppComponent
 
     this.observableAggregator.flowControl = this.generalservice.flowCtrl$.subscribe(
       val => {
-        // this.showModal = "block";
+        console.log(val);
         this.generalservice.flowControlHolder = String(val);
-        if (String(val) == "welcomeModal") return;
         this.clickAButton();
       }
     );
@@ -73,10 +72,6 @@ export class AppComponent
         // closeBtn.click();
       }
     );
-
-    this.generalservice.timer$.subscribe(val => {
-      // console.log(val);
-    });
   }
   ngAfterContentChecked() {
     this.cd.detectChanges();

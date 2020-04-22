@@ -96,7 +96,7 @@ export class ChatMessagesDisplayComponent
             )
           ) {
             this.responseFromReceiver(objCopy as ReceiversResponse);
-            // this.responseFromGiver({ message, text }, reply);
+            this.respondToReceiver(this.generalservice.nextChatbotReplyToReceiver)
           }
           return;
         }
@@ -302,6 +302,13 @@ export class ChatMessagesDisplayComponent
         this.displaySubsequentMessages(chatbotReply);
       }, 1000);
     }
+  }
+
+  respondToReceiver(reply: replyGiversOrReceivers){
+      this.displaySubsequentMessages({
+        message: reply.message,
+        direction: reply.direction
+      })
   }
 
   responseFromReceiver(obj: ReceiversResponse) {

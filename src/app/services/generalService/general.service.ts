@@ -106,7 +106,10 @@ export class GeneralService {
   public familyImageToConfirm: any;
   public switchOfModal: boolean = false;
   public receiver: string = "receiver";
+  // replies from chatbot
   public nextChatbotReplyToGiver: replyGiversOrReceivers;
+  public nextChatbotReplyToReceiver: replyGiversOrReceivers;
+  //
   public familyToReceiveCashDonation: any;
   public flowControlHolder: string;
   public familiesForCashDonation: Array<any> = [];

@@ -13,9 +13,11 @@ export class WelcomeComponent implements OnInit {
 
   gotoReceiver() {
     this.router.navigate(["receiver"]);
+    (document.querySelector(".modal-close") as HTMLSpanElement).click();
   }
 
   gotoGiver() {
     this.router.navigate(["giver"]);
+    (document.querySelector(".modal-close") as HTMLSpanElement).click();
   }
 }

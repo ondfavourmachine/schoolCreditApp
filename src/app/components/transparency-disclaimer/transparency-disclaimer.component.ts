@@ -1,6 +1,10 @@
 import { Component, OnInit } from "@angular/core";
 import { GeneralService } from "src/app/services/generalService/general.service";
-import { ReceiversResponse, GiverResponse, replyGiversOrReceivers } from "src/app/models/GiverResponse";
+import {
+  ReceiversResponse,
+  GiverResponse,
+  replyGiversOrReceivers
+} from "src/app/models/GiverResponse";
 
 @Component({
   selector: "app-transparency-disclaimer",
@@ -8,9 +12,9 @@ import { ReceiversResponse, GiverResponse, replyGiversOrReceivers } from "src/ap
   styleUrls: ["./transparency-disclaimer.component.css"]
 })
 export class TransparencyDisclaimerComponent implements OnInit {
-  constructor(private generalservice: GeneralService) { }
+  constructor(private generalservice: GeneralService) {}
 
-  ngOnInit(): void { }
+  ngOnInit(): void {}
 
   continue() {
     // const input = e.srcElement as HTMLInputElement;
@@ -25,6 +29,10 @@ export class TransparencyDisclaimerComponent implements OnInit {
         button: "",
         extraInfo: undefined
       }
+    );
+    this.generalservice.nextChatbotReplyToReceiver = new replyGiversOrReceivers(
+      "Awesome! Please continue.",
+      "left"
     );
     //  const message: replyGiversOrReceivers = {message:'testing', button'right',}
     // const response1: GiverResponse = new GiverResponse()

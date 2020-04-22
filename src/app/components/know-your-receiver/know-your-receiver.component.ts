@@ -3,14 +3,20 @@ import {
   OnInit,
   OnDestroy,
   AfterViewInit,
-  ChangeDetectorRef
+  ViewChild,
+  ChangeDetectorRef,
+  ElementRef
 } from "@angular/core";
 import { GeneralService } from "src/app/services/generalService/general.service";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { debounceTime } from "rxjs/operators";
 import { Subscription } from "rxjs";
 // import { NotifierService } from "angular-notifier";
-import { ReceiversResponse } from "src/app/models/GiverResponse";
+import {
+  ReceiversResponse,
+  replyGiversOrReceivers
+} from "src/app/models/GiverResponse";
+// import { element } from 'protractor';
 
 interface DetailsToSend {
   parent?: string;
@@ -29,11 +35,17 @@ interface DetailsToSend {
 })
 export class KnowYourReceiverComponent
   implements OnInit, AfterViewInit, OnDestroy {
-  public toKYCComponent: { nextStage?: string; previousStage?: string } = {};
+  public notification = { show: false, message: undefined };
+  public toKYCComponent: {
+    nextStage?: string;
+    previousStage?: string;
+    subStage?: string;
+  } = {};
 
   // public familyMemberSelection: boolean = false;
   public provideIDFirstPerson: boolean = true;
   public provideIDSecondPerson: boolean = true;
+  public allowedToShow: boolean = false;
 
   public familyDetailsInfo: {
     parent?: string;
@@ -59,6 +71,7 @@ export class KnowYourReceiverComponent
 
   public loading: boolean = true; // this is for the hidden attribute, when true = hide, when false = unhide
   public selectedParent: string = undefined;
+  public IdToProvide: string = "BVN";
 
   // htmlElement containers
   translateDiv: HTMLDivElement;
@@ -66,6 +79,7 @@ export class KnowYourReceiverComponent
   numberBlockOneAlt: HTMLDivElement;
   modifiableParagraph: HTMLParagraphElement;
   translateCoverPlateForProvidingID: HTMLDivElement;
+  // subStage: string; // 1, 2, 3
   // subscriptions
   destoryPhonenumber: Subscription;
   destroyID: Subscription;
@@ -102,20 +116,20 @@ export class KnowYourReceiverComponent
         }
       });
 
-    this.destroyID = this.id.valueChanges
-      .pipe(debounceTime(500))
-      .subscribe(val => {
-        if (this.IdToProvide.toLowerCase() !== "bvn") {
-          return;
-        }
-        if (!isNaN(val)) {
-          this.id.patchValue(
-            String(val)
-              .toString()
-              .substring(0, 11)
-          );
-        }
-      });
+    // this.destroyID = this.id.valueChanges
+    //   .pipe(debounceTime(500))
+    //   .subscribe(val => {
+    //     if (this.IdToProvide.toLowerCase() !== "bvn") {
+    //       return;
+    //     }
+    //     if (!isNaN(val)) {
+    //       this.id.patchValue(
+    //         String(val)
+    //           .toString()
+    //           .substring(0, 11)
+    //       );
+    //     }
+    //   });
   }
 
   ngAfterViewInit() {
@@ -129,21 +143,19 @@ export class KnowYourReceiverComponent
 
     setTimeout(() => {
       let previousStage = this.toKYCComponent.nextStage;
-      this.toKYCComponent = { nextStage: "familyDetails", previousStage };
+      this.toKYCComponent = {
+        nextStage: "familyDetails",
+        previousStage,
+        subStage: "numberBlock"
+      };
+      // this.subStage = "1";
       this.loading = true;
     }, 1000);
   }
 
-  submitIdForm(form) {
-    // console.log("i am here");
-    // if (
-    //   this.IdToProvide.toLowerCase() == "bvn" &&
-    //   isNaN(Number(this.id.value))
-    // ) {
-    //   // console.log(this.id.value);
-    //   // this.notifier.notify("warning", "Please enter an eleven digit BVN");
-    //   return;
-    // }
+  submitIdForm(form?: any, checked?: string) {
+    //  if(this.pToTrack.nativeElement['textContent'] == '')
+    this.allowedToShow = true;
     this.familyDetailsInfo.nameOfPerson = this.fullname.value;
     this.familyDetailsInfo.phoneNumber = this.phonenumber.value;
     this.familyDetailsInfo.occupation = this.occupation.value;
@@ -152,7 +164,15 @@ export class KnowYourReceiverComponent
       this.familyDetailsInfo.idOfParentValue &&
       this.familyDetailsInfo.idOfSpouseValue
     ) {
+      // console.log(this.familyDetailsInfo.idOfParentToProvide)
       this.moveToNextStageForReceiver();
+    } else {
+      // this.notification.show = true;
+      // this.notification.message = "Please provide at least one ID";
+      // setTimeout(() => {
+      //   this.notification.show = false;
+      //   this.notification.message = undefined;
+      // }, 2000);
     }
   }
 
@@ -174,7 +194,7 @@ export class KnowYourReceiverComponent
       this.modifiableParagraph = document.querySelector(
         ".modifiableParagraph"
       ) as HTMLParagraphElement;
-      this.modifiableParagraph.textContent = `Please provide your ${this.familyDetailsInfo.spouse} ID`;
+      this.modifiableParagraph.textContent = `Please provide your other family member's ID`;
       let classlist: DOMTokenList = this.translateCoverPlateForProvidingID
         .classList;
       let regex = /animationIn/;
@@ -195,7 +215,8 @@ export class KnowYourReceiverComponent
     }
   }
 
-  selectFamilySize(event, size?: string) {
+  selectFamilySize(event, size?: string, ifYouWantToGoBack?: string) {
+    if (ifYouWantToGoBack) this.toKYCComponent.subStage = ifYouWantToGoBack;
     try {
       const div = (event.srcElement as HTMLElement).closest(".numberBlockOne");
       if (size)
@@ -317,14 +338,20 @@ export class KnowYourReceiverComponent
     setTimeout(() => {
       this.toKYCComponent = {
         nextStage: "providingID",
-        previousStage: "familyDetails"
+        previousStage: "familyDetails",
+        subStage: "numberBlock"
       };
     }, 1500);
   }
 
-  selectID(event) {
+  selectID(event, ifYouWantToGoBack?: string) {
+    if (ifYouWantToGoBack) this.toKYCComponent.subStage = ifYouWantToGoBack;
     const div = (event.srcElement as HTMLElement).closest(".numberBlockOne");
+    this.unselectElementsSelected("idSelectionDiv", div.textContent);
+    this.IdToProvide = div.textContent;
+    // console.log(div.textContent);
     div.classList.add("thickenBorderBottom");
+    // console.log(this.familyDetailsInfo);
     if (this.familyDetailsInfo.idOfParentToProvide) {
       this.familyDetailsInfo.idOfSpouseToProvide = div.textContent;
     } else {
@@ -366,17 +393,6 @@ export class KnowYourReceiverComponent
     return this.familyDetailsInfo.spouse == "husband" ? "wife" : "husband";
   }
 
-  get IdToProvide(): string {
-    if (
-      this.familyDetailsInfo.idOfParentToProvide &&
-      !this.familyDetailsInfo.spouseHasChosenProvidedID
-    ) {
-      return this.familyDetailsInfo.idOfParentToProvide;
-    } else {
-      return this.familyDetailsInfo.idOfSpouseToProvide;
-    }
-  }
-
   get fullname() {
     return this.familyGroupForm.get("fullname");
   }
@@ -394,6 +410,7 @@ export class KnowYourReceiverComponent
   }
 
   moveToNextStageForReceiver() {
+    // debugger;
     sessionStorage.setItem(
       "currentState",
       JSON.stringify(this.familyDetailsInfo)
@@ -408,6 +425,10 @@ export class KnowYourReceiverComponent
         extraInfo: undefined
       }
     );
+    this.generalservice.nextChatbotReplyToReceiver = new replyGiversOrReceivers(
+      "Ok, thank you. Please keep going.",
+      "left"
+    );
     this.generalservice.controlGlobalNotificationSubject.next("on");
     this.generalservice.responseDisplayNotifier(response);
     setTimeout(() => {
@@ -415,8 +436,9 @@ export class KnowYourReceiverComponent
     }, 1200);
   }
 
-  sonOrDaughter() {
-    return;
+  removeTranslatedPage() {
+    this.translateCoverPlateForProvidingID.classList.remove("animationIn");
+    this.translateCoverPlateForProvidingID.style.display = "none";
   }
 
   returnApiComplientFamilysize(size) {
@@ -427,8 +449,96 @@ export class KnowYourReceiverComponent
     else if (size == "6+") return "4";
   }
 
+  goBack(nameOfPart?: string, extraInfo?: string) {
+    switch (nameOfPart) {
+      case "providingID":
+        if (this.toKYCComponent.subStage == "numberBlock" && extraInfo) {
+          (document.querySelector(
+            `.numberBlockAlt`
+          ) as HTMLDivElement).style.display = "none";
+          (document.getElementById(
+            `idSelectionDiv`
+          ) as HTMLDivElement).style.display = "grid";
+          this.modifiableParagraph.textContent = "Please provide your ID?";
+        } else {
+          this.removethickenBorderBottom(".numberBlockOneAlt");
+          (document.querySelector(
+            `.translateCoverPlate`
+          ) as HTMLDivElement).style.display = "none";
+          (document.querySelector(
+            `.numberBlockAlt`
+          ) as HTMLDivElement).style.display = "none";
+          (document.querySelector(
+            `.numberBlock`
+          ) as HTMLDivElement).style.display = "grid";
+          this.modifiableParagraph.textContent =
+            "Number of people in your immediate family?";
+        }
+        this.familyDetailsInfo.idOfParentToProvide = undefined;
+        this.familyDetailsInfo.spouseHasChosenProvidedID = false;
+        this.familyDetailsInfo.idOfParentValue = undefined;
+        this.familyDetailsInfo.idOfSpouseValue = undefined;
+        this.allowedToShow = false;
+        break;
+      case "familyDetails":
+        this.removethickenBorderBottom(".numberBlockOne");
+        if (this.toKYCComponent.subStage == "numberBlock") {
+          // blockToDisable = this.toKYCComponent.subStage;
+          (document.querySelector(
+            `.numberBlockAlt`
+          ) as HTMLDivElement).style.display = "none";
+          (document.querySelector(
+            `.numberBlock`
+          ) as HTMLDivElement).style.display = "grid";
+          this.modifiableParagraph.textContent =
+            "Number of people in your immediate family?";
+        } else {
+          this.removethickenBorderBottom(".numberBlockOneAlt");
+          (document.querySelector(
+            `.translateCoverPlate`
+          ) as HTMLDivElement).style.display = "none";
+          (document.querySelector(
+            `.numberBlockAlt`
+          ) as HTMLDivElement).style.display = "none";
+          (document.querySelector(
+            `.numberBlock`
+          ) as HTMLDivElement).style.display = "grid";
+          this.modifiableParagraph.textContent =
+            "Number of people in your immediate family?";
+        }
+        break;
+    }
+  }
+
+  unselectElementsSelected(selector, textContent) {
+    let divs: NodeList = document
+      .getElementById(selector)
+      .querySelectorAll(".numberBlockOne");
+    divs.forEach(element => {
+      // element = element as HTMLDivElement
+      if (element.textContent !== textContent) {
+        (element as HTMLDivElement).classList.remove("thickenBorderBottom");
+      }
+    });
+  }
+
+  iDontHaveAFamilyWithID(event: Event) {
+    const input = event.srcElement as HTMLInputElement;
+    if (input.checked && this.familyDetailsInfo.idOfParentValue) {
+      // console.log(this.familyDetailsInfo);
+      this.moveToNextStageForReceiver();
+    } else {
+      this.notification.show = true;
+      this.notification.message = "You must provide an ID";
+    }
+    setTimeout(() => {
+      this.notification.show = false;
+      this.notification.message = undefined;
+    }, 2000);
+  }
+
   ngOnDestroy() {
-    this.destoryPhonenumber.unsubscribe();
-    this.destroyID.unsubscribe();
+    // this.destoryPhonenumber.unsubscribe();
+    // this.destroyID.unsubscribe();
   }
 }

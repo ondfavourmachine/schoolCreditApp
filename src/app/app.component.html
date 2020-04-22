@@ -68,8 +68,8 @@
           <div *ngSwitchCase="'supportPageForms'">
             <app-support-page></app-support-page>
           </div>
-          <div *ngSwitchCase="'QuestionsContainer'">
-            <app-questions-ctrl></app-questions-ctrl>
+          <div *ngSwitchCase="'receiverContainer'">
+            <app-transparency-disclaimer></app-transparency-disclaimer>
           </div>
           <div *ngSwitchCase="'welcomeModal'">
             <app-welcome></app-welcome>
@@ -101,6 +101,7 @@
               <app-confirm-details-uploaded></app-confirm-details-uploaded>
             </div>
           </div>
+          <div *ngSwitchDefault><app-welcome></app-welcome></div>
         </div>
 
         <div class="searchingParent">
@@ -116,7 +117,7 @@
         <div class="foundParent">
           <div>
             <div class="grandChild">
-              <app-found-beneficiary></app-found-beneficiary>
+              <!-- <app-found-beneficiary></app-found-beneficiary> -->
             </div>
 
             <div class="grandChildTwo">

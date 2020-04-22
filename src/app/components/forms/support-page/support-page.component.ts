@@ -111,7 +111,6 @@ export class SupportPageComponent implements OnInit {
               "No Family Available to receive your Kindness! Please Try Giving in the Next Hour." &&
             !val["status"]
           ) {
-            this.tryAgain();
           } else {
             let temp = [];
             if (val["data"].length == 1) {
@@ -127,8 +126,8 @@ export class SupportPageComponent implements OnInit {
 
             // console.log(this.familyDetails);
             this.generalservice.familyToReceiveCashDonation = this.familyDetails;
-            console.log(this.generalservice.familyToReceiveCashDonation);
-            console.log(this.generalservice.familiesForCashDonation);
+            // console.log(this.generalservice.familyToReceiveCashDonation);
+            // console.log(this.generalservice.familiesForCashDonation);
             this.stage = "3";
           }
         },

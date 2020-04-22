@@ -12,8 +12,8 @@ export class FoundBeneficiaryComponent implements OnInit, AfterViewInit {
   familyThatWillBenefit: any = {};
   familyPictureToDisplay: string;
   constructor(public generalservice: GeneralService) {
-    console.log(this.generalservice.familyToReceiveCashDonation);
-    console.log(this.generalservice.familiesForCashDonation);
+    // console.log(this.generalservice.familyToReceiveCashDonation);
+    // console.log(this.generalservice.familiesForCashDonation);
     this.familyThatWillBenefit = generalservice.familyToReceiveCashDonation;
   }
 
@@ -39,18 +39,16 @@ export class FoundBeneficiaryComponent implements OnInit, AfterViewInit {
   iHaveTransferredTheMoney() {
     if (this.generalservice.familiesForCashDonation.length != 0) {
       this.familyThatWillBenefit = "";
-      this.familyThatWillBenefit = this.generalservice.familiesForCashDonation.splice(
-        0,
-        1
-      );
-      console.log(this.familyThatWillBenefit);
+      let temp = this.generalservice.familiesForCashDonation.splice(0, 1);
+      this.familyThatWillBenefit = temp[0];
+      // console.log(this.familyThatWillBenefit);
       let imageElement = document.getElementById(
         "familyPicture"
       ) as HTMLImageElement;
       imageElement.src = "";
-      imageElement.src = this.familyThatWillBenefit[0].family_picture;
+      imageElement.src = this.familyThatWillBenefit.family_picture;
       const giverResponse = new replyGiversOrReceivers(
-        `I have transferred the N5000 to the ${this.familyThatWillBenefit[0].family_name}`,
+        `I have transferred the N5000 to the ${this.familyThatWillBenefit.family_name}`,
         "right"
       );
       setTimeout(() => {
