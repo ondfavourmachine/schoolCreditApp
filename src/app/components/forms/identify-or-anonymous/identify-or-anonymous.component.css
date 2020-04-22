@@ -1,37 +1,35 @@
-.identifyOrAnonymous {
+/* .identifyOrAnonymous {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-content: center;
-  height: 520px;
+  min-height: 520px;
   position: relative;
-}
+} */
 
-.identifyOrAnonymous > div {
+/* .identifyOrAnonymous > div {
   display: flex;
   justify-content: center;
-}
+} */
 
-.identifyOrAnonymous img {
+/* .identifyOrAnonymous img {
   height: 100px;
   text-align: center;
-}
-
+} */
+/* 
 .identifyOrAnonymous p {
   text-align: center;
   padding: 15px 7px;
   align-self: center;
   color: #075e54;
   font-size: 20px;
-}
-
+} */
+/* 
 .identifyOrAnonymous button {
   margin-top: 15px;
   background: #54d38a;
   position: relative;
-  /* display: flex; */
-  /* justify-content: space-around; */
-}
+} */
 
 .identifyOrAnonymous i {
   position: absolute;
@@ -39,9 +37,9 @@
   margin-right: 10px;
 }
 
-.identifyOrAnonymous button:hover {
+/* .identifyOrAnonymous button:hover {
   background: #075e54;
-}
+} */
 
 input:invalid {
   border: 1px solid red !important;

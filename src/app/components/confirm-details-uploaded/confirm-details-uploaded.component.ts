@@ -101,7 +101,7 @@ export class ConfirmDetailsUploadedComponent implements OnInit, AfterViewInit {
           this.submit = "success";
           sessionStorage.clear();
           setTimeout(() => {
-            (document.querySelector(".close") as HTMLSpanElement).click();
+            (document.querySelector(".modal-close") as HTMLSpanElement).click();
           }, 2000);
         },
         (err: HttpErrorResponse) => {
@@ -153,10 +153,10 @@ export class ConfirmDetailsUploadedComponent implements OnInit, AfterViewInit {
 
   closeTheModal(command?: string) {
     if (!command) {
-      (document.querySelector(".close") as HTMLSpanElement).click();
+      (document.querySelector(".modal-close") as HTMLSpanElement).click();
       this.generalservice.notifyThatCongratsOrRegrets("success");
     } else {
-      (document.querySelector(".close") as HTMLSpanElement).click();
+      (document.querySelector(".modal-close") as HTMLSpanElement).click();
       this.generalservice.notifyThatCongratsOrRegrets("cancelled");
     }
   }

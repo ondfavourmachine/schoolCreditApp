@@ -69,7 +69,7 @@ export class IdentifyOrAnonymousComponent implements OnInit {
           this.generalservice.ctrlDisableTheButtonsOfPreviousListElement(
             "allow"
           );
-          (document.querySelector(".close") as HTMLSpanElement).click();
+          (document.querySelector(".modal-close") as HTMLSpanElement).click();
           this.generalservice.responseDisplayNotifier(giverResponse);
           this.generalservice.controlGlobalNotificationSubject.next("off");
         },

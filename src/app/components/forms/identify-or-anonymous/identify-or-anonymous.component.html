@@ -1,11 +1,11 @@
 <div class="identifyOrAnonymous">
-  <div><img src="../../assets/images/helpingHands.svg" alt="" /></div>
-  <p *ngIf="stayAnonymous == '2'; else identify">
+  <!-- <div><img src="../../assets/images/helpingHands.svg" alt="" /></div> -->
+  <p class="para-title text-center mt-4 mb-4" *ngIf="stayAnonymous == '2'; else identify">
     We will need some information about you. Be sure you have good internet.
   </p>
 
   <ng-template #identify>
-    <p>
+    <p class="para-title text-center mt-4 mb-4">
       Despite your request to remain incognito, we still need your details for
       record purposes. We will not share your details with anyone.
     </p>
@@ -18,8 +18,7 @@
         <input formControlName="name" type="text" placeholder="First Name" />
         <div *ngIf="name.touched && name.invalid" class="ng-invalid ng-touched">
           <small style="color: #f10b0b9d;" *ngIf="nameIsRequired()">
-            Your name is required!</small
-          >
+            Your name is required!</small>
         </div>
       </div>
       <div class="field">
@@ -51,13 +50,9 @@
           placeholder="Enter your Phone number"
         />
         <small> </small>
-        <div
-          *ngIf="phone.touched && phone.invalid"
-          class="ng-invalid ng-touched"
-        >
+        <div *ngIf="phone.touched && phone.invalid" class="ng-invalid ng-touched">
           <small style="color: #f10b0b9d;" *ngIf="phoneIsRequired()">
-            Your phone number is required!</small
-          >
+            Your phone number is required!</small>
         </div>
       </div>
 
@@ -77,13 +72,11 @@
       </div>
     </div>
 
-    <button
-      [disabled]="!iAForm.valid"
-      type="submit"
-      class="fluid ui primary button"
-    >
-      Start <i hidden class="fas fa-circle-notch fa-spin"></i>
-    </button>
+    <div class="text-center mt-4">
+      <button [disabled]="!iAForm.valid" type="submit" class="ui primary button">
+        Start <i hidden class="fas fa-circle-notch fa-spin"></i>
+      </button>
+    </div>
   </form>
 
   <small class="smallNotification" *ngIf="notification?.show">

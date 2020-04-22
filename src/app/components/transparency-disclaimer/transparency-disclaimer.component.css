@@ -26,7 +26,6 @@ div.parent {
 .parent p:nth-child(3) {
   text-align: center;
   font-size: 1.2rem;
-  font-family: 400;
   word-spacing: 0.02rem;
   padding-bottom: 8rem;
 }
