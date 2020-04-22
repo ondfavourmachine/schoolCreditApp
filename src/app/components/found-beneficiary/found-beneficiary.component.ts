@@ -49,12 +49,23 @@ export class FoundBeneficiaryComponent implements OnInit, AfterViewInit {
       ) as HTMLImageElement;
       imageElement.src = "";
       imageElement.src = this.familyThatWillBenefit[0].family_picture;
+      const giverResponse = new replyGiversOrReceivers(
+        `I have transferred the N5000 to the ${this.familyThatWillBenefit[0].family_name}`,
+        "right"
+      );
+      setTimeout(() => {
+        this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
+          "Thank you so much. God bless you",
+          "left"
+        );
+        this.generalservice.responseDisplayNotifier(giverResponse);
+      }, 300);
       this.stage = "1";
       return;
     }
     this.generalservice.controlGlobalNotificationSubject.next("on");
     const giverResponse = new replyGiversOrReceivers(
-      "I have transferred the money",
+      "I have transferred money to all of them",
       "right"
     );
 
