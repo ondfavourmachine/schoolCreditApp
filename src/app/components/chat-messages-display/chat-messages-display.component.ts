@@ -96,7 +96,9 @@ export class ChatMessagesDisplayComponent
             )
           ) {
             this.responseFromReceiver(objCopy as ReceiversResponse);
-            this.respondToReceiver(this.generalservice.nextChatbotReplyToReceiver)
+            this.respondToReceiver(
+              this.generalservice.nextChatbotReplyToReceiver
+            );
           }
           return;
         }
@@ -149,10 +151,58 @@ export class ChatMessagesDisplayComponent
     this.generateWelcomeMsgForReceiverOrGiver(ul);
 
     ul.addEventListener("customReceiverEventFromMsgClass", (e: CustomEvent) => {
-      const { stage } = e.detail;
+      const { stage, message, text } = e.detail;
       if (String(stage).includes("transparency-disclaimer")) {
         this.generalservice.handleFlowController("receiverContainer");
         // this.disableTheButtonsOfPreviousListElement();
+      }
+      if (String(message).toLowerCase() == "yes, help me") {
+        const response: ReceiversResponse = new ReceiversResponse(
+          this.generalservice.typeOfPerson,
+          "",
+          {
+            message,
+            direction: "right",
+            button: "",
+            extraInfo: undefined
+          },
+          new replyGiversOrReceivers(
+            "I would like to know if you are in Nigeria. Please turn on your location.",
+            "left",
+            "i have done so",
+            "location on,location off"
+          )
+        );
+        this.generalservice.nextChatbotReplyToReceiver =
+          response.optionalReplyToUser;
+        this.generalservice.responseDisplayNotifier(response);
+      }
+
+      if (String(message).toLowerCase() == "yes, my location is turned on.") {
+        console.log(message);
+        const response: ReceiversResponse = new ReceiversResponse(
+          this.generalservice.typeOfPerson,
+          "",
+          {
+            message,
+            direction: "right",
+            button: "",
+            extraInfo: undefined
+          },
+          new replyGiversOrReceivers(
+            `Get the following information ready before we start:
+              (1) A valid means of ID(BVN, Voters, Drivers licence, National ID), 
+              (2) Another family member means of ID 
+              (3) The Account number you want to get funds into 
+              (4) A picture with you and your family taken today.`,
+            "left",
+            "Continue,No i want to give",
+            "receive,give"
+          )
+        );
+        this.generalservice.nextChatbotReplyToReceiver =
+          response.optionalReplyToUser;
+        this.generalservice.responseDisplayNotifier(response);
       }
     });
     //   IdentifyOrAnonymousForms
@@ -232,36 +282,36 @@ export class ChatMessagesDisplayComponent
   }
 
   // old code from creditclan chatbot
-  respondToChangesFromOutside(value: any) {
-    // debugger;
-    switch (value) {
-      case "termsAndConditionAccepted":
-        this.displaySubsequentMessages({
-          message: `
-            I have read and accepted the terms and conditions.
-          `,
-          direction: "right"
-        });
-        setTimeout(() => {
-          this.displaySubsequentMessages({
-            message: `
-             Please provide your BVN and date of birth
-            `,
-            direction: "left",
-            button: "Provide bvn"
-          });
-        }, 500);
-        break;
-      case "stop":
-        this.displaySubsequentMessages({
-          message: `
-            Ok, Thank you for your time.
-          `,
-          direction: "left"
-        });
-        break;
-    }
-  }
+  // respondToChangesFromOutside(value: any) {
+  //   // debugger;
+  //   switch (value) {
+  //     case "termsAndConditionAccepted":
+  //       this.displaySubsequentMessages({
+  //         message: `
+  //           I have read and accepted the terms and conditions.
+  //         `,
+  //         direction: "right"
+  //       });
+  //       setTimeout(() => {
+  //         this.displaySubsequentMessages({
+  //           message: `
+  //            Please provide your BVN and date of birth
+  //           `,
+  //           direction: "left",
+  //           button: "Provide bvn"
+  //         });
+  //       }, 500);
+  //       break;
+  //     case "stop":
+  //       this.displaySubsequentMessages({
+  //         message: `
+  //           Ok, Thank you for your time.
+  //         `,
+  //         direction: "left"
+  //       });
+  //       break;
+  //   }
+  // }
 
   // covid relief bot replies to givers
   respondToUsers(reply: replyGiversOrReceivers) {
@@ -304,11 +354,15 @@ export class ChatMessagesDisplayComponent
     }
   }
 
-  respondToReceiver(reply: replyGiversOrReceivers){
+  respondToReceiver(reply: replyGiversOrReceivers) {
+    setTimeout(() => {
       this.displaySubsequentMessages({
         message: reply.message,
-        direction: reply.direction
-      })
+        direction: reply.direction,
+        button: reply.button,
+        extraInfo: reply.extraInfo
+      });
+    }, 500);
   }
 
   responseFromReceiver(obj: ReceiversResponse) {
@@ -541,7 +595,8 @@ export class ChatMessagesDisplayComponent
               `left`,
               ul,
               "Yes,No i am giving",
-              "receive,give"
+              "help,give"
+              // "receive,give"
             );
             messageToDisplay.makeAndInsertMessage(this.count);
             return;

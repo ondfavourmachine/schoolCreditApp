@@ -1,9 +1,7 @@
 export class GiverResponse {
   reply?: replyGiversOrReceivers;
-  constructor(
-    reply?: replyGiversOrReceivers
-  ) {
-      (this.reply = reply);
+  constructor(reply?: replyGiversOrReceivers) {
+    this.reply = reply;
   }
 }
 
@@ -26,17 +24,20 @@ export class replyGiversOrReceivers {
 }
 
 export class ReceiversResponse {
-  person: string
+  person: string;
   nextStage?: string;
   messageForUserToDisplayInResponseToPreviousStage?: replyGiversOrReceivers;
+  optionalReplyToUser: replyGiversOrReceivers;
   constructor(
     person: string,
     nextStage?: string,
-    messageForUserToDisplayInResponseToPreviousStage?: replyGiversOrReceivers
+    messageForUserToDisplayInResponseToPreviousStage?: replyGiversOrReceivers,
+    optionalReply?: replyGiversOrReceivers
   ) {
-    this.person = person
+    this.person = person;
     this.nextStage = nextStage;
     this.messageForUserToDisplayInResponseToPreviousStage = messageForUserToDisplayInResponseToPreviousStage;
+    this.optionalReplyToUser = optionalReply;
     // console.log(this.nextStage);
     // console.log(this.nextStage)
   }
