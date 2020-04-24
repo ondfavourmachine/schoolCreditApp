@@ -54,12 +54,16 @@ div.selectedImageContainer {
   justify-content: center !important;
   position: absolute !important;
   align-items: center !important;
-  top: 167px;
+  top: 0;
+  height: 50%;
+  z-index: 1;
 }
 
 div.selectedImageContainer > #imageToDisplay {
   height: 100% !important;
   width: 100% !important;
+  object-fit: cover;
+  object-position: center;
 }
 
 small {

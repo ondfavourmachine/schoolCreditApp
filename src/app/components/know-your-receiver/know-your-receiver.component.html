@@ -10,74 +10,41 @@
         Let us know you on behalf of your family
       </p>
 
-      <form
-        class="mt-4"
-        [formGroup]="familyGroupForm"
-        (ngSubmit)="submit(familyGroupForm)"
-      >
+      <form class="mt-4" [formGroup]="familyGroupForm" (ngSubmit)="submit(familyGroupForm)">
         <div class="ui form">
           <div class="field">
             <label>Full name</label>
-            <input
-              type="text"
-              formControlName="fullname"
-              placeholder="Enter fullname"
-            />
+            <input type="text" formControlName="fullname" placeholder="Enter fullname" />
 
-            <div
-              *ngIf="fullname.touched && fullname.invalid"
-              class="ng-invalid ng-touched"
-            >
+            <div *ngIf="fullname.touched && fullname.invalid" class="ng-invalid ng-touched">
               <small style="color: #f10b0b9d;" *ngIf="fullnameIsRequired()">
-                Your family full name is required!</small
-              >
+                Your family full name is required!</small>
             </div>
           </div>
           <div class="field">
             <label>Phone number</label>
-            <input
-              formControlName="phonenumber"
-              name="tel2"
-              type="tel"
-              pattern="[0-9]{11}"
-              placeholder="Enter phone number"
-            />
+            <input formControlName="phonenumber" name="tel2" type="tel" pattern="[0-9]{11}"
+              placeholder="Enter phone number" />
 
-            <div
-              *ngIf="phonenumber.touched && phonenumber.invalid"
-              class="ng-invalid ng-touched"
-            >
+            <div *ngIf="phonenumber.touched && phonenumber.invalid" class="ng-invalid ng-touched">
               <small style="color: #f10b0b9d;" *ngIf="phoneIsRequired()">
-                Your phone number is required!</small
-              >
+                Your phone number is required!</small>
             </div>
           </div>
           <div class="field">
             <label>Occupation</label>
-            <input
-              formControlName="occupation"
-              type="text"
-              placeholder="What do you do for a living?"
-            />
+            <input formControlName="occupation" type="text" placeholder="What do you do for a living?" />
 
-            <div
-              *ngIf="occupation.touched && occupation.invalid"
-              class="ng-invalid ng-touched"
-            >
+            <div *ngIf="occupation.touched && occupation.invalid" class="ng-invalid ng-touched">
               <small style="color: #f10b0b9d;" *ngIf="occupationIsRequired()">
-                Your occupation is required!</small
-              >
+                Your occupation is required!</small>
             </div>
           </div>
         </div>
 
         <div class="text-center mt-4">
-          <button
-            [disabled]="!familyGroupForm.valid"
-            type="submit"
-            class="ui primary button"
-            [ngClass]="{ loading: !loading }"
-          >
+          <button [disabled]="!familyGroupForm.valid" type="submit" class="ui primary button"
+            [ngClass]="{ loading: !loading }">
             Continue
           </button>
         </div>
@@ -87,7 +54,7 @@
 
   <div *ngSwitchCase="'familyDetails'">
     <div class="familyDetails">
-      <p class="para-title shrink modifiableParagraph">
+      <p class="para-title mb-5 shrink modifiableParagraph">
         Number of people in your immediate family?
       </p>
 
@@ -127,10 +94,7 @@
       </div>
 
       <div class="numberBlockAlt">
-        <div
-          (click)="selectFamilySize($event, '', 'numberBlockAlt')"
-          class="numberBlockOneAlt"
-        >
+        <div (click)="selectFamilySize($event, '', 'numberBlockAlt')" class="numberBlockOneAlt">
           <div>
             <img src="../../../assets/images/svgs/user.svg" alt="" />
           </div>
@@ -138,10 +102,7 @@
           <!-- <p><i class="fa fa-check"></i></p> -->
         </div>
 
-        <div
-          (click)="selectFamilySize($event, '', 'numberBlockAlt')"
-          class="numberBlockOneAlt"
-        >
+        <div (click)="selectFamilySize($event, '', 'numberBlockAlt')" class="numberBlockOneAlt">
           <div>
             <img src="../../../assets/images/svgs/user.svg" alt="" />
           </div>
@@ -149,10 +110,7 @@
           <!-- <p><i class="fa fa-check"></i></p> -->
         </div>
 
-        <div
-          (click)="selectFamilySize($event, '', 'numberBlockAlt')"
-          class="numberBlockOneAlt"
-        >
+        <div (click)="selectFamilySize($event, '', 'numberBlockAlt')" class="numberBlockOneAlt">
           <div>
             <img src="../../../assets/images/svgs/user.svg" alt="" />
           </div>
@@ -160,26 +118,22 @@
           <!-- <p><i class="fa fa-check"></i></p> -->
         </div>
 
-        <div
-          (click)="selectFamilySize($event, '', 'numberBlockAlt')"
-          class="numberBlockOneAlt"
-        >
+        <div (click)="selectFamilySize($event, '', 'numberBlockAlt')" class="numberBlockOneAlt">
           <div>
             <img src="../../../assets/images/svgs/user.svg" alt="" />
           </div>
           <p>Daughter</p>
           <!-- <p><i class="fa fa-check"></i></p> -->
         </div>
-        <span (click)="goBack('familyDetails')" class="goBack">
-          <a>back</a></span
-        >
+
+        <button (click)="goBack('familyDetails')" class="modal-back">
+          <i class="fa fa-chevron-left"></i>
+        </button>
       </div>
 
       <div class="translateCoverPlate">
         <div class="inner-modal preliminary" style="display: none;">
-          <div
-            class="inner-modal-content flex flex-column align-center text-center"
-          >
+          <div class="inner-modal-content flex flex-column align-center text-center">
             <h1 class="para-title">Provide means of Identification</h1>
             <p class="para-body">
               We need You and one other member of your family to provide us with
@@ -189,12 +143,11 @@
             <button class="ui button primary basic mt-4" (click)="provideID()">
               Yes, i have a family member with ID
             </button>
-            <a class="mt-3 link" href="#" (click)="cancelPreliminaryPage()">
+            <a class="mt-3 link" (click)="cancelPreliminaryPage()">
               No, I am a single parent
             </a>
-            <span (click)="goBack('familyDetails')" class="goBack">
-              <a>back</a></span
-            >
+            <!-- <span (click)="goBack('familyDetails')" class="goBack">
+              <a>back</a></span> -->
           </div>
           <!-- <span (click)="goBack('familyDetails')" class="goBack">go back</span> -->
         </div>
@@ -238,22 +191,15 @@
 
   <div *ngSwitchCase="'providingID'">
     <div class="familyDetails" style="position:relative">
-      <p #pToTrack class="para-title modifiableParagraph">
+      <p #pToTrack class="para-title shrink modifiableParagraph mb-5">
         Please provide your ID
       </p>
       <small class="smallNotification" *ngIf="notification?.show">
-          {{ notification?.message }}
-        </small>
+        {{ notification?.message }}
+      </small>
       <!-- testing -->
-      <form *ngIf="allowedToShow" class="ui form">
-          <div class="field">
-              <div class="ui checkbox">
-                <input (click)="iDontHaveAFamilyWithID($event)" type="checkbox" tabindex="0">
-                <label style="line-height: 1">I do not have a family member with id</label>
-              </div>
-            </div>
-       </form>
-       <!-- testing -->
+
+      <!-- testing -->
       <div id="idSelectionDiv" class="numberBlock modifyFontSize">
         <div (click)="selectID($event)" class="numberBlockOne">
           <div>
@@ -286,13 +232,20 @@
           <p>Drivers licence</p>
           <!-- <p><i class="fa fa-check"></i></p> -->
         </div>
+
       </div>
 
+      <form *ngIf="allowedToShow" class="ui form mt-4">
+        <div class="field">
+          <div class="ui checkbox">
+            <input (click)="iDontHaveAFamilyWithID($event)" type="checkbox" tabindex="0">
+            <label style="line-height: 1">I do not have a family member with id</label>
+          </div>
+        </div>
+      </form>
+
       <div class="numberBlockAlt">
-        <div
-          (click)="selectFamilySize($event, '', 'numberBlockAlt')"
-          class="numberBlockOneAlt"
-        >
+        <div (click)="selectFamilySize($event, '', 'numberBlockAlt')" class="numberBlockOneAlt">
           <div>
             <img src="../../../assets/images/svgs/user.svg" alt="" />
           </div>
@@ -300,10 +253,7 @@
           <!-- <p><i class="fa fa-check"></i></p> -->
         </div>
 
-        <div
-          (click)="selectFamilySize($event, '', 'numberBlockAlt')"
-          class="numberBlockOneAlt"
-        >
+        <div (click)="selectFamilySize($event, '', 'numberBlockAlt')" class="numberBlockOneAlt">
           <div>
             <img src="../../../assets/images/svgs/user.svg" alt="" />
           </div>
@@ -311,10 +261,7 @@
           <!-- <p><i class="fa fa-check"></i></p> -->
         </div>
 
-        <div
-          (click)="selectFamilySize($event, '', 'numberBlockAlt')"
-          class="numberBlockOneAlt"
-        >
+        <div (click)="selectFamilySize($event, '', 'numberBlockAlt')" class="numberBlockOneAlt">
           <div>
             <img src="../../../assets/images/svgs/user.svg" alt="" />
           </div>
@@ -322,10 +269,7 @@
           <!-- <p><i class="fa fa-check"></i></p> -->
         </div>
 
-        <div
-          (click)="selectFamilySize($event, '', 'numberBlockAlt')"
-          class="numberBlockOneAlt"
-        >
+        <div (click)="selectFamilySize($event, '', 'numberBlockAlt')" class="numberBlockOneAlt">
           <div>
             <img src="../../../assets/images/svgs/user.svg" alt="" />
           </div>
@@ -337,9 +281,7 @@
 
       <div id="translateCoverPlateForProvidingID" class="translateCoverPlate">
         <div class="inner-modal preliminary" style="display: none;">
-          <div
-            class="inner-modal-content flex flex-column align-center text-center"
-          >
+          <div class="inner-modal-content flex flex-column align-center text-center">
             <div class="modal-icon">
               <img src="../../../../assets/images/svgs/alert.svg" alt="ICON" />
             </div>
@@ -352,49 +294,24 @@
             <button class="ui button primary basic mt-4" (click)="provideID()">
               Yes, I have a wife with ID
             </button>
-            <a class="mt-3 link" href="#" (click)="cancelPreliminaryPage()">
+            <a class="mt-3 link" (click)="cancelPreliminaryPage()">
               No, I am a single parent
             </a>
           </div>
         </div>
 
-        <!-- <div class="preliminary" style="display: none">
-          <p>
-            We need You and your {{ spouse }} to provide us with any of National
-            ID, Voters ID, BVN
-          </p>
-
-          <p>
-            <a (click)="provideID()">Yes, i have a wife with ID</a>
-          </p>
-          <p>
-            <a (click)="cancelPreliminaryPage()">No, i am a single parent</a>
-          </p>
-          <p style="cursor: pointer;" (click)="cancelPreliminaryPage()">
-            <a>cancel</a>
-          </p>
-        </div> -->
-
         <div class="identificationForm">
           <form [formGroup]="idForm" (ngSubmit)="submitIdForm(idForm)">
-            <div class="ui form">
+            <div class="ui form mt-4">
               <div class="field">
-                <input
-                
-                  [readonly]="noInputAllowed"
-                  formControlName="id"
+                <input [readonly]="noInputAllowed" formControlName="id"
                   [attr.type]="IdToProvide == 'BVN' ? 'number' : 'text'"
-                  [attr.placeholder]="'Enter' + ' ' + IdToProvide"
-                />
+                  [attr.placeholder]="'Enter' + ' ' + IdToProvide" />
               </div>
             </div>
 
             <div class="text-center mt-2">
-              <button
-                [disabled]="!idForm.valid"
-                type="submit"
-                class="fluid ui primary button"
-              >
+              <button [disabled]="!idForm.valid" type="submit" class="fluid ui primary button">
                 Done
               </button>
             </div>
@@ -402,12 +319,7 @@
         </div>
       </div>
 
-      <span
-        *ngIf="allowedToShow"
-        (click)="goBack('providingID', '1')"
-        class="goBack"
-        >back</span
-      >
+      <span *ngIf="allowedToShow" (click)="goBack('providingID', '1')" class="goBack">back</span>
     </div>
   </div>
 </div>
@@ -441,13 +353,13 @@
 
 
 
-<form class="ui form">
-     <div class="ui segment">
-      <div class="field">
-        <div class="ui toggle checkbox">
-          <input type="checkbox" name="gift" tabindex="0" class="hidden">
-          <label>Do not include a receipt in the package</label>
-        </div>
+<!-- <form class="ui form mt-4">
+  <div class="ui segment">
+    <div class="field">
+      <div class="ui toggle checkbox">
+        <input type="checkbox" name="gift" tabindex="0" class="hidden">
+        <label>Do not include a receipt in the package</label>
       </div>
-    </div> 
-  </form>
+    </div>
+  </div>
+</form> -->

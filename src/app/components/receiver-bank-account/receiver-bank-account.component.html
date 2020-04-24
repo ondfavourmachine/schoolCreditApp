@@ -1,131 +1,85 @@
-<div class="container">
-  <!-- <div><img src="../../../assets/images/familyGroup2.svg" alt="" /></div> -->
+<!-- <div><img src="../../../assets/images/familyGroup2.svg" alt="" /></div> -->
 
-  <p>
-    Finally, what bank account would you like to receive funds in?
-  </p>
+<p class="para-title text-center mb-5">
+  Finally, what bank account would you like to receive funds in?
+</p>
 
-  <form [formGroup]="bankForm" (ngSubmit)="submitForm()">
-    <div class="ui form">
+<form [formGroup]="bankForm" (ngSubmit)="submitForm()">
+  <div class="ui form">
+    <div class="field">
+      <label>Bank name</label>
       <div class="field">
-        <label>Bank name</label>
-        <div class="field">
-          <select (change)="setBankName($event)" formControlName="bank_name">
-            <option ngValue="Bank Name">Bank Name</option>
-            <option
-              (click)="setBankName(bank?.name)"
-              [value]="bank?.bank_code"
-              *ngFor="let bank of banks; index as i"
-            >
-              {{ bank?.name }}
-            </option>
-          </select>
-
-          <!-- {{  }} -->
-        </div>
-
-        <div
-          *ngIf="bankName.touched && bankName.invalid"
-          class="ng-invalid ng-touched"
-        >
-          <small style="color: #f10b0b9d;" *ngIf="bankNameIsRequired()">
-            Your Bank Name is required!</small
-          >
-        </div>
+        <select (change)="setBankName($event)" formControlName="bank_name">
+          <option ngValue="Bank Name">Bank Name</option>
+          <option (click)="setBankName(bank?.name)" [value]="bank?.bank_code" *ngFor="let bank of banks; index as i">
+            {{ bank?.name }}
+          </option>
+        </select>
       </div>
-      <div class="field">
-        <label>Account number</label>
-        <input
-          formControlName="account_no"
-          name="accountNumber"
-          type="tel"
-          placeholder="Enter accounter number"
-          pattern="[0-9]{10}"
-        />
-        <div
-          *ngIf="accountNumber.touched && accountNumber.invalid"
-          class="ng-invalid ng-touched"
-        >
-          <small style="color: #f10b0b9d;">
-            Your account number is required and has to be 10!</small
-          >
-        </div>
+
+      <div *ngIf="bankName.touched && bankName.invalid" class="ng-invalid ng-touched">
+        <small style="color: #f10b0b9d;" *ngIf="bankNameIsRequired()">
+          Your Bank Name is required!</small>
       </div>
     </div>
-
-    <button
-      [disabled]="!bankForm.valid"
-      type="submit"
-      class="fluid ui primary button"
-    >
-      Continue <i hidden class="fas fa-circle-notch fa-spin"></i>
-    </button>
-  </form>
-
-  <div class="accountDetailsSearchResult">
-    <div *ngIf="accountCheck == 'successful'" class="confirmBankDetails">
-      <p>
-        <span>{{ displayAccountDetails?.account_name }}</span>
-        <span> {{ displayAccountDetails?.account_number }}</span>
-        <span>{{ selectedBank }}</span>
-      </p>
-
-      <p (click)="moveToNextStage()" class="submitRequest">
-        <a>Yes, Submit my request</a>
-      </p>
-      <p (click)="tryAgain()">
-        <a>no, i want to change my account details </a>
-      </p>
+    <div class="field">
+      <label>Account number</label>
+      <input formControlName="account_no" name="accountNumber" type="tel" placeholder="Enter accounter number"
+        pattern="[0-9]{10}" />
+      <div *ngIf="accountNumber.touched && accountNumber.invalid" class="ng-invalid ng-touched">
+        <small style="color: #f10b0b9d;">
+          Your account number is required and has to be 10!</small>
+      </div>
     </div>
-    <div *ngIf="accountCheck == 'failed'" class="confirmBankDetails">
-      <p style="padding: 0;">
-        <span>
-          <img
-            src="../../../assets/images/stop.svg"
-            alt=""
-            style="
-            height: 100px;"
-          />
-        </span>
-        <span class="changeAccount">
-          Could not get account details for account number
-          {{ accountNumber.value }}</span
-        >
-      </p>
-
-      <p
-        (click)="tryAgain()"
-        style="margin-top: 0 !important;"
-        class="submitRequest tryAgain"
-      >
-        <a>I want to try again</a>
-      </p>
-    </div>
-
-    <!-- <div class="confirmSubmitRequest">
-      <p>
-        Do we Submit Your family request for cash assistance
-      </p>
-
-      <p>
-        <a>Yes, Submit my request</a>
-      </p>
-
-      <p>
-        <a> No, cancel request</a>
-      </p>
-    </div> -->
-
-    <!-- <div class="requestSuccess">
-      <div><img src="../../../assets/images/check-mark.svg" alt="" /></div>
-      <p>
-        Your request has been sent for assistance. You will get an alert once we
-        and a helper.
-      </p>
-    </div> -->
   </div>
 
-  <small class="smallNotification" *ngIf="notification?.show">
-    {{ notification?.message }}
-  </small>
+  <div class="text-center mt-4">
+    <button [disabled]="!bankForm.valid" type="submit" class="ui primary button">
+      Continue <i hidden class="fas fa-circle-notch fa-spin"></i>
+    </button>
+  </div>
+</form>
+
+<div class="inner-modal accountDetailsSearchResult">
+  <div class="inner-modal-content">
+    <div *ngIf="accountCheck == 'successful'" class="confirmBankDetails flex flex-column align-center justify-center">
+      <ul class="list w-100 mt-4">
+        <li>
+          <span>Account name:</span>
+          <span>{{ displayAccountDetails?.account_name }}</span>
+        </li>
+        <li>
+          <span>Bank:</span>
+          <span>{{ selectedBank }}</span>
+        </li>
+        <li>
+          <span>Account number:</span>
+          <span> {{ displayAccountDetails?.account_number }}</span>
+        </li>
+      </ul>
+      <p>
+      </p>
+
+      <button class="ui button primary basic mt-4" (click)="moveToNextStage()">
+        Yes, Submit my request
+      </button>
+      <a class="mt-3 link" (click)="tryAgain()">
+        Change account details
+      </a>
+    </div>
+    <div *ngIf="accountCheck == 'failed'" class="confirmBankDetails flex flex-column align-center justify-center">
+      <p class="para-title text-center">
+        Could not get account details for account number
+        {{ accountNumber.value }}
+      </p>
+
+      <button class="ui button negative basic mt-4" (click)="tryAgain()">
+        Try again
+      </button>
+    </div>
+  </div>
 </div>
+
+<small class="smallNotification" *ngIf="notification?.show">
+  {{ notification?.message }}
+</small>

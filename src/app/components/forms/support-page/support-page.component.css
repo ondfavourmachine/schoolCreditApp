@@ -51,17 +51,30 @@ form .form {
   align-items: center;
 }
 
-.moneyBoxes {
+.money-boxes {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-gap: 10px;
   width: 100%;
-  /* box-align: center; */
   padding: 10px 10px;
   transition: display 1s ease-in-out;
+  width: 90%;
+  margin: auto;
 }
 
-.moneyBoxes p {
+.money-boxes .box {
+  margin: 0;
+  min-height: 120px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.money-boxes .box:hover {
+  background: rgba(72, 108, 216, 0.156);
+}
+/* .moneyBoxes p {
   text-align: center;
   padding: 1rem 1rem;
   border: 1px solid rgb(0, 0, 0, 0.5);
@@ -70,7 +83,7 @@ form .form {
   margin-bottom: 0;
   color: #2185d0;
   cursor: pointer;
-}
+} */
 
 .goBack {
   margin-top: 10px;

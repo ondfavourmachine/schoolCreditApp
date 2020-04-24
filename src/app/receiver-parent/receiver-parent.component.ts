@@ -7,7 +7,7 @@ import { GeneralService } from "../services/generalService/general.service";
   styleUrls: ["./receiver-parent.component.css"]
 })
 export class ReceiverParentComponent implements OnInit {
-  constructor(private generalservice: GeneralService) {}
+  constructor(private generalservice: GeneralService) { }
 
   ngOnInit(): void {
     this.getLocationOfUser();
@@ -32,7 +32,7 @@ export class ReceiverParentComponent implements OnInit {
     if (window.navigator.geolocation) {
       window.navigator.geolocation.getCurrentPosition(
         this.findPerson,
-        this.errorFindingPerson,
+        () => this.errorFindingPerson,
         { enableHighAccuracy: true }
       );
     }
@@ -45,8 +45,7 @@ export class ReceiverParentComponent implements OnInit {
     sessionStorage.setItem("userLatLng", JSON.stringify(location));
   }
 
-  errorFindingPerson(e) {
-    console.log(e);
+  errorFindingPerson() {
     this.getLocationFromIp();
   }
 }

@@ -90,7 +90,7 @@ export class KnowYourReceiverComponent
     private generalservice: GeneralService,
     private fb: FormBuilder,
     private cd: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.generalservice.commKYC$.subscribe(val => {
@@ -141,19 +141,19 @@ export class KnowYourReceiverComponent
   }
 
   submit(form) {
-    this.loading = false;
+    // this.loading = false;
     // console.log(form);
 
-    setTimeout(() => {
-      let previousStage = this.toKYCComponent.nextStage;
-      this.toKYCComponent = {
-        nextStage: "familyDetails",
-        previousStage,
-        subStage: "numberBlock"
-      };
-      // this.subStage = "1";
-      this.loading = true;
-    }, 1000);
+    // setTimeout(() => {
+    // }, 1000);
+    let previousStage = this.toKYCComponent.nextStage;
+    this.toKYCComponent = {
+      nextStage: "familyDetails",
+      previousStage,
+      subStage: "numberBlock"
+    };
+    // this.subStage = "1";
+    this.loading = true;
   }
 
   submitIdForm(form?: any, checked?: string) {
@@ -241,10 +241,11 @@ export class KnowYourReceiverComponent
         );
       div.classList.add("thickenBorderBottom");
       this.setSpouse();
-      setTimeout(
-        () => this.controlDisplayOfNumberBlockAndNumberBlockAlt(),
-        700
-      );
+      // setTimeout(
+      //   () => 
+      //   700
+      //   );
+      this.controlDisplayOfNumberBlockAndNumberBlockAlt();
     } catch (e) {
       if (size) this.familyDetailsInfo.sizeOfFamily = size;
       const div = (event.srcElement as HTMLElement).closest(
@@ -254,12 +255,12 @@ export class KnowYourReceiverComponent
       this.setSpouse();
 
       div.classList.add("thickenBorderBottom");
-      setTimeout(() => {
-        this.controlDisplayOfNumberBlockAndNumberBlockAlt("animationIn");
-        (document.querySelector(
-          ".preliminary"
-        ) as HTMLDivElement).style.display = "block";
-      }, 1000);
+      // setTimeout(() => {
+      // }, 1000);
+      this.controlDisplayOfNumberBlockAndNumberBlockAlt("animationIn");
+      (document.querySelector(
+        ".preliminary"
+      ) as HTMLDivElement).style.display = "block";
     }
   }
 
@@ -351,13 +352,13 @@ export class KnowYourReceiverComponent
   provideID() {
     // console.log("i am here");
     // this.familyMemberSelection = true;
-    setTimeout(() => {
-      this.toKYCComponent = {
-        nextStage: "providingID",
-        previousStage: "familyDetails",
-        subStage: "numberBlock"
-      };
-    }, 1500);
+    // setTimeout(() => {
+    // }, 1500);
+    this.toKYCComponent = {
+      nextStage: "providingID",
+      previousStage: "familyDetails",
+      subStage: "numberBlock"
+    };
   }
 
   selectID(event, ifYouWantToGoBack?: string) {
@@ -398,7 +399,6 @@ export class KnowYourReceiverComponent
     ) as HTMLDivElement).style.display = "block";
     setTimeout(
       () => this.controlDisplayOfNumberBlockAndNumberBlockAlt("animationIn"),
-
       700
     );
   }
@@ -453,9 +453,9 @@ export class KnowYourReceiverComponent
     );
     this.generalservice.controlGlobalNotificationSubject.next("on");
     this.generalservice.responseDisplayNotifier(response);
-    setTimeout(() => {
-      this.generalservice.handleFlowController("takeAPicture");
-    }, 1200);
+    // setTimeout(() => {
+    // }, 1200);
+    this.generalservice.handleFlowController("takeAPicture");
   }
 
   removeTranslatedPage() {

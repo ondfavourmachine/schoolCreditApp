@@ -1,4 +1,4 @@
-div.parent {
+/* div.parent {
   display: -webkit-box;
   display: flex;
   position: relative;
@@ -11,7 +11,7 @@ div.parent {
   align-items: center;
   height: 100%;
   overflow: hidden;
-}
+} */
 
 /* .parent img {
     height: 100px;
@@ -33,26 +33,24 @@ div.confirmSubmitRequest {
   display: block;
 }
 
-div.confirmSubmitRequest p:first-child {
+/* div.confirmSubmitRequest p:first-child {
   text-align: center !important;
   font-size: 1.59rem !important;
   line-height: 1.17 !important;
   margin-bottom: 2em !important;
-}
+} */
 
-div.confirmSubmitRequest p:nth-child(2) {
+/* div.confirmSubmitRequest p:nth-child(2) {
   display: flex;
   justify-content: center;
   background: #fff;
   cursor: pointer;
   border-radius: 5px;
-  /* margin-top: 4rem; */
   padding: 1rem 0;
   border: 1px solid #54d38a;
 }
 
 div.confirmSubmitRequest p:last-child {
-  /* all: unset; */
   border: none !important;
   padding: 2rem !important;
   margin-top: 0 !important;
@@ -64,32 +62,30 @@ div.confirmSubmitRequest p:last-child > a {
   color: red;
   text-decoration: underline;
   text-decoration-color: red;
-}
+} */
 
-div.requestSuccess img {
+/* div.requestSuccess img {
   height: 100px;
   text-align: center;
-}
+} */
 
-div.requestSuccess {
+/* div.requestSuccess {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-}
+} */
 
-div.requestSuccess p {
+/* div.requestSuccess p {
   border: none !important;
   padding: 2rem !important;
   margin-top: 0 !important;
   text-align: center;
   font-size: 1.3rem;
   font-weight: bold;
-  /* display: flex !important; */
-  /* justify-content: center !important; */
-}
+} */
 
-div.accountDetailsSearchResult {
+/* div.accountDetailsSearchResult {
   position: absolute;
   background: #fff;
   border: 1px solid;
@@ -97,11 +93,10 @@ div.accountDetailsSearchResult {
   width: 100%;
   transform: translateY(260px);
   border-radius: 30px;
-  /* z-index: 5; */
   top: 0;
   left: 0;
   padding: 1.2rem 1rem;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-}
+} */

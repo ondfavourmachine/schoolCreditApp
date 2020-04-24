@@ -16,7 +16,7 @@ export class ConfirmDetailsUploadedComponent implements OnInit, AfterViewInit {
   constructor(
     private generalservice: GeneralService,
     private http: HttpClient
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     setTimeout(() => {
@@ -57,7 +57,7 @@ export class ConfirmDetailsUploadedComponent implements OnInit, AfterViewInit {
   }
 
   sendToNebechi() {
-    const userLatLng = JSON.parse(sessionStorage.getItem("userLatLng"));
+    const userLatLng = JSON.parse(sessionStorage.getItem("userLatLng")) || {};
     const currentState = JSON.parse(sessionStorage.getItem("currentState"));
     const bankCodeSelected = sessionStorage.getItem("bankCodeSelected");
     const accountNumber = sessionStorage.getItem("account_number");
@@ -175,6 +175,7 @@ export class ConfirmDetailsUploadedComponent implements OnInit, AfterViewInit {
   }
 
   closeTheModal(command?: string) {
+    console.log('Closing modal!', command)
     if (!command) return;
     if (command == "success") {
       (document.querySelector(".modal-close") as HTMLSpanElement).click();

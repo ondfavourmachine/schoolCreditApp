@@ -1,7 +1,4 @@
-<div
-  style="height: 490px;"
-  class="flex flex-column justify-center align-center h-100 family-info"
->
+<div style="height: 490px;" class="flex flex-column justify-center align-center h-100 family-info">
   <div class="verified-icon">
     <img src="/assets/images/svgs/shield.svg" alt="verified icon" />
   </div>
@@ -13,20 +10,16 @@
 
 <div *ngIf="stage == '1'" class="inner-modal">
   <div class="inner-modal-content flex flex-column align-center text-center">
-    <span
-      *ngIf="this.generalservice.familiesForCashDonation.length > 0"
-      class="info"
-    >
+    <span *ngIf="this.generalservice.familiesForCashDonation.length > 0" class="info">
       You have {{ this.generalservice.familiesForCashDonation.length }} more
       family to send 5000 each to
     </span>
     <div class="para-title">
       {{ familyThatWillBenefit?.family_name }} Family
     </div>
-    <ul class="list w-100 mt-4">
+    <ul class="list w-100 mt-4 text-center">
       <li>
-        <span
-          >Family is made up of {{ familyThatWillBenefit?.members_no }} people
+        <span>Family is made up of {{ familyThatWillBenefit?.members_no }} people
         </span>
       </li>
       <li>
@@ -43,9 +36,7 @@
     <button (click)="stage = '4'" class="ui button primary basic mt-4">
       Transfer N{{ familyThatWillBenefit?.amount_given }}
     </button>
-    <a (click)="checkEligibilty()" style="cursor: pointer" class="mt-3 link"
-      >View eligibility check</a
-    >
+    <a (click)="checkEligibilty()" style="cursor: pointer" class="mt-3 link">View eligibility check</a>
   </div>
 </div>
 
@@ -79,15 +70,10 @@
       </div>
     </form>
 
-    <button
-      (click)="checkThatUserHasTransferredMoney()"
-      class="ui button primary basic mt-2"
-    >
+    <button (click)="checkThatUserHasTransferredMoney()" class="ui button primary basic mt-2">
       Done
     </button>
-    <a class="mt-3 link" (click)="stage = '1'"
-      ><span class="mr-2">←</span>Back</a
-    >
+    <a class="mt-3 link" (click)="stage = '1'"><span class="mr-2">←</span>Back</a>
   </div>
 </div>
 
@@ -129,21 +115,14 @@
     <div class="modal-icon">
       <img src="/assets/images/svgs/checked.svg" alt="ICON" />
     </div>
-    <button
-      *ngIf="
+    <button *ngIf="
         generalservice.familiesForCashDonation.length > 0;
         else noMoreFamilies
-      "
-      (click)="iHaveTransferredTheMoney()"
-      class="ui button positive basic"
-    >
+      " (click)="iHaveTransferredTheMoney()" class="ui button positive basic">
       Goto Next Family
     </button>
     <ng-template #noMoreFamilies>
-      <button
-        (click)="iHaveTransferredTheMoney()"
-        class="ui button positive basic"
-      >
+      <button (click)="iHaveTransferredTheMoney()" class="ui button positive basic">
         Done
       </button>
     </ng-template>
