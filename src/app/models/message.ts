@@ -83,7 +83,7 @@ export class Message {
       // set image
       avatarImage.src = `../../../assets/chatbotImages/${
         this.direction == "left" ? "avatar.png" : "avatar2.png"
-      }`;
+        }`;
       avatarImage.className = "avatar";
 
       // secondDiv after image
@@ -129,7 +129,7 @@ export class Message {
         const html = `
         <div data-time="${this.addDate()}" class="chat-box__wrapper ${
           this.direction
-        }">  
+          }">  
         <div class="chat-box__inner-wrapper">
           <img
             src="../../../assets/chatbotImages/avatar.png"
@@ -193,7 +193,7 @@ export class Message {
         const html = `
         <div data-time="${this.addDate()}" class="chat-box__wrapper ${
           this.direction
-        }">  
+          }">  
         <div class="chat-box__inner-wrapper">
           
           <div class="chat-box__text-wrapper">
@@ -208,7 +208,7 @@ export class Message {
         const html = `
          <div data-time="${this.addDate()}" class="chat-box__wrapper ${
           this.direction
-        }">  
+          }">  
         <div class="chat-box__inner-wrapper">
       
       <div class="chat-box__text-wrapper">
@@ -224,7 +224,7 @@ export class Message {
       const html = `
       <div data-time="${this.addDate()}" class="chat-box__wrapper ${
         this.direction
-      }">  
+        }">  
       <div class="chat-box__inner-wrapper">
         
         <div class="chat-box__text-wrapper">
@@ -268,14 +268,14 @@ export class Message {
       } else {
         avatar.src = `../../../assets/chatbotImages/${
           this.direction == "left" ? "avatar.png" : "avatar2.png"
-        }`;
+          }`;
         avatar.className = "avatar";
         parentDiv.insertAdjacentElement("afterbegin", avatar);
       }
     } else {
       avatar.src = `../../../assets/chatbotImages/${
         this.direction == "left" ? "avatar.png" : "avatar2.png"
-      }`;
+        }`;
       avatar.className = "avatar";
       parentDiv.insertAdjacentElement("afterbegin", avatar);
     }
@@ -317,7 +317,7 @@ export class Message {
     const failureMessages = [
       `Oops wrong format! ${dateOfBirthMsg[0].split(",")[1]}`,
       `The format you entered is wrong! Please ${
-        dateOfBirthMsg[0].split(",")[1]
+      dateOfBirthMsg[0].split(",")[1]
       }`,
       `Try again! ${dateOfBirthMsg[0].split(",")[1]}`
     ];
@@ -398,7 +398,7 @@ export class Message {
           new replyGiversOrReceivers(
             "Would you like to stay anonymous or be an identified giver?",
             "left",
-            "I want to identify, Incognito",
+            "I want to be identified,Stay anonymous",
             "identify,stayanonymous"
           ),
           new GiverResponse(
@@ -412,7 +412,7 @@ export class Message {
           new replyGiversOrReceivers(
             "Would you like to stay anonymous or be an identified giver?",
             "left",
-            "I want to identify,Incognito",
+            "I want to be identified,Stay anonymous",
             "identify,stayanonymous"
           ),
           new GiverResponse(

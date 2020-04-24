@@ -118,9 +118,9 @@ div.foundParent div.grandChildThree {
   transition: transform 0.7s ease-in-out;
 }
 
-div.receiver {
+/* div.receiver {
   height: 550px;
-}
+} */
 
 div.transparencyDisclaimer {
   height: 100%;
@@ -137,13 +137,13 @@ div.transparencyDisclaimer {
   transition: transform 0.7s ease-in-out; */
 }
 
-div.takeAPicture {
+/* div.takeAPicture {
   height: 550px;
-}
+} */
 
-div.receiverBankAccount {
+/* div.receiverBankAccount {
   height: 550px;
-}
+} */
 
 .globalOverlay {
   display: none;

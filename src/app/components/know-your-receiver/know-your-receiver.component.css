@@ -50,7 +50,7 @@ button[type="submit"]:hover {
 div.familyDetails {
   /* position: relative; */
   display: flex;
-  height: 550px !important;
+  /* height: 550px !important; */
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
@@ -73,7 +73,7 @@ div.familyDetails p {
 div.providingID {
   position: relative;
   display: flex;
-  height: 550px !important;
+  /* height: 550px !important; */
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;

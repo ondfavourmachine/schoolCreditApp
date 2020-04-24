@@ -28,12 +28,12 @@ div.container {
   text-align: center;
   align-items: center;
 }
-.container form {
+/* .container form {
   margin-top: 3rem;
   width: 100%;
-}
+} */
 
-[type="submit"] {
+/* [type="submit"] {
   margin: 25px 0;
   background: #54d38a !important;
 }
@@ -48,9 +48,9 @@ button[type="submit"]:hover {
   position: absolute !important;
   right: 0px !important;
   margin-right: 10px !important;
-}
+} */
 
-.container p:first-child {
+/* .container p:first-child {
   font-size: 1.5rem;
   padding: 1.2rem 0;
   font-weight: 700;
@@ -58,9 +58,13 @@ button[type="submit"]:hover {
   line-height: 2rem;
   display: flex;
   flex-direction: column;
-}
+} */
 
 div.accountDetailsSearchResult {
+  display: none;
+}
+
+/* div.accountDetailsSearchResult {
   position: absolute;
   background: #fff;
   border: 1px solid;
@@ -68,7 +72,7 @@ div.accountDetailsSearchResult {
   width: 100%;
   transform: translateY(260px);
   border-radius: 30px;
-  /* z-index: 5; */
+  /* z-index: 5; *
   top: 0;
   left: 0;
   padding: 1.2rem 1rem;
@@ -98,7 +102,7 @@ div.accountDetailsSearchResult p:last-child {
   text-align: center;
   text-decoration: underline;
   cursor: pointer;
-}
+} */
 
 div.confirmBankDetails {
   display: "block";

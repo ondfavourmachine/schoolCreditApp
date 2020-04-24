@@ -3,36 +3,41 @@
     <img id="imageToDisplay" src="" alt="" />
   </div>
 
-  <div class="accountDetailsSearchResult">
-    <div *ngIf="submit == 'confirm'" class="confirmSubmitRequest">
-      <p>
-        Do we Submit Your family request for cash assistance?
-      </p>
-      <p (click)="submitRequestForAssistance()">
-        <a>Yes, Submit my request</a>
-      </p>
-      <p (click)="closeTheModal('cancel')">
-        <a> No, cancel request</a>
-      </p>
-    </div>
+  <div class="accountDetailsSearchResult inner-modal">
+    <div class="inner-modal-content">
+      <div *ngIf="submit == 'confirm'"
+        class="confirmSubmitRequest flex flex-column justify-center align-center text-center">
+        <p class="para-title">
+          Do we Submit Your family request for cash assistance?
+        </p>
 
-    <div *ngIf="submit == 'success'" class="requestSuccess">
-      <div><img src="../../../assets/images/check-mark.svg" alt="" /></div>
-      <p>
-        Your request has been sent for assistance. You will get an alert once we
-        and a helper.
-      </p>
+        <button class="ui button primary basic mt-4" (click)="submitRequestForAssistance()">
+          Yes, Submit my request
+        </button>
+        <a class="mt-3 link" (click)="closeTheModal('cancel')">
+          No, cancel request
+        </a>
 
-      <p (click)="closeTheModal()">
-        <a> ok </a>
-      </p>
-    </div>
+      </div>
 
-    <div *ngIf="submit == 'failed'" class="requestSuccess">
-      <div><img src="../../../assets/images/stop.svg" alt="" /></div>
-      <p>
-        We could not submit your request at this time.
-      </p>
+      <div *ngIf="submit == 'success'" class="requestSuccess flex flex-column justify-center align-center text-center">
+        <div class="modal-icon mb-4"><img src="../../../assets/images/svgs/checked.svg" alt="" /></div>
+        <p class="para-title">
+          Your request has been sent for assistance. You will get an alert once we
+          and a helper.
+        </p>
+
+        <button class="ui button primary basic mt-4" (click)="closeTheModal()">
+          Okay
+        </button>
+      </div>
+
+      <div *ngIf="submit == 'failed'" class="requestSuccess flex flex-column justify-center align-center text-center">
+        <div class="modal-icon"><img src="../../../assets/images/svgs/alert.svg" alt="" /></div>
+        <p class="para-title">
+          We could not submit your request at this time.
+        </p>
+      </div>
     </div>
   </div>
 </div>

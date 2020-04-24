@@ -11,7 +11,9 @@ export class PictureComponentComponent implements OnInit {
   // @ViewChild("ImageInsertionPoint") ImageInsertionPoint: ElementRef;
   public notification: boolean;
   file: File;
-  constructor(private generalservice: GeneralService) {}
+  uploaded = false;
+
+  constructor(private generalservice: GeneralService) { }
 
   ngOnInit(): void {
     this.generalservice.controlGlobalNotificationSubject.next("off");
@@ -43,9 +45,10 @@ export class PictureComponentComponent implements OnInit {
       reader.onload = event => {
         imageToDisplay.src = `${event.target["result"]}`;
         this.generalservice.familyImageToConfirm = event.target["result"];
+        this.uploaded = true;
       };
       reader.readAsDataURL(event.target.files[0]);
-      this.controlAnimation();
+      // this.controlAnimation();
     }
   }
 
@@ -54,26 +57,27 @@ export class PictureComponentComponent implements OnInit {
     (document.getElementById("inputFile") as HTMLInputElement).click();
   }
 
-  controlAnimation() {
-    const div = document.querySelector(
-      ".translateCoverPlate"
-    ) as HTMLDivElement;
-    if (div.classList.contains("animationIn")) {
-      div.classList.remove("animationIn");
-      div.classList.add("animationOut");
-      // div.style.display = 'flex !important'
-    } else {
-      div.classList.remove("animationOut");
-      div.classList.add("animationIn");
-    }
-  }
+  // controlAnimation() {
+  //   const div = document.querySelector(
+  //     ".translateCoverPlate"
+  //   ) as HTMLDivElement;
+  //   if (div.classList.contains("animationIn")) {
+  //     div.classList.remove("animationIn");
+  //     div.classList.add("animationOut");
+  //     // div.style.display = 'flex !important'
+  //   } else {
+  //     div.classList.remove("animationOut");
+  //     div.classList.add("animationIn");
+  //   }
+  // }
 
   changePicture() {
-    this.controlAnimation();
+    // this.controlAnimation();
     const imageToDisplay = document.getElementById(
       "imageToDisplay"
     ) as HTMLImageElement;
     imageToDisplay.src = "";
+    this.uploaded = false;
   }
 
   next() {
@@ -93,8 +97,8 @@ export class PictureComponentComponent implements OnInit {
     );
     this.generalservice.controlGlobalNotificationSubject.next("on");
     this.generalservice.responseDisplayNotifier(response);
-    setTimeout(() => {
-      this.generalservice.handleFlowController("receiverBankAccount");
-    }, 1200);
+    // setTimeout(() => {
+    // }, 1200);
+    this.generalservice.handleFlowController("receiverBankAccount");
   }
 }
