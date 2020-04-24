@@ -76,7 +76,7 @@ export class SupportPageComponent implements OnInit {
       amount_given: this.amount,
       item_given: "1"
     };
-    this.tryAgain();
+    // this.tryAgain();
     setTimeout(() => {
       this.fetchFamilies(formToSubmit);
     }, 500);
@@ -87,7 +87,6 @@ export class SupportPageComponent implements OnInit {
   }
 
   gotoFamilyDetails() {
-    // this.generalservice.controlGlobalNotificationSubject.next("on");
     this.generalservice.handleFlowController("foundBeneficiary");
   }
 
@@ -118,14 +117,13 @@ export class SupportPageComponent implements OnInit {
                 this.familyDetails = { ...data };
               }
             } else {
-              temp = val["data"];
-              this.familyDetails = temp[0];
-              temp.splice(0, 1);
-              this.generalservice.familiesForCashDonation = temp;
+              this.generalservice.familiesForCashDonation = val["data"];
+              this.generalservice.controlGlobalNotificationSubject.next("on");
+              this.gotoFamilyDetails();
             }
 
             // console.log(this.familyDetails);
-            this.generalservice.familyToReceiveCashDonation = this.familyDetails;
+            // this.generalservice.familyToReceiveCashDonation = this.familyDetails;
             // console.log(this.generalservice.familyToReceiveCashDonation);
             // console.log(this.generalservice.familiesForCashDonation);
             this.stage = "3";

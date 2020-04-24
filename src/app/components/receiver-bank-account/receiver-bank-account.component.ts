@@ -30,6 +30,7 @@ export class ReceiverBankAccountComponent implements OnInit {
   notification = { show: false, message: undefined };
   public displayAccountDetails: BankAccountCheckResponse;
   public selectedBank: string;
+  public accountCheck: string;
 
   constructor(
     private generalservice: GeneralService,
@@ -150,6 +151,14 @@ export class ReceiverBankAccountComponent implements OnInit {
       .pipe(timeout(50000))
       .subscribe(
         val => {
+          if (!val["status"]) {
+            this.accountCheck = "failed";
+            this.generalservice.controlGlobalNotificationSubject.next("off");
+            this.controlAnimation();
+            this.showAccountDetails();
+            return;
+          }
+          this.accountCheck = "successful";
           sessionStorage.setItem("accountDetails", JSON.stringify(val));
           sessionStorage.setItem("bankCodeSelected", this.bankName.value);
           sessionStorage.setItem("account_number", this.accountNumber.value);
@@ -189,8 +198,6 @@ export class ReceiverBankAccountComponent implements OnInit {
   }
 
   moveToNextStage() {
-    // console.log(this.generalservice.familyImage);
-    // console.log(this.generalservice.familyImageToConfirm);
     const response: ReceiversResponse = new ReceiversResponse(
       this.generalservice.typeOfPerson,
       "",
@@ -219,5 +226,11 @@ export class ReceiverBankAccountComponent implements OnInit {
     } catch (error) {
       console.log("Location error.. ", error);
     }
+  }
+
+  tryAgain() {
+    this.takeOffAccountDetails();
+    this.accountCheck = "";
+    this.bankForm.reset();
   }
 }

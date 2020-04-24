@@ -63,7 +63,7 @@
   </form>
 
   <div class="accountDetailsSearchResult">
-    <div class="confirmBankDetails">
+    <div *ngIf="accountCheck == 'successful'" class="confirmBankDetails">
       <p>
         <span>{{ displayAccountDetails?.account_name }}</span>
         <span> {{ displayAccountDetails?.account_number }}</span>
@@ -72,6 +72,33 @@
 
       <p (click)="moveToNextStage()" class="submitRequest">
         <a>Yes, Submit my request</a>
+      </p>
+      <p (click)="tryAgain()">
+        <a>no, i want to change my account details </a>
+      </p>
+    </div>
+    <div *ngIf="accountCheck == 'failed'" class="confirmBankDetails">
+      <p style="padding: 0;">
+        <span>
+          <img
+            src="../../../assets/images/stop.svg"
+            alt=""
+            style="
+            height: 100px;"
+          />
+        </span>
+        <span class="changeAccount">
+          Could not get account details for account number
+          {{ accountNumber.value }}</span
+        >
+      </p>
+
+      <p
+        (click)="tryAgain()"
+        style="margin-top: 0 !important;"
+        class="submitRequest tryAgain"
+      >
+        <a>I want to try again</a>
       </p>
     </div>
 

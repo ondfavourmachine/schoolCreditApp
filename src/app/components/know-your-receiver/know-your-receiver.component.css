@@ -193,13 +193,14 @@ input:invalid {
   margin: 0 auto !important;
   width: 80% !important;
   height: 30px !important;
-  border: 1px solid rgba(255, 99, 71, 0.3) !important;
+  border: 1px solid rgba(255, 99, 71, 0.8) !important;
   top: 0 !important;
   border-radius: 3px !important;
-  background: rgba(255, 99, 71, 0.5) !important;
+  background: rgba(255, 99, 71, 0.8) !important;
   color: #fff !important;
   text-align: center;
   align-items: center;
+  box-shadow: 0 0 20px 6px #a7a1a1;
 }
 
 /* div.translateCoverPlate {

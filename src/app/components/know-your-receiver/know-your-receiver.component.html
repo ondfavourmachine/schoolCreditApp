@@ -380,6 +380,8 @@
             <div class="ui form">
               <div class="field">
                 <input
+                
+                  [readonly]="noInputAllowed"
                   formControlName="id"
                   [attr.type]="IdToProvide == 'BVN' ? 'number' : 'text'"
                   [attr.placeholder]="'Enter' + ' ' + IdToProvide"

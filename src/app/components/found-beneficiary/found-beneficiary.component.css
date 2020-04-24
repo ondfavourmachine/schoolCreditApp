@@ -69,8 +69,25 @@ div.parent a {
   color: #495057;
 }
 
-
-.info{
+.info {
   padding-bottom: 4px !important;
-  color: #2185D0;
+  color: #2185d0;
+}
+
+.smallNotification {
+  position: absolute !important;
+  display: flex;
+  justify-content: center;
+  line-height: 1;
+  margin: 0 auto !important;
+  width: 80% !important;
+  height: 30px !important;
+  border: 1px solid rgba(255, 99, 71, 0.8) !important;
+  top: 0 !important;
+  border-radius: 3px !important;
+  background: rgba(255, 99, 71, 0.8) !important;
+  color: #fff !important;
+  text-align: center;
+  align-items: center;
+  box-shadow: 0 0 20px 6px #a7a1a1;
 }

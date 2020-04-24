@@ -77,19 +77,27 @@ div.accountDetailsSearchResult {
   justify-content: flex-start;
 }
 
-div.accountDetailsSearchResult p:last-child {
+div.accountDetailsSearchResult p:nth-child(2) {
   display: flex;
   justify-content: center;
   background: #fff;
   cursor: pointer;
   border-radius: 5px;
-  margin-top: 3rem !important;
+  margin-top: 2rem !important;
   padding: 1rem 0;
   border: 1px solid #54d38a;
 }
 
-div.accountDetailsSearchResult p:last-child > a {
+div.accountDetailsSearchResult p:nth-child(2) > a {
   color: #54d38a;
+}
+
+div.accountDetailsSearchResult p:last-child {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 div.confirmBankDetails {
@@ -126,6 +134,10 @@ div.confirmSubmitRequest p:last-child > a {
   text-decoration-color: red;
 }
 
+div.confirmSubmitRequest .changeAccount {
+  color: red;
+}
+
 div.requestSuccess img {
   height: 100px;
   text-align: center;
@@ -160,4 +172,18 @@ p.submitRequest a:hover {
 
 input:invalid {
   border: 1px solid red !important;
+}
+
+.tryAgain {
+  display: flex;
+  -webkit-box-pack: center;
+  justify-content: center;
+  background: #fff;
+  cursor: pointer;
+  border-radius: 5px;
+  /* margin-top: 0 !important; */
+  padding: 1rem 0 !important;
+  border: 1px solid #54d38a;
+  width: 50% !important;
+  margin: 0 auto;
 }

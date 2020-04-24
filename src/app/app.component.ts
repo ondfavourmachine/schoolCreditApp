@@ -56,7 +56,7 @@ export class AppComponent
 
     this.observableAggregator.flowControl = this.generalservice.flowCtrl$.subscribe(
       val => {
-        console.log(val);
+        // console.log(val);
         this.generalservice.flowControlHolder = String(val);
         this.clickAButton();
       }

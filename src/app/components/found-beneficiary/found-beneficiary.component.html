@@ -6,6 +6,9 @@
     <img src="/assets/images/svgs/shield.svg" alt="verified icon" />
   </div>
   <img id="familyPicture" src="" alt="Family" />
+  <small class="smallNotification" *ngIf="notification?.show">
+    {{ notification?.message }}
+  </small>
 </div>
 
 <div *ngIf="stage == '1'" class="inner-modal">
@@ -67,10 +70,24 @@
       </li>
     </ul>
 
-    <button (click)="stage = '5'" class="ui button primary basic mt-4">
+    <form class="ui form mt-2">
+      <div class="field">
+        <div class="ui checkbox">
+          <input type="checkbox" id="confirmTransfer" tabindex="0" />
+          <label style="line-height: 1">I have transferred the money</label>
+        </div>
+      </div>
+    </form>
+
+    <button
+      (click)="checkThatUserHasTransferredMoney()"
+      class="ui button primary basic mt-2"
+    >
       Done
     </button>
-    <a class="mt-3 link" href="#"><span class="mr-2">←</span>Back</a>
+    <a class="mt-3 link" (click)="stage = '1'"
+      ><span class="mr-2">←</span>Back</a
+    >
   </div>
 </div>
 

@@ -83,6 +83,9 @@ export class KnowYourReceiverComponent
   // subscriptions
   destoryPhonenumber: Subscription;
   destroyID: Subscription;
+
+  // disable Input if the boxes havent been selected;
+  public noInputAllowed: boolean = true;
   constructor(
     private generalservice: GeneralService,
     private fb: FormBuilder,
@@ -116,20 +119,20 @@ export class KnowYourReceiverComponent
         }
       });
 
-    // this.destroyID = this.id.valueChanges
-    //   .pipe(debounceTime(500))
-    //   .subscribe(val => {
-    //     if (this.IdToProvide.toLowerCase() !== "bvn") {
-    //       return;
-    //     }
-    //     if (!isNaN(val)) {
-    //       this.id.patchValue(
-    //         String(val)
-    //           .toString()
-    //           .substring(0, 11)
-    //       );
-    //     }
-    //   });
+    this.destroyID = this.id.valueChanges
+      .pipe(debounceTime(200))
+      .subscribe(val => {
+        if (this.IdToProvide.toLowerCase() !== "bvn") {
+          return;
+        }
+        if (!isNaN(val)) {
+          this.id.patchValue(
+            String(val)
+              .toString()
+              .substring(0, 11)
+          );
+        }
+      });
   }
 
   ngAfterViewInit() {
@@ -159,12 +162,25 @@ export class KnowYourReceiverComponent
     this.familyDetailsInfo.nameOfPerson = this.fullname.value;
     this.familyDetailsInfo.phoneNumber = this.phonenumber.value;
     this.familyDetailsInfo.occupation = this.occupation.value;
+    this.noInputAllowed = true;
     this.askForSecondID();
     if (
       this.familyDetailsInfo.idOfParentValue &&
       this.familyDetailsInfo.idOfSpouseValue
     ) {
-      // console.log(this.familyDetailsInfo.idOfParentToProvide)
+      if (
+        this.familyDetailsInfo.idOfParentValue ==
+        this.familyDetailsInfo.idOfSpouseValue
+      ) {
+        this.notification.show = true;
+        this.notification.message =
+          "Your ID and that of your family members ID cannot be the same";
+        setTimeout(() => {
+          this.notification.show = false;
+          this.notification.message = undefined;
+        }, 4000);
+        return;
+      }
       this.moveToNextStageForReceiver();
     } else {
       // this.notification.show = true;
@@ -345,6 +361,8 @@ export class KnowYourReceiverComponent
   }
 
   selectID(event, ifYouWantToGoBack?: string) {
+    console.log("i am from selectID");
+    this.noInputAllowed = true;
     if (ifYouWantToGoBack) this.toKYCComponent.subStage = ifYouWantToGoBack;
     const div = (event.srcElement as HTMLElement).closest(".numberBlockOne");
     this.unselectElementsSelected("idSelectionDiv", div.textContent);
@@ -354,8 +372,12 @@ export class KnowYourReceiverComponent
     // console.log(this.familyDetailsInfo);
     if (this.familyDetailsInfo.idOfParentToProvide) {
       this.familyDetailsInfo.idOfSpouseToProvide = div.textContent;
+      this.noInputAllowed = false;
+      console.log(this.familyDetailsInfo);
     } else {
       this.familyDetailsInfo.idOfParentToProvide = div.textContent;
+      this.noInputAllowed = false;
+      console.log(this.familyDetailsInfo);
     }
     // console.log(this.familyDetailsInfo.idOfParentToProvide);
     this.familyDetailsInfo.spouseHasChosenProvidedID = false;

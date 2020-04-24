@@ -99,6 +99,16 @@ export class ConfirmDetailsUploadedComponent implements OnInit, AfterViewInit {
       .pipe(timeout(60000))
       .subscribe(
         val => {
+          if (!val["status"]) {
+            this.generalservice.controlGlobalNotificationSubject.next("off");
+            this.submit = "failed";
+            setTimeout(() => {
+              sessionStorage.clear();
+              this.closeTheModal("cancel");
+              this.generalservice.switchOfModal = true;
+            }, 3000);
+            return;
+          }
           this.generalservice.controlGlobalNotificationSubject.next("off");
           this.generalservice.switchOfModal = true;
           this.submit = "success";
@@ -112,7 +122,7 @@ export class ConfirmDetailsUploadedComponent implements OnInit, AfterViewInit {
           if (err instanceof TimeoutError) {
             console.log(err);
             this.generalservice.controlGlobalNotificationSubject.next("off");
-            this.closeTheModal("success");
+            this.closeTheModal("cancel");
           }
           if (err instanceof HttpErrorResponse && err.status == 500) {
             this.generalservice.controlGlobalNotificationSubject.next("off");
@@ -165,7 +175,8 @@ export class ConfirmDetailsUploadedComponent implements OnInit, AfterViewInit {
   }
 
   closeTheModal(command?: string) {
-    if (!command) {
+    if (!command) return;
+    if (command == "success") {
       (document.querySelector(".modal-close") as HTMLSpanElement).click();
       this.generalservice.notifyThatCongratsOrRegrets("success");
     } else {
