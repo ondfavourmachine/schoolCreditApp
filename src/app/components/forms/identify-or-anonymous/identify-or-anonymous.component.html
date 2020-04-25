@@ -1,12 +1,17 @@
 <div class="identifyOrAnonymous flex flex-column align-center">
-  <div class="modal-icon mb-4"><img src="../../assets/images/svgs/question.svg" alt="" /></div>
-  <p class="para-title text-center mt-4 mb-4" *ngIf="stayAnonymous == '2'; else identify">
+  <div class="modal-icon mb-4">
+    <img src="../../assets/images/svgs/question.svg" alt="" />
+  </div>
+  <p
+    class="para-title text-center mt-4 mb-4"
+    *ngIf="stayAnonymous == '2'; else identify"
+  >
     We will need some information about you. Be sure you have good internet.
   </p>
 
   <ng-template #identify>
     <p class="para-title text-center mt-4 mb-4">
-      Despite your request to remain incognito, we still need your details for
+      Despite your request to remain anonymous, we still need your details for
       record purposes. We will not share your details with anyone.
     </p>
   </ng-template>
@@ -18,27 +23,46 @@
         <input formControlName="name" type="text" placeholder="First Name" />
         <div *ngIf="name.touched && name.invalid" class="ng-invalid ng-touched">
           <small style="color: #f10b0b9d;" *ngIf="nameIsRequired()">
-            Your name is required!</small>
+            Your name is required!</small
+          >
         </div>
       </div>
       <div class="field">
         <label>Email</label>
-        <input formControlName="email" name="email" type="email" placeholder="example@example.com" />
+        <input
+          formControlName="email"
+          name="email"
+          type="email"
+          placeholder="example@example.com"
+        />
         <small> </small>
-        <div *ngIf="email.touched && email.invalid" class="ng-invalid ng-touched">
+        <div
+          *ngIf="email.touched && email.invalid"
+          class="ng-invalid ng-touched"
+        >
           <small style="color: #f10b0b9d;" *ngIf="emailIsRequired()">
-            Your Age is required!</small>
+            Your Age is required!</small
+          >
         </div>
       </div>
 
       <div class="field">
         <label>Phone Number</label>
-        <input formControlName="phone" name="tel2" type="tel" pattern="[0-9]{11}"
-          placeholder="Enter your Phone number" />
+        <input
+          formControlName="phone"
+          name="tel2"
+          type="tel"
+          pattern="[0-9]{11}"
+          placeholder="Enter your Phone number"
+        />
         <small> </small>
-        <div *ngIf="phone.touched && phone.invalid" class="ng-invalid ng-touched">
+        <div
+          *ngIf="phone.touched && phone.invalid"
+          class="ng-invalid ng-touched"
+        >
           <small style="color: #f10b0b9d;" *ngIf="phoneIsRequired()">
-            Your phone number is required!</small>
+            Your phone number is required!</small
+          >
         </div>
       </div>
 
@@ -59,7 +83,11 @@
     </div>
 
     <div class="text-center mt-4">
-      <button [disabled]="!iAForm.valid" type="submit" class="ui primary button">
+      <button
+        [disabled]="!iAForm.valid"
+        type="submit"
+        class="ui primary button"
+      >
         Start <i hidden class="fas fa-circle-notch fa-spin"></i>
       </button>
     </div>
