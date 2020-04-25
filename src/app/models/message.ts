@@ -348,9 +348,21 @@ export class Message {
           "terms-and-condition"
         );
         break;
-      case "no":
-      case "cancel":
-        this.dispatchevent("customEventFromMessageClass", "stop");
+      case "help":
+        this.receiverDispatchEvents(
+          "customReceiverEventFromMsgClass",
+          "",
+          "Yes, help me",
+          ""
+        );
+        break;
+      case "location on":
+        this.receiverDispatchEvents(
+          "customReceiverEventFromMsgClass",
+          "",
+          "Yes, my location is turned on.",
+          ""
+        );
         break;
       case "provide bvn":
         this.dispatchevent("customEventFromMessageClass", "bvn");
