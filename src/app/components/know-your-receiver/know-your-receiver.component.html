@@ -69,7 +69,7 @@
 
         <div (click)="selectFamilySize($event, '2-3')" class="numberBlockOne">
           <div>
-            <img src="../../../assets/images/svgs/user.svg" alt="" />
+            <img src="../../../assets/images/svgs/user2.svg" alt="" />
           </div>
           <p>2-3</p>
           <!-- <p><i class="fa fa-check"></i></p> -->
@@ -77,7 +77,7 @@
 
         <div (click)="selectFamilySize($event, '4-6')" class="numberBlockOne">
           <div>
-            <img src="../../../assets/images/svgs/user.svg" alt="" />
+            <img src="../../../assets/images/svgs/user4.svg" style="height: 50px;" alt="" />
           </div>
           <p>4-6</p>
           <!-- <p><i class="fa fa-check"></i></p> -->
@@ -85,7 +85,7 @@
 
         <div (click)="selectFamilySize($event, '6+')" class="numberBlockOne">
           <div>
-            <img src="../../../assets/images/svgs/user.svg" alt="" />
+            <img src="../../../assets/images/svgs/user6.svg" style="height: 50px;" alt="" />
           </div>
           <p>6+</p>
           <!-- <p><i class="fa fa-check"></i></p> -->
@@ -143,9 +143,9 @@
             <button class="ui button primary basic mt-4" (click)="provideID()">
               Yes, i have a family member with ID
             </button>
-            <a hidden class="mt-3 link" (click)="cancelPreliminaryPage()">
+            <!-- <a class="mt-3 link" (click)="cancelPreliminaryPage()">
               No, I am a single parent
-            </a>
+            </a> -->
             <!-- <span (click)="goBack('familyDetails')" class="goBack">
               <a>back</a></span> -->
           </div>
@@ -203,7 +203,7 @@
       <div id="idSelectionDiv" class="numberBlock modifyFontSize">
         <div (click)="selectID($event)" class="numberBlockOne">
           <div>
-            <img src="../../../assets/images/svgs/user.svg" alt="" />
+            <img src="../../../assets/images/svgs/name.svg" alt="" />
           </div>
           <p>National ID</p>
           <!-- <p><i class="fa fa-check"></i></p> -->
@@ -211,7 +211,7 @@
 
         <div (click)="selectID($event)" class="numberBlockOne">
           <div>
-            <img src="../../../assets/images/svgs/user.svg" alt="" />
+            <img src="../../../assets/images/svgs/name.svg" alt="" />
           </div>
           <p>Voters ID</p>
           <!-- <p><i class="fa fa-check"></i></p> -->
@@ -219,7 +219,7 @@
 
         <div (click)="selectID($event)" class="numberBlockOne">
           <div>
-            <img src="../../../assets/images/svgs/user.svg" alt="" />
+            <img src="../../../assets/images/svgs/name.svg" alt="" />
           </div>
           <p>BVN</p>
           <!-- <p><i class="fa fa-check"></i></p> -->
@@ -227,7 +227,7 @@
 
         <div (click)="selectID($event)" class="numberBlockOne">
           <div>
-            <img src="../../../assets/images/svgs/user.svg" alt="" />
+            <img src="../../../assets/images/svgs/name.svg" alt="" />
           </div>
           <p>Drivers licence</p>
           <!-- <p><i class="fa fa-check"></i></p> -->
@@ -238,8 +238,8 @@
       <form *ngIf="allowedToShow" class="ui form mt-4">
         <div class="field">
           <div class="ui checkbox">
-            <input (click)="iDontHaveAFamilyWithID($event)" type="checkbox" tabindex="0">
-            <label style="line-height: 1">I do not have a family member with id</label>
+            <input id="xyxx" (click)="iDontHaveAFamilyWithID($event)" type="checkbox" tabindex="0">
+            <label for="xyxx" style="line-height: 1">I do not have a family member with id</label>
           </div>
         </div>
       </form>
@@ -319,7 +319,9 @@
         </div>
       </div>
 
-      <span *ngIf="allowedToShow" (click)="goBack('providingID', '1')" class="goBack">back</span>
+      <button *ngIf="allowedToShow" (click)="goBack('providingID', '1')" class="modal-back">
+        <i class="fa fa-chevron-left"></i>
+      </button>
     </div>
   </div>
 </div>
