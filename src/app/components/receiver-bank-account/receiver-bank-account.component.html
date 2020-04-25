@@ -10,7 +10,7 @@
       <label>Bank name</label>
       <div class="field">
         <select (change)="setBankName($event)" formControlName="bank_name">
-          <option ngValue="Bank Name">Bank Name</option>
+          <option selected disabled ngValue="">Select Bank</option>
           <option (click)="setBankName(bank?.name)" [value]="bank?.bank_code" *ngFor="let bank of banks; index as i">
             {{ bank?.name }}
           </option>

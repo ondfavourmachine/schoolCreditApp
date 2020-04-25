@@ -59,6 +59,12 @@ div.selectedImageContainer {
   z-index: 1;
 }
 
+@media screen and (max-width: 700px) {
+  div.selectedImageContainer {
+    height: 70%;
+  }
+}
+
 div.selectedImageContainer > #imageToDisplay {
   height: 100% !important;
   width: 100% !important;

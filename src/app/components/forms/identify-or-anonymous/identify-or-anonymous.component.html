@@ -1,10 +1,13 @@
 <div class="identifyOrAnonymous flex flex-column align-center">
-  <div class="modal-icon mb-4"><img src="../../assets/images/svgs/question.svg" alt="" /></div>
-  <p class="para-title text-center mt-4 mb-4" *ngIf="stayAnonymous == '2'; else identify">
-    We will need some information about you. Be sure you have good internet.
-  </p>
+  <div class="flex flex-column align-center" *ngIf="stayAnonymous == '2'; else identify">
+    <div class="modal-icon mb-4"><img src="../../assets/images/svgs/question.svg" alt="" /></div>
+    <p class="para-title text-center mt-4 mb-4">
+      We will need some information about you. Be sure you have good internet.
+    </p>
+  </div>
 
   <ng-template #identify>
+    <div class="modal-icon mb-4"><img src="../../assets/images/svgs/unknown.svg" alt="" /></div>
     <p class="para-title text-center mt-4 mb-4">
       Despite your request to remain incognito, we still need your details for
       record purposes. We will not share your details with anyone.
