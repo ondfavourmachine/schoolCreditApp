@@ -72,6 +72,7 @@ export class KnowYourReceiverComponent
   public loading: boolean = true; // this is for the hidden attribute, when true = hide, when false = unhide
   public selectedParent: string = undefined;
   public IdToProvide: string = "BVN";
+  public warningForNotProvidingID: boolean = false;
 
   // htmlElement containers
   translateDiv: HTMLDivElement;
@@ -90,7 +91,7 @@ export class KnowYourReceiverComponent
     private generalservice: GeneralService,
     private fb: FormBuilder,
     private cd: ChangeDetectorRef
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.generalservice.commKYC$.subscribe(val => {
@@ -242,7 +243,7 @@ export class KnowYourReceiverComponent
       div.classList.add("thickenBorderBottom");
       this.setSpouse();
       // setTimeout(
-      //   () => 
+      //   () =>
       //   700
       //   );
       this.controlDisplayOfNumberBlockAndNumberBlockAlt();
@@ -258,9 +259,8 @@ export class KnowYourReceiverComponent
       // setTimeout(() => {
       // }, 1000);
       this.controlDisplayOfNumberBlockAndNumberBlockAlt("animationIn");
-      (document.querySelector(
-        ".preliminary"
-      ) as HTMLDivElement).style.display = "block";
+      (document.querySelector(".preliminary") as HTMLDivElement).style.display =
+        "block";
     }
   }
 
@@ -557,6 +557,28 @@ export class KnowYourReceiverComponent
       this.notification.show = false;
       this.notification.message = undefined;
     }, 2000);
+  }
+
+  noIDToProvide() {
+    const increaseHeight = document.getElementById(
+      "increaseHeight"
+    ) as HTMLDivElement;
+    increaseHeight.style.height = "550px";
+    this.warningForNotProvidingID = true;
+  }
+
+  takeOfwarning() {
+    const increaseHeight = document.getElementById(
+      "increaseHeight"
+    ) as HTMLDivElement;
+    increaseHeight.style.height = "auto";
+    this.warningForNotProvidingID = false;
+  }
+
+  continueWithoutID() {
+    // const increaseHeight =  document.getElementById('increaseHeight') as HTMLDivElement;
+    this.moveToNextStageForReceiver();
+    this.generalservice.userDidNotProvideID = true;
   }
 
   ngOnDestroy() {

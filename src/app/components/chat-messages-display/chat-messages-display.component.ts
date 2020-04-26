@@ -152,6 +152,7 @@ export class ChatMessagesDisplayComponent
 
     ul.addEventListener("customReceiverEventFromMsgClass", (e: CustomEvent) => {
       const { stage, message, text } = e.detail;
+      // console.log(e.detail);
       if (String(stage).includes("transparency-disclaimer")) {
         this.generalservice.handleFlowController("receiverContainer");
         // this.disableTheButtonsOfPreviousListElement();
@@ -179,35 +180,57 @@ export class ChatMessagesDisplayComponent
       }
 
       if (String(message).toLowerCase() == "yes, my location is turned on.") {
-        console.log(message);
-        const response: ReceiversResponse = new ReceiversResponse(
-          this.generalservice.typeOfPerson,
-          "",
-          {
-            message,
-            direction: "right",
-            button: "",
-            extraInfo: undefined
-          },
-          new replyGiversOrReceivers(
-            `Get the following information ready before we start:
-              (1) A valid means of ID(BVN, Voters, Drivers licence, National ID), 
-              (2) Another family member means of ID 
-              (3) The Account number you want to get funds into 
-              (4) A picture with you and your family taken today.`,
-            "left",
-            "Continue,No i want to give",
-            "receive,give"
-          )
+        // console.log(message);
+        this.generalservice.getLocationOfUser();
+        setTimeout(() => {
+          this.manageLocationIssuesScenario(message);
+        }, 2000);
+      }
+      if (String(message).toLowerCase() == "i have turned on my location") {
+        const response = new replyGiversOrReceivers(
+          `Get the following information ready before we start:
+                (1) A valid means of ID(BVN, Voters, Drivers licence, National ID),
+                (2) Another family member means of ID
+                (3) The Account number you want to get funds into
+                (4) A picture with you and your family taken today.`,
+          "left",
+          "Continue,No i want to give",
+          "receive,give"
         );
-        this.generalservice.nextChatbotReplyToReceiver =
-          response.optionalReplyToUser;
-        this.generalservice.responseDisplayNotifier(response);
+        this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
+        this.displaySubsequentMessages(response);
+      }
+      if (String(message).toLowerCase() == "continue without it") {
+        const userResponse = new replyGiversOrReceivers(
+          `${String(message)}`,
+          "right"
+        );
+        const chatBotReply = new replyGiversOrReceivers(
+          `Get the following information ready before we start:
+        (1) A valid means of ID(BVN, Voters, Drivers licence, National ID),
+        (2) Another family member means of ID
+        (3) The Account number you want to get funds into
+        (4) A picture with you and your family taken today.`,
+          "left",
+          "Continue,No i want to give",
+          "receive,give"
+        );
+        this.displaySubsequentMessages(userResponse);
+        this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
+        setTimeout(() => {
+          this.displaySubsequentMessages(chatBotReply);
+        }, 500);
       }
     });
     //   IdentifyOrAnonymousForms
     ul.addEventListener("customGiverEventFromMsgClass", (e: CustomEvent) => {
-      const { typeOfEvent, message, componentToLoad } = e.detail;
+      // console.log(e.detail);
+      const {
+        typeOfEvent,
+        message,
+        componentToLoad,
+        moreInformation
+      } = e.detail;
       if (String(message).includes("giver")) {
         sessionStorage.setItem("route", String(message));
         this.generalservice.receiver = "giver";
@@ -219,12 +242,55 @@ export class ChatMessagesDisplayComponent
       if (String(componentToLoad).toLowerCase() == "supportpageforms") {
         this.generalservice.handleFlowController(String(componentToLoad));
       }
+      if (moreInformation) {
+        let arrToPush = [];
+        // console.log(moreInformation);
+        // sessionStorage.removeItem(;)
+
+        arrToPush = JSON.parse(sessionStorage.getItem("evidenceUploadData"));
+        if (arrToPush) {
+          let temp = moreInformation.split("-");
+          let obj = {};
+          obj[temp[1]] =
+            String(temp[2]) + "/" + String(temp[3]) + "/" + String(temp[4]);
+          arrToPush.push(obj);
+          sessionStorage.setItem(
+            "evidenceUploadData",
+            JSON.stringify(arrToPush)
+          );
+        } else {
+          arrToPush = [];
+          let temp = moreInformation.split("-");
+          let obj = {};
+          obj[temp[1]] =
+            String(temp[2]) + "/" + String(temp[3]) + "/" + String(temp[4]);
+          arrToPush.push(obj);
+          sessionStorage.setItem(
+            "evidenceUploadData",
+            JSON.stringify(arrToPush)
+          );
+        }
+        // console.log(componentToLoad);
+        this.generalservice.handleFlowController("takeAPicture");
+        this.generalservice.uploadEvidenceOfTransferInProgress = true;
+      }
     });
 
     ul.addEventListener("customGiverResponse", (e: CustomEvent) => {
       const { reply, message } = e.detail;
-      // console.log(reply);
-      // console.log(message.trim());
+      // console.log(message, reply);
+      if (!reply) {
+        this.displaySubsequentMessages({
+          message: message.message,
+          direction: message.direction,
+          button: message.button,
+          extraInfo: message.extraInfo
+        });
+        // this.generalservice.ctrlDisableTheButtonsOfPreviousListElement(
+        //   "prevent"
+        // );
+        return;
+      }
       this.insertGiversResponseIntoDom(reply, message);
     });
 
@@ -281,38 +347,6 @@ export class ChatMessagesDisplayComponent
     });
   }
 
-  // old code from creditclan chatbot
-  // respondToChangesFromOutside(value: any) {
-  //   // debugger;
-  //   switch (value) {
-  //     case "termsAndConditionAccepted":
-  //       this.displaySubsequentMessages({
-  //         message: `
-  //           I have read and accepted the terms and conditions.
-  //         `,
-  //         direction: "right"
-  //       });
-  //       setTimeout(() => {
-  //         this.displaySubsequentMessages({
-  //           message: `
-  //            Please provide your BVN and date of birth
-  //           `,
-  //           direction: "left",
-  //           button: "Provide bvn"
-  //         });
-  //       }, 500);
-  //       break;
-  //     case "stop":
-  //       this.displaySubsequentMessages({
-  //         message: `
-  //           Ok, Thank you for your time.
-  //         `,
-  //         direction: "left"
-  //       });
-  //       break;
-  //   }
-  // }
-
   // covid relief bot replies to givers
   respondToUsers(reply: replyGiversOrReceivers) {
     this.displaySubsequentMessages({
@@ -345,11 +379,17 @@ export class ChatMessagesDisplayComponent
       const { message, direction } = reply;
       this.displaySubsequentMessages({
         message: message,
-        direction: direction
+        direction: direction,
+        button: reply.button ? reply.button : "",
+        extraInfo: reply.extraInfo ? reply.extraInfo : ""
       });
       this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
+
       setTimeout(() => {
         this.displaySubsequentMessages(chatbotReply);
+        if (/upload/i.test(chatbotReply.button)) {
+          this.generalservice.reEnableUploadButton();
+        }
       }, 1000);
     }
   }
@@ -404,26 +444,30 @@ export class ChatMessagesDisplayComponent
   }) {
     const ul = this.messagePlaceHolder.nativeElement as HTMLUListElement;
     // console.log(message, direction);
-    if (!obj.button) {
-      const messageToDisplay = new Message(
-        `${obj.message ? obj.message : " "}`,
-        `${obj.direction ? obj.direction : "left"}`,
-        ul
-      );
-      //  incrementing this is important
-      this.count++;
-      messageToDisplay.makeAndInsertMessage(this.count);
-    } else {
-      this.count++;
-      const messageToDisplay = new Message(
-        `${obj.message ? obj.message : " "}`,
-        `${obj.direction ? obj.direction : "left"}`,
-        ul,
-        obj.button,
-        obj.extraInfo
-      );
-      messageToDisplay.makeAndInsertMessage(this.count);
-      // console.log(this.count);
+    try {
+      if (!obj.button) {
+        const messageToDisplay = new Message(
+          `${obj.message ? obj.message : " "}`,
+          `${obj.direction ? obj.direction : "left"}`,
+          ul
+        );
+        //  incrementing this is important
+        this.count++;
+        messageToDisplay.makeAndInsertMessage(this.count);
+      } else {
+        this.count++;
+        const messageToDisplay = new Message(
+          `${obj.message ? obj.message : " "}`,
+          `${obj.direction ? obj.direction : "left"}`,
+          ul,
+          obj.button,
+          obj.extraInfo
+        );
+        messageToDisplay.makeAndInsertMessage(this.count);
+        // console.log(this.count);
+      }
+    } catch (err) {
+      console.log(err);
     }
   }
 
@@ -441,27 +485,27 @@ export class ChatMessagesDisplayComponent
     }
   }
 
-  checkForRefNoAndDisplayAppropriateMsg(ref?: string) {
-    // debugger;
-    let refToSend = { ref_no: ref };
-    this.chatservice.fetchRefNumber(refToSend).subscribe(
-      (val: ValidateRefResponse) => {
-        console.log(val);
-        let msg: { message: string; direction: string; button?: string };
-        msg = this.generalservice.handleValidRef(val);
-        try {
-          this.displaySubsequentMessages(msg);
-        } catch (e) {
-          return;
-        }
-        console.log(msg.message);
-      },
-      err =>
-        this.displaySubsequentMessages(
-          this.generalservice.handleRefCheckingError(err)
-        )
-    );
-  }
+  // checkForRefNoAndDisplayAppropriateMsg(ref?: string) {
+  //   // debugger;
+  //   let refToSend = { ref_no: ref };
+  //   this.chatservice.fetchRefNumber(refToSend).subscribe(
+  //     (val: ValidateRefResponse) => {
+  //       console.log(val);
+  //       let msg: { message: string; direction: string; button?: string };
+  //       msg = this.generalservice.handleValidRef(val);
+  //       try {
+  //         this.displaySubsequentMessages(msg);
+  //       } catch (e) {
+  //         return;
+  //       }
+  //       console.log(msg.message);
+  //     },
+  //     err =>
+  //       this.displaySubsequentMessages(
+  //         this.generalservice.handleRefCheckingError(err)
+  //       )
+  //   );
+  // }
 
   requestRef(ref: string) {
     setTimeout(() => {
@@ -474,7 +518,7 @@ export class ChatMessagesDisplayComponent
         });
         this.actionDispatched.emit("refChecking");
       } else {
-        this.checkForRefNoAndDisplayAppropriateMsg(ref);
+        // this.checkForRefNoAndDisplayAppropriateMsg(ref);
       }
     }, 300);
   }
@@ -541,12 +585,12 @@ export class ChatMessagesDisplayComponent
     }, 1000);
   }
 
-  specialCaseButtons(buttons: Array<HTMLButtonElement>) {
+  specialCaseButtons(buttons: Array<HTMLButtonElement> | NodeList) {
     buttons.forEach((button: HTMLButtonElement) => {
       if (
-        button.textContent.includes("Address") ||
-        button.textContent.includes("Work") ||
-        button.textContent.includes("Ok begin")
+        button.textContent.toLowerCase().includes("yes") ||
+        button.textContent.toLowerCase().includes("no i am giving") ||
+        button.textContent.toLowerCase().includes("ok begin")
       ) {
         button.classList.add("disabled");
         button.disabled = true;
@@ -657,6 +701,57 @@ export class ChatMessagesDisplayComponent
       // this.observableToTrash.apiCall.unsubscribe();
       this.observableToTrash.preventDisabling.unsubscribe();
       this.observableToTrash.destroyNextReply.unsubscribe();
+    }
+  }
+
+  manageLocationIssuesScenario(message) {
+    const userLatLng = JSON.parse(sessionStorage.getItem("userLatLng"));
+    // this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
+    const nl: NodeList = document.querySelectorAll(".dynamicButton");
+    this.specialCaseButtons(nl);
+    try {
+      if (userLatLng["latitude"]) {
+        const response: ReceiversResponse = new ReceiversResponse(
+          this.generalservice.typeOfPerson,
+          "",
+          {
+            message,
+            direction: "right",
+            button: "",
+            extraInfo: undefined
+          },
+          new replyGiversOrReceivers(
+            `Get the following information ready before we start:
+                  (1) A valid means of ID(BVN, Voters, Drivers licence, National ID),
+                  (2) Another family member means of ID
+                  (3) The Account number you want to get funds into
+                  (4) A picture with you and your family taken today.`,
+            "left",
+            "Continue,No i want to give",
+            "receive,give"
+          )
+        );
+        this.generalservice.nextChatbotReplyToReceiver =
+          response.optionalReplyToUser;
+        // this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
+        this.generalservice.responseDisplayNotifier(response);
+      }
+    } catch (err) {
+      this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
+      const response = new replyGiversOrReceivers(
+        `i am still not able to get your location. It might affect your chances of getting help.`,
+        "left",
+        "i have turned it on,continue without it",
+        "location now on,forget about it"
+      );
+      this.displaySubsequentMessages({
+        message: response.message,
+        direction: response.direction,
+        button: response.button,
+        extraInfo: response.extraInfo
+      });
+      // this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
+      // this.generalservice.responseDisplayNotifier(response);
     }
   }
 }

@@ -21,7 +21,11 @@ body {
   /* background: linear-gradient(to bottom right, #00bcd4, #1a2461); */
   /* background: linear-gradient(to bottom right, #1a1a1f, #111114); */
   background: #005c97; /* fallback for old browsers */
-  background: -webkit-linear-gradient(to right, #363795, #005c97); /* Chrome 10-25, Safari 5.1-6 */
+  background: -webkit-linear-gradient(
+    to right,
+    #363795,
+    #005c97
+  ); /* Chrome 10-25, Safari 5.1-6 */
   background: linear-gradient(
     to right,
     #363795,
@@ -241,8 +245,10 @@ body {
   top: 0;
   height: 75px;
   width: 100%;
-  box-shadow: 0 0.46875rem 2.1875rem rgba(4, 9, 20, 0.03), 0 0.9375rem 1.40625rem rgba(4, 9, 20, 0.03),
-    0 0.25rem 0.53125rem rgba(4, 9, 20, 0.05), 0 0.125rem 0.1875rem rgba(4, 9, 20, 0.03);
+  box-shadow: 0 0.46875rem 2.1875rem rgba(4, 9, 20, 0.03),
+    0 0.9375rem 1.40625rem rgba(4, 9, 20, 0.03),
+    0 0.25rem 0.53125rem rgba(4, 9, 20, 0.05),
+    0 0.125rem 0.1875rem rgba(4, 9, 20, 0.03);
 }
 
 .header__inner {
@@ -1361,6 +1367,9 @@ ul.list li span:nth-child(2) {
   border-radius: 0 !important;
   padding: 1rem 0 !important;
 }
+/* input:invalid {
+  border-bottom: 1px solid red !important;
+} */
 
 .ui.form .field > input:focus,
 .ui.form .field > select:focus,

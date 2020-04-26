@@ -169,3 +169,20 @@ div.translateCoverPlate p:last-child > a {
     transform: translateY(550px);
   }
 }
+
+.noPictures {
+  display: block;
+  margin: 15px auto;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 40px;
+  position: absolute;
+  z-index: 10000 !important;
+  cursor: pointer;
+  padding: 0.2rem 1rem;
+}
+
+.warning {
+  text-align: center;
+  font-size: 1.3rem;
+}

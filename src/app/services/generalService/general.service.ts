@@ -30,6 +30,8 @@ export class GeneralService {
   public answersToSend: Array<any> = [];
   public nameOfModal: string = "";
   public questionsHasFinished: string = undefined;
+  public uploadEvidenceOfTransferInProgress: boolean = false;
+  public noOfevidencesOfTransferToUpload: number = 0;
   svg: any = `
   <svg  " xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="margin: auto; background: inherit; display: inline-block; shape-rendering: auto;" width="34px" height="20px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
           <g transform="rotate(183.438 50 50)">
@@ -113,6 +115,7 @@ export class GeneralService {
   public familyToReceiveCashDonation: any;
   public flowControlHolder: string;
   public familiesForCashDonation: Array<any> = [];
+  public userDidNotProvideID = false;
 
   public location: any;
   constructor() {}
@@ -368,14 +371,54 @@ export class GeneralService {
     }, t);
   }
 
-  // get welcomeMsgToDisplayFromMessageClass(){
-  //   const ul = document.getElementById('messagesPlaceHolder')
-  //   const msg = new Message(
-  //     `${Message.welcomeMessagesGenerator()}`,
-  //     `left`,
-  //     ul
-  //   )
+  reEnableUploadButton() {
+    let nl: NodeList = document.querySelectorAll(".dynamicButton");
+    for (let i = nl.length - 1; i >= 0; i--) {
+      // console.log(i);
+      if (
+        /upload/i.test(nl[i].textContent) &&
+        (nl[i] as HTMLButtonElement).classList.contains("disabled")
+      ) {
+        const but = nl[i] as HTMLButtonElement;
+        but.classList.remove("disabled");
+        but.disabled = false;
+        but.style.pointerEvents = "auto";
+      }
+      if (i == 5) break;
+    }
+  }
 
-  //   return msg
-  // }
+  getLocationOfUser() {
+    if (window.navigator.geolocation) {
+      window.navigator.geolocation.getCurrentPosition(
+        this.findPerson,
+        () => this.errorFindingPerson,
+        { enableHighAccuracy: true }
+      );
+    }
+  }
+
+  findPerson(position) {
+    const { longitude, latitude } = position.coords;
+    let location = { latitude, longitude };
+    // console.log(position);
+    sessionStorage.setItem("userLatLng", JSON.stringify(location));
+  }
+  errorFindingPerson() {
+    this.getLocationFromIp();
+  }
+
+  async getLocationFromIp() {
+    try {
+      const { longitude, latitude } = await (await fetch(
+        "https://api.ipstack.com/check?access_key=2f2fdee3320b5dcebf5b167167dd96f2"
+      )).json();
+      let location = { latitude, longitude };
+      // console.log(this.generalservice.location);
+      sessionStorage.setItem("userLatLng", JSON.stringify(location));
+      // this.verifyLocation(this.location);
+    } catch (error) {
+      console.log("Location error.. ", error);
+    }
+  }
 }

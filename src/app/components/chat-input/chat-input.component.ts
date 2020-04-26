@@ -88,9 +88,11 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
       const giverRegex = /giver/gi;
       if (ReceiverRegex.test(input.value)) {
         this.router.navigate(["receiver"]);
+        sessionStorage.clear();
       }
       if (giverRegex.test(input.value)) {
         this.router.navigate(["giver"]);
+        sessionStorage.clear();
       }
     }
 

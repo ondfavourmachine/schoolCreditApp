@@ -1,5 +1,8 @@
 <div class="parent">
-  <div class="flex flex-column justify-center align-center" id="ImageInsertionPoint">
+  <div
+    class="flex flex-column justify-center align-center"
+    id="ImageInsertionPoint"
+  >
     <div class="selectedImageContainer">
       <img id="imageToDisplay" src="" alt="" />
     </div>
@@ -8,23 +11,87 @@
       <img src="../../../assets/images/svgs/upload.svg" alt="" />
     </div>
 
-    <input hidden (change)="mimeController($event)" id="inputFile" type="file" accept="image/png, image/jpeg" />
+    <input
+      hidden
+      (change)="mimeController($event)"
+      id="inputFile"
+      type="file"
+      accept="image/png, image/jpeg"
+    />
 
-    <p class="para-title shrink">
+    <p *ngIf="!uploadEvidence; else evidenceUpload" class="para-title shrink">
       Click the icon above to upload a picture of your family
+
+      <span (click)="noPicturesProvided()" class="noPictures"
+        ><a
+          style="cursor: pointer;z-index: 1000;"
+          (click)="noPicturesProvided()"
+        >
+          I dont have no pictures</a
+        ></span
+      >
     </p>
+    <ng-template #evidenceUpload>
+      <p class="para-title shrink">
+        Click to upload a picture of transfer you made to {{ familyName }}
+      </p>
+    </ng-template>
 
     <!-- <p>Click the icon to upload a picture</p> -->
     <small *ngIf="notification">Please upload an image lesser than 2.5mb</small>
 
     <div class="inner-modal" *ngIf="uploaded">
-      <div class="inner-modal-content flex flex-column align-center justify-center">
+      <div
+        *ngIf="idontWantToProvidePictures"
+        id="idontWantToProvidePictures"
+        class="inner-modal-content flex flex-column align-center justify-center"
+      >
+        <div class="modal-icon mb-4">
+          <img src="../../../assets/images/stop.svg" alt="" />
+        </div>
+        <p class="warning">
+          Not providing an id will affect your chances of receiving help.
+        </p>
+
+        <button class="ui button primary basic mt-4" (click)="next()">
+          Continue without a picture
+        </button>
+        <a class="mt-3 link" (click)="hide()">
+          ok, i will provide a picture
+        </a>
+      </div>
+
+      <div
+        *ngIf="!familyName && !idontWantToProvidePictures"
+        class="inner-modal-content flex flex-column align-center justify-center"
+      >
         <div class="modal-icon mb-4">
           <img src="../../../assets/images/svgs/checked.svg" alt="" />
         </div>
 
-        <button class="ui button primary basic mt-4" (click)="next()">Next</button>
-        <a class="mt-3 link" href="#" (click)="changePicture()">
+        <button class="ui button primary basic mt-4" (click)="next()">
+          Next
+        </button>
+        <a class="mt-3 link" (click)="changePicture()">
+          Change picture
+        </a>
+      </div>
+
+      <div
+        *ngIf="familyName"
+        class="inner-modal-content flex flex-column align-center justify-center"
+      >
+        <div class="modal-icon mb-4">
+          <img src="../../../assets/images/svgs/checked.svg" alt="" />
+        </div>
+
+        <button
+          class="ui button primary basic mt-4"
+          (click)="uploadEvidenceOfTransfer()"
+        >
+          Upload evidence
+        </button>
+        <a class="mt-3 link" (click)="changePicture()">
           Change picture
         </a>
       </div>

@@ -83,7 +83,7 @@ export class Message {
       // set image
       avatarImage.src = `../../../assets/chatbotImages/${
         this.direction == "left" ? "avatar.png" : "avatar2.png"
-        }`;
+      }`;
       avatarImage.className = "avatar";
 
       // secondDiv after image
@@ -129,7 +129,7 @@ export class Message {
         const html = `
         <div data-time="${this.addDate()}" class="chat-box__wrapper ${
           this.direction
-          }">  
+        }">  
         <div class="chat-box__inner-wrapper">
           <img
             src="../../../assets/chatbotImages/avatar.png"
@@ -193,7 +193,7 @@ export class Message {
         const html = `
         <div data-time="${this.addDate()}" class="chat-box__wrapper ${
           this.direction
-          }">  
+        }">  
         <div class="chat-box__inner-wrapper">
           
           <div class="chat-box__text-wrapper">
@@ -208,7 +208,7 @@ export class Message {
         const html = `
          <div data-time="${this.addDate()}" class="chat-box__wrapper ${
           this.direction
-          }">  
+        }">  
         <div class="chat-box__inner-wrapper">
       
       <div class="chat-box__text-wrapper">
@@ -224,7 +224,7 @@ export class Message {
       const html = `
       <div data-time="${this.addDate()}" class="chat-box__wrapper ${
         this.direction
-        }">  
+      }">  
       <div class="chat-box__inner-wrapper">
         
         <div class="chat-box__text-wrapper">
@@ -268,14 +268,14 @@ export class Message {
       } else {
         avatar.src = `../../../assets/chatbotImages/${
           this.direction == "left" ? "avatar.png" : "avatar2.png"
-          }`;
+        }`;
         avatar.className = "avatar";
         parentDiv.insertAdjacentElement("afterbegin", avatar);
       }
     } else {
       avatar.src = `../../../assets/chatbotImages/${
         this.direction == "left" ? "avatar.png" : "avatar2.png"
-        }`;
+      }`;
       avatar.className = "avatar";
       parentDiv.insertAdjacentElement("afterbegin", avatar);
     }
@@ -317,7 +317,7 @@ export class Message {
     const failureMessages = [
       `Oops wrong format! ${dateOfBirthMsg[0].split(",")[1]}`,
       `The format you entered is wrong! Please ${
-      dateOfBirthMsg[0].split(",")[1]
+        dateOfBirthMsg[0].split(",")[1]
       }`,
       `Try again! ${dateOfBirthMsg[0].split(",")[1]}`
     ];
@@ -338,7 +338,10 @@ export class Message {
     let button = event.srcElement as HTMLButtonElement;
     let c = button.dataset["button"].toString().toLowerCase();
     c = c.split("-")[1];
-    // console.log(c);
+    if (!isNaN(Number(c))) {
+      this.handleUpload(button.dataset["button"]);
+      return;
+    }
     switch (c) {
       case "yes":
       case "start":
@@ -364,6 +367,22 @@ export class Message {
           ""
         );
         break;
+      case "location now on":
+        this.receiverDispatchEvents(
+          "customReceiverEventFromMsgClass",
+          "",
+          "I have turned on my location",
+          ""
+        );
+        break;
+      case "forget about it":
+        this.receiverDispatchEvents(
+          "customReceiverEventFromMsgClass",
+          "",
+          "Continue without it",
+          ""
+        );
+        break;
       case "provide bvn":
         this.dispatchevent("customEventFromMessageClass", "bvn");
         break;
@@ -375,11 +394,27 @@ export class Message {
           "yes, this is my first time"
         );
         break;
+      // giveFood
       case "identify":
         this.giverDispatchEvents(
           "customGiverEventFromMsgClass",
           "giver",
           "IdentifyOrAnonymousForms"
+        );
+        sessionStorage.setItem("anonymous", "2");
+        break;
+      case "givefood":
+        this.giverResponsesEvent(
+          "customGiverResponse",
+          new replyGiversOrReceivers(
+            "We are still working out the modalities for enabling help by food.",
+            "left",
+            "I want to give money",
+            "identify,stayanonymous"
+          )
+          // new GiverResponse(
+          //   new replyGiversOrReceivers("Yes, i am a first time giver", "right")
+          // )
         );
         sessionStorage.setItem("anonymous", "2");
         break;
@@ -478,10 +513,11 @@ export class Message {
   giverDispatchEvents(
     typeOfEvent: string,
     message: string,
-    componentToLoad: string
+    componentToLoad: string,
+    moreInformation?: string
   ) {
     const event: Event = new CustomEvent(typeOfEvent, {
-      detail: { typeOfEvent, message, componentToLoad },
+      detail: { typeOfEvent, message, componentToLoad, moreInformation },
       bubbles: true
     });
     this.htmlElement.dispatchEvent(event);
@@ -498,12 +534,21 @@ export class Message {
   giverResponsesEvent(
     typeOfEvent: string,
     message: replyGiversOrReceivers,
-    reply: GiverResponse
+    reply?: GiverResponse
   ) {
     const event: Event = new CustomEvent(typeOfEvent, {
       detail: { message, typeOfEvent, reply },
       bubbles: true
     });
     this.htmlElement.dispatchEvent(event);
+  }
+
+  handleUpload(stringToPassAlong: string) {
+    this.giverDispatchEvents(
+      "customGiverEventFromMsgClass",
+      "giver",
+      "takeApicture",
+      stringToPassAlong
+    );
   }
 }

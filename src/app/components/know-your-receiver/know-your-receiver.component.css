@@ -318,3 +318,13 @@ div.identificationForm form {
 } */
 
 /* ends here */
+p.warningSign img{
+  height: 200px;
+}
+
+p.warningSignText{
+  text-align: center;
+  font-weight: 500;
+}
+
+

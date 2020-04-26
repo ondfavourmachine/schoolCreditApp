@@ -12,6 +12,9 @@ export class FoundBeneficiaryComponent implements OnInit, AfterViewInit {
   stage: string = "1"; // 1, 2, 3, 4, 5
   familyThatWillBenefit: any = {};
   familyPictureToDisplay: string;
+  public confirmed: boolean = true;
+  private previousFamilyThatReceivedHelp: string;
+  private giverID = sessionStorage.getItem("giver");
   notification = { show: false, message: undefined };
   constructor(public generalservice: GeneralService, private http: HttpClient) {
     // console.log(this.generalservice.familyToReceiveCashDonation);
@@ -26,7 +29,7 @@ export class FoundBeneficiaryComponent implements OnInit, AfterViewInit {
     setTimeout(() => {
       this.generalservice.controlGlobalNotificationSubject.next("off");
     }, 500);
-    // console.log("i am here");
+    // console.log(this.confirmed);
   }
 
   ngAfterViewInit() {
@@ -41,8 +44,9 @@ export class FoundBeneficiaryComponent implements OnInit, AfterViewInit {
   }
 
   iHaveTransferredTheMoney() {
+    this.confirmed = true;
     if (this.generalservice.familiesForCashDonation.length != 0) {
-      let previousFamily = this.familyThatWillBenefit;
+      this.previousFamilyThatReceivedHelp = this.familyThatWillBenefit;
       this.familyThatWillBenefit = "";
       let temp = this.generalservice.familiesForCashDonation.splice(0, 1);
       this.familyThatWillBenefit = temp[0];
@@ -53,33 +57,41 @@ export class FoundBeneficiaryComponent implements OnInit, AfterViewInit {
       imageElement.src = "";
       imageElement.src = this.familyThatWillBenefit.family_picture;
       const giverResponse = new replyGiversOrReceivers(
-        `I have transferred N5000 to the ${previousFamily["family_name"]}`,
+        `I have transferred N5000 to the ${this.previousFamilyThatReceivedHelp["family_name"]}`,
         "right"
       );
+      this.generalservice.noOfevidencesOfTransferToUpload++
       setTimeout(() => {
         this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
-          "Thank you so much. God bless you",
-          "left"
+          `Thank you so much. God bless you. Please could you take a moment to upload some evidence of transfer
+            to ${this.previousFamilyThatReceivedHelp["family_name"]}`,
+          "left",
+          "upload evidence",
+          `${this.previousFamilyThatReceivedHelp["transaction_id"]}-${this.previousFamilyThatReceivedHelp["id"]}-${this.giverID}-${this.familyThatWillBenefit["family_name"]}`
         );
         this.generalservice.responseDisplayNotifier(giverResponse);
       }, 300);
       this.stage = "1";
       return;
     }
+    // console.log(this.familyThatWillBenefit);
     this.generalservice.controlGlobalNotificationSubject.next("on");
     const giverResponse = new replyGiversOrReceivers(
-      "I have transferred money to all of them",
+      `I have transferred N5000 to the ${this.familyThatWillBenefit["family_name"]}`,
       "right"
     );
 
     this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
-      "Thank you so much for providing help in this trying times. God bless you.",
-      "left"
+      `Thank you so much for providing help in this trying times. God bless you. Please take a moment to upload some evidence of transfer to ${this.familyThatWillBenefit["family_name"]}`,
+      "left",
+      "upload evidence",
+      `${this.familyThatWillBenefit["transaction_id"]}-${this.familyThatWillBenefit["id"]}-${this.giverID}-${this.familyThatWillBenefit["family_name"]}`
     );
     this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
     (document.querySelector(".modal-close") as HTMLSpanElement).click();
     this.generalservice.responseDisplayNotifier(giverResponse);
     this.generalservice.controlGlobalNotificationSubject.next("off");
+    this.generalservice.noOfevidencesOfTransferToUpload++
   }
 
   iConfirmThatMoneyHasLeftMyAccount() {
@@ -110,7 +122,7 @@ export class FoundBeneficiaryComponent implements OnInit, AfterViewInit {
       setTimeout(() => {
         this.notification.show = false;
         this.notification.message = undefined;
-      }, 4000);
+      }, 10000);
     }
   }
 }

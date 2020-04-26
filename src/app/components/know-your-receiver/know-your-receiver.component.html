@@ -133,7 +133,7 @@
 
       <div class="translateCoverPlate">
         <div class="inner-modal preliminary" style="display: none;">
-          <div class="inner-modal-content flex flex-column align-center text-center">
+          <div id="increaseHeight" *ngIf="!warningForNotProvidingID" class="inner-modal-content flex flex-column align-center text-center">
             <h1 class="para-title">Provide means of Identification</h1>
             <p class="para-body">
               We need You and one other member of your family to provide us with
@@ -143,12 +143,31 @@
             <button class="ui button primary basic mt-4" (click)="provideID()">
               Yes, i have a family member with ID
             </button>
-            <!-- <a class="mt-3 link" (click)="cancelPreliminaryPage()">
-              No, I am a single parent
-            </a> -->
+            <a class="mt-3 link" style="cursor: pointer;" (click)="noIDToProvide()">
+              No, I do not have an ID to provide
+            </a>
             <!-- <span (click)="goBack('familyDetails')" class="goBack">
               <a>back</a></span> -->
           </div>
+          <div id="increaseHeight" *ngIf="warningForNotProvidingID" class="inner-modal-content flex flex-column align-center text-center">
+              
+              <p class="warningSign">
+                  <img src="../../../assets/images/stop.svg" alt="" />
+              </p>
+
+              <p class="warningSignText">
+                  Not providing a valid ID can affect your chances of getting financial assitance in this trying times
+              </p>
+  
+              <button class="ui button primary basic mt-4" (click)="continueWithoutID()">
+                continue without providing ID
+              </button>
+              <a class="mt-3 link" style="cursor: pointer;" (click)="takeOfwarning()">
+                OK, I will provide an ID
+              </a>
+              <!-- <span (click)="goBack('familyDetails')" class="goBack">
+                <a>back</a></span> -->
+            </div>
           <!-- <span (click)="goBack('familyDetails')" class="goBack">go back</span> -->
         </div>
 

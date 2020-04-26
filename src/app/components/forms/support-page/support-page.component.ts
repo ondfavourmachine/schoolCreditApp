@@ -110,17 +110,17 @@ export class SupportPageComponent implements OnInit {
               "No Family Available to receive your Kindness! Please Try Giving in the Next Hour." &&
             !val["status"]
           ) {
+            this.stage = "1";
           } else {
-            let temp = [];
-            if (val["data"].length == 1) {
-              for (let data of val["data"]) {
-                this.familyDetails = { ...data };
-              }
-            } else {
-              this.generalservice.familiesForCashDonation = val["data"];
-              this.generalservice.controlGlobalNotificationSubject.next("on");
-              this.gotoFamilyDetails();
-            }
+            // let temp = [];
+            // if (val["data"].length == 1) {
+            //   for (let data of val["data"]) {
+            //     this.familyDetails = { ...data };
+            //   }
+            // } else {
+            this.generalservice.familiesForCashDonation = val["data"];
+            this.generalservice.controlGlobalNotificationSubject.next("on");
+            this.gotoFamilyDetails();
 
             // console.log(this.familyDetails);
             // this.generalservice.familyToReceiveCashDonation = this.familyDetails;
