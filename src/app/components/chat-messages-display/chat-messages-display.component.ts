@@ -17,14 +17,14 @@ import { ChatService } from "src/app/services/ChatService/chat.service";
 // import { QuestionsToAsk, Questionaire } from "src/app/models/Questionaire";
 import { TitleCasePipe } from "@angular/common";
 import { Subscription } from "rxjs";
-import { ValidateRefResponse } from "../../models/validaterRefRes";
-import { delay } from "rxjs/operators";
+// import { Location } from '@angular/common';
+import { delay, take } from "rxjs/operators";
 import {
   replyGiversOrReceivers,
   GiverResponse,
   ReceiversResponse
 } from "src/app/models/GiverResponse";
-import { Router, NavigationStart, NavigationEnd } from "@angular/router";
+import { Router } from "@angular/router";
 // import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
 
 interface GetBvnResponse {
@@ -55,7 +55,7 @@ export class ChatMessagesDisplayComponent
   @Output("restartProcess")
   restartProcess = new EventEmitter<string>();
   @Output("actionDispatched") actionDispatched = new EventEmitter<string>();
-  observer: MutationObserver;
+
   // private counter: number;
   private refNo: string;
   private receiverIsPresent: boolean = false;
@@ -70,6 +70,24 @@ export class ChatMessagesDisplayComponent
   ) {}
 
   ngOnInit() {
+    this.generalservice.reset$.subscribe((val: string) => {
+      if (val.length < 1) return;
+      const currentRoute = this.route.url;
+      sessionStorage.clear();
+      if (currentRoute.includes("giver")) {
+        this.route.navigateByUrl("/", { skipLocationChange: true }).then(() => {
+          this.route.navigate([currentRoute]);
+        });
+      } else {
+        this.route
+          .navigateByUrl("/giver", { skipLocationChange: true })
+          .then(() => {
+            this.route.navigate([currentRoute]);
+          });
+      }
+
+      // this.ngOnInit();
+    });
     this.generalservice.congratsOrRegrets$.subscribe(val => {
       if (val.length < 1) {
         return;
@@ -180,7 +198,7 @@ export class ChatMessagesDisplayComponent
       }
 
       if (String(message).toLowerCase() == "yes, my location is turned on.") {
-        // console.log(message);
+        this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
         this.generalservice.getLocationOfUser();
         setTimeout(() => {
           this.manageLocationIssuesScenario(message);

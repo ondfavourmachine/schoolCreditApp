@@ -12,5 +12,6 @@ export class ReceiverParentComponent implements OnInit {
   ngOnInit(): void {
     // this.getLocationOfUser();
     this.generalservice.handleFlowController("welcomeModal");
+    sessionStorage.removeItem("userLatLng");
   }
 }

@@ -30,6 +30,7 @@ export class AppComponent
   private btnTrigger: HTMLButtonElement;
   private observableAggregator: observableAggregator = {};
   public globalOverlay: string = "none";
+  public confirmationDialog: string = "none";
   errorHouse: { error: Alert } = { error: new Alert(false, "") };
   constructor(
     private router: Router,
@@ -162,5 +163,22 @@ export class AppComponent
   ngOnDestroy() {
     this.observableAggregator.flowControl.unsubscribe();
     this.observableAggregator.intermediateResponse.unsubscribe();
+  }
+
+  fakeButtonForUserOnly() {
+    if (document.getElementById("welcomeButton")) {
+      return;
+    }
+    this.confirmationDialog = "flex";
+  }
+
+  cancel() {
+    this.confirmationDialog = "none";
+  }
+
+  resetEverything() {
+    this.switchOfModal();
+    this.cancel();
+    this.generalservice.resetEverything("reset");
   }
 }

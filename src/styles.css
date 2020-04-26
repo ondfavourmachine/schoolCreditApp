@@ -698,7 +698,7 @@ small img {
 .modal-close {
   position: absolute;
   top: 2%;
-  right: 3%;
+  /* right: 3%; */
   z-index: 1000;
   width: 25px;
   height: 25px;
@@ -712,6 +712,7 @@ small img {
   padding: 0;
   border: 0;
   cursor: pointer;
+  visibility: hidden;
 }
 
 .modal-close:focus,

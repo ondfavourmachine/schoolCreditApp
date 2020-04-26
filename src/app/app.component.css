@@ -19,7 +19,11 @@
 }
 
 div.searchingParent {
-  background: linear-gradient(to bottom, rgba(118, 118, 118, 0.9), rgba(212, 212, 213, 0.3));
+  background: linear-gradient(
+    to bottom,
+    rgba(118, 118, 118, 0.9),
+    rgba(212, 212, 213, 0.3)
+  );
   display: none;
   /* position: absolute; */
   z-index: 10;
@@ -168,3 +172,75 @@ div.transparencyDisclaimer {
 }
 
 /* spinner css starts here */
+
+.fakeButton {
+  position: absolute;
+  top: 2%;
+  right: 3%;
+  z-index: 1000;
+  width: 25px;
+  height: 25px;
+  background: #db2828;
+  color: #fff;
+  font-size: 1.5em;
+  border-radius: 50%;
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  align-items: center;
+  padding: 0;
+  border: 0;
+  cursor: pointer;
+}
+
+.confirmation {
+  display: none;
+  z-index: 1020;
+  position: absolute;
+  background: rgb(255, 255, 255, 0.3);
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.confirmationContent {
+  margin: 9rem 20px;
+  border: 1px solid rgba(204, 204, 204, 0.6);
+  border-radius: 15px;
+  background: #fff;
+  width: 50%;
+  padding: 1rem 0.5rem;
+  text-align: center;
+  box-shadow: 0 0 15px 1px rgba(204, 204, 204, 0.6);
+}
+
+.confirmationContent p {
+  font-size: 1.3rem;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.buttons span {
+  cursor: pointer;
+  border-radius: 3px;
+  border: 1px solid rgba(255, 99, 71, 0.4);
+  color: rgba(255, 99, 71, 0.4);
+  /* color: white; */
+  padding: 5px 5px;
+}
+
+.buttons span:last-child {
+  border-radius: 3px;
+  border: 1px solid lightgreen;
+  color: lightgreen;
+  /* color: white; */
+  padding: 5px 5px;
+}

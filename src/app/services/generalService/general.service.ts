@@ -103,6 +103,9 @@ export class GeneralService {
   public controlGlobalNotificationSubject = new Subject();
   public controlGlobalNotifier$ = this.controlGlobalNotificationSubject.asObservable();
 
+  public resetSubject = new Subject();
+  public reset$ = this.resetSubject.asObservable();
+
   public typeOfPerson: string;
   public familyImage: File;
   public familyImageToConfirm: any;
@@ -221,79 +224,18 @@ export class GeneralService {
 
   // function for modifying the look and feel of the button
   // when there is an apicall or not
-  loading4button(
-    element: HTMLElement,
-    apiCall: string,
-    displayString?: string
-  ) {
-    const apibutton = `<button class="ui loading button">Loading</button>`;
-    // const normalbutton = element
-    if (element instanceof HTMLButtonElement) {
-      switch (apiCall) {
-        case "yes":
-          element.innerText = "";
-          element.disabled = true;
-          // element.insertAdjacentHTML("beforeend", apibutton);
-          element.innerHTML = `${displayString} ${this.svg}`;
-          break;
-        case "done":
-          element.innerHTML = "";
-          element.disabled = false;
-          element.innerHTML = `${displayString || "Submit"}`;
-      }
-    } else {
-      switch (apiCall) {
-        case "yes":
-          element.innerText = "";
-          element.style.pointerEvents = "none";
-          element.innerHTML = `${displayString} ${this.svg}`;
-          break;
-        case "done":
-          element.innerHTML = "";
-          element.style.pointerEvents = "auto";
-          element.innerHTML = `${displayString || "Submit"}`;
-      }
-    }
-  }
+ 
 
   // communication conduit to tell a component whether to disable a button or not
   ctrlDisableTheButtonsOfPreviousListElement(anything) {
     this.preventDisableSubject.next(anything);
   }
 
-  handleValidRef(
-    msg: ValidateRefResponse
-  ): { message: string; direction: string; button?: string } {
-    // debugger
-    if (!msg.test_taken && !msg.stage) {
-      sessionStorage.setItem("userinfo", JSON.stringify(msg.message));
-      let name = sessionStorage.getItem("name");
-      return {
-        message: `
-            Hi ${this.convertToTitleCase(
-              name
-            )}, We are about to begin this credibility test. It usually takes 5-10 mins
-            to complete. Would you like to begin?
-      `,
-        direction: "left",
-        button: "Yes,No"
-      };
-    } else if (msg.stage) {
-      // do something here
-      sessionStorage.setItem("userinfo", JSON.stringify(msg.message));
-      // console.log(msg.stage);
-      let stages: Partial<Stage> = this.checkForStages(msg.stage as object);
-      // console.log(stages);
-      // send an alert to somewhere to notify system of
-      // the stage to start from
-      let res = this.nextStagesForUser(stages);
-      // console.log(res);
-      sessionStorage.setItem("userhasProvidedThisStagePreviously", res);
-      // this.responseDisplayNotifier();
-      return null;
-      // this.generalservice.startFromHere(stages)
-    }
+  resetEverything(anything: string){
+      this.resetSubject.next(anything)
   }
+
+ 
 
   // this function will loop through the stage object
   // and seperate the truthy values of the truthy value
@@ -311,40 +253,7 @@ export class GeneralService {
   }
 
   //handle Errors with reference checking
-  handleRefCheckingError(
-    err
-  ): { message: string; direction: string; button?: string } {
-    // console.log(err);
-    if (err instanceof TimeoutError) {
-      return {
-        message:
-          "Oops, i think you have slow internet. Please check your connection and try again",
-        direction: "left"
-      };
-    } else {
-      if (err instanceof HttpErrorResponse && err.status == 403) {
-        if (err.error.message.includes("Test has already been Taken")) {
-          return {
-            message: `${err.error.message}. Enter a valid reference number to start`,
-            direction: "left"
-          };
-        }
-
-        return {
-          message:
-            "Sorry! your reference numbers seems to be off. Please check the reference number, re-enter it and try again",
-          direction: "left"
-        };
-      } else {
-        console.log("i am here");
-        return {
-          message:
-            "We could not confirm your reference number at this time. Please check your internet and reload this page",
-          direction: "left"
-        };
-      }
-    }
-  }
+  
 
   nextStagesForUser(stages: Partial<Stage>) {
     let s: Partial<Stage> = {},

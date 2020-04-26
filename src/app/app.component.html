@@ -47,9 +47,13 @@
     <!-- Modal content -->
     <div class="modal-content" style="position: relative">
       <button
+        hidden
         (click)="preventHidingOfbuttons(generalservice.nameOfModal)"
         class="modal-close"
       >
+        &times;
+      </button>
+      <button (click)="fakeButtonForUserOnly()" class="fakeButton">
         &times;
       </button>
 
@@ -132,6 +136,16 @@
 
         <div [style.display]="globalOverlay" class="globalOverlay">
           <app-loader></app-loader>
+        </div>
+
+        <div [style.display]="confirmationDialog" class="confirmation">
+          <div class="confirmationContent">
+            <p>If you leave now, you loose all your progress</p>
+            <div class="buttons">
+              <span (click)="resetEverything()">I want to leave</span>
+              <span (click)="cancel()">Ok, i'll stay</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>

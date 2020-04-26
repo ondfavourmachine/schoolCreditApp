@@ -9,11 +9,11 @@ import {
 } from "@angular/core";
 import { ChatService } from "src/app/services/ChatService/chat.service";
 import { GeneralService } from "src/app/services/generalService/general.service";
-import { timeout } from "rxjs/operators";
+// import { timeout } from "rxjs/operators";
 import { DisplayQuestion } from "src/app/models/Questionaire";
 import { ActivatedRoute } from "@angular/router";
 import { TimeoutError, Subscription } from "rxjs";
-import { ValidateRefResponse } from "../../models/validaterRefRes";
+// import { ValidateRefResponse } from "../../models/validaterRefRes";
 
 @Component({
   selector: "app-chat-bot",
@@ -147,51 +147,51 @@ export class ChatBotComponent implements OnInit, AfterViewInit, OnDestroy {
     }, 500);
   }
 
-  connectToApi(val: { typeOfApiCall: string; valToSend: string }): void {
-    switch (val.typeOfApiCall) {
-      case "check-ref":
-        this.validateRef(val.valToSend);
-        break;
-      case "kkkk":
-        break;
-    }
-  }
+  // connectToApi(val: { typeOfApiCall: string; valToSend: string }): void {
+  //   switch (val.typeOfApiCall) {
+  //     case "check-ref":
+  //       this.validateRef(val.valToSend);
+  //       break;
+  //     case "kkkk":
+  //       break;
+  //   }
+  // }
 
-  validateRef(val) {
-    this.chatservice
-      .fetchRefNumber({ ref_no: val })
-      .pipe(timeout(60000))
-      .subscribe(
-        (res: ValidateRefResponse) => {
-          if (!res.valid) {
-            this.messages = {
-              message: res.message,
-              direction: "left"
-            };
-          } else {
-            sessionStorage.setItem("ref_no", val);
-            sessionStorage.setItem("name", res.name);
-            this.messages = this.generalservice.handleValidRef(res);
+  // validateRef(val) {
+  //   this.chatservice
+  //     .fetchRefNumber({ ref_no: val })
+  //     .pipe(timeout(60000))
+  //     .subscribe(
+  //       (res: ValidateRefResponse) => {
+  //         if (!res.valid) {
+  //           this.messages = {
+  //             message: res.message,
+  //             direction: "left"
+  //           };
+  //         } else {
+  //           sessionStorage.setItem("ref_no", val);
+  //           sessionStorage.setItem("name", res.name);
+  //           // this.messages = this.generalservice.handleValidRef(res);
 
-            if (
-              this.messages &&
-              this.messages.message
-                .toLowerCase()
-                .includes("has already been taken")
-            ) {
-              // console.log("i am here");
-              setTimeout(() => {
-                this.messages = {
-                  message: "Please enter a reference number",
-                  direction: "left"
-                };
-              }, 1000);
-            }
-          }
-        },
-        err => (this.messages = this.generalservice.handleRefCheckingError(err))
-      );
-  }
+  //           if (
+  //             this.messages &&
+  //             this.messages.message
+  //               .toLowerCase()
+  //               .includes("has already been taken")
+  //           ) {
+  //             // console.log("i am here");
+  //             setTimeout(() => {
+  //               this.messages = {
+  //                 message: "Please enter a reference number",
+  //                 direction: "left"
+  //               };
+  //             }, 1000);
+  //           }
+  //         }
+  //       },
+  //       // err => (this.messages = this.generalservice.handleRefCheckingError(err))
+  //     );
+  // }
 
   // this function will restart the questioning process
   // when it receives an event from app-chat-messages-display restartProcess eventEmitter
@@ -201,6 +201,6 @@ export class ChatBotComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.destroyAnything.unsubscribe();
+    // this.destroyAnything.unsubscribe();
   }
 }
