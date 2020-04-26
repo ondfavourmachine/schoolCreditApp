@@ -43,7 +43,7 @@
         </div>
 
         <div class="text-center mt-4">
-          <button [disabled]="!familyGroupForm.valid" type="submit" class="ui primary button"
+          <button [disabled]="!familyGroupForm.valid" type="submit" class="ui positive button"
             [ngClass]="{ loading: !loading }">
             Continue
           </button>
@@ -140,7 +140,7 @@
               any of National ID, Voters ID, BVN
             </p>
 
-            <button class="ui button primary basic mt-4" (click)="provideID()">
+            <button class="ui button positive basic mt-4" (click)="provideID()">
               Yes, i have a family member with ID
             </button>
             <a class="mt-3 link" style="cursor: pointer;" (click)="noIDToProvide()">
@@ -159,7 +159,7 @@
                   Not providing a valid ID can affect your chances of getting financial assitance in this trying times
               </p>
   
-              <button class="ui button primary basic mt-4" (click)="continueWithoutID()">
+              <button class="ui button positive basic mt-4" (click)="continueWithoutID()">
                 continue without providing ID
               </button>
               <a class="mt-3 link" style="cursor: pointer;" (click)="takeOfwarning()">
@@ -310,7 +310,7 @@
               National ID, Voters ID, BVN
             </p>
 
-            <button class="ui button primary basic mt-4" (click)="provideID()">
+            <button class="ui button positive basic mt-4" (click)="provideID()">
               Yes, I have a wife with ID
             </button>
             <a class="mt-3 link" (click)="cancelPreliminaryPage()">
@@ -330,7 +330,7 @@
             </div>
 
             <div class="text-center mt-2">
-              <button [disabled]="!idForm.valid" type="submit" class="fluid ui primary button">
+              <button [disabled]="!idForm.valid" type="submit" class="fluid ui positive button">
                 Done
               </button>
             </div>

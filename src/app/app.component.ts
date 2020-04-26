@@ -73,7 +73,10 @@ export class AppComponent
         // closeBtn.click();
       }
     );
+
+    window.addEventListener('beforeunload', this.handleBeforeUnload);
   }
+
   ngAfterContentChecked() {
     this.cd.detectChanges();
   }
@@ -159,10 +162,16 @@ export class AppComponent
     // console.log(this.showModal);
   }
 
+  handleBeforeUnload() {
+    return false;
+  }
+
   // unsubscribe to prevent memory leaks
   ngOnDestroy() {
     this.observableAggregator.flowControl.unsubscribe();
     this.observableAggregator.intermediateResponse.unsubscribe();
+
+    window.removeEventListener('beforeunload', this.handleBeforeUnload);
   }
 
   fakeButtonForUserOnly() {
