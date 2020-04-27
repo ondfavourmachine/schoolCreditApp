@@ -13,11 +13,8 @@
   <!-- <div class="loaderWindow">
   <nz-spin nzSimple [nzSize]="'large'"></nz-spin>
 </div> -->
-  <div
-    *ngIf="errorHouse?.error?.errorBool"
-    class="alert alert-danger customised alert-dismissible fade show"
-    role="alert"
-  >
+  <div *ngIf="errorHouse?.error?.errorBool" class="alert alert-danger customised alert-dismissible fade show"
+    role="alert">
     <strong><i nz-icon nzType="warning" nzTheme="outline"></i></strong>
     {{ errorHouse?.error?.errorText }}
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -36,33 +33,33 @@
   Launch demo modal
 </button> -->
 
-  <button
-    (click)="lauchModal()"
-    id="btnTrigger"
-    hidden
-    class="btn btn button--no-width"
-  ></button>
+  <button (click)="lauchModal()" id="btnTrigger" hidden class="btn btn button--no-width"></button>
 
   <div id="myModal" class="modal" [style.display]="showModal">
     <!-- Modal content -->
     <div class="modal-content" style="position: relative">
-      <button
-        hidden
-        (click)="preventHidingOfbuttons(generalservice.nameOfModal)"
-        class="modal-close"
-      >
+      <button hidden (click)="preventHidingOfbuttons(generalservice.nameOfModal)" class="modal-close">
         &times;
       </button>
       <button (click)="fakeButtonForUserOnly()" class="fakeButton">
         &times;
       </button>
 
+      <div class="confirmation" [ngClass]="{'visible': confirmationDialog}">
+        <div class="confirmationContent">
+          <p>If you leave now, you will loose all your progress</p>
+          <div class="buttons">
+            <button class="ui button positive small" (click)="cancel()">Continue</button>
+            <button class="ui button negative small basic ml-2" (click)="resetEverything()">
+              Quit without saving
+            </button>
+          </div>
+        </div>
+      </div>
+
       <div class="modal-body" style="display: 'flex'">
         <div [ngSwitch]="generalservice.flowControlHolder">
-          <div
-            style="overflow-y: auto;"
-            *ngSwitchCase="'IdentifyOrAnonymousForms'"
-          >
+          <div style="overflow-y: auto;" *ngSwitchCase="'IdentifyOrAnonymousForms'">
             <!-- <app-terms-and-condition></app-terms-and-condition> -->
             <app-identify-or-anonymous></app-identify-or-anonymous>
           </div>
@@ -138,16 +135,8 @@
           <app-loader></app-loader>
         </div>
 
-        <div [style.display]="confirmationDialog" class="confirmation">
-          <div class="confirmationContent">
-            <p>If you leave now, you loose all your progress</p>
-            <div class="buttons">
-              <span (click)="resetEverything()">I want to leave</span>
-              <span (click)="cancel()">Ok, i'll stay</span>
-            </div>
-          </div>
-        </div>
       </div>
+
     </div>
   </div>
 </div>

@@ -30,7 +30,7 @@ export class AppComponent
   private btnTrigger: HTMLButtonElement;
   private observableAggregator: observableAggregator = {};
   public globalOverlay: string = "none";
-  public confirmationDialog: string = "none";
+  public confirmationDialog = false;
   errorHouse: { error: Alert } = { error: new Alert(false, "") };
   constructor(
     private router: Router,
@@ -73,8 +73,6 @@ export class AppComponent
         // closeBtn.click();
       }
     );
-
-    window.addEventListener('beforeunload', this.handleBeforeUnload);
   }
 
   ngAfterContentChecked() {
@@ -162,27 +160,21 @@ export class AppComponent
     // console.log(this.showModal);
   }
 
-  handleBeforeUnload() {
-    return false;
-  }
-
   // unsubscribe to prevent memory leaks
   ngOnDestroy() {
     this.observableAggregator.flowControl.unsubscribe();
     this.observableAggregator.intermediateResponse.unsubscribe();
-
-    window.removeEventListener('beforeunload', this.handleBeforeUnload);
   }
 
   fakeButtonForUserOnly() {
     if (document.getElementById("welcomeButton")) {
       return;
     }
-    this.confirmationDialog = "flex";
+    this.confirmationDialog = true;
   }
 
   cancel() {
-    this.confirmationDialog = "none";
+    this.confirmationDialog = false;
   }
 
   resetEverything() {
