@@ -26,8 +26,8 @@ export class IdentifyOrAnonymousComponent implements OnInit {
       name: ["", Validators.required],
       email: ["", Validators.required],
       phone: ["", Validators.required],
-      gender: [""],
-      tAndC: ["", Validators.required]
+      gender: ["1"],
+      tAndC: [true, Validators.required]
     });
     let stayAnonymous = sessionStorage.getItem("anonymous");
     stayAnonymous == "1"

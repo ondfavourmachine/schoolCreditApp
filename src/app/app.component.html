@@ -47,17 +47,17 @@
 
       <div class="confirmation" [ngClass]="{'visible': confirmationDialog}">
         <div class="confirmationContent">
-          <p>If you leave now, you will loose all your progress</p>
+          <p>If you quit now, you will loose all your progress</p>
           <div class="buttons">
-            <button class="ui button positive small" (click)="cancel()">Continue</button>
-            <button class="ui button negative small basic ml-2" (click)="resetEverything()">
+            <button class="ui button positive small fluid" (click)="cancel()">Continue</button>
+            <button class="ui button negative small fluid basic mt-2" (click)="resetEverything()">
               Quit without saving
             </button>
           </div>
         </div>
       </div>
 
-      <div class="modal-body" style="display: 'flex'">
+      <div class="modal-body" style="display: 'block'">
         <div [ngSwitch]="generalservice.flowControlHolder">
           <div style="overflow-y: auto;" *ngSwitchCase="'IdentifyOrAnonymousForms'">
             <!-- <app-terms-and-condition></app-terms-and-condition> -->

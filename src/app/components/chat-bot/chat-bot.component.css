@@ -9,7 +9,7 @@ div.chatInputAndButton {
 
 div.parentOfChatWindow {
     /* background: url("../../../assets/chatbotImages/whatsapp.png") !important; */
-    overflow-y: scroll !important;
+    /* overflow-y: scroll !important; */
     max-height: 100%;
 }
 

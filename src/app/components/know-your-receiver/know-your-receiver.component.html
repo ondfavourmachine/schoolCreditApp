@@ -1,5 +1,5 @@
 <!-- @Input('knowYourReceiver') kyc: object = {nextStage: undefined, previousStage: undefined} -->
-<div [ngSwitch]="toKYCComponent?.nextStage" class="h-100">
+<div [ngSwitch]="toKYCComponent?.nextStage" class="h-100" id="knowYourReceiver">
   <div *ngSwitchCase="'fpw'" class="h-100">
     <div class="parent">
       <div class="modal-icon mb-4">
@@ -55,7 +55,7 @@
   <div *ngSwitchCase="'familyDetails'">
     <div class="familyDetails">
       <p class="para-title mb-5 shrink modifiableParagraph">
-        Number of people in your immediate family?
+        How many immediate family members so you have?
       </p>
 
       <div class="numberBlock">
@@ -133,15 +133,15 @@
 
       <div class="translateCoverPlate">
         <div class="inner-modal preliminary" style="display: none;">
-          <div id="increaseHeight" *ngIf="!warningForNotProvidingID" class="inner-modal-content flex flex-column align-center text-center">
-            <h1 class="para-title">Provide means of Identification</h1>
+          <div id="increaseHeight" *ngIf="!warningForNotProvidingID"
+            class="inner-modal-content flex flex-column align-center text-center">
+            <h1 class="para-title">Are you a Nigerian?</h1>
             <p class="para-body">
-              We need You and one other member of your family to provide us with
-              any of National ID, Voters ID, BVN
+              Do you have at least 1 family member with any of (National ID, Voters ID, Driver's Licence)
             </p>
 
             <button class="ui button positive basic mt-4" (click)="provideID()">
-              Yes, i have a family member with ID
+              Yes, I have a family member with ID
             </button>
             <a class="mt-3 link" style="cursor: pointer;" (click)="noIDToProvide()">
               No, I do not have an ID to provide
@@ -149,25 +149,26 @@
             <!-- <span (click)="goBack('familyDetails')" class="goBack">
               <a>back</a></span> -->
           </div>
-          <div id="increaseHeight" *ngIf="warningForNotProvidingID" class="inner-modal-content flex flex-column align-center text-center">
-              
-              <p class="warningSign">
-                  <img src="../../../assets/images/stop.svg" alt="" />
-              </p>
+          <div id="increaseHeight" *ngIf="warningForNotProvidingID"
+            class="inner-modal-content flex flex-column align-center text-center">
 
-              <p class="warningSignText">
-                  Not providing a valid ID can affect your chances of getting financial assitance in this trying times
-              </p>
-  
-              <button class="ui button positive basic mt-4" (click)="continueWithoutID()">
-                continue without providing ID
-              </button>
-              <a class="mt-3 link" style="cursor: pointer;" (click)="takeOfwarning()">
-                OK, I will provide an ID
-              </a>
-              <!-- <span (click)="goBack('familyDetails')" class="goBack">
+            <p class="modal-icon mb-4">
+              <img src="../../../assets/images/svgs/alert.svg" alt="" />
+            </p>
+
+            <p class="para-title">
+              Not providing a valid ID can affect your chances of getting financial assitance in this trying times
+            </p>
+
+            <button class="ui button positive basic mt-4" (click)="continueWithoutID()">
+              continue without providing ID
+            </button>
+            <a class="mt-3 link" style="cursor: pointer;" (click)="takeOfwarning()">
+              OK, I will provide an ID
+            </a>
+            <!-- <span (click)="goBack('familyDetails')" class="goBack">
                 <a>back</a></span> -->
-            </div>
+          </div>
           <!-- <span (click)="goBack('familyDetails')" class="goBack">go back</span> -->
         </div>
 
@@ -209,9 +210,9 @@
   </div>
 
   <div *ngSwitchCase="'providingID'">
-    <div class="familyDetails" style="position:relative">
+    <div class="familyDetails">
       <p #pToTrack class="para-title shrink modifiableParagraph mb-5">
-        Please provide your ID
+        Please provide ID of any family member
       </p>
       <small class="smallNotification" *ngIf="notification?.show">
         {{ notification?.message }}
@@ -225,7 +226,6 @@
             <img src="../../../assets/images/svgs/name.svg" alt="" />
           </div>
           <p>National ID</p>
-          <!-- <p><i class="fa fa-check"></i></p> -->
         </div>
 
         <div (click)="selectID($event)" class="numberBlockOne">
@@ -233,15 +233,13 @@
             <img src="../../../assets/images/svgs/name.svg" alt="" />
           </div>
           <p>Voters ID</p>
-          <!-- <p><i class="fa fa-check"></i></p> -->
         </div>
 
         <div (click)="selectID($event)" class="numberBlockOne">
           <div>
             <img src="../../../assets/images/svgs/name.svg" alt="" />
           </div>
-          <p>BVN</p>
-          <!-- <p><i class="fa fa-check"></i></p> -->
+          <p>International Passport</p>
         </div>
 
         <div (click)="selectID($event)" class="numberBlockOne">
@@ -249,7 +247,6 @@
             <img src="../../../assets/images/svgs/name.svg" alt="" />
           </div>
           <p>Drivers licence</p>
-          <!-- <p><i class="fa fa-check"></i></p> -->
         </div>
 
       </div>
@@ -319,28 +316,38 @@
           </div>
         </div>
 
-        <div class="identificationForm">
-          <form [formGroup]="idForm" (ngSubmit)="submitIdForm(idForm)">
-            <div class="ui form mt-4">
-              <div class="field">
-                <input [readonly]="noInputAllowed" formControlName="id"
-                  [attr.type]="IdToProvide == 'BVN' ? 'number' : 'text'"
-                  [attr.placeholder]="'Enter' + ' ' + IdToProvide" />
-              </div>
-            </div>
+        <div class="inner-modal" *ngIf="inputingID">
+          <div class="inner-modal-content">
+            <div class="identificationForm">
+              <form [formGroup]="idForm" (ngSubmit)="submitIdForm(idForm)">
+                <p class="para-title text-center">
+                  Enter license number located on the {{ IdToProvide }}
+                </p>
+                <div class="ui form mt-4">
+                  <div class="field">
+                    <input id="idToProvideInput" [readonly]="noInputAllowed" formControlName="id"
+                      [attr.type]="IdToProvide == 'BVN' ? 'number' : 'text'"
+                      [attr.placeholder]="'Enter' + ' ' + IdToProvide" />
+                  </div>
+                </div>
 
-            <div class="text-center mt-2">
-              <button [disabled]="!idForm.valid" type="submit" class="fluid ui positive button">
-                Done
-              </button>
+                <div class="text-center mt-4">
+                  <button [disabled]="!idForm.valid" type="submit" class="fluid ui positive button">
+                    Done
+                  </button>
+                  <button class="ui button basic mini mt-3" (click)="inputingID = false">
+                    Back
+                  </button>
+                </div>
+              </form>
             </div>
-          </form>
+          </div>
         </div>
       </div>
 
-      <button *ngIf="allowedToShow" (click)="goBack('providingID', '1')" class="modal-back">
+      <!-- <button *ngIf="allowedToShow" (click)="goBack('providingID', '1')" class="modal-back">
         <i class="fa fa-chevron-left"></i>
-      </button>
+      </button> -->
     </div>
   </div>
 </div>

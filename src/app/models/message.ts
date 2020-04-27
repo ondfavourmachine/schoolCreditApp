@@ -45,7 +45,7 @@ export class Message {
 
   static welcomeMsgForReceiver: string[] = [
     "Good Morning, My name is Dorcas. I represent a private initiative from concerned Nigerians who want to help",
-    `In times like these, what makes us a great Nation is our ability to find people who care enough to help. Incase you arent a receiver, you can click on the 'no i am giving button' or type i am a giver'`,
+    `In times like these, what makes us a great Nation is our ability to find people who care enough to help.`,
     `Would you like me to find someone to assist your
     family?
     `

@@ -107,9 +107,9 @@ export class ConfirmDetailsUploadedComponent implements OnInit, AfterViewInit {
             this.submit = "failed";
             setTimeout(() => {
               sessionStorage.clear();
-              this.closeTheModal("cancel");
+              // this.closeTheModal("cancel");
               this.generalservice.switchOfModal = true;
-            }, 3000);
+            }, 5000);
             return;
           }
           this.generalservice.controlGlobalNotificationSubject.next("off");

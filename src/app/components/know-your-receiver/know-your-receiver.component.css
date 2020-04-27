@@ -100,6 +100,7 @@ div.numberBlockAlt {
   grid-gap: 10px;
   width: 100%;
   /* border: 1px solid red; */
+  max-width: 300px;
   padding: 10px 10px;
   transition: display 1s ease-in-out;
 }
@@ -114,15 +115,16 @@ div.numberBlock p,
 div.numberBlockOne p,
 div.numberBlockOneAlt p {
   margin-top: 8px;
-  /* font-size: 1rem; */
   font-weight: 600;
+  line-height: 1rem;
+  text-align: center;
 }
 
 div.numberBlockOneAlt {
   cursor: pointer;
   background-color: rgba(0, 0, 0, 0.05);
   border-radius: 4px;
-  height: 120px;
+  height: 130px;
   width: 100%;
   padding: 1rem;
   display: flex;
@@ -138,6 +140,7 @@ div.numberBlock {
   grid-gap: 10px;
   width: 100%;
   /* border: 1px solid red; */
+  max-width: 300px;
   padding: 10px 10px;
   transition: display 1s ease-in-out;
 }
@@ -153,7 +156,7 @@ div.numberBlockOne {
   display: flex;
   background-color: rgba(0, 0, 0, 0.05);
   border-radius: 4px;
-  height: 120px;
+  height: 130px;
   width: 100%;
   padding: 1rem;
   flex-direction: column;
@@ -274,6 +277,8 @@ div.translateCoverPlate div.identificationForm {
 div.identificationForm form {
   /* border: 1px solid red; */
   width: 100%;
+  max-width: 300px;
+  margin: auto;
 }
 
 /* animations for sliding in and out starts here */
@@ -318,13 +323,11 @@ div.identificationForm form {
 } */
 
 /* ends here */
-p.warningSign img{
+p.warningSign img {
   height: 200px;
 }
 
-p.warningSignText{
+p.warningSignText {
   text-align: center;
   font-weight: 500;
 }
-
-

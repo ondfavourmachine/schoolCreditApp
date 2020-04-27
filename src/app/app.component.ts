@@ -167,10 +167,16 @@ export class AppComponent
   }
 
   fakeButtonForUserOnly() {
-    if (document.getElementById("welcomeButton")) {
-      return;
+    if (
+      document.getElementById("knowYourReceiver")
+      // || document.getElementById('found-beneficiary')
+    ) {
+      this.confirmationDialog = true;
+      // return;
+    } else {
+      this.switchOfModal();
+      this.cancel();
     }
-    this.confirmationDialog = true;
   }
 
   cancel() {

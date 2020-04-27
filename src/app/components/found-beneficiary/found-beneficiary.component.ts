@@ -66,7 +66,7 @@ export class FoundBeneficiaryComponent implements OnInit, AfterViewInit {
           `Thank you so much. God bless you. Please could you take a moment to upload some evidence of transfer
             to ${this.previousFamilyThatReceivedHelp["family_name"]}`,
           "left",
-          "upload evidence",
+          "Upload evidence",
           `${this.previousFamilyThatReceivedHelp["transaction_id"]}-${this.previousFamilyThatReceivedHelp["id"]}-${this.giverID}-${this.familyThatWillBenefit["family_name"]}`
         );
         this.generalservice.responseDisplayNotifier(giverResponse);
@@ -84,7 +84,7 @@ export class FoundBeneficiaryComponent implements OnInit, AfterViewInit {
     this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
       `Thank you so much for providing help in this trying times. God bless you. Please take a moment to upload some evidence of transfer to ${this.familyThatWillBenefit["family_name"]}`,
       "left",
-      "upload evidence",
+      "Upload evidence",
       `${this.familyThatWillBenefit["transaction_id"]}-${this.familyThatWillBenefit["id"]}-${this.giverID}-${this.familyThatWillBenefit["family_name"]}`
     );
     this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");

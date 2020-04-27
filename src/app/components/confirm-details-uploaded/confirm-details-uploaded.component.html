@@ -35,8 +35,12 @@
       <div *ngIf="submit == 'failed'" class="requestSuccess flex flex-column justify-center align-center text-center">
         <div class="modal-icon"><img src="../../../assets/images/svgs/alert.svg" alt="" /></div>
         <p class="para-title">
-          We could not submit your request at this time.
+          Your request could not be processed at the moment because you've made a request earlier
         </p>
+
+        <button class="ui button negative basic mt-4" (click)="closeTheModal('cancel')">
+          Close
+        </button>
       </div>
     </div>
   </div>

@@ -67,7 +67,7 @@ export class ChatMessagesDisplayComponent
     private chatservice: ChatService,
     private titleCasePipe: TitleCasePipe,
     private route: Router
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.generalservice.reset$.subscribe((val: string) => {
@@ -207,10 +207,10 @@ export class ChatMessagesDisplayComponent
       if (String(message).toLowerCase() == "i have turned on my location") {
         const response = new replyGiversOrReceivers(
           `Get the following information ready before we start:
-                (1) A valid means of ID(BVN, Voters, Drivers licence, National ID),
-                (2) Another family member means of ID
-                (3) The Account number you want to get funds into
-                (4) A picture with you and your family taken today.`,
+                (1) The Account number you want to get funds into
+                (2) A picture with you and your family taken today.
+                (3) A valid means of ID (Voters, Drivers licence, National ID),
+                `,
           "left",
           "Continue,No i want to give",
           "receive,give"
@@ -225,10 +225,10 @@ export class ChatMessagesDisplayComponent
         );
         const chatBotReply = new replyGiversOrReceivers(
           `Get the following information ready before we start:
-        (1) A valid means of ID(BVN, Voters, Drivers licence, National ID),
-        (2) Another family member means of ID
-        (3) The Account number you want to get funds into
-        (4) A picture with you and your family taken today.`,
+            (1) The Account number you want to get funds into
+            (2) A picture with you and your family taken today.
+            (3) A valid means of ID (Voters, Drivers licence, National ID),
+          `,
           "left",
           "Continue,No i want to give",
           "receive,give"
@@ -585,7 +585,7 @@ export class ChatMessagesDisplayComponent
           }
         }
       }
-    } catch (e) {}
+    } catch (e) { }
   }
 
   userDidNotProvideDriversLicense() {
@@ -740,10 +740,10 @@ export class ChatMessagesDisplayComponent
           },
           new replyGiversOrReceivers(
             `Get the following information ready before we start:
-                  (1) A valid means of ID(BVN, Voters, Drivers licence, National ID),
-                  (2) Another family member means of ID
-                  (3) The Account number you want to get funds into
-                  (4) A picture with you and your family taken today.`,
+            (1) The Account number you want to get funds into
+            (2) A picture with you and your family taken today.
+            (3) A valid means of ID (Voters, Drivers licence, National ID),
+            `,
             "left",
             "Continue,No i want to give",
             "receive,give"

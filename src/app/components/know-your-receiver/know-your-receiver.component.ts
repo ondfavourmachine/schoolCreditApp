@@ -87,11 +87,12 @@ export class KnowYourReceiverComponent
 
   // disable Input if the boxes havent been selected;
   public noInputAllowed: boolean = true;
+  inputingID: boolean;
   constructor(
     private generalservice: GeneralService,
     private fb: FormBuilder,
     private cd: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.generalservice.commKYC$.subscribe(val => {
@@ -164,32 +165,10 @@ export class KnowYourReceiverComponent
     this.familyDetailsInfo.phoneNumber = this.phonenumber.value;
     this.familyDetailsInfo.occupation = this.occupation.value;
     this.noInputAllowed = true;
-    this.askForSecondID();
-    if (
-      this.familyDetailsInfo.idOfParentValue &&
-      this.familyDetailsInfo.idOfSpouseValue
-    ) {
-      if (
-        this.familyDetailsInfo.idOfParentValue ==
-        this.familyDetailsInfo.idOfSpouseValue
-      ) {
-        this.notification.show = true;
-        this.notification.message =
-          "Your ID and that of your family members ID cannot be the same";
-        setTimeout(() => {
-          this.notification.show = false;
-          this.notification.message = undefined;
-        }, 4000);
-        return;
-      }
+    // this.askForSecondID();
+    this.familyDetailsInfo.idOfParentValue = this.id.value;
+    if (this.familyDetailsInfo.idOfParentValue) {
       this.moveToNextStageForReceiver();
-    } else {
-      // this.notification.show = true;
-      // this.notification.message = "Please provide at least one ID";
-      // setTimeout(() => {
-      //   this.notification.show = false;
-      //   this.notification.message = undefined;
-      // }, 2000);
     }
   }
 
@@ -212,23 +191,23 @@ export class KnowYourReceiverComponent
         ".modifiableParagraph"
       ) as HTMLParagraphElement;
       this.modifiableParagraph.textContent = `Please provide your other family member's ID`;
-      let classlist: DOMTokenList = this.translateCoverPlateForProvidingID
-        .classList;
-      let regex = /animationIn/;
-      if (regex.test(classlist.value)) {
-        // console.log(true, classlist.value);
-        this.translateCoverPlateForProvidingID.classList.remove("animationIn");
-        this.translateCoverPlateForProvidingID.classList.add("animationOut");
-        this.removethickenBorderBottom(".numberBlockOne");
-        if (this.familyDetailsInfo.idOfParentValue) {
-          this.familyDetailsInfo.idOfSpouseValue = this.id.value;
-        } else {
-          this.familyDetailsInfo.idOfParentValue = this.id.value;
-        }
-
-        // console.log(this.familyDetailsInfo);
-        this.id.reset();
+      // let classlist: DOMTokenList = this.translateCoverPlateForProvidingID
+      //   .classList;
+      // let regex = /animationIn/;
+      // if (regex.test(classlist.value)) {
+      // console.log(true, classlist.value);
+      // this.translateCoverPlateForProvidingID.classList.remove("animationIn");
+      // this.translateCoverPlateForProvidingID.classList.add("animationOut");
+      this.removethickenBorderBottom(".numberBlockOne");
+      if (this.familyDetailsInfo.idOfParentValue) {
+        this.familyDetailsInfo.idOfSpouseValue = this.id.value;
+      } else {
+        this.familyDetailsInfo.idOfParentValue = this.id.value;
       }
+
+      // console.log(this.familyDetailsInfo);
+      this.id.reset();
+      // }
     }
   }
 
@@ -359,10 +338,15 @@ export class KnowYourReceiverComponent
       previousStage: "familyDetails",
       subStage: "numberBlock"
     };
+    // HACK!!
+    // this.translateCoverPlateForProvidingID = document.getElementById(
+    //   "translateCoverPlateForProvidingID"
+    // ) as HTMLDivElement;
+    this.submitIdForm();
+    // HACK!!
   }
 
   selectID(event, ifYouWantToGoBack?: string) {
-    console.log("i am from selectID");
     this.noInputAllowed = true;
     if (ifYouWantToGoBack) this.toKYCComponent.subStage = ifYouWantToGoBack;
     const div = (event.srcElement as HTMLElement).closest(".numberBlockOne");
@@ -394,9 +378,12 @@ export class KnowYourReceiverComponent
       "animationIn",
       this.translateCoverPlateForProvidingID
     );
-    (document.querySelector(
-      ".identificationForm"
-    ) as HTMLDivElement).style.display = "block";
+    // (document.querySelector(
+    //   ".identificationForm"
+    // ) as HTMLDivElement).style.display = "block";
+
+    this.inputingID = true;
+
     setTimeout(
       () => this.controlDisplayOfNumberBlockAndNumberBlockAlt("animationIn"),
       700
@@ -546,7 +533,8 @@ export class KnowYourReceiverComponent
 
   iDontHaveAFamilyWithID(event: Event) {
     const input = event.srcElement as HTMLInputElement;
-    if (input.checked && this.familyDetailsInfo.idOfParentValue) {
+    // if (input.checked && this.familyDetailsInfo.idOfParentValue) {
+    if (input.checked) {
       // console.log(this.familyDetailsInfo);
       this.moveToNextStageForReceiver();
     } else {

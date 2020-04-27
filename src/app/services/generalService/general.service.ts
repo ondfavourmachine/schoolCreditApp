@@ -121,7 +121,7 @@ export class GeneralService {
   public userDidNotProvideID = false;
 
   public location: any;
-  constructor() {}
+  constructor() { }
 
   nextReplyFromCovidRelief(obj: replyGiversOrReceivers) {
     this.nextReplySubject.next(obj);
@@ -224,18 +224,18 @@ export class GeneralService {
 
   // function for modifying the look and feel of the button
   // when there is an apicall or not
- 
+
 
   // communication conduit to tell a component whether to disable a button or not
   ctrlDisableTheButtonsOfPreviousListElement(anything) {
     this.preventDisableSubject.next(anything);
   }
 
-  resetEverything(anything: string){
-      this.resetSubject.next(anything)
+  resetEverything(anything: string) {
+    this.resetSubject.next(anything)
   }
 
- 
+
 
   // this function will loop through the stage object
   // and seperate the truthy values of the truthy value
@@ -253,7 +253,7 @@ export class GeneralService {
   }
 
   //handle Errors with reference checking
-  
+
 
   nextStagesForUser(stages: Partial<Stage>) {
     let s: Partial<Stage> = {},
@@ -329,5 +329,9 @@ export class GeneralService {
     } catch (error) {
       console.log("Location error.. ", error);
     }
+  }
+
+  loading4button(a, b, c?) {
+    return null;
   }
 }

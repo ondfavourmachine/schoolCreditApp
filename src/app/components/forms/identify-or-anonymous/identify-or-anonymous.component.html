@@ -3,21 +3,20 @@
     class="flex flex-column align-center"
     *ngIf="stayAnonymous == '2'; else identify"
   >
-    <div class="modal-icon mb-4">
+    <!-- <div class="modal-icon mb-4">
       <img src="../../assets/images/svgs/question.svg" alt="" />
-    </div>
+    </div> -->
     <p class="para-title text-center mt-4 mb-4">
-      We will need some information about you. Be sure you have good internet.
+      We will need your information for potential contact.
     </p>
   </div>
 
   <ng-template #identify>
-    <div class="modal-icon mb-4">
+    <!-- <div class="modal-icon mb-4">
       <img src="../../assets/images/svgs/unknown.svg" alt="" />
-    </div>
+    </div> -->
     <p class="para-title text-center mt-4 mb-4">
-      Despite your request to remain anonymous, we still need your details for
-      record purposes. We will not share your details with anyone.
+      We guarantee data anonymity
     </p>
   </ng-template>
 
@@ -46,7 +45,7 @@
           class="ng-invalid ng-touched"
         >
           <small style="color: #f10b0b9d;" *ngIf="emailIsRequired()">
-            Your Age is required!</small
+            Your email address is required!</small
           >
         </div>
       </div>
@@ -71,20 +70,20 @@
         </div>
       </div>
 
-      <div class="field">
+      <!-- <div class="field">
         <select formControlName="gender">
           <option value="">Gender</option>
           <option value="1">Male</option>
           <option value="2">Female</option>
         </select>
-      </div>
+      </div> -->
 
-      <div class="field">
+      <!-- <div class="field">
         <div class="ui checkbox">
           <input formControlName="tAndC" type="checkbox" tabindex="0" />
           <label>I agree to the Terms and Conditions</label>
         </div>
-      </div>
+      </div> -->
     </div>
 
     <div class="text-center mt-4">

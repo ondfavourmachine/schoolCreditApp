@@ -12,12 +12,23 @@
 
     <div class="z-index-2" *ngIf="!uploadEvidence; else evidenceUpload">
       <p class="para-title shrink">
-        Click the icon above to upload a picture of your family
+        Click the button below to upload a picture of your family
       </p>
+      <br>
       <div class="text-center mt-4">
-        <button (click)="noPicturesProvided()" class="ui button basic secondary mini">
+        <button (click)="trigger()" class="ui button primary">Upload picture</button>
+        <br>
+        <!-- <button (click)="noPicturesProvided()" class="ui button basic secondary mini">
           Skip
-        </button>
+        </button> -->
+        <form class="ui form mt-4">
+          <div class="field">
+            <div class="ui checkbox">
+              <input id="xyxx" (click)="noPicturesProvided()" type="checkbox" tabindex="0">
+              <label for="xyxx" style="line-height: 1">I dont want to use our picture</label>
+            </div>
+          </div>
+        </form>
       </div>
     </div>
 
