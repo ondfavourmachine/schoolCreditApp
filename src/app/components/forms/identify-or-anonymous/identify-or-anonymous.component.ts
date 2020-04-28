@@ -22,12 +22,15 @@ export class IdentifyOrAnonymousComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    if (sessionStorage.getItem("giver")) {
+      this.generalservice.handleFlowController("supportPageForms");
+    }
     this.iAForm = this.fb.group({
       name: ["", Validators.required],
       email: ["", Validators.required],
       phone: ["", Validators.required],
-      gender: [""],
-      tAndC: ["", Validators.required]
+      gender: [""]
+      // tAndC: ["", Validators.required]
     });
     let stayAnonymous = sessionStorage.getItem("anonymous");
     stayAnonymous == "1"
@@ -39,7 +42,6 @@ export class IdentifyOrAnonymousComponent implements OnInit {
   submit(form: FormGroup) {
     this.generalservice.controlGlobalNotificationSubject.next("on");
     let formToSubmit = { ...form.value };
-    delete formToSubmit["tAndC"];
     formToSubmit["anonymous"] = sessionStorage.getItem("anonymous");
     // console.log(formToSubmit);
     this.http

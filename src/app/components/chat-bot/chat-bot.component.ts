@@ -93,34 +93,6 @@ export class ChatBotComponent implements OnInit, AfterViewInit, OnDestroy {
     // console.log(this.actionToTake);
   }
 
-  // showThatYourWorking(event) {
-  //   console.log(event);
-  // }
-
-  // this function was formally supposed to run here.
-  // it now runs in the questionsCtrl component.
-  // notifyTheUserThatTimeForQuestionHasElapsed() {
-  //   if (
-  //     this.generalservice.displayedQuestions.length <
-  //     this.generalservice.totalLengthOfQuestions
-  //   ) {
-  //     let answer: { ref_no?: string; answer?: string } = {};
-  //     answer.ref_no = sessionStorage.getItem("ref_no");
-  //     for (let question of this.generalservice.allQuestions) {
-  //       answer.answer = `${question.id},''`;
-  //       this.chatservice.uploadAnswers(answer).subscribe();
-  //     }
-  //     this.generalservice.timerController("dontShow");
-  //     this.generalservice.declareThatTimeHasElapsed("timeHasElapsed");
-  //     // this.generalservice.responseDisplayNotifier(
-  //     //   "questionAnsweringIncomplete"
-  //     // );
-  //     return;
-  //   }
-  //   this.generalservice.declareThatTimeHasElapsed("timeHasElapsed");
-  //   this.generalservice.timerController("dontShow");
-  // }
-
   userWantsToStartAnsweringQuestions() {
     setTimeout(() => {
       this.userHasStartedQuestions();
@@ -146,52 +118,6 @@ export class ChatBotComponent implements OnInit, AfterViewInit, OnDestroy {
       temp.splice(0, 1);
     }, 500);
   }
-
-  // connectToApi(val: { typeOfApiCall: string; valToSend: string }): void {
-  //   switch (val.typeOfApiCall) {
-  //     case "check-ref":
-  //       this.validateRef(val.valToSend);
-  //       break;
-  //     case "kkkk":
-  //       break;
-  //   }
-  // }
-
-  // validateRef(val) {
-  //   this.chatservice
-  //     .fetchRefNumber({ ref_no: val })
-  //     .pipe(timeout(60000))
-  //     .subscribe(
-  //       (res: ValidateRefResponse) => {
-  //         if (!res.valid) {
-  //           this.messages = {
-  //             message: res.message,
-  //             direction: "left"
-  //           };
-  //         } else {
-  //           sessionStorage.setItem("ref_no", val);
-  //           sessionStorage.setItem("name", res.name);
-  //           // this.messages = this.generalservice.handleValidRef(res);
-
-  //           if (
-  //             this.messages &&
-  //             this.messages.message
-  //               .toLowerCase()
-  //               .includes("has already been taken")
-  //           ) {
-  //             // console.log("i am here");
-  //             setTimeout(() => {
-  //               this.messages = {
-  //                 message: "Please enter a reference number",
-  //                 direction: "left"
-  //               };
-  //             }, 1000);
-  //           }
-  //         }
-  //       },
-  //       // err => (this.messages = this.generalservice.handleRefCheckingError(err))
-  //     );
-  // }
 
   // this function will restart the questioning process
   // when it receives an event from app-chat-messages-display restartProcess eventEmitter
