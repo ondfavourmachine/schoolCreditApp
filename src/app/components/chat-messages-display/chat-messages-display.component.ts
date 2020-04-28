@@ -460,8 +460,13 @@ export class ChatMessagesDisplayComponent
     button?: string;
     extraInfo?: string;
   }) {
-    const ul = this.messagePlaceHolder.nativeElement as HTMLUListElement;
-    // console.log(message, direction);
+    let ul: HTMLUListElement;
+    // back up plan if the above doesnt work;
+    if (this.messagePlaceHolder) {
+      ul = this.messagePlaceHolder.nativeElement as HTMLUListElement;
+    } else {
+      ul = document.getElementById("messagesPlaceHolder") as HTMLUListElement;
+    }
     try {
       if (!obj.button) {
         const messageToDisplay = new Message(

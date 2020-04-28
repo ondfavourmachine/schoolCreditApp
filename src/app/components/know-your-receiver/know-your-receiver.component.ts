@@ -143,11 +143,7 @@ export class KnowYourReceiverComponent
   }
 
   submit(form) {
-    // this.loading = false;
-    // console.log(form);
-
-    // setTimeout(() => {
-    // }, 1000);
+    console.log("i am here");
     let previousStage = this.toKYCComponent.nextStage;
     this.toKYCComponent = {
       nextStage: "familyDetails",
@@ -156,6 +152,10 @@ export class KnowYourReceiverComponent
     };
     // this.subStage = "1";
     this.loading = true;
+    this.familyDetailsInfo.nameOfPerson = this.fullname.value;
+    this.familyDetailsInfo.phoneNumber = this.phonenumber.value;
+    this.familyDetailsInfo.occupation = this.occupation.value;
+    // console.log(this.familyDetailsInfo);
   }
 
   submitIdForm(form?: any, checked?: string) {
@@ -164,6 +164,7 @@ export class KnowYourReceiverComponent
     this.familyDetailsInfo.nameOfPerson = this.fullname.value;
     this.familyDetailsInfo.phoneNumber = this.phonenumber.value;
     this.familyDetailsInfo.occupation = this.occupation.value;
+    // console.log(this.familyDetailsInfo);
     this.noInputAllowed = true;
     // this.askForSecondID();
     this.familyDetailsInfo.idOfParentValue = this.id.value;

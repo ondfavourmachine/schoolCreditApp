@@ -30,10 +30,10 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
   >();
   @Input("action") action: string;
   @Output("readyToAnswerOrNot") readyToAnswerOrNot = new EventEmitter<string>();
-  @Output("makeAnApiCall") makeAnApiCall = new EventEmitter<{
-    typeOfApiCall: string;
-    valToSend: string;
-  }>();
+  // @Output("makeAnApiCall") makeAnApiCall = new EventEmitter<{
+  //   typeOfApiCall: string;
+  //   valToSend: string;
+  // }>();
   private PreventMemoryLeaks: {
     timeHasElapsed?: Subscription;
     InputToNumber?: Subscription;
@@ -122,12 +122,12 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
         });
       }, 300);
 
-      setTimeout(() => {
-        this.makeAnApiCall.emit({
-          typeOfApiCall: "check-ref",
-          valToSend: inputValue
-        });
-      }, 1000);
+      // setTimeout(() => {
+      //   this.makeAnApiCall.emit({
+      //     typeOfApiCall: "check-ref",
+      //     valToSend: inputValue
+      //   });
+      // }, 1000);
 
       input.value = "";
       let test = sessionStorage.getItem("ref_no");

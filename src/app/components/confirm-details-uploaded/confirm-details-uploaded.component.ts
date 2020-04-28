@@ -16,7 +16,7 @@ export class ConfirmDetailsUploadedComponent implements OnInit, AfterViewInit {
   constructor(
     private generalservice: GeneralService,
     private http: HttpClient
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     setTimeout(() => {
@@ -58,13 +58,11 @@ export class ConfirmDetailsUploadedComponent implements OnInit, AfterViewInit {
 
   sendToNebechi() {
     const userLatLng = JSON.parse(sessionStorage.getItem("userLatLng")) || {};
-    const currentState =
-      JSON.parse(sessionStorage.getItem("currentState")) || undefined;
-    const bankCodeSelected =
-      sessionStorage.getItem("bankCodeSelected") || undefined;
-    const accountNumber = sessionStorage.getItem("account_number") || undefined;
-    const accountDetails =
-      JSON.parse(sessionStorage.getItem("accountDetails")) || undefined;
+    const currentState = JSON.parse(sessionStorage.getItem("currentState"));
+    console.log(currentState);
+    const bankCodeSelected = sessionStorage.getItem("bankCodeSelected");
+    const accountNumber = sessionStorage.getItem("account_number");
+    const accountDetails = JSON.parse(sessionStorage.getItem("accountDetails"));
 
     let dataToSend = new FormData();
     dataToSend.append("family_name", currentState["nameOfPerson"]);
@@ -170,7 +168,7 @@ export class ConfirmDetailsUploadedComponent implements OnInit, AfterViewInit {
       return "1";
     } else if (val.toString().toLowerCase() == "voters id") {
       return "3";
-    } else if (val.toString().toLowerCase() == "bvn") {
+    } else if (val.toString().toLowerCase() == "international passport") {
       return "2";
     } else if (regex.test(val)) {
       return "4";

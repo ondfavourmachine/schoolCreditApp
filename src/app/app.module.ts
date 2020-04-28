@@ -20,10 +20,7 @@ import { GeneralFormsComponent } from "./components/general-forms/general-forms.
 
 // import { LicenseValidationFormComponent } from "./components/forms/license-validation-form/license-validation-form.component";
 // import { UploadPhotoAndStatementComponent } from "./components/forms/upload-photo-and-statement/upload-photo-and-statement.component";
-import { QuestionsCtrlComponent } from "./components/Questions/questions-ctrl/questions-ctrl.component";
-import { QuestionsTextComponent } from "./components/Questions/questions-text/questions-text.component";
-import { QuestionOptionsComponent } from "./components/Questions/question-options/question-options.component";
-import { QuestionsProgressBarComponent } from "./components/Questions/questions-progress-bar/questions-progress-bar.component";
+
 import { IdentifyOrAnonymousComponent } from "./components/forms/identify-or-anonymous/identify-or-anonymous.component";
 import { SupportPageComponent } from "./components/forms/support-page/support-page.component";
 import { FoundBeneficiaryComponent } from "./components/found-beneficiary/found-beneficiary.component";
@@ -35,8 +32,8 @@ import { KnowYourReceiverComponent } from "./components/know-your-receiver/know-
 import { PictureComponentComponent } from "./components/picture-component/picture-component.component";
 import { ReceiverBankAccountComponent } from "./components/receiver-bank-account/receiver-bank-account.component";
 import { SharedModule } from "./modules/shared/shared.module";
-import { ConfirmDetailsUploadedComponent } from './components/confirm-details-uploaded/confirm-details-uploaded.component';
-import { WelcomeComponent } from './welcome/welcome.component';
+import { ConfirmDetailsUploadedComponent } from "./components/confirm-details-uploaded/confirm-details-uploaded.component";
+import { WelcomeComponent } from "./welcome/welcome.component";
 // import { GiverComponentComponent } from './components/giver-component/giver-component.component';
 
 // import { BBRWFormsComponent } from "./components/forms/bbrw-forms/bbrw-forms.component";
@@ -53,10 +50,7 @@ registerLocaleData(en);
     // BvnAndDOBFormComponent,
     // LicenseValidationFormComponent,
     // UploadPhotoAndStatementComponent,
-    QuestionsCtrlComponent,
-    QuestionsTextComponent,
-    QuestionOptionsComponent,
-    QuestionsProgressBarComponent,
+
     SupportPageComponent,
     FoundBeneficiaryComponent,
     EligibilityChecksComponent,
