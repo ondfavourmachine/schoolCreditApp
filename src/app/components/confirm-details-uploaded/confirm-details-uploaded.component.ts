@@ -168,7 +168,7 @@ export class ConfirmDetailsUploadedComponent implements OnInit, AfterViewInit {
       return "1";
     } else if (val.toString().toLowerCase() == "voters id") {
       return "3";
-    } else if (val.toString().toLowerCase() == "bvn") {
+    } else if (val.toString().toLowerCase() == "international passport") {
       return "2";
     } else if (regex.test(val)) {
       return "4";

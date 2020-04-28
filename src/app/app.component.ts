@@ -181,5 +181,6 @@ export class AppComponent
     this.switchOfModal();
     this.cancel();
     this.generalservice.resetEverything("reset");
+    this.generalservice.controlGlobalNotificationSubject.next("off");
   }
 }

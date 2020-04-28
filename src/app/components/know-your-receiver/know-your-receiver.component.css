@@ -150,6 +150,7 @@ div.numberBlockOne > div > img {
 
 div.numberBlockOne {
   cursor: pointer;
+  text-align: center;
   display: flex;
   background-color: rgba(0, 0, 0, 0.05);
   border-radius: 4px;
@@ -318,13 +319,11 @@ div.identificationForm form {
 } */
 
 /* ends here */
-p.warningSign img{
-  height: 200px;
+p.warningSign img {
+  height: 100px;
 }
 
-p.warningSignText{
+p.warningSignText {
   text-align: center;
   font-weight: 500;
 }
-
-
