@@ -42,12 +42,12 @@ export class PictureComponentComponent implements OnInit {
     // check the file the user is trying to upload is
     // more than 2.5mb. If it is, tell d user;
 
-    if (event.target.files[0].size > 2500000) {
-      this.notification = true;
-      setTimeout(() => {
-        this.notification = false;
-      }, 2500);
-      return;
+    if (event.target.files[0].size > 2000000) {
+      // this.notification = true;
+      // setTimeout(() => {
+      //   this.notification = false;
+      // }, 2500);
+      return this.generalservice.handleFlowController("receiverBankAccount");;
     }
 
     if (this.familyName) {

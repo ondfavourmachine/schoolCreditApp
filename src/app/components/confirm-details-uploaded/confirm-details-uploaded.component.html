@@ -1,4 +1,4 @@
-<div class="parent">
+<div id="receiver-confirm" class="parent">
   <div class="imgContainer">
     <img id="imageToDisplay" src="" alt="" />
   </div>
@@ -11,8 +11,8 @@
           Do we Submit Your family request for cash assistance?
         </p>
 
-        <button class="ui button positive basic mt-4" (click)="submitRequestForAssistance()">
-          Yes, Submit my request
+        <button class="ui button primary basic mt-4" (click)="submitRequestForAssistance()">
+          Yes, Submit our request
         </button>
         <a class="mt-3 link" (click)="closeTheModal('cancel')">
           No, cancel request
@@ -27,14 +27,14 @@
           and a helper.
         </p>
 
-        <button class="ui button positive basic mt-4" (click)="closeTheModal()">
+        <button class="ui button primary basic mt-4" (click)="closeTheModal()">
           Okay
         </button>
       </div>
 
       <div *ngIf="submit == 'failed'" class="requestSuccess flex flex-column justify-center align-center text-center">
         <div class="modal-icon"><img src="../../../assets/images/svgs/alert.svg" alt="" /></div>
-        <p class="para-title">
+        <p class="para-body">
           Your request could not be processed at the moment because you've made a request earlier
         </p>
 

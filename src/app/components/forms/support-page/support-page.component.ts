@@ -16,16 +16,19 @@ export class SupportPageComponent implements OnInit {
   notification = { show: false, message: undefined };
   amount: string;
   text: string;
+  families = [];
+
   public familyDetails: {
     family_name?: string;
     bank_name?: string;
     account_no?: string;
   } = {};
+
   constructor(
     private fb: FormBuilder,
     private generalservice: GeneralService,
     private http: HttpClient
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.supportPageForm = this.fb.group({
@@ -51,19 +54,19 @@ export class SupportPageComponent implements OnInit {
     // console.log(this.amount);
     if (this.amount == "5000") {
       this.text = "";
-      this.text = "a family in need who can be helped with N5000";
+      this.text = "a family in need who can be helped with at least N5000";
     }
     if (this.amount == "10000") {
       this.text = "";
-      this.text = "2 families in need who can be helped with N5000 each.";
+      this.text = "2 families in need who can be helped with at least N5000 each.";
     }
     if (this.amount == "20000") {
       this.text = "";
-      this.text = "4 families in need who can be helped with N5000 each.";
+      this.text = "4 families in need who can be helped with at least N5000 each.";
     }
-    if (this.amount == "30000") {
+    if (this.amount == "50000") {
       this.text = "";
-      this.text = "6 families in need who can be helped with N5000 each.";
+      this.text = "10 families in need who can be helped with at least N5000 each.";
     }
     this.stage = "1";
   }
@@ -104,32 +107,35 @@ export class SupportPageComponent implements OnInit {
     this.http
       .post(`${this.generalservice.apiUrl}transaction`, formToSubmit)
       .subscribe(
-        val => {
-          if (
-            val["message"] ==
-              "No Family Available to receive your Kindness! Please Try Giving in the Next Hour." &&
-            !val["status"]
-          ) {
-            this.stage = "1";
+        res => {
+          if (!res["status"]) {
+            this.stage = "0";
           } else {
             // let temp = [];
-            // if (val["data"].length == 1) {
-            //   for (let data of val["data"]) {
+            // if (res["data"].length == 1) {
+            //   for (let data of res["data"]) {
             //     this.familyDetails = { ...data };
             //   }
             // } else {
-            this.generalservice.familiesForCashDonation = val["data"];
-            this.generalservice.controlGlobalNotificationSubject.next("on");
-            this.gotoFamilyDetails();
+
+            this.generalservice.familiesForCashDonation = res["data"];
+            this.families = res["data"];
+            this.stage = '4';
+
 
             // console.log(this.familyDetails);
             // this.generalservice.familyToReceiveCashDonation = this.familyDetails;
             // console.log(this.generalservice.familyToReceiveCashDonation);
             // console.log(this.generalservice.familiesForCashDonation);
-            this.stage = "3";
+            // this.stage = "3";
           }
         },
         err => console.log(err)
       );
+  }
+
+  gotoFamily() {
+    this.generalservice.controlGlobalNotificationSubject.next("on");
+    this.gotoFamilyDetails();
   }
 }

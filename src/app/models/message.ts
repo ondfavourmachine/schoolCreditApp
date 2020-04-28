@@ -21,7 +21,7 @@ export class Message {
     "You can do it! Answer the next question faster!"
   ];
   static welcomeMessagesForGiver = [
-    "Hey! My name is Dorcas. Thank you for trying to help out in these times.",
+    "Hey! My name is Tabitha. Thank you for trying to help out in these times.",
     `Incase you are not a giver but a receiver, type 'i am a receiver' and you will be taken to the receivers section.`,
     "Is this your first time here giving for COVID Relief?"
   ];
@@ -44,7 +44,7 @@ export class Message {
   ];
 
   static welcomeMsgForReceiver: string[] = [
-    "Good Morning, My name is Dorcas. I represent a private initiative from concerned Nigerians who want to help",
+    "Good Morning, My name is Tabitha. I represent a private initiative from concerned Nigerians who want to help",
     `In times like these, what makes us a great Nation is our ability to find people who care enough to help.`,
     `Would you like me to find someone to assist your
     family?
@@ -213,7 +213,7 @@ export class Message {
       
       <div class="chat-box__text-wrapper">
         ${this.text}
-       
+        <i class="fa fa-check-double read-indicator"></i>
       </div>
     </div>
   </div>

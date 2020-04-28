@@ -22,29 +22,24 @@
   </form>
 </div> -->
 
-<div id class="flex flex-column justify-center align-center h-100" id="support-page">
-  <!-- <div class="modal-icon mt-5">
-    <img src="../../../../assets/images/svgs/profit.svg" alt="ICON" />
-  </div> -->
-  <p class="para-title">How much do you want to give?</p>
-  <!-- <form [formGroup]="supportPageForm" (ngSubmit)="submit()" class="ui form mb-4">
-    <div class="field">
-      <label>How much do you want to support with?</label>
-      <input formControlName="amount" type="tel" pattern="[0-9]*" name="amount" placeholder="First Name" />
-    </div>
-    <button class="fluid ui primary button mt-4">
-      Next
-    </button>
-  </form> -->
+<div id class="flex flex-column justify-center align-center h-100 text-center" id="support-page">
+  <p class="para-title">How much would you like to give?</p>
   <div class="grid two money-boxes">
     <p class="box para-title" (click)="submitAmount($event)">N5,000</p>
     <p class="box para-title" (click)="submitAmount($event)">N10,000</p>
     <p class="box para-title" (click)="submitAmount($event)">N20,000</p>
-    <p class="box para-title" (click)="submitAmount($event)">N30,000</p>
+    <p class="box para-title" (click)="submitAmount($event)">N50,000</p>
   </div>
   <small class="smallNotification" *ngIf="notification?.show">
     {{ notification?.message }}
   </small>
+</div>
+
+<div *ngIf="stage == '0'" class="inner-modal">
+  <div class="inner-modal-content flex flex-column align-center text-center">
+    <div class="para-title">No family available to support</div>
+    <a class="link mt-4" (click)="stage = ''" class="goBack">go back</a>
+  </div>
 </div>
 
 <div *ngIf="stage == '1'" class="inner-modal">
@@ -107,5 +102,16 @@
       <span (click)="gotoFamilyDetails()" class="mr-2"> Next </span>
     </button>
     <span (click)="stage = ''" class="goBack">go back</span>
+  </div>
+</div>
+
+<div *ngIf="stage == '4'" class="inner-modal">
+  <div class="inner-modal-content flex flex-column align-center text-center">
+    <div class="para-title">
+      There {{ families.length > 1 ? 'are' : 'is' }} {{ families.length }} 
+      {{ families.length > 1 ? 'families' : 'family' }}
+      available to support
+    </div>
+    <a class="link mt-4" (click)="gotoFamily()" class="goBack">continue</a>
   </div>
 </div>

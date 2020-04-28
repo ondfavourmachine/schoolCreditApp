@@ -1,23 +1,23 @@
-<div class="parent">
+<div id="receiver-picture" class="parent">
   <div class="flex flex-column justify-center align-center" id="ImageInsertionPoint">
     <div class="selectedImageContainer">
       <img id="imageToDisplay" src="" alt="" />
     </div>
 
-    <div class="modal-icon mb-4" style="cursor:pointer;" (click)="trigger()">
+    <div *ngIf="!uploaded" class="modal-icon mb-4" style="cursor:pointer;" (click)="trigger()">
       <img src="../../../assets/images/svgs/upload.svg" alt="" />
     </div>
 
     <input hidden (change)="mimeController($event)" id="inputFile" type="file" accept="image/png, image/jpeg" />
 
     <div class="z-index-2" *ngIf="!uploadEvidence; else evidenceUpload">
-      <div *ngIf="!uploaded">
-        <p class="para-title shrink">
+      <div *ngIf="!uploaded" class="text-center">
+        <p class="para-body">
           Click the button below to upload a picture of your family
         </p>
         <br>
         <div class="text-center mt-4">
-          <button (click)="trigger()" class="ui button primary">Upload picture</button>
+          <button (click)="trigger()" class="ui button basic primary">Upload picture</button>
           <br>
           <!-- <button (click)="noPicturesProvided()" class="ui button basic secondary mini">
           Skip
@@ -26,7 +26,7 @@
             <div class="field">
               <div class="ui checkbox">
                 <input id="xyxx" (click)="noPicturesProvided()" type="checkbox" tabindex="0">
-                <label for="xyxx" style="line-height: 1">I dont want to use our picture</label>
+                <label for="xyxx" style="line-height: 1">We dont want to use our picture</label>
               </div>
             </div>
           </form>
@@ -45,15 +45,16 @@
 
     <div class="inner-modal" *ngIf="uploaded">
       <div *ngIf="idontWantToProvidePictures" id="idontWantToProvidePictures"
-        class="inner-modal-content flex flex-column align-center justify-center">
-        <div class="modal-icon mb-4">
-          <img src="../../../assets/images/alert.svg" alt="" />
-        </div>
-        <p class="para-title text-center">
-          Not providing a means of identification will affect your chances of receiving help.
+        class="inner-modal-content flex flex-column align-center justify-center text-center">
+        <p class="modal-icon mb-4">
+          <img src="../../../assets/images/svgs/alert.svg" alt="" />
         </p>
 
-        <button class="ui button positive basic mt-4" (click)="next()">
+        <p class="para-body">
+          Not providing a picture of your family might affect your chances of receiving help.
+        </p>
+
+        <button class="ui button primary basic mt-4" (click)="next()">
           Continue without a picture
         </button>
         <a class="mt-3 link" (click)="hide()">
@@ -67,7 +68,7 @@
           <img src="../../../assets/images/svgs/checked.svg" alt="" />
         </div>
 
-        <button class="ui button positive basic mt-4" (click)="next()">
+        <button class="ui button primary basic mt-4" (click)="next()">
           Next
         </button>
         <a class="mt-3 link" (click)="changePicture()">
@@ -80,7 +81,7 @@
           <img src="../../../assets/images/svgs/checked.svg" alt="" />
         </div>
 
-        <button class="ui button positive basic mt-4" (click)="uploadEvidenceOfTransfer()">
+        <button class="ui button primary basic mt-4" (click)="uploadEvidenceOfTransfer()">
           Upload evidence
         </button>
         <a class="mt-3 link" (click)="changePicture()">

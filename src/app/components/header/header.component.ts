@@ -8,9 +8,15 @@ import { Timer } from "src/app/models/timer";
   styleUrls: ["./header.component.css"]
 })
 export class HeaderComponent implements OnInit {
-  constructor() {}
+  constructor(
+    private gs: GeneralService
+  ) { }
 
-  ngOnInit() {}
+  ngOnInit() { }
+
+  launchMenu() {
+    this.gs.handleFlowController("welcomeModal");
+  }
 
   // change(event) {}
 }

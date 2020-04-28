@@ -38,6 +38,10 @@ input::placeholder {
   font-weight: 400;
 }
 
+.ui.form ::-webkit-input-placeholder {
+  color: #666;
+}
+
 main {
   display: block;
 }
@@ -214,16 +218,6 @@ template {
   display: none;
 }
 
-* {
-  box-sizing: border-box;
-}
-
-body {
-  height: 100vh;
-  width: 100%;
-  position: relative;
-}
-
 .ui.form .field > label {
   font-weight: 400;
   font-size: 0.9rem;
@@ -243,10 +237,8 @@ body {
   top: 0;
   height: 60px;
   width: 100%;
-  box-shadow: 0 0.46875rem 2.1875rem rgba(4, 9, 20, 0.03),
-    0 0.9375rem 1.40625rem rgba(4, 9, 20, 0.03),
-    0 0.25rem 0.53125rem rgba(4, 9, 20, 0.05),
-    0 0.125rem 0.1875rem rgba(4, 9, 20, 0.03);
+  box-shadow: 0 0.46875rem 2.1875rem rgba(4, 9, 20, 0.03), 0 0.9375rem 1.40625rem rgba(4, 9, 20, 0.03),
+    0 0.25rem 0.53125rem rgba(4, 9, 20, 0.05), 0 0.125rem 0.1875rem rgba(4, 9, 20, 0.03);
 }
 
 .header__inner {
@@ -312,7 +304,7 @@ body {
 
 .footer {
   border-top: none;
-  position: absolute;
+  position: fixed;
   bottom: 0;
   width: 100%;
   height: 80px;
@@ -351,7 +343,7 @@ body {
   border: none;
   border-radius: 7px;
   font-weight: 400;
-  font-size: 1rem;
+  font-size: 0.9rem;
   color: #74787c;
   /* box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24); */
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
@@ -442,7 +434,7 @@ body {
 
 .chat-box {
   background: transparent;
-  height: calc(100vh - 150px);
+  height: calc(100vh - 130px);
   position: absolute;
   width: 100%;
   overflow: auto;
@@ -456,16 +448,15 @@ body {
 }
 
 .chat-box__text-wrapper {
-  background: #2185d0;
+  background: #afddff;
   padding: 0.6rem 1rem;
   /* box-shadow: 0px 4px 29px rgba(0, 0, 0, 0.04), 3px 4px 9px rgba(0, 0, 0, 0.1); */
   font-size: 0.9rem;
-  border-radius: 10px;
+  border-radius: 5px;
   display: inline-block;
   width: 100%;
   line-height: 1.2rem;
-  color: #ffffff;
-  font-weight: 500;
+  color: #333;
   animation: scaleUp 300ms ease;
   transform-origin: right;
 }
@@ -503,8 +494,9 @@ body {
 
 .button-container .btn:first-child {
   margin-right: 10px;
-  background: #2185d0;
-  color: #fff;
+  background: #afddff;
+  border: 0;
+  color: #333;
 }
 
 .chat-box__wrapper.left .chat-box__text-wrapper {
@@ -512,8 +504,8 @@ body {
   color: #495057;
   position: relative;
   margin-left: 11px;
-  /* box-shadow: 3px 3px 19px rgba(0, 0, 0, 0.25); */
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+  box-shadow: 3px 3px 19px rgba(0, 0, 0, 0.25);
+  /* box-shadow: 0 0 20px rgba(0, 0, 0, 0.05); */
   transform-origin: left;
 }
 
@@ -556,7 +548,7 @@ body {
   height: 0;
   border-top: 10px solid transparent;
   border-bottom: 10px solid transparent;
-  border-right: 10px solid #2185d0;
+  border-right: 10px solid #afddff;
   position: absolute;
   top: 0.7rem;
   right: -8px;
@@ -641,8 +633,9 @@ small img {
     display: none;
   }
   .button-container {
-    flex-direction: column;
+    flex-direction: row;
     align-items: flex-start;
+    flex-wrap: wrap;
   }
 }
 
@@ -673,13 +666,16 @@ small img {
   -webkit-animation-duration: 0.4s;
   animation-name: animatetop;
   animation-duration: 0.4s;
-  /* display: flex;
+  display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: stretch; */
+  align-items: stretch;
 }
 
 @media screen and (max-width: 700px) {
+  html {
+    font-size: 16px;
+  }
   .modal-content {
     max-width: 100%;
     margin: 0;
@@ -847,10 +843,10 @@ small img {
   margin-bottom: 1.8rem;
 }
 
-.ui.checkbox label,
+/* .ui.checkbox label,
 .ui.checkbox + label {
   line-height: 1.5rem;
-}
+} */
 
 .counter {
   font-weight: 500;
@@ -1178,9 +1174,10 @@ small img {
 }
 
 .para-title {
-  font-size: 1.17rem;
+  font-size: 1.15rem;
   color: #343a40;
   font-weight: 600;
+  line-height: 1.6rem !important;
 }
 
 .para-title.shrink {
@@ -1190,7 +1187,7 @@ small img {
 }
 
 .para-body {
-  font-size: 0.9rem;
+  font-size: 1rem;
   color: #343a40;
   font-weight: 400;
 }
@@ -1267,7 +1264,7 @@ ul.list li span:nth-child(2) {
 }
 
 .inner-modal {
-  position: absolute;
+  position: fixed;
   top: 0;
   right: 0;
   bottom: 0;
@@ -1296,7 +1293,7 @@ ul.list li span:nth-child(2) {
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
+  height: 80%;
   object-fit: cover;
   object-position: top;
 }
@@ -1383,9 +1380,28 @@ textarea {
 }
 
 .chat-box__inner-wrapper .avatar {
-  width: 25px;
+  width: 40px;
+  background: #999;
+  border: 5px solid #999;
 }
 
 .z-index-2 {
   z-index: 2;
+}
+
+.read-indicator {
+  position: absolute;
+  bottom: 20%;
+  right: 5%;
+  font-size: 0.6rem;
+  color: #2a9a0d;
+}
+
+.font-weight-bold {
+  font-weight: 600;
+}
+
+.ui.checkbox .box:before,
+.ui.checkbox label:before {
+  border: 2px solid #c3c3c3;
 }

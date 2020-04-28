@@ -43,9 +43,16 @@
   display: inline-block;
 }
 
-/* .header__item {
+.header__item {
   margin-left: 12px;
-} */
+}
+
+.header__inner {
+  margin-left: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 /* 
   
     */

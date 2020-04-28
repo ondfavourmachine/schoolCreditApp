@@ -130,11 +130,11 @@ id="found-beneficiary"
     <button *ngIf="
         generalservice.familiesForCashDonation.length > 0;
         else noMoreFamilies
-      " (click)="iHaveTransferredTheMoney()" class="ui button positive basic">
+      " (click)="iHaveTransferredTheMoney()" class="ui button primary basic">
       Goto Next Family
     </button>
     <ng-template #noMoreFamilies>
-      <button (click)="iHaveTransferredTheMoney()" class="ui button positive basic">
+      <button (click)="iHaveTransferredTheMoney()" class="ui button primary basic">
         Done
       </button>
     </ng-template>

@@ -482,7 +482,7 @@ export class KnowYourReceiverComponent
             `.numberBlock`
           ) as HTMLDivElement).style.display = "grid";
           this.modifiableParagraph.textContent =
-            "Number of people in your immediate family?";
+            "How many are you in your family?";
         }
         this.familyDetailsInfo.idOfParentToProvide = undefined;
         this.familyDetailsInfo.spouseHasChosenProvidedID = false;
@@ -501,7 +501,7 @@ export class KnowYourReceiverComponent
             `.numberBlock`
           ) as HTMLDivElement).style.display = "grid";
           this.modifiableParagraph.textContent =
-            "Number of people in your immediate family?";
+            "How many are you in your family?";
         } else {
           this.removethickenBorderBottom(".numberBlockOneAlt");
           (document.querySelector(
@@ -514,7 +514,7 @@ export class KnowYourReceiverComponent
             `.numberBlock`
           ) as HTMLDivElement).style.display = "grid";
           this.modifiableParagraph.textContent =
-            "Number of people in your immediate family?";
+            "How many are you in your family?";
         }
         break;
     }
@@ -549,19 +549,29 @@ export class KnowYourReceiverComponent
   }
 
   noIDToProvide() {
-    const increaseHeight = document.getElementById(
-      "increaseHeight"
-    ) as HTMLDivElement;
-    increaseHeight.style.height = "550px";
+    // this.translateDiv = document.querySelector(
+    //   "#idWarning"
+    // ) as HTMLDivElement;
+    // this.translateDiv.style.display = "block";
+
+    // (document.querySelector("#idWarning .preliminary") as HTMLDivElement).style.display =
+    //   "block";
+
+    // const increaseHeight = document.getElementById(
+    //   "increaseHeight"
+    // ) as HTMLDivElement;
+    // increaseHeight.style.height = "550px";
     this.warningForNotProvidingID = true;
   }
 
   takeOfwarning() {
-    const increaseHeight = document.getElementById(
-      "increaseHeight"
-    ) as HTMLDivElement;
-    increaseHeight.style.height = "auto";
+    // const increaseHeight = document.getElementById(
+    //   "increaseHeight"
+    // ) as HTMLDivElement;
+    // increaseHeight.style.height = "auto";
     this.warningForNotProvidingID = false;
+    const cbox = document.getElementById('noId') as HTMLInputElement;
+    if (cbox) cbox.checked = false;
   }
 
   continueWithoutID() {

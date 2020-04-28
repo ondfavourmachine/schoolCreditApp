@@ -34,9 +34,11 @@ export class FoundBeneficiaryComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     // console.log(this.familyThatWillBenefit);
+    const { family_picture } = this.familyThatWillBenefit;
+    console.log('Family picture..', family_picture);
     (document.getElementById(
       "familyPicture"
-    ) as HTMLImageElement).src = this.familyThatWillBenefit.family_picture;
+    ) as HTMLImageElement).src = family_picture || '/assets/images/family-avatar.png';
   }
 
   checkEligibilty() {
@@ -55,7 +57,7 @@ export class FoundBeneficiaryComponent implements OnInit, AfterViewInit {
         "familyPicture"
       ) as HTMLImageElement;
       imageElement.src = "";
-      imageElement.src = this.familyThatWillBenefit.family_picture;
+      imageElement.src = this.familyThatWillBenefit.family_picture || '/assets/images/family-avatar.png';
       const giverResponse = new replyGiversOrReceivers(
         `I have transferred N5000 to the ${this.previousFamilyThatReceivedHelp["family_name"]}`,
         "right"

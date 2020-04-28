@@ -16,7 +16,7 @@ export class ConfirmDetailsUploadedComponent implements OnInit, AfterViewInit {
   constructor(
     private generalservice: GeneralService,
     private http: HttpClient
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     setTimeout(() => {
@@ -35,7 +35,7 @@ export class ConfirmDetailsUploadedComponent implements OnInit, AfterViewInit {
     // let reader: FileReader;
     // if (FileReader) {
     // check if the filereader api is supported by browser
-    imageToDisplay.src = this.generalservice.familyImageToConfirm;
+    imageToDisplay.src = this.generalservice.familyImageToConfirm || '/assets/images/family-avatar.png';
 
     // reader = new FileReader();
     // reader.onload = event => {

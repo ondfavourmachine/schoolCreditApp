@@ -1,0 +1,34 @@
+.w-header {
+    height: 250px;
+    background: url(/assets/images/tabitha.png);
+    background-size: cover;
+    background-position: center;
+    border-radius: 0 0 200px 200px / 0 0 15% 15%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+.w-header::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 0 0 200px 200px / 0 0 15% 15%;
+}
+
+.welcome-page {
+    padding-top: 225px;
+    display: flex;
+    flex-direction: column;
+}
+
+@media screen and (max-width: 700px) {
+    .welcome-page {
+        padding-top: 180px;
+    }
+}

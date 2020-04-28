@@ -168,11 +168,12 @@ export class AppComponent
 
   fakeButtonForUserOnly() {
     if (
-      document.getElementById("knowYourReceiver")
-      // || document.getElementById('found-beneficiary')
+      document.getElementById("knowYourReceiver") ||
+      document.getElementById("receiver-bank") ||
+      document.getElementById("receiver-picture") ||
+      document.getElementById("receiver-confirm")
     ) {
       this.confirmationDialog = true;
-      // return;
     } else {
       this.switchOfModal();
       this.cancel();
@@ -186,7 +187,7 @@ export class AppComponent
   resetEverything() {
     this.switchOfModal();
     this.cancel();
-    this.generalservice.resetEverything("reset");
-    this.generalservice.controlGlobalNotificationSubject.next("off");
+    // this.generalservice.resetEverything("reset");
+    // this.generalservice.controlGlobalNotificationSubject.next("off");
   }
 }
