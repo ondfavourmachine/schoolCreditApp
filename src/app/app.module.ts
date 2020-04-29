@@ -34,6 +34,7 @@ import { ReceiverBankAccountComponent } from "./components/receiver-bank-account
 import { SharedModule } from "./modules/shared/shared.module";
 import { ConfirmDetailsUploadedComponent } from "./components/confirm-details-uploaded/confirm-details-uploaded.component";
 import { WelcomeComponent } from "./welcome/welcome.component";
+import { EvidenceUploadComponent } from './components/evidence-upload/evidence-upload.component';
 // import { GiverComponentComponent } from './components/giver-component/giver-component.component';
 
 // import { BBRWFormsComponent } from "./components/forms/bbrw-forms/bbrw-forms.component";
@@ -61,7 +62,8 @@ registerLocaleData(en);
     PictureComponentComponent,
     ReceiverBankAccountComponent,
     ConfirmDetailsUploadedComponent,
-    WelcomeComponent
+    WelcomeComponent,
+    EvidenceUploadComponent
     // GiverComponentComponent
 
     // BBRWFormsComponent

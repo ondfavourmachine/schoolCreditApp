@@ -143,7 +143,7 @@ export class KnowYourReceiverComponent
   }
 
   submit(form) {
-    console.log("i am here");
+    // console.log("i am here");
     let previousStage = this.toKYCComponent.nextStage;
     this.toKYCComponent = {
       nextStage: "familyDetails",
@@ -363,7 +363,7 @@ export class KnowYourReceiverComponent
     } else {
       this.familyDetailsInfo.idOfParentToProvide = div.textContent;
       this.noInputAllowed = false;
-      console.log(this.familyDetailsInfo);
+      // console.log(this.familyDetailsInfo);
     }
     // console.log(this.familyDetailsInfo.idOfParentToProvide);
     this.familyDetailsInfo.spouseHasChosenProvidedID = false;

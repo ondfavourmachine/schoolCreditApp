@@ -35,10 +35,9 @@ export class FoundBeneficiaryComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     // console.log(this.familyThatWillBenefit);
     const { family_picture } = this.familyThatWillBenefit;
-    console.log('Family picture..', family_picture);
-    (document.getElementById(
-      "familyPicture"
-    ) as HTMLImageElement).src = family_picture || '/assets/images/family-avatar.png';
+    // console.log('Family picture..', family_picture);
+    (document.getElementById("familyPicture") as HTMLImageElement).src =
+      family_picture || "/assets/images/family-avatar.png";
   }
 
   checkEligibilty() {
@@ -50,6 +49,7 @@ export class FoundBeneficiaryComponent implements OnInit, AfterViewInit {
     if (this.generalservice.familiesForCashDonation.length != 0) {
       this.previousFamilyThatReceivedHelp = this.familyThatWillBenefit;
       this.familyThatWillBenefit = "";
+
       let temp = this.generalservice.familiesForCashDonation.splice(0, 1);
       this.familyThatWillBenefit = temp[0];
       // console.log(this.familyThatWillBenefit);
@@ -57,12 +57,14 @@ export class FoundBeneficiaryComponent implements OnInit, AfterViewInit {
         "familyPicture"
       ) as HTMLImageElement;
       imageElement.src = "";
-      imageElement.src = this.familyThatWillBenefit.family_picture || '/assets/images/family-avatar.png';
+      imageElement.src =
+        this.familyThatWillBenefit.family_picture ||
+        "/assets/images/family-avatar.png";
       const giverResponse = new replyGiversOrReceivers(
         `I have transferred N5000 to the ${this.previousFamilyThatReceivedHelp["family_name"]}`,
         "right"
       );
-      this.generalservice.noOfevidencesOfTransferToUpload++
+
       setTimeout(() => {
         this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
           `Thank you so much. God bless you. Please could you take a moment to upload some evidence of transfer
@@ -72,11 +74,16 @@ export class FoundBeneficiaryComponent implements OnInit, AfterViewInit {
           `${this.previousFamilyThatReceivedHelp["transaction_id"]}-${this.previousFamilyThatReceivedHelp["id"]}-${this.giverID}-${this.familyThatWillBenefit["family_name"]}`
         );
         this.generalservice.responseDisplayNotifier(giverResponse);
+        this.generalservice.noOfevidencesOfTransferToUpload.push({
+          [this.previousFamilyThatReceivedHelp[
+            "transaction_id"
+          ]]: `${this.previousFamilyThatReceivedHelp["id"]}-${this.giverID}-${this.previousFamilyThatReceivedHelp["family_name"]}`
+        });
       }, 300);
       this.stage = "1";
       return;
     }
-    // console.log(this.familyThatWillBenefit);
+
     this.generalservice.controlGlobalNotificationSubject.next("on");
     const giverResponse = new replyGiversOrReceivers(
       `I have transferred N5000 to the ${this.familyThatWillBenefit["family_name"]}`,
@@ -90,10 +97,15 @@ export class FoundBeneficiaryComponent implements OnInit, AfterViewInit {
       `${this.familyThatWillBenefit["transaction_id"]}-${this.familyThatWillBenefit["id"]}-${this.giverID}-${this.familyThatWillBenefit["family_name"]}`
     );
     this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
-    (document.querySelector(".modal-close") as HTMLSpanElement).click();
+    // (document.querySelector(".modal-close") as HTMLSpanElement).click();
     this.generalservice.responseDisplayNotifier(giverResponse);
     this.generalservice.controlGlobalNotificationSubject.next("off");
-    this.generalservice.noOfevidencesOfTransferToUpload++
+    this.generalservice.noOfevidencesOfTransferToUpload.push({
+      [this.familyThatWillBenefit[
+        "transaction_id"
+      ]]: `${this.familyThatWillBenefit["id"]}-${this.giverID}-${this.familyThatWillBenefit["family_name"]}`
+    });
+    this.generalservice.handleFlowController("evidenceUploadComponent");
   }
 
   iConfirmThatMoneyHasLeftMyAccount() {

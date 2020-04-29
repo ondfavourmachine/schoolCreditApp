@@ -10,8 +10,12 @@ export class ReceiverParentComponent implements OnInit {
   constructor(private generalservice: GeneralService) {}
 
   ngOnInit(): void {
-    // this.getLocationOfUser();
     this.generalservice.handleFlowController("welcomeModal");
     sessionStorage.removeItem("userLatLng");
+    if (sessionStorage.getItem("route")) sessionStorage.removeItem("route");
+    if (sessionStorage.getItem("giver")) sessionStorage.removeItem("giver");
+    this.generalservice.noOfevidencesOfTransferToUpload = [];
+    this.generalservice.nextChatbotReplyToGiver = null;
+    this.generalservice.uploadEvidenceOfTransferInProgress = false;
   }
 }

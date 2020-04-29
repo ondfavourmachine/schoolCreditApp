@@ -11,6 +11,7 @@ import { Router, NavigationStart } from "@angular/router";
 import { GeneralService } from "./services/generalService/general.service";
 import { Subscription } from "rxjs";
 import { Alert } from "./models/Alert";
+import { replyGiversOrReceivers } from "./models/GiverResponse";
 
 interface observableAggregator {
   flowControl?: Subscription;
@@ -187,7 +188,26 @@ export class AppComponent
   resetEverything() {
     this.switchOfModal();
     this.cancel();
+    this.handleResetEverythingScenario();
+    // this.handleResetEverythingScenario();
     // this.generalservice.resetEverything("reset");
     // this.generalservice.controlGlobalNotificationSubject.next("off");
+  }
+
+  handleResetEverythingScenario() {
+    const response = new replyGiversOrReceivers(
+      `Whenever your ready, we can help you get assistance.`,
+      "left",
+      `Ok let's continue`,
+      "receive"
+    );
+    // this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("prevent");
+    this.generalservice.responseDisplayNotifier(response);
+
+    setTimeout(() => {
+      this.generalservice.reEnableUploadButton(`Ok let's continue`);
+    }, 600);
+
+    // this.displaySubsequentMessages(response);
   }
 }

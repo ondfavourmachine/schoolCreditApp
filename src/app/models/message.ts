@@ -22,7 +22,7 @@ export class Message {
   ];
   static welcomeMessagesForGiver = [
     "Hey! My name is Tabitha. Thank you for trying to help out in these times.",
-    `Incase you are not a giver but a receiver, type 'i am a receiver' and you will be taken to the receivers section.`,
+    // `Incase you are not a giver but a receiver, type 'i am a receiver' and you will be taken to the receivers section.`,
     "Is this your first time here giving for COVID Relief?"
   ];
 
@@ -184,7 +184,7 @@ export class Message {
       let diff = timeNow - time;
       let timediffInSeconds = Math.round(diff / 1000);
       if (
-        timediffInSeconds < 20 &&
+        timediffInSeconds < 200 &&
         this.direction.trim() == "left" &&
         count > 0
       ) {
@@ -212,8 +212,7 @@ export class Message {
         <div class="chat-box__inner-wrapper">
       
       <div class="chat-box__text-wrapper">
-        ${this.text}
-        <i class="fa fa-check-double read-indicator"></i>
+        ${this.text}  
       </div>
     </div>
   </div>
@@ -237,6 +236,8 @@ export class Message {
       this.htmlElement.insertAdjacentHTML("beforeend", html);
     }
   }
+
+  // <i class="fa fa-check-double read-indicator"></i>
 
   addOrRemoveImage(
     parentDiv: HTMLElement,

@@ -24,15 +24,7 @@ export class PictureComponentComponent implements OnInit {
   constructor(
     private generalservice: GeneralService,
     private http: HttpClient
-  ) {
-    if (generalservice.noOfevidencesOfTransferToUpload) {
-      this.uploadEvidence = generalservice.uploadEvidenceOfTransferInProgress
-        ? true
-        : false;
-      const arr = JSON.parse(sessionStorage.getItem("evidenceUploadData"));
-      this.familyName = this.getFamilyName(arr[0]);
-    }
-  }
+  ) {}
 
   ngOnInit(): void {
     this.generalservice.controlGlobalNotificationSubject.next("off");
@@ -47,7 +39,7 @@ export class PictureComponentComponent implements OnInit {
       // setTimeout(() => {
       //   this.notification = false;
       // }, 2500);
-      return this.generalservice.handleFlowController("receiverBankAccount");;
+      return this.generalservice.handleFlowController("receiverBankAccount");
     }
 
     if (this.familyName) {
@@ -169,7 +161,7 @@ export class PictureComponentComponent implements OnInit {
     formToSubmit.append("giver_id", giver_id);
     formToSubmit.append("transfer_image", this.transferEvidence);
     this.generalservice.controlGlobalNotificationSubject.next("on");
-    console.log(this.generalservice.noOfevidencesOfTransferToUpload);
+    // console.log(this.generalservice.noOfevidencesOfTransferToUpload);
     this.http
       .post(`${this.generalservice.apiUrl}uploadpayment`, formToSubmit)
       .subscribe(
@@ -187,7 +179,7 @@ export class PictureComponentComponent implements OnInit {
             button.disabled = true;
             button.style.pointerEvents = "none";
             (document.querySelector(".modal-close") as HTMLSpanElement).click();
-            this.generalservice.noOfevidencesOfTransferToUpload--;
+            // this.generalservice.noOfevidencesOfTransferToUpload--;
 
             this.generalservice.controlGlobalNotificationSubject.next("off");
             if (!this.generalservice.noOfevidencesOfTransferToUpload) {

@@ -67,7 +67,7 @@ export class ChatMessagesDisplayComponent
     private chatservice: ChatService,
     private titleCasePipe: TitleCasePipe,
     private route: Router
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.generalservice.reset$.subscribe((val: string) => {
@@ -103,7 +103,7 @@ export class ChatMessagesDisplayComponent
 
     this.observableToTrash.displayResponse = this.generalservice.intermediateResponse$.subscribe(
       (val: ReceiversResponse | GiverResponse) => {
-        // console.log(val);
+        // debugger;
         const objCopy: ReceiversResponse & object | GiverResponse & object = {
           ...val
         };
@@ -262,8 +262,7 @@ export class ChatMessagesDisplayComponent
       }
       if (moreInformation) {
         let arrToPush = [];
-        // console.log(moreInformation);
-        // sessionStorage.removeItem(;)
+        console.log(moreInformation);
 
         arrToPush = JSON.parse(sessionStorage.getItem("evidenceUploadData"));
         if (arrToPush) {
@@ -271,25 +270,27 @@ export class ChatMessagesDisplayComponent
           let obj = {};
           obj[temp[1]] =
             String(temp[2]) + "/" + String(temp[3]) + "/" + String(temp[4]);
-          arrToPush.push(obj);
-          sessionStorage.setItem(
-            "evidenceUploadData",
-            JSON.stringify(arrToPush)
-          );
+          // arrToPush.push(obj);
+          this.generalservice.noOfevidencesOfTransferToUpload.push(obj);
+          // sessionStorage.setItem(
+          //   "evidenceUploadData",
+          //   JSON.stringify(arrToPush)
+          // );
         } else {
           arrToPush = [];
           let temp = moreInformation.split("-");
           let obj = {};
           obj[temp[1]] =
             String(temp[2]) + "/" + String(temp[3]) + "/" + String(temp[4]);
-          arrToPush.push(obj);
-          sessionStorage.setItem(
-            "evidenceUploadData",
-            JSON.stringify(arrToPush)
-          );
+          // arrToPush.push(obj);
+          this.generalservice.noOfevidencesOfTransferToUpload.push(obj);
+          // sessionStorage.setItem(
+          //   "evidenceUploadData",
+          //   JSON.stringify(arrToPush)
+          // );
         }
         // console.log(componentToLoad);
-        this.generalservice.handleFlowController("takeAPicture");
+        this.generalservice.handleFlowController("evidenceUploadComponent");
         this.generalservice.uploadEvidenceOfTransferInProgress = true;
       }
     });
@@ -405,10 +406,15 @@ export class ChatMessagesDisplayComponent
 
       setTimeout(() => {
         this.displaySubsequentMessages(chatbotReply);
-        if (/upload/i.test(chatbotReply.button)) {
+
+        if (
+          chatbotReply &&
+          /upload/i.test(chatbotReply.button) &&
+          this.route.url.includes("giver")
+        ) {
           this.generalservice.reEnableUploadButton();
         }
-      }, 1000);
+      }, 700);
     }
   }
 
@@ -468,6 +474,7 @@ export class ChatMessagesDisplayComponent
       ul = document.getElementById("messagesPlaceHolder") as HTMLUListElement;
     }
     try {
+      if (obj == null) return;
       if (!obj.button) {
         const messageToDisplay = new Message(
           `${obj.message ? obj.message : " "}`,
@@ -489,9 +496,7 @@ export class ChatMessagesDisplayComponent
         messageToDisplay.makeAndInsertMessage(this.count);
         // console.log(this.count);
       }
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (err) {}
   }
 
   // changes the title of Modal for the different forms
@@ -507,28 +512,6 @@ export class ChatMessagesDisplayComponent
       });
     }
   }
-
-  // checkForRefNoAndDisplayAppropriateMsg(ref?: string) {
-  //   // debugger;
-  //   let refToSend = { ref_no: ref };
-  //   this.chatservice.fetchRefNumber(refToSend).subscribe(
-  //     (val: ValidateRefResponse) => {
-  //       console.log(val);
-  //       let msg: { message: string; direction: string; button?: string };
-  //       msg = this.generalservice.handleValidRef(val);
-  //       try {
-  //         this.displaySubsequentMessages(msg);
-  //       } catch (e) {
-  //         return;
-  //       }
-  //       console.log(msg.message);
-  //     },
-  //     err =>
-  //       this.displaySubsequentMessages(
-  //         this.generalservice.handleRefCheckingError(err)
-  //       )
-  //   );
-  // }
 
   requestRef(ref: string) {
     setTimeout(() => {
@@ -590,7 +573,7 @@ export class ChatMessagesDisplayComponent
           }
         }
       }
-    } catch (e) { }
+    } catch (e) {}
   }
 
   userDidNotProvideDriversLicense() {
@@ -606,20 +589,6 @@ export class ChatMessagesDisplayComponent
         button: "Play, Pause"
       });
     }, 1000);
-  }
-
-  specialCaseButtons(buttons: Array<HTMLButtonElement> | NodeList) {
-    buttons.forEach((button: HTMLButtonElement) => {
-      if (
-        button.textContent.toLowerCase().includes("yes") ||
-        button.textContent.toLowerCase().includes("no i am giving") ||
-        button.textContent.toLowerCase().includes("ok begin")
-      ) {
-        button.classList.add("disabled");
-        button.disabled = true;
-        button.style.pointerEvents = "none";
-      }
-    });
   }
 
   getQuestions() {
@@ -677,7 +646,7 @@ export class ChatMessagesDisplayComponent
         let messageToDisplay: Message;
         this.count = 0;
         msgs.forEach((msg, index) => {
-          if (index == 2) {
+          if (index == 1) {
             this.count = index;
             messageToDisplay = new Message(
               `${msg}`,
@@ -717,21 +686,22 @@ export class ChatMessagesDisplayComponent
   ngOnDestroy() {
     // let remove: Subscription
     // this.observableToTrash.displayResponse.unsubscribe
-    if (
-      this.observableToTrash.preventDisabling ||
-      this.observableToTrash.destroyNextReply
-    ) {
-      // this.observableToTrash.apiCall.unsubscribe();
+
+    if (this.observableToTrash.preventDisabling)
       this.observableToTrash.preventDisabling.unsubscribe();
+    if (this.observableToTrash.destroyNextReply)
       this.observableToTrash.destroyNextReply.unsubscribe();
-    }
+
+    // this.observableToTrash.apiCall.unsubscribe();
+
+    this.observableToTrash.destroyNextReply.unsubscribe();
   }
 
   manageLocationIssuesScenario(message) {
     const userLatLng = JSON.parse(sessionStorage.getItem("userLatLng"));
     // this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
     const nl: NodeList = document.querySelectorAll(".dynamicButton");
-    this.specialCaseButtons(nl);
+    this.generalservice.specialCaseButtons(nl);
     try {
       if (userLatLng["latitude"]) {
         const response: ReceiversResponse = new ReceiversResponse(

@@ -1,0 +1,81 @@
+<div style="position: relative;" class="evidenceUploadContainer">
+  <div class="selectedImageContainer">
+    <img id="imageToDisplay" src="" alt="" />
+  </div>
+
+  <p *ngIf="!uploadNextFamily">
+    You have
+    {{ this.countOfUploadsLeft }} evidences of transfers to upload
+  </p>
+
+  <div class="text-center mt-4">
+    <button
+      *ngIf="!uploadNextFamily"
+      (click)="trigger()"
+      class="ui button basic primary"
+    >
+      Upload evidence for transfer to {{ familyName }}
+    </button>
+
+    <div class="nextFamily">
+      <button
+        *ngIf="uploadNextFamily && !uploadCompleted"
+        (click)="trigger('next')"
+        class="ui button basic primary"
+      >
+        Next Family
+      </button>
+
+      <button
+        *ngIf="uploadCompleted"
+        (click)="sendUploadToNebechi()"
+        class="ui button basic primary"
+      >
+        Done
+      </button>
+
+      <!-- <a>
+        {{ generalservice.noOfevidencesOfTransferToUpload.length }}
+        {{ arrayOfEvidencesToSendToNebechi.length }}
+      </a> -->
+
+      <!-- <a
+        class="change"
+        *ngIf="uploadNextFamily"
+        (click)="changePicture()"
+        style="cursor: pointer;"
+      >
+        change picture
+      </a> -->
+    </div>
+    <br />
+
+    <p>
+      <i class="fas fa-exclamation-triangle"></i> Each picture must be less than
+      2mb
+    </p>
+
+    <!-- <button (click)="noPicturesProvided()" class="ui button basic secondary mini">
+        Skip
+      </button> -->
+    <!-- <form class="ui form mt-4">
+          <div class="field">
+            <div class="ui checkbox">
+              <input id="xyxx" (click)="noPicturesProvided()" type="checkbox" tabindex="0">
+              <label for="xyxx" style="line-height: 1">We dont want to use our picture</label>
+            </div>
+          </div>
+        </form> -->
+  </div>
+  <input
+    hidden
+    (change)="mimeController($event)"
+    id="inputFile"
+    type="file"
+    accept="image/png, image/jpeg"
+  />
+
+  <small class="smallNotification" *ngIf="notification?.show">
+    {{ notification?.message }}
+  </small>
+</div>

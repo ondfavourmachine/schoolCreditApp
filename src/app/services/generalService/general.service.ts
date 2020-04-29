@@ -31,7 +31,7 @@ export class GeneralService {
   public nameOfModal: string = "";
   public questionsHasFinished: string = undefined;
   public uploadEvidenceOfTransferInProgress: boolean = false;
-  public noOfevidencesOfTransferToUpload: number = 0;
+  public noOfevidencesOfTransferToUpload: any[] = [];
   svg: any = `
   <svg  " xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="margin: auto; background: inherit; display: inline-block; shape-rendering: auto;" width="34px" height="20px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
           <g transform="rotate(183.438 50 50)">
@@ -121,7 +121,7 @@ export class GeneralService {
   public userDidNotProvideID = false;
 
   public location: any;
-  constructor() { }
+  constructor() {}
 
   nextReplyFromCovidRelief(obj: replyGiversOrReceivers) {
     this.nextReplySubject.next(obj);
@@ -225,17 +225,14 @@ export class GeneralService {
   // function for modifying the look and feel of the button
   // when there is an apicall or not
 
-
   // communication conduit to tell a component whether to disable a button or not
   ctrlDisableTheButtonsOfPreviousListElement(anything) {
     this.preventDisableSubject.next(anything);
   }
 
   resetEverything(anything: string) {
-    this.resetSubject.next(anything)
+    this.resetSubject.next(anything);
   }
-
-
 
   // this function will loop through the stage object
   // and seperate the truthy values of the truthy value
@@ -253,7 +250,6 @@ export class GeneralService {
   }
 
   //handle Errors with reference checking
-
 
   nextStagesForUser(stages: Partial<Stage>) {
     let s: Partial<Stage> = {},
@@ -280,20 +276,32 @@ export class GeneralService {
     }, t);
   }
 
-  reEnableUploadButton() {
+  reEnableUploadButton(specialCaseRequest?: string) {
+    if (specialCaseRequest) {
+      const buttons = document.querySelectorAll(
+        `[data-button*="${specialCaseRequest}"]`
+      ) as NodeList;
+      let targetButton: HTMLButtonElement = buttons[
+        buttons.length - 1
+      ] as HTMLButtonElement;
+      targetButton.classList.remove("disabled");
+      targetButton.disabled = false;
+      targetButton.style.pointerEvents = "auto";
+      return;
+    }
     let nl: NodeList = document.querySelectorAll(".dynamicButton");
     for (let i = nl.length - 1; i >= 0; i--) {
       // console.log(i);
       if (
-        /upload/i.test(nl[i].textContent) &&
-        (nl[i] as HTMLButtonElement).classList.contains("disabled")
+        /upload/i.test(nl[i].textContent)
+        // (nl[i] as HTMLButtonElement).classList.contains("disabled")
       ) {
         const but = nl[i] as HTMLButtonElement;
         but.classList.remove("disabled");
         but.disabled = false;
         but.style.pointerEvents = "auto";
       }
-      if (i == 5) break;
+      if (i <= 2) break;
     }
   }
 
@@ -331,7 +339,30 @@ export class GeneralService {
     }
   }
 
-  loading4button(a, b, c?) {
-    return null;
+  specialCaseButtons(
+    buttons: Array<HTMLButtonElement> | NodeList,
+    disable?: string
+  ) {
+    if (disable) {
+      buttons.forEach((button: HTMLButtonElement) => {
+        if (!button.classList.contains("disabled")) {
+          button.classList.add("disabled");
+          button.disabled = true;
+          button.style.pointerEvents = "none";
+        }
+      });
+      return;
+    }
+    buttons.forEach((button: HTMLButtonElement) => {
+      if (
+        button.textContent.toLowerCase().includes("yes") ||
+        button.textContent.toLowerCase().includes("no i am giving") ||
+        button.textContent.toLowerCase().includes("ok begin")
+      ) {
+        button.classList.add("disabled");
+        button.disabled = true;
+        button.style.pointerEvents = "none";
+      }
+    });
   }
 }

@@ -1,0 +1,71 @@
+.evidenceUploadContainer {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  flex-direction: column;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
+
+.evidenceUploadContainer p:first-child {
+  margin: 2rem 0;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.text-center.mt-4 p {
+  color: #db2828;
+  text-align: center;
+  margin: 0.3rem 0;
+}
+
+div.selectedImageContainer {
+  width: 100% !important;
+  display: flex !important;
+  justify-content: center !important;
+  position: absolute !important;
+  align-items: center !important;
+  top: 0;
+  height: 50%;
+  z-index: 1;
+}
+
+.smallNotification {
+  position: absolute !important;
+  display: flex;
+  justify-content: center;
+  margin: 0 auto !important;
+  width: 80% !important;
+  height: 30px !important;
+  border: 1px solid rgba(255, 99, 71) !important;
+  top: 0 !important;
+  border-radius: 3px !important;
+  background: rgba(255, 99, 71) !important;
+  color: #fff !important;
+  text-align: center;
+  align-items: center;
+}
+
+div.nextFamily {
+  top: 355px;
+  /* bottom: 379px; */
+  display: flex;
+  flex-direction: column;
+  min-height: 100px;
+  justify-content: flex-end;
+  width: 100%;
+  padding: 0 1.5rem;
+  /* background: rgba(245, 245, 245, 0.34); */
+  z-index: 10;
+  position: absolute;
+  border-radius: 5px;
+}
+/* div.nexFamily button {
+  background-color: #4183c4 !important;
+  color: #fff !important;
+} */
+
+div.nexFamily a.change {
+  color: rgb(34, 33, 33) !important;
+}

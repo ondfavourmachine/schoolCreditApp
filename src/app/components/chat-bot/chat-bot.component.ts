@@ -11,7 +11,7 @@ import { ChatService } from "src/app/services/ChatService/chat.service";
 import { GeneralService } from "src/app/services/generalService/general.service";
 // import { timeout } from "rxjs/operators";
 import { DisplayQuestion } from "src/app/models/Questionaire";
-import { ActivatedRoute } from "@angular/router";
+import { Router, NavigationEnd } from "@angular/router";
 import { TimeoutError, Subscription } from "rxjs";
 // import { ValidateRefResponse } from "../../models/validaterRefRes";
 
@@ -28,19 +28,19 @@ export class ChatBotComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild("parentContainer") parentContainer: ElementRef;
   // timeHasElapsed: number = 0;
   constructor(
-    private activatedRoute: ActivatedRoute,
     private chatservice: ChatService,
     private generalservice: GeneralService,
+    private router: Router,
     private changeDetection: ChangeDetectorRef
-  ) {
-    activatedRoute.queryParams.subscribe(val => {
-      this.referenceNumber = val["ref_no"];
-      sessionStorage.setItem("ref_no", this.referenceNumber);
-    });
-  }
+  ) {}
 
   ngOnInit() {
-    // this.chatservice.zeroAllSubmit().subscribe();
+    this.router.events.subscribe(evt => {
+      if (evt instanceof NavigationEnd) {
+        this.ngOnInit();
+        this.ngAfterViewInit();
+      }
+    });
     this.destroyAnything = this.generalservice.startAskingAndChangeQuestions$.subscribe(
       val => {
         // do something here
