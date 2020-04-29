@@ -15,7 +15,7 @@
       <img src="../../assets/images/svgs/question.svg" alt="" />
     </div> -->
     <p class="para-title text-center mt-4 mb-4">
-      We will need your information for potential contact.
+      This information will help us when sending our gratitude notification
     </p>
   </div>
 
@@ -24,6 +24,7 @@
       <img src="../../assets/images/svgs/unknown.svg" alt="" />
     </div> -->
     <p class="para-title text-center mt-4 mb-4">
+      This information will help us when sending our gratitude notification.
       We guarantee data anonymity
     </p>
   </ng-template>
@@ -32,7 +33,7 @@
     <div class="ui form">
       <div class="field">
         <label>Name</label>
-        <input formControlName="name" type="text" placeholder="First Name" />
+        <input formControlName="name" type="text" placeholder="Fullname" />
         <div *ngIf="name.touched && name.invalid" class="ng-invalid ng-touched">
           <small style="color: #f10b0b9d;" *ngIf="nameIsRequired()">
             Your name is required!</small>

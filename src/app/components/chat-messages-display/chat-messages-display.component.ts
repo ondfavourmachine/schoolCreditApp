@@ -212,7 +212,7 @@ export class ChatMessagesDisplayComponent
                 (3) A valid means of ID (Voters, Drivers licence, National ID),
                 `,
           "left",
-          "Continue,No i want to give",
+          "Continue,No, I want to help a family",
           "receive,give"
         );
         this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
@@ -230,7 +230,7 @@ export class ChatMessagesDisplayComponent
             (3) A valid means of ID (Voters, Drivers licence, National ID),
           `,
           "left",
-          "Continue,No i want to give",
+          "Continue,No, I want to help a family",
           "receive,give"
         );
         this.displaySubsequentMessages(userResponse);
@@ -750,7 +750,7 @@ export class ChatMessagesDisplayComponent
             (3) A valid means of ID (Voters, Drivers licence, National ID),
             `,
             "left",
-            "Continue,No i want to give",
+            "Continue,No, I want to help a family",
             "receive,give"
           )
         );
