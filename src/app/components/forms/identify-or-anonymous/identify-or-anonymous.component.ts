@@ -15,6 +15,8 @@ export class IdentifyOrAnonymousComponent implements OnInit {
   public iAForm: FormGroup;
   stayAnonymous: string;
   notification = { show: false, message: undefined };
+  termsVisible = false;
+
   constructor(
     private fb: FormBuilder,
     private generalservice: GeneralService,
@@ -22,6 +24,7 @@ export class IdentifyOrAnonymousComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.showTerms();
     if (sessionStorage.getItem("giver")) {
       this.generalservice.handleFlowController("supportPageForms");
     }
@@ -138,5 +141,13 @@ export class IdentifyOrAnonymousComponent implements OnInit {
       this.notification.show = false;
       this.notification.message = undefined;
     }, 2000);
+  }
+
+  showTerms() {
+    this.termsVisible = true;
+  }
+
+  hideTerms() {
+    this.termsVisible = false;
   }
 }

@@ -1,9 +1,9 @@
 .w-header {
     height: 250px;
-    background: url(/assets/images/tabitha.png);
+    background: url(/assets/images/african-family.jpg);
     background-size: cover;
     background-position: center;
-    border-radius: 0 0 200px 200px / 0 0 15% 15%;
+    border-radius: 0 0 300px 300px / 0 0 20% 20%;
     position: absolute;
     top: 0;
     left: 0;
@@ -11,7 +11,7 @@
 }
 
 .w-header::before {
-    content: "";
+    /* content: ""; */
     position: absolute;
     top: 0;
     left: 0;
@@ -22,7 +22,7 @@
 }
 
 .welcome-page {
-    padding-top: 225px;
+    padding-top: 255px;
     display: flex;
     flex-direction: column;
 }

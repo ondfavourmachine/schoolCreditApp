@@ -434,7 +434,8 @@ template {
 
 .chat-box {
   background: transparent;
-  height: calc(100vh - 130px);
+  /* height: calc(100vh - 130px); */
+  height: calc(100vh - 80px - 60px);
   position: absolute;
   width: 100%;
   overflow: auto;
@@ -444,7 +445,7 @@ template {
   background: url(/assets/images/background.jpg);
   background-size: cover;
   background-repeat: no-repeat;
-  height: 100vh;
+  height: calc(100vh - 58px);
 }
 
 .chat-box__text-wrapper {
@@ -659,7 +660,7 @@ small img {
   border-radius: 4px;
   border: 1px solid #888;
   width: 100%;
-  max-width: 500px;
+  max-width: 420px;
   margin: 100px auto 30px;
   box-shadow: 0 0 50px rgba(0, 0, 0, 0.2);
   -webkit-animation-name: animatetop;
@@ -670,6 +671,7 @@ small img {
   flex-direction: column;
   justify-content: center;
   align-items: stretch;
+  min-height: 580px;
 }
 
 @media screen and (max-width: 700px) {
@@ -739,11 +741,13 @@ small img {
   color: #495057;
   display: none;
   position: relative;
-  min-height: 500px;
-  /* flex-direction: column;
-  justify-content: center;
-  align-items: stretch; */
 }
+
+/* @media screen and (max-width: 700px) {
+  .modal-body {
+    min-height: initial;
+  }
+} */
 
 .modal-body p {
   line-height: 1.5rem;
