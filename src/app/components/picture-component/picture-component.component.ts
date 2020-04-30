@@ -147,7 +147,6 @@ export class PictureComponentComponent implements OnInit {
   }
   uploadEvidenceOfTransfer() {
     const arr = JSON.parse(sessionStorage.getItem("evidenceUploadData"))[0];
-    console.log(this.transferEvidence);
     const transaction_id = Object.keys(arr)[0];
     let receiver_id, giver_id;
     for (let key in arr) {

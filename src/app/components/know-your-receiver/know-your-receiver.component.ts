@@ -359,7 +359,6 @@ export class KnowYourReceiverComponent
     if (this.familyDetailsInfo.idOfParentToProvide) {
       this.familyDetailsInfo.idOfSpouseToProvide = div.textContent;
       this.noInputAllowed = false;
-      console.log(this.familyDetailsInfo);
     } else {
       this.familyDetailsInfo.idOfParentToProvide = div.textContent;
       this.noInputAllowed = false;

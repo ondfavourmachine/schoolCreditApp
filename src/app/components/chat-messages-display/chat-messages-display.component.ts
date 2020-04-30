@@ -262,7 +262,6 @@ export class ChatMessagesDisplayComponent
       }
       if (moreInformation) {
         let arrToPush = [];
-        console.log(moreInformation);
 
         arrToPush = JSON.parse(sessionStorage.getItem("evidenceUploadData"));
         if (arrToPush) {
