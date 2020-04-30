@@ -213,6 +213,7 @@ export class Message {
       
       <div class="chat-box__text-wrapper">
         ${this.text}  
+        <i class="fa fa-check-double read-indicator"></i>
       </div>
     </div>
   </div>
@@ -236,8 +237,6 @@ export class Message {
       this.htmlElement.insertAdjacentHTML("beforeend", html);
     }
   }
-
-  // <i class="fa fa-check-double read-indicator"></i>
 
   addOrRemoveImage(
     parentDiv: HTMLElement,

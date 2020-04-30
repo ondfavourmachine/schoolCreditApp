@@ -114,7 +114,7 @@ export class ConfirmDetailsUploadedComponent implements OnInit, AfterViewInit {
           this.generalservice.switchOfModal = true;
           this.submit = "success";
           sessionStorage.clear();
-          this.closeTheModal("success");
+          // this.closeTheModal("success");
           // setTimeout(() => {
           //   (document.querySelector(".modal-close") as HTMLSpanElement).click();
           // }, 2000);
