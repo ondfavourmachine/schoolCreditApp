@@ -202,8 +202,11 @@ export class EvidenceUploadComponent implements OnInit {
             this.generalservice.responseDisplayNotifier(giverResponse);
             this.generalservice.controlGlobalNotificationSubject.next("off");
           }, 500);
-
+          //  just for backup
+          this.generalservice.justFinishedGiving = true;
+          // 
           (document.querySelector(".modal-close") as HTMLSpanElement).click();
+
         },
         err => console.log(err)
       );

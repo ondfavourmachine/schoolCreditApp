@@ -18,6 +18,7 @@ import { QuestionsAndAnswers } from "../../models/answersInterface";
 import { Message } from "../../models/message";
 import { timeout } from "rxjs/operators";
 import { Router } from "@angular/router";
+import { replyGiversOrReceivers } from "src/app/models/GiverResponse";
 
 @Component({
   selector: "app-chat-input",
@@ -30,10 +31,23 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
   >();
   @Input("action") action: string;
   @Output("readyToAnswerOrNot") readyToAnswerOrNot = new EventEmitter<string>();
-  // @Output("makeAnApiCall") makeAnApiCall = new EventEmitter<{
-  //   typeOfApiCall: string;
-  //   valToSend: string;
-  // }>();
+  private arrayOfRegexes: Array<RegExp> = [
+    /hello/gi,
+    /hi/gi,
+    /help/gi,
+    /give/gi,
+    /giver/gi,
+    /receiver/gi,
+    /help my family/gi,
+    /done/gi,
+    /sent/gi,
+    /need money/gi,
+    /uploaded evidence/gi,
+    /donated money/gi,
+    /donated/gi,
+    /completed/gi,
+    /finished giving/gi
+  ];
   private PreventMemoryLeaks: {
     timeHasElapsed?: Subscription;
     InputToNumber?: Subscription;
@@ -79,41 +93,156 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
     // );
   }
 
+  processAndRespondToUserInput(actualText: string, value: string) {
+    (this.inputFromUser.nativeElement as HTMLInputElement).value = "";
+    const typeOfUser = this.router.url;
+    switch (actualText) {
+      case "help":
+      case "help my family":
+      case "need money":
+      case "receiver":
+        if (!typeOfUser.includes("giver")) {
+          const response = new replyGiversOrReceivers(`${value}`, "right");
+          this.generalservice.nextChatbotReplyToGiver = null;
+          this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
+            `We are aware. Please click the button below to begin the process of receiving help.`,
+            `left`,
+            "I need monetary help",
+            "help,"
+          );
+          setTimeout(() => {
+            this.generalservice.responseDisplayNotifier(response);
+          }, 700);
+        } else {
+          const response = new replyGiversOrReceivers(`${value}`, "right");
+          this.generalservice.nextChatbotReplyToGiver = null;
+          this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
+            `I can't respond to your entry. If you want to give. Please click the buttons below.`,
+            `left`,
+            "I want to be identified,Stay anonymous",
+            "identify,anonymous"
+          );
+          setTimeout(() => {
+            this.generalservice.responseDisplayNotifier(response);
+          }, 700);
+        }
+        break;
+      case "hi":
+      case "hello":
+        const reply = actualText == "hi" ? "Hello" : "Hi";
+        if (typeOfUser.includes("giver")) {
+          const response = new replyGiversOrReceivers(`${value}`, "right");
+          this.generalservice.nextChatbotReplyToGiver = null;
+          this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
+            `${reply}, It's nice to meet you. I know you're here to donate to a family or families in need. Please click one of the buttons to begin`,
+            `left`,
+            "I want to be identified,Stay anonymous",
+            "identify,anonymous"
+          );
+          setTimeout(() => {
+            this.generalservice.responseDisplayNotifier(response);
+          }, 700);
+        }
+        break;
+      case "done":
+      case "completed":
+      case "sent":
+      case "finished giving":
+      case "donated":
+      case "donated money":
+        if (
+          !this.generalservice.justFinishedGiving &&
+          typeOfUser.includes("giver")
+        ) {
+          const response = new replyGiversOrReceivers(`${value}`, "right");
+          this.generalservice.nextChatbotReplyToGiver = null;
+          this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
+            `You have made an invalid entry! I am sure you intend to provide some financial assistance to a family or some families in need. Please click any of the buttons to continue`,
+            `left`,
+            "I want to be identified,Stay anonymous",
+            "identify,anonymous"
+          );
+          setTimeout(() => {
+            this.generalservice.responseDisplayNotifier(response);
+          }, 700);
+        } else {
+          if (!typeOfUser.includes("giver")) return;
+
+          const response = new replyGiversOrReceivers(`${value}`, "right");
+          this.generalservice.nextChatbotReplyToGiver = null;
+          this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
+            `It is great that you provided help in this trying times!`,
+            "left",
+            "Give more money",
+            "giveMoney"
+          );
+          setTimeout(() => {
+            this.generalservice.responseDisplayNotifier(response);
+          }, 700);
+        }
+        break;
+      case "giver":
+      case "give":
+        if (typeOfUser.includes("giver")) {
+          const response = new replyGiversOrReceivers(`${value}`, "right");
+          this.generalservice.nextChatbotReplyToGiver = null;
+          this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
+            `Seems, you want to get right to it. That's the spirit! Please click one of the buttons`,
+            `left`,
+            "I want to be identified,Stay anonymous",
+            "identify,anonymous"
+          );
+          setTimeout(() => {
+            this.generalservice.responseDisplayNotifier(response);
+          }, 700);
+        }
+        break;
+      default:
+        if (typeOfUser.includes("giver")) {
+          const response = new replyGiversOrReceivers(`${value}`, "right");
+          this.generalservice.nextChatbotReplyToGiver = null;
+          this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
+            `Your entry is invalid! To provide financial help, please click one of the buttons`,
+            `left`,
+            "I want to be identified,Stay anonymous",
+            "identify,anonymous"
+          );
+          setTimeout(() => {
+            this.generalservice.responseDisplayNotifier(response);
+          }, 700);
+        }
+    }
+  }
+
   submit(event: KeyboardEvent) {
     event.preventDefault();
     const input = event.srcElement as HTMLInputElement;
     if (event instanceof KeyboardEvent) {
-      const ReceiverRegex = /receiver/gi;
-      const giverRegex = /giver/gi;
-      if (ReceiverRegex.test(input.value)) {
-        this.router.navigate(["receiver"]);
-        sessionStorage.clear();
-      }
-      if (giverRegex.test(input.value)) {
-        this.router.navigate(["giver"]);
-        sessionStorage.clear();
-      }
+      this.crossCheckUserInputWithRegexes(input.value);
     } else {
-      this.handleClickEvent(event);
+      // this.handleClickEvent();
     }
   }
 
   crossCheckUserInputWithRegexes(str) {
-    const arrayOfRegexes = [
-      /hello/gi,
-      /hi/gi,
-      /help/gi,
-      /give/gi,
-      /receiver/gi,
-      /help my family/gi
-    ];
+    let actualText: string, response: boolean;
+    for (const regex of this.arrayOfRegexes) {
+      if (regex.test(str)) {
+        response = true;
+        actualText = regex.source;
+        break;
+      }
+    }
+    this.processAndRespondToUserInput(actualText, str);
   }
 
   //
 
-  handleClickEvent(event: MouseEvent) {
+  handleClickEvent(event) {
+    event.preventDefault();
     const input = this.inputFromUser.nativeElement as HTMLInputElement;
-    console.log(input.value);
+    this.crossCheckUserInputWithRegexes(input.value);
+    // this.crossCheckUserInputWithRegexes(input.value);
   }
 
   handleKeyBoardSubmit(event: KeyboardEvent) {
@@ -155,25 +284,6 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
     this.sendMessage.emit(something);
   }
 
-  // handleQuestionAndAnswerSession(value: string) {
-  //   // display to the screen the users input.
-  //   this.newSendMessagesToDisplay({
-  //     message: value,
-  //     direction: "right"
-  //   });
-  //   const bvn_number = sessionStorage.getItem("BVN");
-  //   const sendToBack = {
-  //     bvn_number,
-  //     answer: `${
-  //       this.generalservice.displayedQuestions[
-  //         this.generalservice.displayedQuestions.length - 1
-  //       ].id_of_question
-  //     },${value.toUpperCase()}`
-  //   };
-  //   console.log(sendToBack);
-  //   // send notification for next question to come!
-  // }
-
   // this function resets all chats
   resetAllChat(): void {
     setTimeout(() => {
@@ -187,42 +297,3 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
     // this.questionaireButton = false;
   }
 }
-
-//
-// {
-//   this.newSendMessagesToDisplay({
-//     message: input.value,
-//     direction: "right"
-//   });
-//   setTimeout(() => {
-//     this.newSendMessagesToDisplay({
-//       message: `You seem to be offline. Please check your internet and try again!`,
-//       direction: "left"
-//     });
-//   }, 300);
-// } else {
-//   // if he is connected then do all these
-//   if (this.action == "refChecking" && event.code == "Enter") {
-//     this.newSendMessagesToDisplay({
-//       message: input.value,
-//       direction: "right"
-//     });
-//     setTimeout(() => {
-//       this.newSendMessagesToDisplay({
-//         message: "Please give a moment to confirm",
-//         direction: "left"
-//       });
-//     }, 500);
-//     this.makeAnApiCall.emit({
-//       typeOfApiCall: "check-ref",
-//       valToSend: input.value
-//     });
-//     input.value = "";
-//     let test = sessionStorage.getItem("ref_no");
-//     this.sendButton = test == "undefined" ? false : true;
-
-//     if (this.sendButton) {
-//       // this.generalservice.toggleInput("disable Input");
-//     }
-//   }
-// }

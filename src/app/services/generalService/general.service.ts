@@ -32,14 +32,15 @@ export class GeneralService {
   public questionsHasFinished: string = undefined;
   public uploadEvidenceOfTransferInProgress: boolean = false;
   public noOfevidencesOfTransferToUpload: any[] = [];
-  svg: any = `
-  <svg  " xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="margin: auto; background: inherit; display: inline-block; shape-rendering: auto;" width="34px" height="20px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
-          <g transform="rotate(183.438 50 50)">
-            <path d="M50 15A35 35 0 1 0 74.74873734152916 25.251262658470843" fill="none" stroke="#cccccc" stroke-width="12"></path>
-            <path d="M49 -3L49 33L67 15L49 -3" fill="#cccccc"></path>
-            <animateTransform attributeName="transform" type="rotate" repeatCount="indefinite" dur="1s" values="0 50 50;360 50 50" keyTimes="0;1"></animateTransform>
-          </g>
-  `;
+  public justFinishedGiving: boolean = false;
+  // svg: any = `
+  // <svg  " xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="margin: auto; background: inherit; display: inline-block; shape-rendering: auto;" width="34px" height="20px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
+  //         <g transform="rotate(183.438 50 50)">
+  //           <path d="M50 15A35 35 0 1 0 74.74873734152916 25.251262658470843" fill="none" stroke="#cccccc" stroke-width="12"></path>
+  //           <path d="M49 -3L49 33L67 15L49 -3" fill="#cccccc"></path>
+  //           <animateTransform attributeName="transform" type="rotate" repeatCount="indefinite" dur="1s" values="0 50 50;360 50 50" keyTimes="0;1"></animateTransform>
+  //         </g>
+  // `;
   // public modalPopUpBtn: HTMLButtonElement;
 
   // OBSERVABLES FOR INTER COMPONENT COMMUNICATIONS

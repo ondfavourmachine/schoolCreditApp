@@ -24,6 +24,8 @@ export class IdentifyOrAnonymousComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    //  just being cautious
+    this.generalservice.justFinishedGiving = false;
     this.showTerms();
     if (sessionStorage.getItem("giver")) {
       this.generalservice.handleFlowController("supportPageForms");

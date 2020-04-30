@@ -106,6 +106,7 @@ export class FoundBeneficiaryComponent implements OnInit, AfterViewInit {
       ]]: `${this.familyThatWillBenefit["id"]}-${this.giverID}-${this.familyThatWillBenefit["family_name"]}`
     });
     this.generalservice.handleFlowController("evidenceUploadComponent");
+    this.generalservice.justFinishedGiving = true;
   }
 
   iConfirmThatMoneyHasLeftMyAccount() {

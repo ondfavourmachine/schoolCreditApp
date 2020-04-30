@@ -8,11 +8,12 @@
       type="text"
       placeholder="Enter your message here"
     />
-    <button (click)="submit($event)" class="btn btnSend" type="submit">
-      <!-- <img src="../../../assets/chatbotImages/send.svg" alt="" /> -->
+    <button
+      (click)="handleClickEvent($event)"
+      class="btn btnSend"
+      type="submit"
+    >
       <i class="fa fa-paper-plane"></i>
     </button>
   </form>
 </footer>
-
-<!-- (click)="handleQuestionAndAnswerSession()" -->
