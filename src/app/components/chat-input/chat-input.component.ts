@@ -80,7 +80,6 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   submit(event: KeyboardEvent) {
-    // debugger;
     event.preventDefault();
     const input = event.srcElement as HTMLInputElement;
     if (event instanceof KeyboardEvent) {
@@ -94,48 +93,27 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
         this.router.navigate(["giver"]);
         sessionStorage.clear();
       }
+    } else {
+      this.handleClickEvent(event);
     }
+  }
 
-    // event.preventDefault();
-    // if (event instanceof KeyboardEvent) {
-    //   const keyboardEvent = event as KeyboardEvent;
-    //   this.handleKeyBoardSubmit(keyboardEvent);
-    // } else {
-    //   this.handleClickEvent(event);
-    // }
+  crossCheckUserInputWithRegexes(str) {
+    const arrayOfRegexes = [
+      /hello/gi,
+      /hi/gi,
+      /help/gi,
+      /give/gi,
+      /receiver/gi,
+      /help my family/gi
+    ];
   }
 
   //
 
   handleClickEvent(event: MouseEvent) {
     const input = this.inputFromUser.nativeElement as HTMLInputElement;
-    let inputValue = input.value;
-    if (this.action == "refChecking" && !this.sendButton) {
-      this.newSendMessagesToDisplay({
-        message: inputValue,
-        direction: "right"
-      });
-      setTimeout(() => {
-        this.newSendMessagesToDisplay({
-          message: "Please give a moment to confirm",
-          direction: "left"
-        });
-      }, 300);
-
-      // setTimeout(() => {
-      //   this.makeAnApiCall.emit({
-      //     typeOfApiCall: "check-ref",
-      //     valToSend: inputValue
-      //   });
-      // }, 1000);
-
-      input.value = "";
-      let test = sessionStorage.getItem("ref_no");
-      this.sendButton = test == "undefined" ? false : true;
-      if (this.sendButton) {
-        // this.generalservice.toggleInput("disable Input");
-      }
-    }
+    console.log(input.value);
   }
 
   handleKeyBoardSubmit(event: KeyboardEvent) {

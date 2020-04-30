@@ -59,7 +59,7 @@ export class ConfirmDetailsUploadedComponent implements OnInit, AfterViewInit {
   sendToNebechi() {
     const userLatLng = JSON.parse(sessionStorage.getItem("userLatLng")) || {};
     const currentState = JSON.parse(sessionStorage.getItem("currentState"));
-    console.log(currentState);
+    // console.log(currentState);
     const bankCodeSelected = sessionStorage.getItem("bankCodeSelected");
     const accountNumber = sessionStorage.getItem("account_number");
     const accountDetails = JSON.parse(sessionStorage.getItem("accountDetails"));
@@ -176,7 +176,7 @@ export class ConfirmDetailsUploadedComponent implements OnInit, AfterViewInit {
   }
 
   closeTheModal(command?: string) {
-    console.log("Closing modal!", command);
+    // console.log("Closing modal!", command);
     if (!command) return;
     if (command == "success") {
       (document.querySelector(".modal-close") as HTMLSpanElement).click();
