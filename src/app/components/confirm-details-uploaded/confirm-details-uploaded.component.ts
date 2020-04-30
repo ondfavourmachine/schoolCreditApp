@@ -16,7 +16,7 @@ export class ConfirmDetailsUploadedComponent implements OnInit, AfterViewInit {
   constructor(
     private generalservice: GeneralService,
     private http: HttpClient
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     setTimeout(() => {
@@ -35,7 +35,9 @@ export class ConfirmDetailsUploadedComponent implements OnInit, AfterViewInit {
     // let reader: FileReader;
     // if (FileReader) {
     // check if the filereader api is supported by browser
-    imageToDisplay.src = this.generalservice.familyImageToConfirm || '/assets/images/family-avatar.png';
+    imageToDisplay.src =
+      this.generalservice.familyImageToConfirm ||
+      "/assets/images/family-avatar.png";
 
     // reader = new FileReader();
     // reader.onload = event => {
@@ -59,7 +61,6 @@ export class ConfirmDetailsUploadedComponent implements OnInit, AfterViewInit {
   sendToNebechi() {
     const userLatLng = JSON.parse(sessionStorage.getItem("userLatLng")) || {};
     const currentState = JSON.parse(sessionStorage.getItem("currentState"));
-    // console.log(currentState);
     const bankCodeSelected = sessionStorage.getItem("bankCodeSelected");
     const accountNumber = sessionStorage.getItem("account_number");
     const accountDetails = JSON.parse(sessionStorage.getItem("accountDetails"));
@@ -121,7 +122,6 @@ export class ConfirmDetailsUploadedComponent implements OnInit, AfterViewInit {
         },
         (err: HttpErrorResponse | TimeoutError) => {
           if (err instanceof TimeoutError) {
-            console.log(err);
             this.generalservice.controlGlobalNotificationSubject.next("off");
             this.closeTheModal("cancel");
           }
@@ -176,7 +176,6 @@ export class ConfirmDetailsUploadedComponent implements OnInit, AfterViewInit {
   }
 
   closeTheModal(command?: string) {
-    // console.log("Closing modal!", command);
     if (!command) return;
     if (command == "success") {
       (document.querySelector(".modal-close") as HTMLSpanElement).click();
