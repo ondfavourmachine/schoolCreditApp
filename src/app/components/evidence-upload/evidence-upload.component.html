@@ -3,34 +3,33 @@
     <img id="imageToDisplay" src="" alt="" />
   </div>
 
-  <p *ngIf="!uploadNextFamily">
+  <div *ngIf="uploadCompleted || uploadNextFamily" class="modal-icon">
+    <img src="/assets/images/svgs/doc-check.svg" alt="">
+  </div>
+
+  <p *ngIf="!uploadNextFamily && !uploadCompleted">
     You have
     {{ this.countOfUploadsLeft }} evidences of transfers to upload
   </p>
 
+  <div class="para-title texy-center" *ngIf="!uploadNextFamily && !uploadCompleted">
+    Upload evidence of funds transferred to {{ familyName }}
+  </div>
+  <div class="para-title texy-center" *ngIf="uploadCompleted || uploadNextFamily">
+    Uploaded
+  </div>
+
   <div class="text-center mt-4">
-    <button
-      *ngIf="!uploadNextFamily"
-      (click)="trigger()"
-      class="ui button basic primary"
-    >
-      Upload evidence for transfer to {{ familyName }}
+    <button *ngIf="!uploadNextFamily && !uploadCompleted" (click)="trigger()" class="ui button basic primary">
+      Upload
     </button>
 
-    <div class="nextFamily">
-      <button
-        *ngIf="uploadNextFamily && !uploadCompleted"
-        (click)="trigger('next')"
-        class="ui button basic primary"
-      >
+    <div>
+      <button *ngIf="uploadNextFamily && !uploadCompleted" (click)="trigger('next')" class="ui button basic primary">
         Next Family
       </button>
 
-      <button
-        *ngIf="uploadCompleted"
-        (click)="sendUploadToNebechi()"
-        class="ui button basic primary"
-      >
+      <button *ngIf="uploadCompleted" (click)="sendUploadToNebechi()" class="ui button basic primary">
         Done
       </button>
 
@@ -50,7 +49,7 @@
     </div>
     <br />
 
-    <p>
+    <p class="mt-4">
       <i class="fas fa-exclamation-triangle"></i> Each picture must be less than
       2mb
     </p>
@@ -67,13 +66,7 @@
           </div>
         </form> -->
   </div>
-  <input
-    hidden
-    (change)="mimeController($event)"
-    id="inputFile"
-    type="file"
-    accept="image/png, image/jpeg"
-  />
+  <input hidden (change)="mimeController($event)" id="inputFile" type="file" accept="image/png, image/jpeg" />
 
   <small class="smallNotification" *ngIf="notification?.show">
     {{ notification?.message }}

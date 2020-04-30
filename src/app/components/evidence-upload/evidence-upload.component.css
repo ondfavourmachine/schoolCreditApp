@@ -8,11 +8,11 @@
   align-items: center;
 }
 
-.evidenceUploadContainer p:first-child {
+/* .evidenceUploadContainer p:first-child {
   margin: 2rem 0;
   font-size: 1.2rem;
   font-weight: bold;
-}
+} */
 
 .text-center.mt-4 p {
   color: #db2828;
@@ -22,7 +22,7 @@
 
 div.selectedImageContainer {
   width: 100% !important;
-  display: flex !important;
+  display: none !important;
   justify-content: center !important;
   position: absolute !important;
   align-items: center !important;
