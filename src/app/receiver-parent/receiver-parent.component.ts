@@ -17,5 +17,6 @@ export class ReceiverParentComponent implements OnInit {
     this.generalservice.noOfevidencesOfTransferToUpload = [];
     this.generalservice.nextChatbotReplyToGiver = null;
     this.generalservice.uploadEvidenceOfTransferInProgress = false;
+    this.generalservice.justFinishedGiving = false;
   }
 }

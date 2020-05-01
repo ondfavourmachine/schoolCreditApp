@@ -31,6 +31,10 @@ export class SupportPageComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.generalservice.justFinishedGiving = false;
+    // backup. making sure that the array of evidences is empty when user tries to provide financial support
+    this.generalservice.noOfevidencesOfTransferToUpload = [];
+    // 
     this.supportPageForm = this.fb.group({
       amount: ["", Validators.required]
     });
