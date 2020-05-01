@@ -1,7 +1,5 @@
-<div style="height: 490px;" 
-class="flex flex-column justify-center align-center h-100 family-info"
-id="found-beneficiary"
->
+<div style="height: 490px;" class="flex flex-column justify-center align-center h-100 family-info"
+  id="found-beneficiary">
   <div class="verified-icon">
     <img src="/assets/images/svgs/shield.svg" alt="verified icon" />
   </div>
@@ -91,27 +89,27 @@ id="found-beneficiary"
     <ul class="list small w-100">
       <li>
         <span>Facial recognition</span>
-        <span>✔</span>
+        <span>{{ familyThatWillBenefit.facial_recognition == 1 ? '✔' : '❌' }}</span>
       </li>
       <li>
         <span>Account verified</span>
-        <span>✔</span>
+        <span>{{ familyThatWillBenefit.account_verified == 1 ? '✔' : '❌' }}</span>
       </li>
       <li>
         <span>BVN Confirmed</span>
-        <span>✔</span>
+        <span>{{ familyThatWillBenefit.bvn_confirmed == 1 ? '✔' : '❌' }}</span>
       </li>
       <li>
         <span>Eligibility check</span>
-        <span>✔</span>
+        <span>{{ familyThatWillBenefit.eligible == 1 ? '✔' : '❌' }}</span>
       </li>
       <li>
         <span>Location match</span>
-        <span>✔</span>
+        <span>{{ familyThatWillBenefit.location_match == 1 ? '✔' : '❌' }}</span>
       </li>
       <li>
         <span>Family member match</span>
-        <span>✔</span>
+        <span>{{ familyThatWillBenefit.family_member_match == 1 ? '✔' : '❌' }}</span>
       </li>
     </ul>
 

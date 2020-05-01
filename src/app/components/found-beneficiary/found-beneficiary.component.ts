@@ -23,6 +23,7 @@ export class FoundBeneficiaryComponent implements OnInit, AfterViewInit {
       0,
       1
     )[0];
+    console.log('FTWB', this.familyThatWillBenefit);
   }
 
   ngOnInit(): void {
