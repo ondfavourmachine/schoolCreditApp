@@ -216,11 +216,12 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
 
   submit(event: KeyboardEvent) {
     event.preventDefault();
+    //  i would remove this later
+    event.stopPropagation();
+
     const input = event.srcElement as HTMLInputElement;
     if (event instanceof KeyboardEvent) {
       this.crossCheckUserInputWithRegexes(input.value);
-    } else {
-      // this.handleClickEvent();
     }
   }
 
@@ -240,8 +241,13 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
 
   handleClickEvent(event) {
     event.preventDefault();
-    const input = this.inputFromUser.nativeElement as HTMLInputElement;
-    this.crossCheckUserInputWithRegexes(input.value);
+    if (event.screenY == 0) {
+      return;
+    } else {
+      const input = this.inputFromUser.nativeElement as HTMLInputElement;
+      this.crossCheckUserInputWithRegexes(input.value);
+    }
+
     // this.crossCheckUserInputWithRegexes(input.value);
   }
 
