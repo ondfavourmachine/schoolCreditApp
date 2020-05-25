@@ -28,13 +28,13 @@ export class SupportPageComponent implements OnInit {
     private fb: FormBuilder,
     private generalservice: GeneralService,
     private http: HttpClient
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.generalservice.justFinishedGiving = false;
     // backup. making sure that the array of evidences is empty when user tries to provide financial support
     this.generalservice.noOfevidencesOfTransferToUpload = [];
-    // 
+    //
     this.supportPageForm = this.fb.group({
       amount: ["", Validators.required]
     });
@@ -58,19 +58,22 @@ export class SupportPageComponent implements OnInit {
     // console.log(this.amount);
     if (this.amount == "5000") {
       this.text = "";
-      this.text = "a family in need who can be helped with at least N5000";
+      this.text = "families in need who can be helped with at least N5000";
     }
     if (this.amount == "10000") {
       this.text = "";
-      this.text = "2 families in need who can be helped with at least N5000 each.";
+      this.text =
+        "families in need who can be helped with at least N5000 each.";
     }
     if (this.amount == "20000") {
       this.text = "";
-      this.text = "4 families in need who can be helped with at least N5000 each.";
+      this.text =
+        "families in need who can be helped with at least N5000 each.";
     }
     if (this.amount == "50000") {
       this.text = "";
-      this.text = "10 families in need who can be helped with at least N5000 each.";
+      this.text =
+        "families in need who can be helped with at least N5000 each.";
     }
     this.stage = "1";
   }
@@ -93,8 +96,10 @@ export class SupportPageComponent implements OnInit {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 
+  // this function will actually take you to the family selection component
   gotoFamilyDetails() {
     this.generalservice.handleFlowController("foundBeneficiary");
+    // this.generalservice.handleFlowController("foundBeneficiary");
   }
 
   getFamilyToSubmit() {
@@ -108,8 +113,12 @@ export class SupportPageComponent implements OnInit {
   }
 
   fetchFamilies(formToSubmit) {
+    // this.generalservice.apiUrl}transactions
+    // formToSubmit
     this.http
-      .post(`${this.generalservice.apiUrl}transaction`, formToSubmit)
+      .post(`${this.generalservice.apiUrl}tenreceivers`, {
+        families_sent_already: []
+      })
       .subscribe(
         res => {
           if (!res["status"]) {
@@ -122,10 +131,9 @@ export class SupportPageComponent implements OnInit {
             //   }
             // } else {
 
-            this.generalservice.familiesForCashDonation = res["data"];
+            this.generalservice.familiesForSelection = [...res["data"]];
             this.families = res["data"];
-            this.stage = '4';
-
+            this.stage = "4";
 
             // console.log(this.familyDetails);
             // this.generalservice.familyToReceiveCashDonation = this.familyDetails;

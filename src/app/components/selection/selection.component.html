@@ -1,0 +1,62 @@
+<div class="selectionParent">
+  <div class="selectionInner">
+    <ng-container
+      *ngFor="let family of generalservice.familiesForSelection; index as i"
+    >
+      <div class="selectedFamily">
+        <p
+          [style.visibility]="selectedIndex > 0 ? 'visible' : 'hidden'"
+          (click)="prev()"
+        >
+          <span>
+            👈
+          </span>
+        </p>
+
+        <p
+          [style.visibility]="
+            selectedIndex == generalservice.familiesForSelection.length - 1
+              ? 'hidden'
+              : 'visible'
+          "
+          (click)="next()"
+        >
+          <span>
+            👉
+          </span>
+        </p>
+        <div class="selectionPanel">
+          <span
+            title="click to select family"
+            (click)="selectAFamilyForPayment(currentFamilyToShow?.id)"
+          >
+            ✔ select
+          </span>
+          <span *ngIf="familiesToPay.length > 0">
+            {{ familiesToPay.length }}
+            <small
+              [ngClass]="{ jumping: familiesToPay.length > 2 ? true : false }"
+            >
+              😊</small
+            >
+            {{ familiesToPay.length > 1 ? "families" : "family" }}
+          </span>
+        </div>
+        <!-- <span> {{ selectedIndex | json }} </span> -->
+        <div
+          class="selectedFamilyImageHolder"
+          [style.display]="currentFamilyToShow?.id ? 'block' : 'none'"
+        >
+          <img [src]="currentFamilyToShow?.family_picture" alt="" />
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+  <div *ngIf="familiesToPay.length > 0" class="selectionfooter">
+    <p (click)="paySelectedFamilies()">
+      Pay {{ familiesToPay.length }}
+      {{ familiesToPay.length > 1 ? "families" : "family" }} selected
+    </p>
+  </div>
+</div>

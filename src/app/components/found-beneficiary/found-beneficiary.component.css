@@ -91,3 +91,87 @@ div.parent a {
   align-items: center;
   box-shadow: 0 0 20px 6px #a7a1a1;
 }
+
+div#found-beneficiary p {
+  position: absolute;
+  font-size: 1.6rem;
+  top: 30%;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 0.5rem;
+  cursor: pointer;
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-align: start;
+  align-items: flex-start;
+  -webkit-box-pack: center;
+  justify-content: center;
+  height: 7%;
+  z-index: 50;
+}
+
+div#found-beneficiary p:nth-child(3) {
+  right: 0;
+  border-bottom-left-radius: 10px;
+  border-top-left-radius: 10px;
+}
+
+div#found-beneficiary p:nth-child(2) {
+  left: 0;
+  border-bottom-right-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.doneWithTransfers {
+  margin-top: 5px;
+  text-decoration: underline;
+  color: tomato;
+  cursor: pointer;
+}
+
+.dropDown {
+  color: black;
+  font-weight: bold;
+  font-size: 1.15rem;
+  position: absolute;
+  right: 5%;
+  top: 4%;
+  cursor: pointer;
+}
+
+.popUp {
+  position: relative;
+  background: white;
+  left: 0;
+  bottom: 320px;
+  width: 70%;
+  z-index: 300;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  min-height: 125px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 0 5px;
+  box-shadow: 0 0 55px 20px rgba(0, 0, 0, 0.47);
+}
+
+.popUp p {
+  font-size: 1.1rem;
+  line-height: 1.25rem;
+}
+
+.popUp a {
+  width: 50%;
+  border: 1px solid #4183c4;
+  padding: 4px 0px;
+  background: #4183c4;
+  color: #fff;
+  border-radius: 3px;
+}
+
+.popUp + .inner-modal {
+  filter: blur(3px);
+}

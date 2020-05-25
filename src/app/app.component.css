@@ -241,6 +241,10 @@ div.transparencyDisclaimer {
   align-items: center;
 }
 
+div.selectBeneficiary {
+  transform: scale(1.175, 1.19);
+}
+
 @media only screen and (max-width: 400px) {
   .confirmation.visible {
     display: flex;

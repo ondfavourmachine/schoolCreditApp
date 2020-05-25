@@ -91,3 +91,13 @@ form .form {
   color: tomato;
   cursor: pointer;
 }
+
+.modified {
+  margin-top: 10px;
+  text-decoration: none;
+  color: #2185d0;
+  cursor: pointer;
+  border: 1px solid #2185d0;
+  border-radius: 4px;
+  padding: 0 0.5rem;
+}

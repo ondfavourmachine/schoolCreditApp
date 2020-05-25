@@ -1,22 +1,61 @@
-<div style="height: 490px;" class="flex flex-column justify-center align-center h-100 family-info"
-  id="found-beneficiary">
+<div
+  style="height: 490px;"
+  class="flex flex-column justify-center align-center h-100 family-info"
+  id="found-beneficiary"
+>
   <div class="verified-icon">
     <img src="/assets/images/svgs/shield.svg" alt="verified icon" />
   </div>
+  <p
+    [style.visibility]="selectedIndex > 0 ? 'visible' : 'hidden'"
+    (click)="prev()"
+  >
+    <span>
+      👈
+    </span>
+  </p>
+  <!-- [style.visibility]="
+      selectedIndex == generalservice.familiesForSelection.length - 1
+        ? 'hidden'
+        : 'visible'
+    " -->
+  <p *ngIf="continueAllowingPictureScroll" (click)="next()">
+    <span *ngIf="!loading">
+      👉
+    </span>
+    <span *ngIf="loading">
+      <i class="fa fa-spinner fa-spin"></i>
+    </span>
+  </p>
   <img id="familyPicture" src="" alt="Family" />
 </div>
 
 <div *ngIf="stage == '1'" class="inner-modal">
-  <div class="inner-modal-content flex flex-column align-center text-center">
+  <div
+    id="targetParent"
+    class="inner-modal-content flex flex-column align-center text-center"
+  >
+    <span *ngIf="!isTransformed" (click)="pushDown($event)" class="dropDown"
+      >🔽</span
+    >
+    <span *ngIf="isTransformed" (click)="pushUp($event)" class="dropDown"
+      >🔼</span
+    >
     <div class="para-title">
-      {{ familyThatWillBenefit?.family_name }} Family
+      {{ currentFamilyToShow?.family_name }}
+      {{ currentFamilyToShow?.id ? "Family" : "" }}
     </div>
 
     <button (click)="stage = '4'" class="ui button primary basic mt-4">
-      Transfer N{{ familyThatWillBenefit?.amount_given }}
+      Transfer N5,000
     </button>
-    <a (click)="checkEligibilty()" style="cursor: pointer" class="mt-3 link">View more details</a>
-    <small *ngIf="this.generalservice.familiesForCashDonation.length > 0" class="info mt-2">
+    <a (click)="checkEligibilty()" style="cursor: pointer" class="mt-3 link"
+      >View more details</a
+    >
+    <small
+      *ngIf="this.generalservice.familiesForCashDonation.length > 0"
+      class="info mt-2"
+    >
       You have {{ this.generalservice.familiesForCashDonation.length }} more
       family to send 5000 each to
     </small>
@@ -34,24 +73,31 @@
       <li>
         <span>Account name:</span>
         <span>
-          {{ familyThatWillBenefit?.family_name }}
+          {{ currentFamilyToShow?.family_name }}
         </span>
       </li>
       <li>
         <span>Bank:</span>
-        <span>{{ familyThatWillBenefit?.bank_name }}</span>
+        <span>{{ currentFamilyToShow?.bank_name }}</span>
       </li>
       <li>
         <span>Account number:</span>
-        <span>{{ familyThatWillBenefit?.account_no }}</span>
+        <span>{{ currentFamilyToShow?.account_no }}</span>
       </li>
       <li>
         <span>
           <form class="ui form mt-2">
             <div class="field">
               <div class="ui checkbox">
-                <input (change)="confirmed = !confirmed" type="checkbox" id="confirmTransfer" tabindex="0" />
-                <label style="line-height: 1">I have transferred the money</label>
+                <input
+                  (change)="confirmed = !confirmed"
+                  type="checkbox"
+                  id="confirmTransfer"
+                  tabindex="0"
+                />
+                <label style="line-height: 1"
+                  >I have transferred the money</label
+                >
               </div>
             </div>
           </form>
@@ -59,11 +105,16 @@
       </li>
     </ul>
 
-
-    <button [disabled]="confirmed" (click)="checkThatUserHasTransferredMoney()" class="ui button primary basic mt-2">
+    <button
+      [disabled]="confirmed"
+      (click)="checkThatUserHasTransferredMoney()"
+      class="ui button primary basic mt-2"
+    >
       Done
     </button>
-    <a class="mt-3 link" (click)="stage = '1'"><span class="mr-2">←</span>Back</a>
+    <a class="mt-3 link" (click)="stage = '1'"
+      ><span class="mr-2">←</span>Back</a
+    >
   </div>
 </div>
 
@@ -71,45 +122,52 @@
   <div class="inner-modal-content flex flex-column align-center text-center">
     <ul class="list small w-100 mt-4 text-center">
       <li>
-        <span>Family is made up of {{ familyThatWillBenefit?.members_no }} people
+        <span
+          >Family is made up of {{ currentFamilyToShow?.members_no }} people
         </span>
       </li>
       <li>
         <span>{{
-          familyThatWillBenefit?.full_address
-            ? familyThatWillBenefit?.full_address
+          currentFamilyToShow?.full_address
+            ? currentFamilyToShow?.full_address
             : "No address for this person"
         }}</span>
       </li>
       <li>
-        <span>Family rep is a {{ familyThatWillBenefit?.breadwinner_job }}</span>
+        <span>Family rep is a {{ currentFamilyToShow?.breadwinner_job }}</span>
       </li>
     </ul>
-    <hr>
+    <hr />
     <ul class="list small w-100">
       <li>
         <span>Facial recognition</span>
-        <span>{{ familyThatWillBenefit.facial_recognition == 1 ? '✔' : '❌' }}</span>
+        <span>{{
+          currentFamilyToShow.facial_recognition == 1 ? "✔" : "❌"
+        }}</span>
       </li>
       <li>
         <span>Account verified</span>
-        <span>{{ familyThatWillBenefit.account_verified == 1 ? '✔' : '❌' }}</span>
+        <span>{{
+          currentFamilyToShow.account_verified == 1 ? "✔" : "❌"
+        }}</span>
       </li>
       <li>
         <span>BVN Confirmed</span>
-        <span>{{ familyThatWillBenefit.bvn_confirmed == 1 ? '✔' : '❌' }}</span>
+        <span>{{ currentFamilyToShow.bvn_confirmed == 1 ? "✔" : "❌" }}</span>
       </li>
       <li>
         <span>Eligibility check</span>
-        <span>{{ familyThatWillBenefit.eligible == 1 ? '✔' : '❌' }}</span>
+        <span>{{ currentFamilyToShow.eligible == 1 ? "✔" : "❌" }}</span>
       </li>
       <li>
         <span>Location match</span>
-        <span>{{ familyThatWillBenefit.location_match == 1 ? '✔' : '❌' }}</span>
+        <span>{{ currentFamilyToShow.location_match == 1 ? "✔" : "❌" }}</span>
       </li>
       <li>
         <span>Family member match</span>
-        <span>{{ familyThatWillBenefit.family_member_match == 1 ? '✔' : '❌' }}</span>
+        <span>{{
+          currentFamilyToShow.family_member_match == 1 ? "✔" : "❌"
+        }}</span>
       </li>
     </ul>
 
@@ -125,16 +183,33 @@
     <p class="para-title text-center">
       Remember to take a screeenshot of your transfer for evidence
     </p>
-    <button *ngIf="
+    <button
+      *ngIf="
         generalservice.familiesForCashDonation.length > 0;
         else noMoreFamilies
-      " (click)="iHaveTransferredTheMoney()" class="ui button primary basic">
+      "
+      (click)="iHaveTransferredTheMoney()"
+      class="ui button primary basic"
+    >
       Goto Next Family
     </button>
+    <a (click)="userIsDoneTransferring()" class="doneWithTransfers">
+      i am done transferring
+    </a>
     <ng-template #noMoreFamilies>
-      <button (click)="iHaveTransferredTheMoney()" class="ui button primary basic">
+      <button
+        (click)="iHaveTransferredTheMoney()"
+        class="ui button primary basic"
+      >
         Done
       </button>
     </ng-template>
   </div>
+</div>
+
+<div *ngIf="showPopUpWarning" class="popUp" style="position: relative;">
+  <p>
+    Please pay one of the families displayed to see more
+  </p>
+  <a (click)="showPopUpWarning = !showPopUpWarning">Ok</a>
 </div>

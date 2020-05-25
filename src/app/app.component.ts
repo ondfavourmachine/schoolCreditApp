@@ -128,7 +128,7 @@ export class AppComponent
         );
       }
     } catch (e) {
-      // console.log(explicitInstruction);
+      // relic from credible
       if (
         explicitInstruction == "Upload Drivers License" ||
         "Terms And Condition" ||

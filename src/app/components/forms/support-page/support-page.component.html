@@ -22,7 +22,11 @@
   </form>
 </div> -->
 
-<div id class="flex flex-column justify-center align-center h-100 text-center" id="support-page">
+<div
+  id
+  class="flex flex-column justify-center align-center h-100 text-center"
+  id="support-page"
+>
   <p class="para-title">How much would you like to give?</p>
   <div class="grid two money-boxes">
     <p class="box para-title" (click)="submitAmount($event)">N5,000</p>
@@ -108,10 +112,10 @@
 <div *ngIf="stage == '4'" class="inner-modal">
   <div class="inner-modal-content flex flex-column align-center text-center">
     <div class="para-title">
-      There {{ families.length > 1 ? 'are' : 'is' }} {{ families.length }} 
-      {{ families.length > 1 ? 'families' : 'family' }}
-      available to support
+      We have selected a set of families for you to fund!
     </div>
-    <a class="link mt-4" (click)="gotoFamily()" class="goBack">continue</a>
+    <a class="link mt-4" (click)="gotoFamily()" class="goBack modified"
+      >continue</a
+    >
   </div>
 </div>

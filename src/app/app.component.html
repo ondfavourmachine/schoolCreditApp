@@ -122,6 +122,10 @@
           </div>
         </div>
 
+        <div class="selectBeneficiary" *ngSwitchCase="'selectBeneficiaries'">
+          <app-selection></app-selection>
+        </div>
+
         <div *ngSwitchCase="'confirmDetailsUploaded'">
           <div class="receiverBankAccount">
             <!-- <app-receiver-bank-account></app-receiver-bank-account> -->

@@ -37,7 +37,7 @@ export class EvidenceUploadComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // console.log(this.generalservice.noOfevidencesOfTransferToUpload);
+    this.thoroughlyCheckForPaidField();
     this.evidencesBackUpArray = [
       ...this.generalservice.noOfevidencesOfTransferToUpload
     ];
@@ -146,7 +146,8 @@ export class EvidenceUploadComponent implements OnInit {
   }
 
   arrangeObjectToSend() {
-    // console.log(this.arrayOfEvidencesToSendToNebechi);
+    const transactionID = this.extractTransactionData(this.familyID);
+    this.transactionID = transactionID;
     let sendToBackend = new FormData();
     sendToBackend.append("transaction_id", this.transactionID);
     sendToBackend.append("receiver_id", this.familyID);
@@ -188,11 +189,11 @@ export class EvidenceUploadComponent implements OnInit {
             `I have uploaded picture evidence of all the transfers I did.`,
             "right"
           );
-          
+
           setTimeout(() => {
             const nl: NodeList = document.querySelectorAll(".dynamicButton");
-            this.generalservice.specialCaseButtons(nl, 'disable');
-            this.generalservice.nextChatbotReplyToGiver = null
+            this.generalservice.specialCaseButtons(nl, "disable");
+            this.generalservice.nextChatbotReplyToGiver = null;
             this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
               `Thank you so much for uploading evidence of your transfers. If you want to give some more, please click the buttons below`,
               "left",
@@ -200,16 +201,31 @@ export class EvidenceUploadComponent implements OnInit {
               "giveMoney"
             );
             this.generalservice.responseDisplayNotifier(giverResponse);
-            this.generalservice.controlGlobalNotificationSubject.next("off");
+            
           }, 500);
           //  just for backup
           this.generalservice.justFinishedGiving = true;
-          // 
+          //
           (document.querySelector(".modal-close") as HTMLSpanElement).click();
-
+          this.generalservice.controlGlobalNotificationSubject.next("off");
+            this.generalservice.familiesForCashDonation = [];
+            this.generalservice.familiesSelectedWithTransactionID = [];
+            this.generalservice.familiesForSelection = [];
         },
         err => console.log(err)
       );
+  }
+
+  thoroughlyCheckForPaidField() {
+    let temp = [];
+    temp = this.generalservice.noOfevidencesOfTransferToUpload.filter(
+      (element: Object) => {
+        // checking that element['paid] == true is the same as just element['paid]
+        return element.hasOwnProperty("paid") && element["paid"] == true;
+      }
+    );
+    this.generalservice.noOfevidencesOfTransferToUpload = [];
+    this.generalservice.noOfevidencesOfTransferToUpload = [...temp];
   }
 
   removeNotification() {
@@ -217,5 +233,11 @@ export class EvidenceUploadComponent implements OnInit {
       this.notification.show = false;
       this.notification.message = undefined;
     }, 4000);
+  }
+
+  extractTransactionData(id: string | number): string {
+    return this.generalservice.familiesSelectedWithTransactionID.find(
+      element => element.id == id
+    )["transaction_id"];
   }
 }
