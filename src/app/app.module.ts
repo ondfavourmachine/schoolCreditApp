@@ -16,10 +16,7 @@ import en from "@angular/common/locales/en";
 // components
 import { TermsAndConditionComponent } from "./components/terms-and-condition/terms-and-condition.component";
 import { GeneralFormsComponent } from "./components/general-forms/general-forms.component";
-// import { BvnAndDOBFormComponent } from "./components/forms/bvn-and-dobform/bvn-and-dobform.component";
 
-// import { LicenseValidationFormComponent } from "./components/forms/license-validation-form/license-validation-form.component";
-// import { UploadPhotoAndStatementComponent } from "./components/forms/upload-photo-and-statement/upload-photo-and-statement.component";
 
 import { IdentifyOrAnonymousComponent } from "./components/forms/identify-or-anonymous/identify-or-anonymous.component";
 import { SupportPageComponent } from "./components/forms/support-page/support-page.component";
@@ -36,9 +33,7 @@ import { ConfirmDetailsUploadedComponent } from "./components/confirm-details-up
 import { WelcomeComponent } from "./welcome/welcome.component";
 import { EvidenceUploadComponent } from './components/evidence-upload/evidence-upload.component';
 import { SelectionComponent } from './components/selection/selection.component';
-// import { GiverComponentComponent } from './components/giver-component/giver-component.component';
-
-// import { BBRWFormsComponent } from "./components/forms/bbrw-forms/bbrw-forms.component";
+import { ChildInformationFormsComponent } from './components/child-information-forms/child-information-forms.component';
 
 registerLocaleData(en);
 
@@ -65,7 +60,8 @@ registerLocaleData(en);
     ConfirmDetailsUploadedComponent,
     WelcomeComponent,
     EvidenceUploadComponent,
-    SelectionComponent
+    SelectionComponent,
+    ChildInformationFormsComponent
     // GiverComponentComponent
 
     // BBRWFormsComponent

@@ -1357,7 +1357,9 @@ ul.list li span:nth-child(2) {
 }
 
 .ui.form .field > label {
-  display: none;
+  display: block;
+  font-weight: bold;
+  text-align: left;
 }
 
 .ui.form .field > input,
@@ -1411,4 +1413,20 @@ textarea {
 .ui.checkbox .box:before,
 .ui.checkbox label:before {
   border: 2px solid #c3c3c3;
+}
+
+.block-element {
+  display: block;
+}
+
+.myborder {
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 5px;
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.myborder img {
+  max-width: 40px;
+  text-align: center;
+  opacity: 0.6;
 }

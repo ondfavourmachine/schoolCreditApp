@@ -131,6 +131,7 @@ export class ChatMessagesDisplayComponent
 
     this.observableToTrash.preventDisabling = this.generalservice.preventDisablingOfButtons$.subscribe(
       val => {
+        // debugger;
         if (val == "prevent") {
           return;
         } else if ("allow") {
@@ -152,7 +153,6 @@ export class ChatMessagesDisplayComponent
   }
 
   ngOnChanges(messages: SimpleChanges) {
-    // console.log(messages.referenceNumberInMsg);
     const msg = { ...messages.messages };
     if (msg.currentValue) {
       // console.log(msg.currentValue);
@@ -242,7 +242,6 @@ export class ChatMessagesDisplayComponent
     });
     //   IdentifyOrAnonymousForms
     ul.addEventListener("customGiverEventFromMsgClass", (e: CustomEvent) => {
-      // console.log(e.detail);
       const {
         typeOfEvent,
         message,
@@ -254,7 +253,7 @@ export class ChatMessagesDisplayComponent
         this.generalservice.receiver = "giver";
         this.route.navigate(["giver"]);
       }
-      if (String(componentToLoad).toLowerCase() == "identifyoranonymousforms") {
+      if (String(componentToLoad).toLowerCase() == "child-information-forms") {
         this.generalservice.handleFlowController(String(componentToLoad));
       }
       if (String(componentToLoad).toLowerCase() == "supportpageforms") {
@@ -642,17 +641,19 @@ export class ChatMessagesDisplayComponent
       } else {
         // "identify,stayanonymous"
         const msgs = Message.welcomeMessagesForGiver;
+        // debugger;
         let messageToDisplay: Message;
         this.count = 0;
         msgs.forEach((msg, index) => {
-          if (index == 1) {
+          if (index == 2) {
             this.count = index;
+            // Continue existing request
             messageToDisplay = new Message(
               `${msg}`,
               `left`,
               ul,
-              "Yes,No",
-              "firstTimeGiver,notFirstTimeGiver"
+              "New request",
+              "newRequest,continuingRequest"
             );
             messageToDisplay.makeAndInsertMessage(this.count);
             return;

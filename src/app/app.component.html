@@ -78,10 +78,9 @@
       <div [ngSwitch]="generalservice.flowControlHolder">
         <div
           style="overflow-y: auto;"
-          *ngSwitchCase="'IdentifyOrAnonymousForms'"
+          *ngSwitchCase="'child-information-forms'"
         >
-          <!-- <app-terms-and-condition></app-terms-and-condition> -->
-          <app-identify-or-anonymous></app-identify-or-anonymous>
+          <app-child-information-forms></app-child-information-forms>
         </div>
         <div *ngSwitchCase="'foundBeneficiary'">
           <app-found-beneficiary></app-found-beneficiary>

@@ -28,11 +28,6 @@ export class FoundBeneficiaryComponent implements OnInit, AfterViewInit {
     this.currentFamilyToShow = this.generalservice.familiesForSelection[
       this.selectedIndex
     ];
-    // this.familyThatWillBenefit = generalservice.familiesForCashDonation.splice(
-    //   0,
-    //   1
-    // )[0];
-    // console.log("FTWB", this.familyThatWillBenefit);
   }
 
   ngOnInit(): void {

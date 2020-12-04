@@ -3,7 +3,7 @@ import { Injectable, Inject } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Observable, forkJoin } from "rxjs";
 import { Reference } from "src/app/models/reference-type";
-import { retry } from "rxjs/operators";
+// import { retry } from "rxjs/operators";
 // import { LgaData } from "../../models/lgaData";
 
 interface Questions {

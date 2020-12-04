@@ -20,10 +20,11 @@ export class Message {
     "Time waits for no one! Try to answer as fast as possible",
     "You can do it! Answer the next question faster!"
   ];
+
   static welcomeMessagesForGiver = [
-    "Hey! My name is Tabitha. Thank you for trying to help out in these times.",
-    // `Incase you are not a giver but a receiver, type 'i am a receiver' and you will be taken to the receivers section.`,
-    "Is this your first time here giving for COVID Relief?"
+    "Welcome to Adama High School. The Citadel of excellence",
+    "This Service helps you manage how you pay your child's fees",
+    "How do you want to proceed?"
   ];
 
   static successfulRequestsMade = [
@@ -105,7 +106,6 @@ export class Message {
         // button.setAttribute("data-button", `${arrayOfStrings[i]}`);
         button.className = "btn btn button--no-width dynamicButton";
         button.textContent = arrayOfStrings[i];
-        // button.style.fontSize = "16px";
         button.onclick = this.handleButtonClick;
         buttonContainer.insertAdjacentElement("beforeend", button);
       }
@@ -152,19 +152,6 @@ export class Message {
       // this.htmlElement.insertAdjacentHTML("beforeend", html);
     }
   }
-
-  //   // <small>
-  //   <img src="img/clock.png" alt="" />
-  //   11:01 AM | Yesterday
-  // </small>
-  // <div class="button-container">
-  // <button id="myBtn" class="btn btn button--no-width">
-  //   GENERATE
-  // </button>
-  // <button class="btn btn button--no-width">
-  //   cancel
-  // </button>
-  // </div>
 
   addDate() {
     return Date.now();
@@ -395,13 +382,13 @@ export class Message {
         );
         break;
       // giveFood
-      case "identify":
+      case "installmental":
         this.giverDispatchEvents(
           "customGiverEventFromMsgClass",
           "giver",
-          "IdentifyOrAnonymousForms"
+          "child-information-forms"
         );
-        sessionStorage.setItem("anonymous", "2");
+        // sessionStorage.setItem("anonymous", "2");
         break;
       case "givefood":
         this.giverResponsesEvent(
@@ -422,26 +409,27 @@ export class Message {
         this.giverDispatchEvents(
           "customGiverEventFromMsgClass",
           "giver",
-          "IdentifyOrAnonymousForms"
+          "child-information-forms"
         );
         sessionStorage.setItem("anonymous", "1");
         break;
       // responses by the giver starts here
-      case "firsttimegiver":
+      case "newrequest":
+      // Pay in full
         this.giverResponsesEvent(
           "customGiverResponse",
           new replyGiversOrReceivers(
-            "Would you like to stay anonymous or be an identified giver?",
+            "How would you like to pay?",
             "left",
-            "I want to be identified,Stay anonymous",
-            "identify,stayanonymous"
+            "Instalmental payment",
+            "installmental,full_pay"
           ),
           new GiverResponse(
-            new replyGiversOrReceivers("Yes, i am a first time giver", "right")
+            new replyGiversOrReceivers(`It's a new request`, "right")
           )
         );
         break;
-      case "notfirsttimegiver": //notFirstTimeGiver
+      case "continuingrequest": //notFirstTimeGiver
         this.giverResponsesEvent(
           "customGiverResponse",
           new replyGiversOrReceivers(

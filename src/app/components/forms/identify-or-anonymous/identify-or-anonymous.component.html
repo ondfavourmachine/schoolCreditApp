@@ -1,17 +1,29 @@
-<div class="flex flex-column justify-center align-center h-100 text-center family-info" *ngIf="termsVisible">
+<div
+  class="flex flex-column justify-center align-center h-100 text-center family-info"
+>
   <div class="modal-icon">
     <img src="../../../../assets/images/svgs/alert.svg" alt="ICON" />
   </div>
   <h1 class="para-title">Transparency Disclaimer</h1>
   <p class="para-body">
-    We neither receive money directly from donors nor give funds directly to families. We only provide a connection between both parties in a transparent way. 
+    We neither receive money directly from donors nor give funds directly to
+    families. We only provide a connection between both parties in a transparent
+    way.
   </p>
 
-  <button class="ui button primary basic mt-4" (click)="hideTerms()">Continue</button>
+  <button class="ui button primary basic mt-4" (click)="hideTerms()">
+    Continue
+  </button>
 </div>
 
-<div class="identifyOrAnonymous flex flex-column align-center" *ngIf="!termsVisible">
-  <div class="flex flex-column align-center" *ngIf="stayAnonymous == '2'; else identify">
+<div
+  class="identifyOrAnonymous flex flex-column align-center"
+  *ngIf="!termsVisible"
+>
+  <div
+    class="flex flex-column align-center"
+    *ngIf="stayAnonymous == '2'; else identify"
+  >
     <!-- <div class="modal-icon mb-4">
       <img src="../../assets/images/svgs/question.svg" alt="" />
     </div> -->
@@ -21,12 +33,9 @@
   </div>
 
   <ng-template #identify>
-    <!-- <div class="modal-icon mb-4">
-      <img src="../../assets/images/svgs/unknown.svg" alt="" />
-    </div> -->
     <p class="para-title text-center mt-4 mb-4">
-      This information will help us when sending our gratitude notification.
-      We guarantee data anonymity
+      This information will help us when sending our gratitude notification. We
+      guarantee data anonymity
     </p>
   </ng-template>
 
@@ -37,27 +46,46 @@
         <input formControlName="name" type="text" placeholder="Fullname" />
         <div *ngIf="name.touched && name.invalid" class="ng-invalid ng-touched">
           <small style="color: #f10b0b9d;" *ngIf="nameIsRequired()">
-            Your name is required!</small>
+            Your name is required!</small
+          >
         </div>
       </div>
       <div class="field">
         <label>Email</label>
-        <input formControlName="email" name="email" type="email" placeholder="example@example.com" />
+        <input
+          formControlName="email"
+          name="email"
+          type="email"
+          placeholder="example@example.com"
+        />
         <small> </small>
-        <div *ngIf="email.touched && email.invalid" class="ng-invalid ng-touched">
+        <div
+          *ngIf="email.touched && email.invalid"
+          class="ng-invalid ng-touched"
+        >
           <small style="color: #f10b0b9d;" *ngIf="emailIsRequired()">
-            Your email address is required!</small>
+            Your email address is required!</small
+          >
         </div>
       </div>
 
       <div class="field">
         <label>Phone Number</label>
-        <input formControlName="phone" name="tel2" type="tel" pattern="[0-9]{11}"
-          placeholder="Enter your Phone number" />
+        <input
+          formControlName="phone"
+          name="tel2"
+          type="tel"
+          pattern="[0-9]{11}"
+          placeholder="Enter your Phone number"
+        />
         <small> </small>
-        <div *ngIf="phone.touched && phone.invalid" class="ng-invalid ng-touched">
+        <div
+          *ngIf="phone.touched && phone.invalid"
+          class="ng-invalid ng-touched"
+        >
           <small style="color: #f10b0b9d;" *ngIf="phoneIsRequired()">
-            Your phone number is required!</small>
+            Your phone number is required!</small
+          >
         </div>
       </div>
 
@@ -78,7 +106,11 @@
     </div>
 
     <div class="text-center mt-4">
-      <button [disabled]="!iAForm.valid" type="submit" class="ui primary button fluid">
+      <button
+        [disabled]="!iAForm.valid"
+        type="submit"
+        class="ui primary button fluid"
+      >
         Start <i hidden class="fas fa-circle-notch fa-spin"></i>
       </button>
     </div>

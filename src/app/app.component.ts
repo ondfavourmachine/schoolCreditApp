@@ -58,8 +58,11 @@ export class AppComponent
 
     this.observableAggregator.flowControl = this.generalservice.flowCtrl$.subscribe(
       val => {
-        // console.log(String(val));
         this.generalservice.flowControlHolder = String(val);
+        if (String(val).length < 1) {
+          this.switchOfModal();
+          return;
+        }
         this.clickAButton();
       }
     );
@@ -94,7 +97,6 @@ export class AppComponent
 
   // this function will choose to grey out buttons added dynamically or not to
   preventHidingOfbuttons(explicitInstruction?: string) {
-    // sessionStorage.removeItem("anonymous");
     this.generalservice.flowControlHolder = "";
     try {
       // try to get the timer if it is in the dom

@@ -1,0 +1,213 @@
+<div
+  class="flex flex-column justify-center align-center h-100 text-center family-info"
+  *ngIf="viewToshow == ''"
+>
+  <div class="modal-icon">
+    <img src="../../../../assets/images/svgs/information_1.svg" alt="ICON" />
+  </div>
+  <h1 class="para-title">Before we begin</h1>
+  <h5 class="" style="margin: 10px 0; font-weight: 500;">
+    You will need the following information:
+  </h5>
+  <p class="para-body">
+    <span class="block-element">1. Name of child</span>
+    <span class="block-element">2. Class of child</span>
+    <span class="block-element">3. Tuition fees</span>
+  </p>
+
+  <button
+    class="ui button primary basic mt-4"
+    (click)="viewToshow = 'selectChildren'"
+  >
+    Continue
+  </button>
+</div>
+
+<!-- <div class="identifyOrAnonymous flex flex-column align-center">
+  <div
+    class="flex flex-column align-center"
+   
+  >
+    <p class="para-title text-center mt-4 mb-4">
+      This information will help us when sending our gratitude notification
+    </p>
+  </div> -->
+
+<!-- <small class="smallNotification" *ngIf="notification?.show">
+    {{ notification?.message }}
+  </small> -->
+<!-- </div> -->
+
+<div
+  class=" h-100 text-center family-info"
+  *ngIf="viewToshow == 'selectChildren'"
+>
+  <h1 class="para-title">How many children do you have?</h1>
+
+  <div class="ui grid justify-center" style="overflow: hidden; margin: 0 auto;">
+    <div
+      (click)="selectThis($event)"
+      class="six wide column myborder positioned-relative"
+    >
+      <img src="../../../assets/images/svgs/user.svg" alt="" />
+      <p class="bolded">1</p>
+      <i *ngIf="selected == '1'" class="fa fa-check positioned-absolute"></i>
+    </div>
+
+    <div
+      (click)="selectThis($event)"
+      class="six wide column myborder positioned-relative"
+    >
+      <img
+        src="../../../assets/images/svgs/user2.svg"
+        style="max-width: 50px;"
+        alt=""
+      />
+      <p class="bolded">2</p>
+      <i *ngIf="selected == '2'" class="fa fa-check positioned-absolute"></i>
+    </div>
+
+    <div
+      (click)="selectThis($event)"
+      class="six wide column myborder positioned-relative"
+    >
+      <img
+        src="../../../assets/images/svgs/user4.svg"
+        style="max-width: 50px;"
+        alt=""
+      />
+      <p class="bolded">3</p>
+      <i *ngIf="selected == '3'" class="fa fa-check positioned-absolute"></i>
+    </div>
+
+    <div
+      (click)="selectThis($event)"
+      class="six wide column myborder positioned-relative"
+    >
+      <img
+        src="../../../assets/images/svgs/user6.svg"
+        alt=""
+        style="max-width: 67px;"
+      />
+      <p class="bolded">3+</p>
+      <i *ngIf="selected == '3+'" class="fa fa-check positioned-absolute"></i>
+    </div>
+  </div>
+
+  <button
+    [disabled]="numberOfSelected"
+    (click)="startEnteringChildInfo()"
+    class="ui button primary basic mt-4"
+  >
+    Continue
+  </button>
+</div>
+
+<div
+  class=" h-100 text-center family-info"
+  *ngIf="viewToshow == 'enterInformation'"
+>
+  <h1 class="para-title">
+    {{
+      mapOfChildrensInfo.size == 1
+        ? "Enter child's Information"
+        : "Enter " + currentChild + " child's information"
+    }}
+  </h1>
+
+  <form [formGroup]="childInfoForm" class="w-100" style="position: relative">
+    <div class="ui form">
+      <div class="field">
+        <label>Name</label>
+        <input formControlName="name" type="text" placeholder="Fullname" />
+        <!-- <div *ngIf="name.touched && name.invalid" class="ng-invalid ng-touched">
+            <small style="color: #f10b0b9d;" *ngIf="nameIsRequired()">
+              Your name is required!</small>
+          </div> -->
+      </div>
+      <div class="field">
+        <!-- -->
+
+        <div class="field">
+          <label>Class</label>
+          <input
+            name="class"
+            formControlName="class"
+            type="text"
+            placeholder="Class of child eg: JSS 1"
+          />
+        </div>
+      </div>
+
+      <div class="field positioned-relative">
+        <label>Tuition fees </label>
+        <input
+          style="padding-left: 22px !important"
+          formControlName="tuition_fees"
+          name="tuition"
+          type="number"
+          placeholder="Enter tuition fees"
+        />
+        <small
+          *ngIf="childInfoForm.get('tuition_fees').value"
+          class="positioned-absolute currency"
+        >
+          &#8358;
+        </small>
+        <!-- <div *ngIf="phone.touched && phone.invalid" class="ng-invalid ng-touched">
+            <small style="color: #f10b0b9d;" *ngIf="phoneIsRequired()">
+              Your phone number is required!</small>
+          </div> -->
+      </div>
+    </div>
+    <!-- {{ iterator.next().done }} {{ iterator.next() }} -->
+    <div class="text-center mt-4">
+      <button
+        [disabled]="!childInfoForm.valid"
+        type="submit"
+        class="ui primary button fluid"
+        (click)="moveToNextChildOrNot()"
+      >
+        Continue
+      </button>
+    </div>
+    <div *ngIf="spinner" class="spinner-container">
+      <i class="fa fa-circle-notch fa-spin fa-3x"></i>
+    </div>
+  </form>
+</div>
+
+<div class=" h-100 text-center family-info" *ngIf="viewToshow == 'modifyOrNot'">
+  <h1 class="para-title">
+    You just provided details for
+    {{ nameOfRecentlyAddedChild }}
+  </h1>
+
+  <button
+    (click)="modifyPreviouslyEnteredChildInfo()"
+    class="ui button primary basic mt-4"
+  >
+    Modify
+  </button>
+
+  <button
+    (click)="onToNextChild($event.target.textContent)"
+    class="ui button primary basic mt-4"
+  >
+    {{ currentChild ? "Continue to " + currentChild + " child" : "Next" }}
+  </button>
+</div>
+
+<div
+  class="flex flex-column justify-center align-center h-100 text-center family-info"
+  *ngIf="viewToshow == 'summary'"
+>
+  <h1 class="para-title">Do you have any more children to enter?</h1>
+  <button disabled class="ui button primary basic mt-4">
+    Yes
+  </button>
+
+  <button (click)="doneAddingChildren()" class="ui button primary basic mt-4">
+    No
+  </button>
+</div>
