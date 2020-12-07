@@ -333,7 +333,7 @@ export class Message {
 
     switch (c) {
       case "yes":
-      case "start":
+      // case "start":
       case "begin":
         this.dispatchevent(
           "customEventFromMessageClass",

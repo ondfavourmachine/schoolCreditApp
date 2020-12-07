@@ -6,3 +6,13 @@
 .modified-button {
   margin-top: 2rem;
 }
+
+/* .code-form {
+  transform: translateY(-100px);
+  opacity: 0;
+  transition: all 0.3s ease-in-out;
+}
+
+.code-form.show {
+  transform: translateY(0px);
+} */

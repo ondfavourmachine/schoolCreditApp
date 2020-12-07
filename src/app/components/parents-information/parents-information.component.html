@@ -15,13 +15,20 @@
     <span class="block-element">3. Tuition fees</span>
   </p> -->
 
-  <div class="ui grid justify-center" style="overflow: hidden; margin: 0 auto;">
-    <div (click)="view = 'profile-form'" class="seven wide column myborder ">
+  <div
+    class="ui grid justify-center"
+    style="overflow: hidden; margin: 0 auto; cursor: pointer; z-index: 30;"
+  >
+    <div (click)="changeThisToProfile()" class="seven wide column myborder ">
       <img src="../../../assets/images/svgs/user.svg" alt="" />
       <p class="bolded">Parent</p>
     </div>
 
-    <div (click)="view = 'profile-form'" class="eight wide column myborder">
+    <div
+      (click)="view = 'profile-form'"
+      style="cursor: pointer; z-index: 30;"
+      class="eight wide column myborder"
+    >
       <img src="../../../assets/images/svgs/user.svg" alt="" />
       <p class="bolded">Guardian</p>
     </div>
@@ -37,18 +44,14 @@
     <div class="ui form">
       <div class="field">
         <label>Full name</label>
-        <input type="text" placeholder="Fullname" />
+        <input type="text" placeholder="eg: Tosin Chukwudi" />
       </div>
       <div class="field">
         <!-- -->
 
         <div class="field">
           <label>Age</label>
-          <input
-            name="class"
-            type="text"
-            placeholder="Class of child eg: JSS 1"
-          />
+          <input name="class" type="text" placeholder="Eg: 20" />
         </div>
       </div>
       <div class="inline fields">
@@ -56,15 +59,40 @@
 
         <div class="field">
           <div class="ui radio checkbox">
-            <input type="radio" name="fruit" tabindex="0" class="hidden" />
-            <label>Male</label>
+            <input
+              type="radio"
+              id="male"
+              name="fruit"
+              tabindex="0"
+              class="hidden"
+            />
+            <label for="male">Male</label>
           </div>
         </div>
         <div class="field">
           <div class="ui radio checkbox">
-            <input type="radio" name="fruit" tabindex="0" class="hidden" />
-            <label>Female</label>
+            <input
+              type="radio"
+              id="female"
+              name="fruit"
+              tabindex="0"
+              class="hidden"
+            />
+            <label for="female">Female</label>
           </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <!-- -->
+
+        <div class="field">
+          <label>Address</label>
+          <input
+            name="class"
+            type="text"
+            placeholder="Eg: 21 Somolu road Lagos"
+          />
         </div>
       </div>
     </div>
@@ -88,16 +116,139 @@
 
   <div>
     <img
+      (click)="addPicture()"
+      title="click to add a picture"
       class=" circular medium ui image modified-img"
       src="/assets/images/image-placeholder-1.svg"
     />
-    <input type="file" id="picture-upload" name="img" accept="image/*" hidden />
+    <input
+      (change)="loadImage($event)"
+      type="file"
+      id="picture-upload"
+      name="img"
+      accept="image/*"
+      hidden
+    />
     <button
-      (click)="addPicture()"
+      (click)="view = 'work-form'"
       type="submit"
       class="ui primary button fluid modified-button"
     >
       Upload and continue
     </button>
+  </div>
+</div>
+
+<div class=" h-100 text-center family-info" *ngIf="view == 'work-form'">
+  <h1 class="para-title">
+    Please enter your work information
+  </h1>
+
+  <form class="w-100" style="position: relative">
+    <div class="ui form">
+      <div class="field">
+        <label>Employer</label>
+        <input type="text" placeholder="Eg: Credit clan" />
+      </div>
+      <div class="field">
+        <!-- -->
+
+        <div class="field">
+          <label>Role</label>
+          <input
+            name="class"
+            type="text"
+            placeholder="Eg: Software Developer"
+          />
+        </div>
+
+        <div class="field">
+          <label>Annual Salary</label>
+          <select
+            style="height: auto;"
+            class="ui fluid search dropdown"
+            name="card[expire-month]"
+          >
+            <option value="" selected>Select salary scale...</option>
+            <option value="1">500k per annum</option>
+            <option value="2">500k - 750k per annum</option>
+            <option value="3">1m per annum</option>
+            <option value="4">1m - 1.250m per annum</option>
+            <option value="5">1.250 - 1.5m per annum</option>
+            <option value="6">1.5m - 2m per annum</option>
+            <option value="7">2m - 2.5m per annum</option>
+            <option value="8">2.5m - 3m per annum</option>
+            <option value="9">3m - 5m per annum</option>
+            <option value="10">5m - 10m per annum</option>
+            <option value="11">10 - 20m per annum</option>
+            <option value="12">More than 20m per annum</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center mt-4">
+      <button
+        (click)="view = 'confirm-email'"
+        type="submit"
+        class="ui primary button fluid"
+      >
+        Next
+      </button>
+    </div>
+  </form>
+</div>
+
+<div class=" h-100 text-center family-info" *ngIf="view == 'confirm-email'">
+  <h1 class="para-title">
+    Let's confirm your email
+  </h1>
+
+  <form class="w-100" style="position: relative">
+    <div class="ui form">
+      <div class="field">
+        <label>Email</label>
+        <input type="text" placeholder="Eg: someone@someone.com" />
+      </div>
+    </div>
+
+    <div class="text-center mt-4">
+      <button
+        (click)="view = 'enter-code'"
+        type="submit"
+        class="ui primary button fluid"
+      >
+        Get code
+      </button>
+    </div>
+  </form>
+</div>
+
+<div *ngIf="view == 'enter-code'" class="h-100 text-center family-info">
+  <h1 class="para-title">
+    Enter code you received in your email
+  </h1>
+
+  <form class="w-100" style="position: relative">
+    <div class="ui form">
+      <div class="field">
+        <label>code</label>
+        <input type="text" placeholder="Eg: 1we6679" />
+      </div>
+    </div>
+
+    <div class="text-center mt-4">
+      <button
+        (click)="saveParentInfo()"
+        type="submit"
+        class="ui primary button fluid"
+      >
+        Save
+      </button>
+    </div>
+  </form>
+
+  <div *ngIf="spinner" class="spinner-container">
+    <i class="fa fa-circle-notch fa-spin fa-3x"></i>
   </div>
 </div>
