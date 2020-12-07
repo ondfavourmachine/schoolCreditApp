@@ -242,6 +242,7 @@ export class ChatMessagesDisplayComponent
     });
     //   IdentifyOrAnonymousForms
     ul.addEventListener("customGiverEventFromMsgClass", (e: CustomEvent) => {
+      // debugger;
       const {
         typeOfEvent,
         message,
@@ -258,6 +259,11 @@ export class ChatMessagesDisplayComponent
       }
       if (String(componentToLoad).toLowerCase() == "supportpageforms") {
         this.generalservice.handleFlowController(String(componentToLoad));
+      }
+
+      if (String(componentToLoad).toLowerCase() == "parents-information") {
+        this.generalservice.handleFlowController(String(componentToLoad));
+        console.log("im here");
       }
       if (moreInformation) {
         let arrToPush = [];
@@ -312,7 +318,7 @@ export class ChatMessagesDisplayComponent
     });
 
     ul.addEventListener("customEventFromMessageClass", (e: CustomEvent) => {
-      // console.log(e.detail);
+      // debugger;
       if (String(e.detail).includes("IdentifyOrAnonymousForms")) {
         // console.log("i am here");
         this.changeModalTitle(String(e.detail));
@@ -393,14 +399,16 @@ export class ChatMessagesDisplayComponent
         this.displaySubsequentMessages(chatbotReply);
       }, 1000);
     } catch (e) {
-      const { message, direction } = reply;
+      const { message, direction, preventOrAllow } = reply;
       this.displaySubsequentMessages({
         message: message,
         direction: direction,
         button: reply.button ? reply.button : "",
         extraInfo: reply.extraInfo ? reply.extraInfo : ""
       });
-      this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
+      this.generalservice.ctrlDisableTheButtonsOfPreviousListElement(
+        preventOrAllow ? preventOrAllow : "allow"
+      );
 
       setTimeout(() => {
         this.displaySubsequentMessages(chatbotReply);

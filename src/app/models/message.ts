@@ -326,9 +326,11 @@ export class Message {
     let c = button.dataset["button"].toString().toLowerCase();
     c = c.split("-")[1];
     if (!isNaN(Number(c))) {
-      this.handleUpload(button.dataset["button"]);
+      // this.handleUpload(button.dataset["button"]);
+      this.handleUpload("");
       return;
     }
+
     switch (c) {
       case "yes":
       case "start":
@@ -338,6 +340,12 @@ export class Message {
           "terms-and-condition"
         );
         break;
+      // case "begin":
+      //   this.dispatchevent(
+      //     "customEventFromMessageClass",
+      //     "terms-and-condition"
+      //   );
+      //   break;
       case "help":
         this.receiverDispatchEvents(
           "customReceiverEventFromMsgClass",
@@ -415,7 +423,7 @@ export class Message {
         break;
       // responses by the giver starts here
       case "newrequest":
-      // Pay in full
+        // Pay in full
         this.giverResponsesEvent(
           "customGiverResponse",
           new replyGiversOrReceivers(
@@ -531,12 +539,13 @@ export class Message {
     this.htmlElement.dispatchEvent(event);
   }
 
-  handleUpload(stringToPassAlong: string) {
+  handleUpload(stringToPassAlong?: string) {
+    // debugger;
     this.giverDispatchEvents(
       "customGiverEventFromMsgClass",
       "giver",
-      "takeApicture",
-      stringToPassAlong
+      "parents-information",
+      stringToPassAlong ? stringToPassAlong : ""
     );
   }
 }

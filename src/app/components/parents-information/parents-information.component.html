@@ -1,0 +1,103 @@
+<div
+  class="flex flex-column justify-center align-center h-100 text-center family-info"
+  *ngIf="view == ''"
+>
+  <!-- <div class="modal-icon">
+    <img src="../../../../assets/images/svgs/information_1.svg" alt="ICON" />
+  </div> -->
+  <h1 class="para-title">Who are you?</h1>
+  <!-- <h5 class="" style="margin: 10px 0; font-weight: 500;">
+    You will need the following information:
+  </h5> -->
+  <!-- <p class="para-body">
+    <span class="block-element">1. Name of child</span>
+    <span class="block-element">2. Class of child</span>
+    <span class="block-element">3. Tuition fees</span>
+  </p> -->
+
+  <div class="ui grid justify-center" style="overflow: hidden; margin: 0 auto;">
+    <div (click)="view = 'profile-form'" class="seven wide column myborder ">
+      <img src="../../../assets/images/svgs/user.svg" alt="" />
+      <p class="bolded">Parent</p>
+    </div>
+
+    <div (click)="view = 'profile-form'" class="eight wide column myborder">
+      <img src="../../../assets/images/svgs/user.svg" alt="" />
+      <p class="bolded">Guardian</p>
+    </div>
+  </div>
+</div>
+
+<div class=" h-100 text-center family-info" *ngIf="view == 'profile-form'">
+  <h1 class="para-title">
+    Let's meet you
+  </h1>
+
+  <form class="w-100" style="position: relative">
+    <div class="ui form">
+      <div class="field">
+        <label>Full name</label>
+        <input type="text" placeholder="Fullname" />
+      </div>
+      <div class="field">
+        <!-- -->
+
+        <div class="field">
+          <label>Age</label>
+          <input
+            name="class"
+            type="text"
+            placeholder="Class of child eg: JSS 1"
+          />
+        </div>
+      </div>
+      <div class="inline fields">
+        <label for="fruit">Gender:</label>
+
+        <div class="field">
+          <div class="ui radio checkbox">
+            <input type="radio" name="fruit" tabindex="0" class="hidden" />
+            <label>Male</label>
+          </div>
+        </div>
+        <div class="field">
+          <div class="ui radio checkbox">
+            <input type="radio" name="fruit" tabindex="0" class="hidden" />
+            <label>Female</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center mt-4">
+      <button
+        (click)="view = 'picture'"
+        type="submit"
+        class="ui primary button fluid"
+      >
+        Next
+      </button>
+    </div>
+  </form>
+</div>
+
+<div class=" h-100 text-center family-info" *ngIf="view == 'picture'">
+  <h1 class="para-title">
+    Please upload a picture
+  </h1>
+
+  <div>
+    <img
+      class=" circular medium ui image modified-img"
+      src="/assets/images/image-placeholder-1.svg"
+    />
+    <input type="file" id="picture-upload" name="img" accept="image/*" hidden />
+    <button
+      (click)="addPicture()"
+      type="submit"
+      class="ui primary button fluid modified-button"
+    >
+      Upload and continue
+    </button>
+  </div>
+</div>

@@ -108,6 +108,12 @@
             <app-picture-component></app-picture-component>
           </div>
         </div>
+        <div *ngSwitchCase="'parents-information'">
+          <div class="takeAPicture">
+            <!-- <app-picture-component></app-picture-component> -->
+            <app-parents-information></app-parents-information>
+          </div>
+        </div>
 
         <div *ngSwitchCase="'receiverBankAccount'">
           <div class="receiverBankAccount">

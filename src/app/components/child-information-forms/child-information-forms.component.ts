@@ -186,17 +186,36 @@ export class ChildInformationFormsComponent implements OnInit {
     );
     // console.log(total);
     this.generalservice.handleFlowController("");
+    const responseFromParent = new replyGiversOrReceivers(
+      `I have provided my ${
+        this.mapOfChildrensInfo.size == 1
+          ? "child's information"
+          : "information about my children"
+      }!`,
+      "right"
+    );
     this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
-      `Summary
-       You entered a total of ₦${new Intl.NumberFormat().format(total)}
+      `Summary : 
+       You entered a total of ₦${new Intl.NumberFormat().format(total)},
        Number of Children: ${this.mapOfChildrensInfo.size}`,
       "left",
       "",
       ``
     );
+
     this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
-    this.generalservice.responseDisplayNotifier(
-      this.generalservice.nextChatbotReplyToGiver
-    );
+    this.generalservice.responseDisplayNotifier(responseFromParent);
+    // this.generalservice.responseDisplayNotifier(newResponse);
+    setTimeout(() => {
+      this.generalservice.nextChatbotReplyToGiver = undefined;
+      const chatbotResponse = new replyGiversOrReceivers(
+        `Can we meet you? Provide info`,
+        "left",
+        "I am ready",
+        ``,
+        "prevent"
+      );
+      this.generalservice.responseDisplayNotifier(chatbotResponse);
+    }, 800);
   }
 }

@@ -34,6 +34,7 @@ import { WelcomeComponent } from "./welcome/welcome.component";
 import { EvidenceUploadComponent } from './components/evidence-upload/evidence-upload.component';
 import { SelectionComponent } from './components/selection/selection.component';
 import { ChildInformationFormsComponent } from './components/child-information-forms/child-information-forms.component';
+import { ParentsInformationComponent } from './components/parents-information/parents-information.component';
 
 registerLocaleData(en);
 
@@ -61,7 +62,8 @@ registerLocaleData(en);
     WelcomeComponent,
     EvidenceUploadComponent,
     SelectionComponent,
-    ChildInformationFormsComponent
+    ChildInformationFormsComponent,
+    ParentsInformationComponent
     // GiverComponentComponent
 
     // BBRWFormsComponent

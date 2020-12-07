@@ -10,16 +10,19 @@ export class replyGiversOrReceivers {
   direction: string;
   button: string;
   extraInfo: string;
+  preventOrAllow?: 'allow' | 'prevent';
   constructor(
     message?: string,
     direction?: string,
     button?: string,
-    extraInfo?: string
+    extraInfo?: string,
+    preventOrAllow?: 'allow' | 'prevent'
   ) {
     (this.message = message),
       (this.direction = direction),
       (this.button = button),
       (this.extraInfo = extraInfo);
+    this.preventOrAllow = preventOrAllow;
   }
 }
 
