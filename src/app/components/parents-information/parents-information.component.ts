@@ -54,8 +54,8 @@ export class ParentsInformationComponent implements OnInit {
     );
     this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
       `Thank you for providing us with your data`,
+      "left",
       "Edit",
-      "",
       ``
     );
 
