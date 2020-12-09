@@ -40,73 +40,7 @@
     Let's meet you
   </h1>
 
-  <form class="w-100" style="position: relative">
-    <div class="ui form">
-      <div class="field">
-        <label>Full name</label>
-        <input type="text" placeholder="eg: Tosin Chukwudi" />
-      </div>
-      <div class="field">
-        <!-- -->
-
-        <div class="field">
-          <label>Age</label>
-          <input name="class" type="text" placeholder="Eg: 20" />
-        </div>
-      </div>
-      <div class="inline fields">
-        <label for="fruit">Gender:</label>
-
-        <div class="field">
-          <div class="ui radio checkbox">
-            <input
-              type="radio"
-              id="male"
-              name="fruit"
-              tabindex="0"
-              class="hidden"
-            />
-            <label for="male">Male</label>
-          </div>
-        </div>
-        <div class="field">
-          <div class="ui radio checkbox">
-            <input
-              type="radio"
-              id="female"
-              name="fruit"
-              tabindex="0"
-              class="hidden"
-            />
-            <label for="female">Female</label>
-          </div>
-        </div>
-      </div>
-
-      <div class="field">
-        <!-- -->
-
-        <div class="field">
-          <label>Address</label>
-          <input
-            name="class"
-            type="text"
-            placeholder="Eg: 21 Somolu road Lagos"
-          />
-        </div>
-      </div>
-    </div>
-
-    <div class="text-center mt-4">
-      <button
-        (click)="view = 'picture'"
-        type="submit"
-        class="ui primary button fluid"
-      >
-        Next
-      </button>
-    </div>
-  </form>
+  <app-profile-form (changeUpTheViewThree)="view = $event"></app-profile-form>
 </div>
 
 <div class=" h-100 text-center family-info" *ngIf="view == 'picture'">
@@ -114,29 +48,7 @@
     Please upload a picture
   </h1>
 
-  <div>
-    <img
-      (click)="addPicture()"
-      title="click to add a picture"
-      class=" circular medium ui image modified-img"
-      src="/assets/images/image-placeholder-1.svg"
-    />
-    <input
-      (change)="loadImage($event)"
-      type="file"
-      id="picture-upload"
-      name="img"
-      accept="image/*"
-      hidden
-    />
-    <button
-      (click)="view = 'work-form'"
-      type="submit"
-      class="ui primary button fluid modified-button"
-    >
-      Upload and continue
-    </button>
-  </div>
+  <app-picture (changeUpTheView)="view = 'work-form'"></app-picture>
 </div>
 
 <div class=" h-100 text-center family-info" *ngIf="view == 'work-form'">
@@ -144,59 +56,7 @@
     Please enter your work information
   </h1>
 
-  <form class="w-100" style="position: relative">
-    <div class="ui form">
-      <div class="field">
-        <label>Employer</label>
-        <input type="text" placeholder="Eg: Credit clan" />
-      </div>
-      <div class="field">
-        <!-- -->
-
-        <div class="field">
-          <label>Role</label>
-          <input
-            name="class"
-            type="text"
-            placeholder="Eg: Software Developer"
-          />
-        </div>
-
-        <div class="field">
-          <label>Annual Salary</label>
-          <select
-            style="height: auto;"
-            class="ui fluid search dropdown"
-            name="card[expire-month]"
-          >
-            <option value="" selected>Select salary scale...</option>
-            <option value="1">500k per annum</option>
-            <option value="2">500k - 750k per annum</option>
-            <option value="3">1m per annum</option>
-            <option value="4">1m - 1.250m per annum</option>
-            <option value="5">1.250 - 1.5m per annum</option>
-            <option value="6">1.5m - 2m per annum</option>
-            <option value="7">2m - 2.5m per annum</option>
-            <option value="8">2.5m - 3m per annum</option>
-            <option value="9">3m - 5m per annum</option>
-            <option value="10">5m - 10m per annum</option>
-            <option value="11">10 - 20m per annum</option>
-            <option value="12">More than 20m per annum</option>
-          </select>
-        </div>
-      </div>
-    </div>
-
-    <div class="text-center mt-4">
-      <button
-        (click)="view = 'confirm-email'"
-        type="submit"
-        class="ui primary button fluid"
-      >
-        Next
-      </button>
-    </div>
-  </form>
+  <app-work-form (changeUpTheViewTwo)="view = 'confirm-email'"></app-work-form>
 </div>
 
 <div class=" h-100 text-center family-info" *ngIf="view == 'confirm-email'">

@@ -35,6 +35,11 @@ import { EvidenceUploadComponent } from './components/evidence-upload/evidence-u
 import { SelectionComponent } from './components/selection/selection.component';
 import { ChildInformationFormsComponent } from './components/child-information-forms/child-information-forms.component';
 import { ParentsInformationComponent } from './components/parents-information/parents-information.component';
+import { WorkFormComponent } from './components/work-form/work-form.component';
+import { PictureComponent } from './components/picture/picture.component';
+import { ProfileFormComponent } from './components/profile-form/profile-form.component';
+import { EditParentInfoComponent } from './components/edit-parent-info/edit-parent-info.component';
+import { BankPartnershipComponent } from './components/bank-partnership/bank-partnership.component';
 
 registerLocaleData(en);
 
@@ -63,7 +68,12 @@ registerLocaleData(en);
     EvidenceUploadComponent,
     SelectionComponent,
     ChildInformationFormsComponent,
-    ParentsInformationComponent
+    ParentsInformationComponent,
+    WorkFormComponent,
+    PictureComponent,
+    ProfileFormComponent,
+    EditParentInfoComponent,
+    BankPartnershipComponent
     // GiverComponentComponent
 
     // BBRWFormsComponent

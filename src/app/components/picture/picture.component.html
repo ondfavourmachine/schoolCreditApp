@@ -1,0 +1,23 @@
+<div>
+  <img
+    (click)="addPicture()"
+    title="click to add a picture"
+    class=" circular medium ui image modified-img"
+    src="/assets/images/image-placeholder-1.svg"
+  />
+  <input
+    (change)="loadImage($event)"
+    type="file"
+    id="picture-upload"
+    name="img"
+    accept="image/*"
+    hidden
+  />
+  <button
+    (click)="changeUpTheView.emit('work-form')"
+    type="submit"
+    class="ui primary button fluid modified-button"
+  >
+    Upload and continue
+  </button>
+</div>

@@ -333,7 +333,13 @@ export class Message {
 
     switch (c) {
       case "yes":
-      // case "start":
+      case "start":
+        this.giverDispatchEvents(
+          "customGiverEventFromMsgClass",
+          "giver",
+          "bank-partnership"
+        );
+        break;
       case "begin":
         this.dispatchevent(
           "customEventFromMessageClass",
@@ -397,6 +403,26 @@ export class Message {
           "child-information-forms"
         );
         // sessionStorage.setItem("anonymous", "2");
+        break;
+      case "edit":
+        this.giverDispatchEvents(
+          "customGiverEventFromMsgClass",
+          "giver",
+          "edit-parent-info"
+        );
+        // sessionStorage.setItem("anonymous", "2");
+        break;
+      case "cancel":
+        this.giverResponsesEvent(
+          "customGiverResponse",
+          new replyGiversOrReceivers(
+            "Awesome, We have partnered with banks who will like to finance this transaction.",
+            "left",
+            "Start",
+            "start",
+            'allow'
+          )
+        );
         break;
       case "givefood":
         this.giverResponsesEvent(

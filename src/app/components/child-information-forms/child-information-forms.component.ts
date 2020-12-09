@@ -196,7 +196,7 @@ export class ChildInformationFormsComponent implements OnInit {
     );
     this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
       `Summary : 
-       You entered a total of ₦${new Intl.NumberFormat().format(total)},
+       You entered a total of ₦${new Intl.NumberFormat().format(total)}
        Number of Children: ${this.mapOfChildrensInfo.size}`,
       "left",
       "",

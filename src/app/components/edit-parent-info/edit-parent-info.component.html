@@ -1,0 +1,66 @@
+<div
+  *ngIf="page == ''"
+  class="flex flex-column justify-center align-center h-100 text-center family-info"
+>
+  <h1 class="para-title">Edit your information</h1>
+
+  <div
+    class="ui grid justify-center "
+    style="overflow: hidden; margin: 0 auto; cursor: pointer; z-index: 30;"
+  >
+    <div
+      (click)="page = 'profile-form'"
+      class="twelve wide column myborder addFlexBehavior"
+    >
+      <p class="bolded ">
+        Profile information
+        <span class=""><i class="fa fa-angle-right"></i> </span>
+      </p>
+    </div>
+
+    <div
+      style="cursor: pointer; z-index: 30;"
+      class="twelve wide column myborder addFlexBehavior"
+      (click)="page = 'picture'"
+    >
+      <p class="bolded">
+        Picture <span class=""><i class="fa fa-angle-right"></i> </span>
+      </p>
+    </div>
+
+    <div
+      style="cursor: pointer; z-index: 30;"
+      class="twelve wide column myborder addFlexBehavior"
+      (click)="page = 'work-form'"
+    >
+      <p class="bolded">
+        Work information
+        <span class=""><i class="fa fa-angle-right"></i> </span>
+      </p>
+    </div>
+  </div>
+</div>
+
+<div class=" h-100 text-center family-info" *ngIf="page == 'profile-form'">
+  <h1 class="para-title">
+    Let's meet you
+  </h1>
+
+  <app-profile-form></app-profile-form>
+</div>
+
+<div class=" h-100 text-center family-info" *ngIf="page == 'picture'">
+  <h1 class="para-title">
+    Please upload a picture
+  </h1>
+
+  <app-picture></app-picture>
+</div>
+
+<div class=" h-100 text-center family-info" *ngIf="page == 'work-form'">
+  <h1 class="para-title">
+    Please enter your work information
+  </h1>
+
+  <app-work-form></app-work-form>
+</div>

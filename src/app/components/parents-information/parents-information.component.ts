@@ -21,28 +21,8 @@ export class ParentsInformationComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  addPicture() {
-    document.getElementById("picture-upload").click();
-  }
-
   changeThisToProfile() {
     this.view = "profile-form";
-  }
-
-  loadImage(event: Event) {
-    let reader: FileReader;
-    if (FileReader) {
-      // check if the filereader api is supported by browser
-
-      reader = new FileReader();
-      reader.onload = anevent => {
-        (document.querySelector(
-          ".modified-img"
-        ) as HTMLImageElement).src = `${anevent.target["result"]}`;
-      };
-      reader.readAsDataURL(event.target["files"][0]);
-      // this.controlAnimation();
-    }
   }
 
   saveParentInfo() {
@@ -53,10 +33,10 @@ export class ParentsInformationComponent implements OnInit {
       "right"
     );
     this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
-      `Thank you for providing us with your data`,
+      `Thank you for providing us with your data. Would you like to modify?`,
       "left",
-      "Edit",
-      ``
+      "Yes edit, No let's continue",
+      `edit,cancel`
     );
 
     this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
@@ -64,15 +44,15 @@ export class ParentsInformationComponent implements OnInit {
     setTimeout(() => {
       this.generalservice.handleFlowController("");
       this.spinner = false;
-      this.generalservice.nextChatbotReplyToGiver = undefined;
-      const chatbotResponse = new replyGiversOrReceivers(
-        `We have partnered with banks who will like to finance this transaction`,
-        "left",
-        "Start",
-        ``,
-        "prevent"
-      );
-      this.generalservice.responseDisplayNotifier(chatbotResponse);
+      // this.generalservice.nextChatbotReplyToGiver = undefined;
+      // const chatbotResponse = new replyGiversOrReceivers(
+      //   `We have partnered with banks who will like to finance this transaction`,
+      //   "left",
+      //   "Start",
+      //   ``,
+      //   "prevent"
+      // );
+      // this.generalservice.responseDisplayNotifier(chatbotResponse);
     }, 800);
   }
 }

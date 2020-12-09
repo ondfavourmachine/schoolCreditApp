@@ -1,0 +1,16 @@
+.addFlexBehavior {
+  display: flex !important;
+  justify-content: space-around;
+  align-items: flex-start;
+  padding: 0.5rem !important;
+}
+
+.addFlexBehavior p {
+  margin-bottom: 0 !important;
+}
+
+.bolded {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}

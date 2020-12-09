@@ -1,0 +1,49 @@
+<form class="w-100" style="position: relative">
+  <div class="ui form">
+    <div class="field">
+      <label>Employer</label>
+      <input type="text" placeholder="Eg: Credit clan" />
+    </div>
+    <div class="field">
+      <!-- -->
+
+      <div class="field">
+        <label>Role</label>
+        <input name="class" type="text" placeholder="Eg: Software Developer" />
+      </div>
+
+      <div class="field">
+        <label>Annual Salary</label>
+        <select
+          style="height: auto;"
+          class="ui fluid search dropdown"
+          name="card[expire-month]"
+        >
+          <option value="" selected>Select salary scale...</option>
+          <option value="1">500k per annum</option>
+          <option value="2">500k - 750k per annum</option>
+          <option value="3">1m per annum</option>
+          <option value="4">1m - 1.250m per annum</option>
+          <option value="5">1.250 - 1.5m per annum</option>
+          <option value="6">1.5m - 2m per annum</option>
+          <option value="7">2m - 2.5m per annum</option>
+          <option value="8">2.5m - 3m per annum</option>
+          <option value="9">3m - 5m per annum</option>
+          <option value="10">5m - 10m per annum</option>
+          <option value="11">10 - 20m per annum</option>
+          <option value="12">More than 20m per annum</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="text-center mt-4">
+    <button
+      (click)="changeUpTheViewTwo.emit('confirm-email')"
+      type="submit"
+      class="ui primary button fluid"
+    >
+      Next
+    </button>
+  </div>
+</form>

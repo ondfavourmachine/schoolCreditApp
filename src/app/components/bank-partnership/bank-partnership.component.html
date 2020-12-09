@@ -1,0 +1,317 @@
+<div
+  class="flex flex-column justify-center align-center h-100 text-center family-info"
+  *ngIf="page == ''"
+>
+  <h1 class="para-title">
+    We are partnered with <strong>RexCredit</strong> to power this transaction.
+  </h1>
+  <h5 class="" style="margin: 10px 0; font-weight: 500;">
+    You will need the following information:
+  </h5>
+  <p class="para-body">
+    <span class="block-element">1. BVN, </span>
+    <span class="block-element">2. A valid means of ID.</span>
+  </p>
+
+  <p class="para-body">
+    We will also ask a few questions to determine your credibility.
+    <strong> Is this ok? </strong>
+  </p>
+
+  <button (click)="page = 'bvn'" class="ui button primary basic mt-4">
+    Yes, it is.
+  </button>
+</div>
+
+<div class=" h-100 text-center family-info" *ngIf="page == 'bvn'">
+  <h1 class="para-title">
+    Enter BVN
+  </h1>
+
+  <form class="w-100" style="position: relative">
+    <div class="ui form">
+      <div class="field">
+        <label>BVN</label>
+        <input type="number" placeholder="22917134590" />
+        <!-- <div *ngIf="name.touched && name.invalid" class="ng-invalid ng-touched">
+            <small style="color: #f10b0b9d;" *ngIf="nameIsRequired()">
+              Your name is required!</small>
+          </div> -->
+      </div>
+    </div>
+
+    <div class="text-center mt-4">
+      <button
+        type="submit"
+        class="ui primary button fluid"
+        (click)="page = 'valid-id'"
+      >
+        Continue
+      </button>
+    </div>
+  </form>
+</div>
+
+<div class=" h-100 text-center family-info" *ngIf="page == 'valid-id'">
+  <h1 class="para-title">Select your preferred means of identification?</h1>
+
+  <div class="ui grid justify-center" style="overflow: hidden; margin: 0 auto;">
+    <div
+      (click)="selectThis($event)"
+      class="seven wide column myborder positioned-relative"
+    >
+      <img
+        src="../../../assets/images/svgs/name.svg"
+        alt=""
+        style="max-width: 50px;"
+      />
+      <p
+        class="bolded"
+        style="line-height: 1rem; font-weight: bold; text-align: center;"
+      >
+        Voters ID
+      </p>
+      <i
+        *ngIf="selected == 'Voters ID'"
+        class="fa fa-check positioned-absolute"
+      ></i>
+    </div>
+
+    <div
+      (click)="selectThis($event)"
+      class="six wide column myborder positioned-relative"
+    >
+      <img
+        src="../../../assets/images/svgs/name.svg"
+        style="max-width: 50px;"
+        alt=""
+      />
+      <p
+        class="bolded"
+        style="line-height: 1rem; font-weight: bold; text-align: center;"
+      >
+        National ID
+      </p>
+      <i
+        *ngIf="selected == 'National ID'"
+        class="fa fa-check positioned-absolute"
+      ></i>
+    </div>
+
+    <div
+      (click)="selectThis($event)"
+      class="seven wide column myborder positioned-relative"
+    >
+      <img
+        src="../../../assets/images/svgs/name.svg"
+        style="max-width: 50px;"
+        alt=""
+      />
+      <p
+        style="line-height: 1rem; font-weight: bold; text-align: center;"
+        class="bolded"
+      >
+        International Passport
+      </p>
+      <i
+        *ngIf="selected == 'International Passport'"
+        class="fa fa-check positioned-absolute"
+      ></i>
+    </div>
+
+    <div
+      (click)="selectThis($event)"
+      class="six wide column myborder positioned-relative"
+    >
+      <img
+        src="../../../assets/images/svgs/name.svg"
+        alt=""
+        style="max-width: 50px;"
+      />
+      <p
+        class="bolded"
+        style="line-height: 1rem; font-weight: bold; text-align: center;"
+      >
+        Drivers licence
+      </p>
+      <i
+        *ngIf="selected == 'Drivers licence'"
+        class="fa fa-check positioned-absolute"
+      ></i>
+    </div>
+  </div>
+
+  <button
+    *ngIf="selected"
+    (click)="page = 'enter-id'"
+    class="ui button primary basic mt-4"
+  >
+    Continue
+  </button>
+</div>
+
+<div class=" h-100 text-center family-info" *ngIf="page == 'enter-id'">
+  <h1 class="para-title">Enter {{ selected }}</h1>
+
+  <form class="w-100" style="position: relative">
+    <div class="ui form">
+      <div class="field">
+        <label>{{ selected }} </label>
+        <input type="number" placeholder="eg: AA100457u788" />
+        <!-- <div *ngIf="name.touched && name.invalid" class="ng-invalid ng-touched">
+              <small style="color: #f10b0b9d;" *ngIf="nameIsRequired()">
+                Your name is required!</small>
+            </div> -->
+      </div>
+    </div>
+
+    <div class="text-center mt-4">
+      <button
+        type="submit"
+        class="ui primary button fluid"
+        (click)="page = 'bank-details'"
+      >
+        Continue
+      </button>
+    </div>
+  </form>
+</div>
+
+<div class=" h-100 text-center family-info" *ngIf="page == 'bank-details'">
+  <h1 class="para-title">
+    We will like to check if you can repay. Please fill in your bank information
+  </h1>
+
+  <form class="w-100" style="position: relative">
+    <div class="ui form">
+      <div class="field">
+        <label>Bank Name</label>
+        <input type="text" placeholder="Eg: Providus" />
+      </div>
+
+      <div class="field">
+        <label>Account number</label>
+        <input type="number" placeholder="001345898" />
+      </div>
+
+      <div class="field">
+        <label>Account name</label>
+        <input type="number" readonly />
+      </div>
+    </div>
+
+    <div class="text-center mt-4">
+      <button
+        (click)="page = 'checking'"
+        type="button"
+        class="ui primary button fluid"
+      >
+        Continue
+      </button>
+    </div>
+  </form>
+</div>
+
+<div class=" h-100 text-center family-info" *ngIf="page == 'checking'">
+  <h1 class="para-title">
+    Checking how much you can pay...
+  </h1>
+  <p class="para-body mt-3">
+    <svg
+      width="73px"
+      height="88px"
+      viewBox="0 0 73 88"
+      version="1.1"
+      xmlns="http://www.w3.org/2000/svg"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+    >
+      <g id="hourglass">
+        <path
+          d="M63.8761664,86 C63.9491436,84.74063 64,83.4707791 64,82.1818182 C64,65.2090455 57.5148507,50.6237818 48.20041,44 C57.5148507,37.3762182 64,22.7909545 64,5.81818182 C64,4.52922091 63.9491436,3.25937 63.8761664,2 L10.1238336,2 C10.0508564,3.25937 10,4.52922091 10,5.81818182 C10,22.7909545 16.4851493,37.3762182 25.79959,44 C16.4851493,50.6237818 10,65.2090455 10,82.1818182 C10,83.4707791 10.0508564,84.74063 10.1238336,86 L63.8761664,86 Z"
+          id="glass"
+          fill="skyblue"
+        ></path>
+        <rect
+          id="top-plate"
+          fill="#9A9A9A"
+          x="0"
+          y="0"
+          width="74"
+          height="8"
+          rx="2"
+        ></rect>
+        <rect
+          id="bottom-plate"
+          fill="#9A9A9A"
+          x="0"
+          y="80"
+          width="74"
+          height="8"
+          rx="2"
+        ></rect>
+
+        <g id="top-sand" transform="translate(18, 21)">
+          <clipPath id="top-clip-path" fill="white">
+            <rect x="0" y="0" width="38" height="21"></rect>
+          </clipPath>
+
+          <path
+            fill="#F5A623"
+            clip-path="url(#top-clip-path)"
+            d="M38,0 C36.218769,7.51704545 24.818769,21 19,21 C13.418769,21 1.9,7.63636364 0,0 L38,0 Z"
+          ></path>
+        </g>
+
+        <g id="bottom-sand" transform="translate(18, 55)">
+          <clipPath id="bottom-clip-path" fill="white">
+            <rect x="0" y="0" width="38" height="21"></rect>
+          </clipPath>
+
+          <g clip-path="url(#bottom-clip-path)">
+            <path
+              fill="#F5A623"
+              d="M0,21 L38,21 C36.1,13.3636364 24.581231,0 19,0 C13.181231,0 1.781231,13.4829545 0,21 Z"
+            ></path>
+          </g>
+        </g>
+      </g>
+    </svg>
+  </p>
+
+  <button (click)="page = 'result'" class="ui button primary basic ">
+    See result
+  </button>
+</div>
+
+<div
+  class="flex flex-column justify-center align-center h-100 text-center family-info"
+  *ngIf="page == 'result'"
+>
+  <h1 class="para-title">
+    Credit Information
+  </h1>
+  <h5 class="" style="margin: 10px 0; font-weight: 500;"></h5>
+  <p class="para-body">
+    <span class="block-element"
+      >You will pay <strong>N34,000/Monthly </strong> for 10 months</span
+    >
+    <span class="block-element"
+      >You will have pay <strong> N68,000 (first 2 months) in advance </strong>
+    </span>
+  </p>
+
+  <!-- <p class="para-body">
+    We will also ask a few questions to determine your credibility.
+    <strong> Is this ok? </strong>
+  </p> -->
+
+  <div class="twelve wide column">
+    <button class="ui button primary basic mr-3">
+      Accept
+    </button>
+
+    <button class="ui button primary basic">
+      Review later
+    </button>
+  </div>
+</div>

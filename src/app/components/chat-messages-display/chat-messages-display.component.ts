@@ -257,6 +257,11 @@ export class ChatMessagesDisplayComponent
       if (String(componentToLoad).toLowerCase() == "child-information-forms") {
         this.generalservice.handleFlowController(String(componentToLoad));
       }
+
+      if (String(componentToLoad).toLowerCase() == "edit-parent-info") {
+        this.generalservice.handleFlowController(String(componentToLoad));
+        // this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
+      }
       if (String(componentToLoad).toLowerCase() == "supportpageforms") {
         this.generalservice.handleFlowController(String(componentToLoad));
       }
@@ -264,6 +269,10 @@ export class ChatMessagesDisplayComponent
       if (String(componentToLoad).toLowerCase() == "parents-information") {
         this.generalservice.handleFlowController(String(componentToLoad));
         console.log("im here");
+      }
+      if (String(componentToLoad).toLowerCase() == "bank-partnership") {
+        this.generalservice.handleFlowController(String(componentToLoad));
+        this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
       }
       if (moreInformation) {
         let arrToPush = [];
@@ -301,7 +310,7 @@ export class ChatMessagesDisplayComponent
 
     ul.addEventListener("customGiverResponse", (e: CustomEvent) => {
       const { reply, message } = e.detail;
-      // console.log(message, reply);
+
       if (!reply) {
         this.displaySubsequentMessages({
           message: message.message,
@@ -310,7 +319,7 @@ export class ChatMessagesDisplayComponent
           extraInfo: message.extraInfo
         });
         // this.generalservice.ctrlDisableTheButtonsOfPreviousListElement(
-        //   "prevent"
+        //   message.preventOrAllow ? message.preventOrAllow : 'prevent'
         // );
         return;
       }
@@ -471,6 +480,7 @@ export class ChatMessagesDisplayComponent
     direction: string;
     button?: string;
     extraInfo?: string;
+    preventOrAllow?: string;
   }) {
     let ul: HTMLUListElement;
     // back up plan if the above doesnt work;

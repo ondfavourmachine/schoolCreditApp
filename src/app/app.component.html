@@ -115,6 +115,18 @@
           </div>
         </div>
 
+        <div *ngSwitchCase="'edit-parent-info'">
+          <div class="takeAPicture">
+            <app-edit-parent-info></app-edit-parent-info>
+          </div>
+        </div>
+
+        <div *ngSwitchCase="'bank-partnership'">
+          <div class="takeAPicture">
+            <app-bank-partnership></app-bank-partnership>
+          </div>
+        </div>
+
         <div *ngSwitchCase="'receiverBankAccount'">
           <div class="receiverBankAccount">
             <app-receiver-bank-account></app-receiver-bank-account>
