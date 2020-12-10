@@ -310,8 +310,9 @@ export class ChatMessagesDisplayComponent
 
     ul.addEventListener("customGiverResponse", (e: CustomEvent) => {
       const { reply, message } = e.detail;
-
+      // debugger;
       if (!reply) {
+        this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
         this.displaySubsequentMessages({
           message: message.message,
           direction: message.direction,
