@@ -1,0 +1,75 @@
+<div class="parent">
+  <div *ngIf="overlay" class="this-overlay"></div>
+  <div *ngIf="view == ''" class="h-100 text-center family-info">
+    <h1 class="para-title">Please enter phone or email you registered with</h1>
+
+    <form class="w-100" style="position: relative">
+      <div class="ui form">
+        <div class="field">
+          <label>Phone or email</label>
+          <input type="text" placeholder="Eg: 1we6679" />
+        </div>
+      </div>
+
+      <div class="text-center mt-4">
+        <button
+          (click)="checking()"
+          type="submit"
+          class="ui primary button fluid"
+        >
+          Continue
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div *ngIf="view == 'four-digit-pin'" class="h-100 text-center family-info">
+    <h1 class="para-title">Enter 4 digit pin sent to Email</h1>
+
+    <form class="w-100" style="position: relative">
+      <div class="ui form">
+        <div class="field">
+          <!-- <label>PIN</label> -->
+          <input type="text" placeholder="Eg: 1we6679" />
+        </div>
+      </div>
+
+      <!-- <div class="text-center mt-4">
+        <button
+          (click)="view = 'four-digit-pin'"
+          type="submit"
+          class="ui primary button fluid"
+        >
+          Continue
+        </button>
+      </div> -->
+    </form>
+
+    <div
+      class="flex flex-column justify-center align-center h-100 text-center family-info"
+    >
+      <div
+        class="ui grid justify-center"
+        style="overflow: hidden; margin: 20px auto; width: 100%; cursor: pointer; z-index: 20;"
+      >
+        <div
+          *ngFor="let number of arrayOfNumbers; index as i"
+          class="three wide column myborder positioned-relative"
+        >
+          <p class="bolded">{{ number }}</p>
+        </div>
+      </div>
+
+      <div class="text-center mt-4">
+        <button type="button" class="ui primary button fluid">
+          Submit
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <span class="checking">
+    Checking email
+    <i style="margin-left: 7px" class="fa fa-circle-notch fa-spin"></i>
+  </span>
+</div>

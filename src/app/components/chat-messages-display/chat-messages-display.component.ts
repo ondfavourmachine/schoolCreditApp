@@ -268,6 +268,11 @@ export class ChatMessagesDisplayComponent
 
       if (String(componentToLoad).toLowerCase() == "parents-information") {
         this.generalservice.handleFlowController(String(componentToLoad));
+      }
+      if (
+        String(componentToLoad).toLowerCase() == "continuing-existing-requests"
+      ) {
+        this.generalservice.handleFlowController(String(componentToLoad));
         console.log("im here");
       }
       if (String(componentToLoad).toLowerCase() == "bank-partnership") {
@@ -310,7 +315,7 @@ export class ChatMessagesDisplayComponent
 
     ul.addEventListener("customGiverResponse", (e: CustomEvent) => {
       const { reply, message } = e.detail;
-      // debugger;
+
       if (!reply) {
         this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
         this.displaySubsequentMessages({

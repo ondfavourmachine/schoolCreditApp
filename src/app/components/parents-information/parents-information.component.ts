@@ -15,8 +15,11 @@ export class ParentsInformationComponent implements OnInit {
     | "picture"
     | "email"
     | "confirm-email"
-    | "enter-code" = "";
+    | "enter-code"
+    | "four-digit-pin"
+    | "choose-verification" = "";
   spinner: boolean = false;
+  selected: "email" | "phone" | "" = "";
   constructor(private generalservice: GeneralService) {}
 
   ngOnInit(): void {}
@@ -29,30 +32,32 @@ export class ParentsInformationComponent implements OnInit {
     this.spinner = true;
 
     const responseFromParent = new replyGiversOrReceivers(
-      `I have entered my profile, work information and have confirmed my email`,
+      `I have provided my details`,
       "right"
     );
+
     this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
-      `Thank you for providing us with your data. Would you like to modify?`,
+      `Thank you for registering, Femi Bejide`,
       "left",
-      "Yes edit, No let's continue",
-      `edit,cancel`
+      "",
+      ``
     );
 
-    this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
     this.generalservice.responseDisplayNotifier(responseFromParent);
+    this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
     setTimeout(() => {
       this.generalservice.handleFlowController("");
       this.spinner = false;
-      // this.generalservice.nextChatbotReplyToGiver = undefined;
-      // const chatbotResponse = new replyGiversOrReceivers(
-      //   `We have partnered with banks who will like to finance this transaction`,
-      //   "left",
-      //   "Start",
-      //   ``,
-      //   "prevent"
-      // );
-      // this.generalservice.responseDisplayNotifier(chatbotResponse);
+      this.generalservice.nextChatbotReplyToGiver = undefined;
+
+      const chatbotResponse = new replyGiversOrReceivers(
+        `How would you like to pay?`,
+        "left",
+        "Instalmental payments, Continue existing request",
+        `installmental,continuingrequest`,
+        'prevent'
+      );
+      this.generalservice.responseDisplayNotifier(chatbotResponse);
     }, 800);
   }
 }

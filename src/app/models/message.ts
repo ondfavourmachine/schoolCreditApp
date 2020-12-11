@@ -420,7 +420,7 @@ export class Message {
             "left",
             "Start",
             "start",
-            'allow'
+            "allow"
           )
         );
         break;
@@ -447,16 +447,26 @@ export class Message {
         );
         sessionStorage.setItem("anonymous", "1");
         break;
+
+      case "continue":
+        this.giverDispatchEvents(
+          "customGiverEventFromMsgClass",
+          "giver",
+          "parents-information"
+        );
+        // child-information-forms
+        // sessionStorage.setItem("anonymous", "1");
+        break;
       // responses by the giver starts here
       case "newrequest":
         // Pay in full
         this.giverResponsesEvent(
           "customGiverResponse",
           new replyGiversOrReceivers(
-            "How would you like to pay?",
+            "We would like to quickly register you for this school fees payment service?",
             "left",
-            "Instalmental payment",
-            "installmental,full_pay"
+            "Continue",
+            "continue,full_pay"
           ),
           new GiverResponse(
             new replyGiversOrReceivers(`It's a new request`, "right")
@@ -464,21 +474,26 @@ export class Message {
         );
         break;
       case "continuingrequest": //notFirstTimeGiver
-        this.giverResponsesEvent(
-          "customGiverResponse",
-          new replyGiversOrReceivers(
-            "Would you like to stay anonymous or be an identified giver?",
-            "left",
-            "I want to be identified,Stay anonymous",
-            "identify,stayanonymous"
-          ),
-          new GiverResponse(
-            new replyGiversOrReceivers(
-              "No, i am not a first time giver",
-              "right"
-            )
-          )
+        this.giverDispatchEvents(
+          "customGiverEventFromMsgClass",
+          "giver",
+          "continuing-existing-requests"
         );
+        // this.giverResponsesEvent(
+        //   "customGiverResponse",
+        //   new replyGiversOrReceivers(
+        //     "Would you like to stay anonymous or be an identified giver?",
+        //     "left",
+        //     "I want to be identified,Stay anonymous",
+        //     "identify,stayanonymous"
+        //   ),
+        //   new GiverResponse(
+        //     new replyGiversOrReceivers(
+        //       "No, i am not a first time giver",
+        //       "right"
+        //     )
+        //   )
+        // );
         break;
       case "givemoney":
         this.giverDispatchEvents(

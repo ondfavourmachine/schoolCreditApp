@@ -43,12 +43,60 @@
   <app-profile-form (changeUpTheViewThree)="view = $event"></app-profile-form>
 </div>
 
+<div
+  class="flex flex-column justify-center align-center h-100 text-center family-info"
+  *ngIf="view == 'choose-verification'"
+>
+  <h1 class="para-title">Choose your preferred means of verification?</h1>
+
+  <div
+    class="ui grid justify-center"
+    style="overflow: hidden; margin: 0 auto; width: 100%; cursor: pointer; z-index: 20;"
+  >
+    <div
+      (click)="selected = 'phone'"
+      class="seven wide column myborder positioned-relative"
+    >
+      <img src="../../../assets/images/svgs/smartphone_1.svg" alt="" />
+      <p class="bolded">Phone</p>
+      <i
+        *ngIf="selected == 'phone'"
+        class="fa fa-check positioned-absolute"
+      ></i>
+    </div>
+
+    <div
+      (click)="selected = 'email'"
+      style="cursor: pointer; z-index: 30;  "
+      class="seven wide column myborder positioned-relative"
+    >
+      <img src="../../../assets/images/svgs/email_1.svg" alt="" />
+      <p class="bolded">Email</p>
+      <i
+        *ngIf="selected == 'email'"
+        class="fa fa-check positioned-absolute"
+      ></i>
+    </div>
+  </div>
+
+  <div class="text-center mt-4">
+    <button
+      (click)="view = 'enter-code'"
+      [disabled]="selected.length < 1"
+      type="submit"
+      class="ui primary button fluid"
+    >
+      Get code
+    </button>
+  </div>
+</div>
+
 <div class=" h-100 text-center family-info" *ngIf="view == 'picture'">
   <h1 class="para-title">
     Please upload a picture
   </h1>
 
-  <app-picture (changeUpTheView)="view = 'work-form'"></app-picture>
+  <app-picture (changeUpTheView)="view = $event"></app-picture>
 </div>
 
 <div class=" h-100 text-center family-info" *ngIf="view == 'work-form'">
@@ -59,41 +107,16 @@
   <app-work-form (changeUpTheViewTwo)="view = 'confirm-email'"></app-work-form>
 </div>
 
-<div class=" h-100 text-center family-info" *ngIf="view == 'confirm-email'">
+<div class=" h-100 text-center family-info" *ngIf="view == 'four-digit-pin'">
   <h1 class="para-title">
-    Let's confirm your email
+    Select a 4 digit pin for future identification
   </h1>
 
   <form class="w-100" style="position: relative">
     <div class="ui form">
       <div class="field">
-        <label>Email</label>
+        <label>PIN</label>
         <input type="text" placeholder="Eg: someone@someone.com" />
-      </div>
-    </div>
-
-    <div class="text-center mt-4">
-      <button
-        (click)="view = 'enter-code'"
-        type="submit"
-        class="ui primary button fluid"
-      >
-        Get code
-      </button>
-    </div>
-  </form>
-</div>
-
-<div *ngIf="view == 'enter-code'" class="h-100 text-center family-info">
-  <h1 class="para-title">
-    Enter code you received in your email
-  </h1>
-
-  <form class="w-100" style="position: relative">
-    <div class="ui form">
-      <div class="field">
-        <label>code</label>
-        <input type="text" placeholder="Eg: 1we6679" />
       </div>
     </div>
 
@@ -103,7 +126,7 @@
         type="submit"
         class="ui primary button fluid"
       >
-        Save
+        Save and continue
       </button>
     </div>
   </form>
@@ -111,4 +134,27 @@
   <div *ngIf="spinner" class="spinner-container">
     <i class="fa fa-circle-notch fa-spin fa-3x"></i>
   </div>
+</div>
+
+<div *ngIf="view == 'enter-code'" class="h-100 text-center family-info">
+  <h1 class="para-title">Enter OTP sent to {{ selected }}</h1>
+
+  <form class="w-100" style="position: relative">
+    <div class="ui form">
+      <div class="field">
+        <label>Verification code</label>
+        <input type="text" placeholder="Eg: 1we6679" />
+      </div>
+    </div>
+
+    <div class="text-center mt-4">
+      <button
+        (click)="view = 'picture'"
+        type="submit"
+        class="ui primary button fluid"
+      >
+        Continue
+      </button>
+    </div>
+  </form>
 </div>

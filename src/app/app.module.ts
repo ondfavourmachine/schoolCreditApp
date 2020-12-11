@@ -40,6 +40,7 @@ import { PictureComponent } from './components/picture/picture.component';
 import { ProfileFormComponent } from './components/profile-form/profile-form.component';
 import { EditParentInfoComponent } from './components/edit-parent-info/edit-parent-info.component';
 import { BankPartnershipComponent } from './components/bank-partnership/bank-partnership.component';
+import { ContinuingExistingRequestsComponent } from './components/continuing-existing-requests/continuing-existing-requests.component';
 
 registerLocaleData(en);
 
@@ -73,7 +74,8 @@ registerLocaleData(en);
     PictureComponent,
     ProfileFormComponent,
     EditParentInfoComponent,
-    BankPartnershipComponent
+    BankPartnershipComponent,
+    ContinuingExistingRequestsComponent
     // GiverComponentComponent
 
     // BBRWFormsComponent
