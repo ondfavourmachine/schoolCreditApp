@@ -3,26 +3,77 @@
   *ngIf="page == ''"
 >
   <h1 class="para-title">
-    We are partnered with <strong>RexCredit</strong> to power this transaction.
+    Congrats
+    <strong
+      ><a href="" style="text-decoration: underline"> RexCredit </a></strong
+    >
+    will like to fund this transaction.
   </h1>
   <h5 class="" style="margin: 10px 0; font-weight: 500;">
-    You will need the following information:
+    Offer information:
   </h5>
   <p class="para-body">
-    <span class="block-element">1. BVN, </span>
-    <span class="block-element">2. A valid means of ID.</span>
+    <span class="block-element"
+      >Amount: <strong>N30,000</strong> per month,
+    </span>
+    <span class="block-element">Duration: For <strong>4 months</strong>.</span>
+    <span class="block-element mt-3">
+      this is an offer in principle and subject to final review</span
+    >
   </p>
 
-  <p class="para-body">
+  <!-- <p class="para-body">
     We will also ask a few questions to determine your credibility.
     <strong> Is this ok? </strong>
-  </p>
+  </p> -->
 
-  <button (click)="page = 'bvn'" class="ui button primary basic mt-4">
-    Yes, it is.
+  <button
+    (click)="page = 'preambleToForms'"
+    class="ui button primary basic mt-4"
+  >
+    I Accept
   </button>
 </div>
 
+<div
+  class="flex flex-column justify-center align-center h-100 text-center family-info"
+  *ngIf="page == 'preambleToForms'"
+>
+  <h1 class="para-title">
+    To help us do final review of your application, We require a few information
+    from you
+  </h1>
+
+  <div class="twelve wide column">
+    <button (click)="page = 'work-form'" class="ui button primary basic mr-3">
+      Ok
+    </button>
+
+    <button disabled class="ui button primary basic">
+      Cancel
+    </button>
+  </div>
+</div>
+
+<!-- work form -->
+<div class=" h-100 text-center family-info" *ngIf="page == 'work-form'">
+  <h1 class="para-title">
+    Please where do you work?
+  </h1>
+
+  <app-work-form (changeUpTheViewTwo)="page = $event"></app-work-form>
+</div>
+
+<!-- Address info -->
+<div class=" h-100 text-center family-info" *ngIf="page == 'address-info'">
+  <h1 class="para-title">
+    Please, where do you stay?
+  </h1>
+
+  <app-address-form (changeUpTheViewThree)="page = $event"></app-address-form>
+</div>
+
+<!-- BVN -->
 <div class=" h-100 text-center family-info" *ngIf="page == 'bvn'">
   <h1 class="para-title">
     Enter BVN
@@ -51,6 +102,8 @@
     </div>
   </form>
 </div>
+
+<!-- Means of identification -->
 
 <div class=" h-100 text-center family-info" *ngIf="page == 'valid-id'">
   <h1 class="para-title">Select your preferred means of identification?</h1>
@@ -169,42 +222,7 @@
       <button
         type="submit"
         class="ui primary button fluid"
-        (click)="page = 'bank-details'"
-      >
-        Continue
-      </button>
-    </div>
-  </form>
-</div>
-
-<div class=" h-100 text-center family-info" *ngIf="page == 'bank-details'">
-  <h1 class="para-title">
-    We will like to check if you can repay. Please fill in your bank information
-  </h1>
-
-  <form class="w-100" style="position: relative">
-    <div class="ui form">
-      <div class="field">
-        <label>Bank Name</label>
-        <input type="text" placeholder="Eg: Providus" />
-      </div>
-
-      <div class="field">
-        <label>Account number</label>
-        <input type="number" placeholder="001345898" />
-      </div>
-
-      <div class="field">
-        <label>Account name</label>
-        <input type="number" readonly />
-      </div>
-    </div>
-
-    <div class="text-center mt-4">
-      <button
-        (click)="page = 'checking'"
-        type="button"
-        class="ui primary button fluid"
+        (click)="accepted()"
       >
         Continue
       </button>
@@ -214,7 +232,7 @@
 
 <div class=" h-100 text-center family-info" *ngIf="page == 'checking'">
   <h1 class="para-title">
-    Checking how much you can pay...
+    Searching for a financial institution for you...
   </h1>
   <p class="para-body mt-3">
     <svg
@@ -278,7 +296,7 @@
     </svg>
   </p>
 
-  <button (click)="page = 'result'" class="ui button primary basic ">
+  <button (click)="page = ''" class="ui button primary basic ">
     See result
   </button>
 </div>
@@ -300,13 +318,8 @@
     </span>
   </p>
 
-  <!-- <p class="para-body">
-    We will also ask a few questions to determine your credibility.
-    <strong> Is this ok? </strong>
-  </p> -->
-
   <div class="twelve wide column">
-    <button (click)="accepted()" class="ui button primary basic mr-3">
+    <button class="ui button primary basic mr-3">
       Accept
     </button>
 

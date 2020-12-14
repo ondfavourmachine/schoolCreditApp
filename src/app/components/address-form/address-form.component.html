@@ -1,0 +1,53 @@
+<form class="w-100" style="position: relative">
+  <div class="ui form">
+    <div class="field">
+      <label>Street</label>
+      <input type="text" placeholder="Eg: 21, Bolaji Banwo street" />
+    </div>
+    <div class="field">
+      <!-- -->
+
+      <div class="field">
+        <label>Nearest Bustop</label>
+        <input name="class" type="text" placeholder="Eg: Cassette Bustop" />
+      </div>
+
+      <div class="field">
+        <label>City</label>
+        <input name="class" type="text" placeholder="Eg: Lagos" />
+      </div>
+
+      <div class="field">
+        <label>State</label>
+        <select
+          style="height: auto;"
+          class="ui fluid search dropdown"
+          name="card[expire-month]"
+        >
+          <option value="" selected>Select state...</option>
+          <option
+            [value]="state.id"
+            *ngFor="let state of NigerianStates; index as i"
+          >
+            {{ state.value }}
+          </option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Post Code</label>
+        <input name="class" type="text" placeholder="Eg: 101025" />
+      </div>
+    </div>
+  </div>
+
+  <div class="text-center mt-4">
+    <button
+      (click)="changeUpTheViewThree.emit('bvn')"
+      type="submit"
+      class="ui primary button fluid"
+    >
+      Next
+    </button>
+  </div>
+</form>

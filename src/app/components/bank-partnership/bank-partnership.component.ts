@@ -15,7 +15,10 @@ export class BankPartnershipComponent implements OnInit {
     | "bank-details"
     | "checking"
     | "enter-id"
-    | "result" = "";
+    | "result"
+    | "work-form"
+    | "address-info"
+    | "preambleToForms" = "checking";
   selected: string;
   constructor(private generalservice: GeneralService) {}
 
@@ -36,18 +39,24 @@ export class BankPartnershipComponent implements OnInit {
     this.generalservice.handleFlowController("");
     this.generalservice.nextChatbotReplyToGiver = undefined;
     const responseFromParent = new replyGiversOrReceivers(
-      `An offer letter is sent to your email.`,
-      "left"
+      `Thanks for this information. RexCredit is preparing your final offer`,
+      "left",
+      "",
+      "prevent"
     );
-    // this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
-    //   `Summary :
-    //    You entered a total of ₦${new Intl.NumberFormat().format(total)}
-    //    Number of Children: ${this.mapOfChildrensInfo.size}`,
-    //   "left",
-    //   "",
-    //   ``
-    // );
 
     this.generalservice.responseDisplayNotifier(responseFromParent);
+
+    setTimeout(() => {
+      this.generalservice.nextChatbotReplyToGiver = undefined;
+      const chatbotResponse = new replyGiversOrReceivers(
+        `They will also like to know which Which account will we be debiting you from?`,
+        "left",
+        "Add Account",
+        `addaccount`,
+        "prevent"
+      );
+      this.generalservice.responseDisplayNotifier(chatbotResponse);
+    }, 800);
   }
 }

@@ -247,7 +247,8 @@ export class ChatMessagesDisplayComponent
         typeOfEvent,
         message,
         componentToLoad,
-        moreInformation
+        moreInformation,
+        callBack
       } = e.detail;
       if (String(message).includes("giver")) {
         sessionStorage.setItem("route", String(message));
@@ -274,6 +275,8 @@ export class ChatMessagesDisplayComponent
       ) {
         this.generalservice.handleFlowController(String(componentToLoad));
         console.log("im here");
+        const res = callBack();
+        console.log(res);
       }
       if (String(componentToLoad).toLowerCase() == "bank-partnership") {
         this.generalservice.handleFlowController(String(componentToLoad));
@@ -676,7 +679,7 @@ export class ChatMessagesDisplayComponent
               `${msg}`,
               `left`,
               ul,
-              "New request",
+              "New request, continue an existing request",
               "newRequest,continuingRequest"
             );
             messageToDisplay.makeAndInsertMessage(this.count);

@@ -41,6 +41,8 @@ import { ProfileFormComponent } from './components/profile-form/profile-form.com
 import { EditParentInfoComponent } from './components/edit-parent-info/edit-parent-info.component';
 import { BankPartnershipComponent } from './components/bank-partnership/bank-partnership.component';
 import { ContinuingExistingRequestsComponent } from './components/continuing-existing-requests/continuing-existing-requests.component';
+import { AddressFormComponent } from './components/address-form/address-form.component';
+import { ParentAccountFormComponent } from './components/parent-account-form/parent-account-form.component';
 
 registerLocaleData(en);
 
@@ -75,7 +77,9 @@ registerLocaleData(en);
     ProfileFormComponent,
     EditParentInfoComponent,
     BankPartnershipComponent,
-    ContinuingExistingRequestsComponent
+    ContinuingExistingRequestsComponent,
+    AddressFormComponent,
+    ParentAccountFormComponent
     // GiverComponentComponent
 
     // BBRWFormsComponent

@@ -359,4 +359,25 @@ export class GeneralService {
       }
     });
   }
+
+  setStage(
+    stageName: "child-info" | "parent-info" | "account-info",
+    stuffToSet: object
+  ) {
+    let previous = localStorage.length;
+    if (previous == 0) {
+      const stages = { [stageName]: stuffToSet };
+      localStorage.setItem("stages", JSON.stringify(stages));
+      return;
+    }
+    let previousStages = JSON.parse(localStorage.getItem("stages"));
+    let newSetOfStages = { ...previousStages, [stageName]: stuffToSet };
+    localStorage.setItem("stages", JSON.stringify(newSetOfStages));
+  }
+
+  getPreviousStage(
+    stageName: "child-info" | "parent-info" | "account-info"
+  ): object {
+    return JSON.parse(localStorage.getItem(stageName));
+  }
 }

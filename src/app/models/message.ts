@@ -334,10 +334,19 @@ export class Message {
     switch (c) {
       case "yes":
       case "start":
+      case "connectme":
+      case "start":
         this.giverDispatchEvents(
           "customGiverEventFromMsgClass",
           "giver",
           "bank-partnership"
+        );
+        this.giverResponsesEvent(
+          "customGiverResponse",
+          new replyGiversOrReceivers(
+            "Yes connect me to a financial institution",
+            "right"
+          )
         );
         break;
       case "begin":
@@ -346,12 +355,6 @@ export class Message {
           "terms-and-condition"
         );
         break;
-      // case "begin":
-      //   this.dispatchevent(
-      //     "customEventFromMessageClass",
-      //     "terms-and-condition"
-      //   );
-      //   break;
       case "help":
         this.receiverDispatchEvents(
           "customReceiverEventFromMsgClass",
@@ -396,13 +399,25 @@ export class Message {
         );
         break;
       // giveFood
-      case "installmental":
+      case "enterchildinfo":
         this.giverDispatchEvents(
           "customGiverEventFromMsgClass",
           "giver",
           "child-information-forms"
         );
         // sessionStorage.setItem("anonymous", "2");
+        break;
+      case "installmental":
+        this.giverResponsesEvent(
+          "customGiverResponse",
+          new replyGiversOrReceivers(
+            "We would like to collect your child's information.",
+            "left",
+            "Start",
+            "enterchildinfo",
+            "allow"
+          )
+        );
         break;
       case "edit":
         this.giverDispatchEvents(
@@ -454,8 +469,6 @@ export class Message {
           "giver",
           "parents-information"
         );
-        // child-information-forms
-        // sessionStorage.setItem("anonymous", "1");
         break;
       // responses by the giver starts here
       case "newrequest":
@@ -477,7 +490,12 @@ export class Message {
         this.giverDispatchEvents(
           "customGiverEventFromMsgClass",
           "giver",
-          "continuing-existing-requests"
+          "continuing-existing-requests",
+          "",
+          (): boolean => {
+            const checkForLastStop: boolean = true;
+            return checkForLastStop;
+          }
         );
         // this.giverResponsesEvent(
         //   "customGiverResponse",
@@ -551,10 +569,17 @@ export class Message {
     typeOfEvent: string,
     message: string,
     componentToLoad: string,
-    moreInformation?: string
+    moreInformation?: string,
+    callBack?: Function
   ) {
     const event: Event = new CustomEvent(typeOfEvent, {
-      detail: { typeOfEvent, message, componentToLoad, moreInformation },
+      detail: {
+        typeOfEvent,
+        message,
+        componentToLoad,
+        moreInformation,
+        callBack
+      },
       bubbles: true
     });
     this.htmlElement.dispatchEvent(event);

@@ -205,15 +205,21 @@ export class ChildInformationFormsComponent implements OnInit {
 
     this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
     this.generalservice.responseDisplayNotifier(responseFromParent);
-    // this.generalservice.responseDisplayNotifier(newResponse);
+    let saveToStorage = Array.from(this.mapOfChildrensInfo.entries());
+    this.generalservice.setStage("child-info", saveToStorage);
     setTimeout(() => {
-      this.generalservice.nextChatbotReplyToGiver = undefined;
-      const chatbotResponse = new replyGiversOrReceivers(
-        `Can we meet you? Provide info`,
+      this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
+        `Are you ready to be connected to a financial institution?`,
         "left",
-        "I am ready",
-        ``,
-        "prevent"
+        "Yes, No Later",
+        `connectme, notinterested`,
+        "allow"
+      );
+      const chatbotResponse = new replyGiversOrReceivers(
+        `To fund this request, We have partnered with banks on your behalf`,
+        "left",
+        "",
+        ``
       );
       this.generalservice.responseDisplayNotifier(chatbotResponse);
     }, 800);

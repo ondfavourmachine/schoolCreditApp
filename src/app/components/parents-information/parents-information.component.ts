@@ -53,9 +53,9 @@ export class ParentsInformationComponent implements OnInit {
       const chatbotResponse = new replyGiversOrReceivers(
         `How would you like to pay?`,
         "left",
-        "Instalmental payments, Continue existing request",
-        `installmental,continuingrequest`,
-        'prevent'
+        "Instalmental payments, Full Payment",
+        `installmental,fullpayment`,
+        "prevent"
       );
       this.generalservice.responseDisplayNotifier(chatbotResponse);
     }, 800);
