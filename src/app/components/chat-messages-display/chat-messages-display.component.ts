@@ -277,9 +277,9 @@ export class ChatMessagesDisplayComponent
         String(componentToLoad).toLowerCase() == "continuing-existing-requests"
       ) {
         this.generalservice.handleFlowController(String(componentToLoad));
-        console.log("im here");
         const res = callBack();
-        this.determineWhatStageToGoNext(res);
+        const stage = this.determineWhatStageToGoNext(res);
+        this.generalservice.communicateNextStage(stage);
       }
       if (String(componentToLoad).toLowerCase() == "bank-partnership") {
         this.generalservice.handleFlowController(String(componentToLoad));
@@ -296,10 +296,7 @@ export class ChatMessagesDisplayComponent
             String(temp[2]) + "/" + String(temp[3]) + "/" + String(temp[4]);
           // arrToPush.push(obj);
           this.generalservice.noOfevidencesOfTransferToUpload.push(obj);
-          // sessionStorage.setItem(
-          //   "evidenceUploadData",
-          //   JSON.stringify(arrToPush)
-          // );
+         
         } else {
           arrToPush = [];
           let temp = moreInformation.split("-");
@@ -308,12 +305,9 @@ export class ChatMessagesDisplayComponent
             String(temp[2]) + "/" + String(temp[3]) + "/" + String(temp[4]);
           // arrToPush.push(obj);
           this.generalservice.noOfevidencesOfTransferToUpload.push(obj);
-          // sessionStorage.setItem(
-          //   "evidenceUploadData",
-          //   JSON.stringify(arrToPush)
-          // );
+         
         }
-        // console.log(componentToLoad);
+       
         this.generalservice.handleFlowController("evidenceUploadComponent");
         this.generalservice.uploadEvidenceOfTransferInProgress = true;
       }
@@ -778,10 +772,37 @@ export class ChatMessagesDisplayComponent
     }
   }
 
-  determineWhatStageToGoNext(res: boolean) {
+  determineWhatStageToGoNext(res: boolean): string {
     if (res) {
       const stages = this.generalservice.getStage();
-      console.log(stages);
+      let stageToStartFrom: string;
+      const arrayOfStages = [];
+      for (let stage in stages) {
+        if (stage == "child-info") {
+          arrayOfStages[0] = stage;
+        }
+        if (stage == "bank-form" && Object.keys(stages[stage]).length < 1) {
+          arrayOfStages[1] = stage;
+        }
+        if (stage == "account-info") {
+          arrayOfStages[2] = stage;
+        }
+      }
+
+      for (let i = 0; i < arrayOfStages.length; i++) {
+        if (arrayOfStages[i] == "child-info") {
+          const stage = arrayOfStages[i];
+          (stages[stage] as Array<any>).length < 1
+            ? (stageToStartFrom = "child-info")
+            : null;
+        } else {
+          const stage = arrayOfStages[i];
+          if (Object.keys(stages[stage]).length < 1) {
+            stageToStartFrom = stage;
+            return stageToStartFrom;
+          }
+        }
+      }
     }
   }
 }

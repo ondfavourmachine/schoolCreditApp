@@ -30,7 +30,15 @@
       <div class="ui form">
         <div class="field">
           <!-- <label>PIN</label> -->
-          <input type="text" placeholder="Eg: 1we6679" />
+          <input
+            disabled
+            [(ngModel)]="input"
+            style="text-align: center; opacity: 1;
+            font-weight: bold;"
+            name="input"
+            type="text"
+            placeholder="Eg: 1we6679"
+          />
         </div>
       </div>
 
@@ -56,12 +64,28 @@
           *ngFor="let number of arrayOfNumbers; index as i"
           class="three wide column myborder positioned-relative"
         >
-          <p class="bolded">{{ number }}</p>
+          <p
+            (click)="enterContentIntoInput($event)"
+            *ngIf="number == 11; else backSpace"
+            class="bolded backspace"
+          >
+            <i class="fas fa-backspace backspace"></i>
+          </p>
+          <ng-template #backSpace>
+            <p (click)="enterContentIntoInput($event)" class="bolded ">
+              {{ number }}
+            </p>
+          </ng-template>
         </div>
       </div>
 
       <div class="text-center mt-4">
-        <button type="button" class="ui primary button fluid">
+        <button
+          [disabled]="input.length < 3"
+          type="button"
+          (click)="continue()"
+          class="ui primary button fluid"
+        >
           Submit
         </button>
       </div>

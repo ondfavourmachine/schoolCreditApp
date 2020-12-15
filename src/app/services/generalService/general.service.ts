@@ -96,6 +96,9 @@ export class GeneralService {
   //  toggle app loader
   public controlGlobalNotificationSubject = new Subject();
   public controlGlobalNotifier$ = this.controlGlobalNotificationSubject.asObservable();
+  //   communicate the next form to fill
+  private nextStageForUserSubject = new BehaviorSubject("");
+  public nextStageForUser$ = this.nextStageForUserSubject.asObservable();
 
   public resetSubject = new Subject();
   public reset$ = this.resetSubject.asObservable();
@@ -116,6 +119,10 @@ export class GeneralService {
 
   public location: any;
   constructor() {}
+
+  communicateNextStage(stage: string) {
+    this.nextStageForUserSubject.next(stage);
+  }
 
   nextReplyFromCovidRelief(obj: replyGiversOrReceivers) {
     this.nextReplySubject.next(obj);
