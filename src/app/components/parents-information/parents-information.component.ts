@@ -45,6 +45,7 @@ export class ParentsInformationComponent implements OnInit {
 
     this.generalservice.responseDisplayNotifier(responseFromParent);
     this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
+    this.generalservice.setStage("parent-info", {});
     setTimeout(() => {
       this.generalservice.handleFlowController("");
       this.spinner = false;

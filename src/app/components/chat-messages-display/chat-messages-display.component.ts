@@ -270,13 +270,16 @@ export class ChatMessagesDisplayComponent
       if (String(componentToLoad).toLowerCase() == "parents-information") {
         this.generalservice.handleFlowController(String(componentToLoad));
       }
+      if (String(componentToLoad).toLowerCase() == "parent-account-form") {
+        this.generalservice.handleFlowController(String(componentToLoad));
+      }
       if (
         String(componentToLoad).toLowerCase() == "continuing-existing-requests"
       ) {
         this.generalservice.handleFlowController(String(componentToLoad));
         console.log("im here");
         const res = callBack();
-        console.log(res);
+        this.determineWhatStageToGoNext(res);
       }
       if (String(componentToLoad).toLowerCase() == "bank-partnership") {
         this.generalservice.handleFlowController(String(componentToLoad));
@@ -772,6 +775,13 @@ export class ChatMessagesDisplayComponent
       });
       // this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
       // this.generalservice.responseDisplayNotifier(response);
+    }
+  }
+
+  determineWhatStageToGoNext(res: boolean) {
+    if (res) {
+      const stages = this.generalservice.getStage();
+      console.log(stages);
     }
   }
 }

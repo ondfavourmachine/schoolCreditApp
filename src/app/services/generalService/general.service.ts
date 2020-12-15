@@ -361,7 +361,7 @@ export class GeneralService {
   }
 
   setStage(
-    stageName: "child-info" | "parent-info" | "account-info",
+    stageName: "child-info" | "parent-info" | "account-info" | "bank-form",
     stuffToSet: object
   ) {
     let previous = localStorage.length;
@@ -375,9 +375,7 @@ export class GeneralService {
     localStorage.setItem("stages", JSON.stringify(newSetOfStages));
   }
 
-  getPreviousStage(
-    stageName: "child-info" | "parent-info" | "account-info"
-  ): object {
-    return JSON.parse(localStorage.getItem(stageName));
+  getStage(): object {
+    return JSON.parse(localStorage.getItem("stages"));
   }
 }

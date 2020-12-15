@@ -1,4 +1,4 @@
-<div class=" h-100 text-center family-info">
+<div class=" h-100 text-center family-info" *ngIf="page == ''">
   <h1 class="para-title">
     We will like to check if you can repay. Please fill in your bank information
   </h1>
@@ -22,9 +22,111 @@
     </div>
 
     <div class="text-center mt-4">
-      <button type="button" class="ui primary button fluid">
+      <button
+        (click)="page = 'info'"
+        type="button"
+        class="ui primary button fluid"
+      >
         Continue
       </button>
     </div>
   </form>
+</div>
+
+<div class=" h-100 text-center family-info" *ngIf="page == 'info'">
+  <h1 class="para-title">
+    We have partnered with Creditclan and Mono to analyze your transactions
+  </h1>
+
+  <div class="text-center mt-4">
+    <button
+      type="button"
+      (click)="page = 'PIN'"
+      class="ui button primary basic mt-4"
+    >
+      Begin
+    </button>
+
+    <button type="button" class="ui button primary basic mt-4">
+      Later
+    </button>
+  </div>
+</div>
+
+<div class=" h-100 text-center family-info" *ngIf="page == 'PIN'">
+  <h1 class="para-title">
+    Enter a 4 digit pin
+  </h1>
+
+  <form class="w-100" style="position: relative">
+    <div class="ui form">
+      <div class="field">
+        <label>PIN</label>
+        <input type="text" placeholder="Eg: someone@someone.com" />
+      </div>
+    </div>
+
+    <div class="text-center mt-4">
+      <button
+        (click)="page = 'attach-card'"
+        type="submit"
+        class="ui button primary basic mt-4"
+      >
+        Save and continue
+      </button>
+    </div>
+  </form>
+
+  <!-- <div *ngIf="spinner" class="spinner-container">
+    <i class="fa fa-circle-notch fa-spin fa-3x"></i>
+  </div> -->
+</div>
+
+<div class=" h-100 text-center family-info" *ngIf="page == 'attach-card'">
+  <h1 class="para-title">
+    Attach Card details
+  </h1>
+
+  <form class="w-100" style="position: relative">
+    <div class="ui form">
+      <div class="field">
+        <label>Name on Card</label>
+        <input type="text" placeholder="Eg: Oke Tunde" />
+      </div>
+    </div>
+    <div class="ui form">
+      <div class="field">
+        <label>Card Number</label>
+        <input type="text" placeholder="Eg: 45450907890908934597" />
+      </div>
+    </div>
+    <div class="ui form">
+      <div class="field">
+        <label>Security </label>
+        <input type="text" placeholder="Eg: 521" />
+      </div>
+    </div>
+    <div class="ui form">
+      <div class="field">
+        <label>Expiry date</label>
+        <input type="text" placeholder="Eg: 05/2020" />
+      </div>
+    </div>
+    <div class="text-center mt-4">
+      <button disabled type="submit" class="ui button primary basic mr-3">
+        Save
+      </button>
+      <button
+        (click)="completeThis()"
+        type="submit"
+        class="ui button primary basic"
+      >
+        Let's do this later
+      </button>
+    </div>
+  </form>
+
+  <!-- <div *ngIf="spinner" class="spinner-container">
+    <i class="fa fa-circle-notch fa-spin fa-3x"></i>
+  </div> -->
 </div>

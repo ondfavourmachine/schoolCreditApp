@@ -349,6 +349,13 @@ export class Message {
           )
         );
         break;
+      case "addaccount":
+      this.giverDispatchEvents(
+        "customGiverEventFromMsgClass",
+        "giver",
+        "parent-account-form"
+      );
+      break;
       case "begin":
         this.dispatchevent(
           "customEventFromMessageClass",

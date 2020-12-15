@@ -46,7 +46,7 @@ export class BankPartnershipComponent implements OnInit {
     );
 
     this.generalservice.responseDisplayNotifier(responseFromParent);
-
+    this.generalservice.setStage("bank-form", {});
     setTimeout(() => {
       this.generalservice.nextChatbotReplyToGiver = undefined;
       const chatbotResponse = new replyGiversOrReceivers(
