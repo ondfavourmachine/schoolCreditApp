@@ -67,7 +67,15 @@ export class ChatMessagesDisplayComponent
     private chatservice: ChatService,
     private titleCasePipe: TitleCasePipe,
     private route: Router
-  ) {}
+  ) {
+    const stages = generalservice.getStage();
+    if (!stages) {
+      generalservice.setStage("child-info", []);
+      generalservice.setStage("parent-info", {});
+      generalservice.setStage("bank-form", {});
+      generalservice.setStage("account-info", {});
+    }
+  }
 
   ngOnInit() {
     this.generalservice.reset$.subscribe((val: string) => {
@@ -296,7 +304,6 @@ export class ChatMessagesDisplayComponent
             String(temp[2]) + "/" + String(temp[3]) + "/" + String(temp[4]);
           // arrToPush.push(obj);
           this.generalservice.noOfevidencesOfTransferToUpload.push(obj);
-         
         } else {
           arrToPush = [];
           let temp = moreInformation.split("-");
@@ -305,9 +312,8 @@ export class ChatMessagesDisplayComponent
             String(temp[2]) + "/" + String(temp[3]) + "/" + String(temp[4]);
           // arrToPush.push(obj);
           this.generalservice.noOfevidencesOfTransferToUpload.push(obj);
-         
         }
-       
+
         this.generalservice.handleFlowController("evidenceUploadComponent");
         this.generalservice.uploadEvidenceOfTransferInProgress = true;
       }
@@ -779,17 +785,25 @@ export class ChatMessagesDisplayComponent
       const arrayOfStages = [];
       for (let stage in stages) {
         if (stage == "child-info") {
-          arrayOfStages[0] = stage;
-        }
-        if (stage == "bank-form" && Object.keys(stages[stage]).length < 1) {
           arrayOfStages[1] = stage;
         }
-        if (stage == "account-info") {
+        if (stage == "bank-form" && Object.keys(stages[stage]).length < 1) {
           arrayOfStages[2] = stage;
+        }
+        if (stage == "account-info") {
+          arrayOfStages[3] = stage;
+        }
+        if (stage == "parent-info") {
+          arrayOfStages[0] = stage;
         }
       }
 
       for (let i = 0; i < arrayOfStages.length; i++) {
+        if (arrayOfStages[i] == "parent-info") {
+          const stage = arrayOfStages[i];
+          stageToStartFrom = stage;
+          return stageToStartFrom;
+        }
         if (arrayOfStages[i] == "child-info") {
           const stage = arrayOfStages[i];
           (stages[stage] as Array<any>).length < 1
@@ -799,10 +813,10 @@ export class ChatMessagesDisplayComponent
           const stage = arrayOfStages[i];
           if (Object.keys(stages[stage]).length < 1) {
             stageToStartFrom = stage;
-            return stageToStartFrom;
           }
         }
       }
+      return stageToStartFrom;
     }
   }
 }

@@ -17,14 +17,14 @@ export class ContinuingExistingRequestsComponent implements OnInit {
   constructor(private generalservice: GeneralService) {}
 
   ngOnInit(): void {
-    this.generalservice.nextStageForUser$.subscribe(
-      val => (this.nextStage = val)
-    );
+    this.generalservice.nextStageForUser$.subscribe(val => {
+      console.log(val);
+      this.nextStage = val;
+    });
   }
 
   checking() {
     this.overlay = true;
-
     document.querySelector(".checking").classList.add("working");
     setTimeout(() => {
       document.querySelector(".checking").classList.remove("working");
@@ -75,6 +75,52 @@ export class ContinuingExistingRequestsComponent implements OnInit {
           );
           this.generalservice.responseDisplayNotifier(chatbotResponse);
         }, 800);
+        break;
+      case "child-info":
+        this.response = new replyGiversOrReceivers(
+          `Thank you for registering, Femi Bejide`,
+          "left",
+          "",
+          ``
+        );
+        this.generalservice.handleFlowController("");
+        this.generalservice.responseDisplayNotifier(this.response);
+        this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
+        setTimeout(() => {
+          this.generalservice.nextChatbotReplyToGiver = undefined;
+          const chatbotResponse = new replyGiversOrReceivers(
+            `How would you like to pay?`,
+            "left",
+            "Instalmental payments, Full Payment",
+            `installmental,fullpayment`,
+            "prevent"
+          );
+          this.generalservice.responseDisplayNotifier(chatbotResponse);
+        }, 800);
+        break;
+      case "parent-info":
+        this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
+        this.generalservice.handleFlowController("");
+        this.response = new replyGiversOrReceivers(
+          `You haven't registered with this school fees payment service`,
+          "left",
+          "",
+          ``
+        );
+        this.generalservice.responseDisplayNotifier(this.response);
+        setTimeout(() => {
+          this.generalservice.nextChatbotReplyToGiver = undefined;
+          const nextresponse = new replyGiversOrReceivers(
+            "We would like to quickly register you for this school fees payment service?",
+            "left",
+            "Continue",
+            "continue,full_pay",
+            "prevent"
+          );
+          this.generalservice.responseDisplayNotifier(nextresponse);
+        }, 500);
+        break;
+      case "account-info":
         break;
     }
   }
