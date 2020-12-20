@@ -115,7 +115,7 @@
     }}
   </h1>
 
-  <form [formGroup]="childInfoForm" class="w-100" style="position: relative">
+  <form [formGroup]="childInfoForm" class="w-100">
     <div class="ui form">
       <div class="field">
         <label>Name</label>
@@ -166,15 +166,32 @@
         [disabled]="!childInfoForm.valid"
         type="submit"
         class="ui primary button fluid"
-        (click)="moveToNextChildOrNot()"
+        (click)="viewToshow = 'upload-image'"
       >
         Continue
       </button>
     </div>
-    <div *ngIf="spinner" class="spinner-container">
-      <i class="fa fa-circle-notch fa-spin fa-3x"></i>
-    </div>
   </form>
+</div>
+
+<div *ngIf="viewToshow == 'upload-image'" style="position: relative">
+  <h1 class="para-title text-center">Add Child's Picture</h1>
+  <img
+    title="click to add a picture"
+    class=" circular medium ui image modified-img"
+    src="/assets/images/image-placeholder-1.svg"
+  />
+  <input type="file" id="picture-upload" name="img" accept="image/*" hidden />
+  <button
+    (click)="moveToNextChildOrNot()"
+    type="submit"
+    class="ui primary button fluid modified-button"
+  >
+    Upload and continue
+  </button>
+  <div *ngIf="spinner" class="spinner-container">
+    <i class="fa fa-circle-notch fa-spin fa-3x"></i>
+  </div>
 </div>
 
 <div class=" h-100 text-center family-info" *ngIf="viewToshow == 'modifyOrNot'">

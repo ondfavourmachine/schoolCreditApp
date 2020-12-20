@@ -414,6 +414,14 @@ export class Message {
         );
         // sessionStorage.setItem("anonymous", "2");
         break;
+        case "fullpayment":
+        this.giverDispatchEvents(
+          "customGiverEventFromMsgClass",
+          "giver",
+          "make-full-payment"
+        );
+        // sessionStorage.setItem("anonymous", "2");
+        break;
       case "installmental":
         this.giverResponsesEvent(
           "customGiverResponse",

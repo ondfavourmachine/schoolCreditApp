@@ -28,4 +28,11 @@
   border: none;
 }
 
+.modified-img {
+  max-width: 150px;
+  margin: 0 auto;
+}
 
+.modified-button {
+  margin-top: 2rem;
+}

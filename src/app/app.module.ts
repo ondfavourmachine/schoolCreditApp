@@ -43,6 +43,7 @@ import { BankPartnershipComponent } from './components/bank-partnership/bank-par
 import { ContinuingExistingRequestsComponent } from './components/continuing-existing-requests/continuing-existing-requests.component';
 import { AddressFormComponent } from './components/address-form/address-form.component';
 import { ParentAccountFormComponent } from './components/parent-account-form/parent-account-form.component';
+import { MakeFullPaymentComponent } from './components/make-full-payment/make-full-payment.component';
 
 registerLocaleData(en);
 
@@ -79,7 +80,8 @@ registerLocaleData(en);
     BankPartnershipComponent,
     ContinuingExistingRequestsComponent,
     AddressFormComponent,
-    ParentAccountFormComponent
+    ParentAccountFormComponent,
+    MakeFullPaymentComponent
     // GiverComponentComponent
 
     // BBRWFormsComponent

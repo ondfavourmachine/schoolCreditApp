@@ -1,7 +1,7 @@
 <form class="w-100" style="position: relative">
   <div class="ui form">
     <div class="field">
-      <label>Street</label>
+      <label>Address</label>
       <input type="text" placeholder="Eg: 21, Bolaji Banwo street" />
     </div>
     <div class="field">
@@ -20,6 +20,7 @@
       <div class="field">
         <label>State</label>
         <select
+          (change)="selectLgaInState($event.target.value)"
           style="height: auto;"
           class="ui fluid search dropdown"
           name="card[expire-month]"
@@ -30,6 +31,20 @@
             *ngFor="let state of NigerianStates; index as i"
           >
             {{ state.value }}
+          </option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>LGA </label>
+        <select
+          style="height: auto;"
+          class="ui fluid search dropdown"
+          name="card[expire-month]"
+        >
+          <option value="" selected>Select Local Govt Area...</option>
+          <option [value]="lga.id" *ngFor="let lga of stateLgas; index as i">
+            {{ lga.value }}
           </option>
         </select>
       </div>

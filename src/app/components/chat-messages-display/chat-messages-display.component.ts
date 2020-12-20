@@ -267,6 +267,10 @@ export class ChatMessagesDisplayComponent
         this.generalservice.handleFlowController(String(componentToLoad));
       }
 
+      if (String(componentToLoad).toLowerCase() == "make-full-payment") {
+        this.generalservice.handleFlowController(String(componentToLoad));
+      }
+
       if (String(componentToLoad).toLowerCase() == "edit-parent-info") {
         this.generalservice.handleFlowController(String(componentToLoad));
         // this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");

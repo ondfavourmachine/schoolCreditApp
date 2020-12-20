@@ -15,7 +15,8 @@ export class ChildInformationFormsComponent implements OnInit {
     | "selectChildren"
     | "enterInformation"
     | "modifyOrNot"
-    | "summary" = "";
+    | "summary"
+    | "upload-image" = "";
   selected: string = "";
   selectedChildren: Array<number> = [];
   mapOfChildrensInfo: Map<

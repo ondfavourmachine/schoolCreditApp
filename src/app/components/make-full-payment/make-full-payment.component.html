@@ -1,0 +1,44 @@
+<div class="inner-modal">
+  <div class="inner-modal-content flex flex-column align-center text-center">
+    <!-- <small class="smallNotification" *ngIf="notification?.show">
+        {{ notification?.message }}
+      </small> -->
+    <div class="para-title">Bank account details</div>
+
+    <ul class="list w-100 mt-4">
+      <li>
+        <span>Account name:</span>
+        <span>
+          Adanma High School
+        </span>
+      </li>
+      <li>
+        <span>Bank:</span>
+        <span>United Bank Of Africa </span>
+      </li>
+      <li>
+        <span>Account number:</span>
+        <span>0216254840</span>
+      </li>
+      <li>
+        <span>
+          <form class="ui form mt-2">
+            <div class="field">
+              <div class="ui checkbox">
+                <input type="checkbox" id="confirmTransfer" tabindex="0" />
+                <label style="line-height: 1"
+                  >I have transferred the money</label
+                >
+              </div>
+            </div>
+          </form>
+        </span>
+      </li>
+    </ul>
+
+    <button (click)="doneSendingMoney()" class="ui button primary basic mt-2">
+      Done
+    </button>
+    <a class="mt-3 link"><span class="mr-2">←</span>Back</a>
+  </div>
+</div>
