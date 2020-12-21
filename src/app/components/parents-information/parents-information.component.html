@@ -6,14 +6,6 @@
     <img src="../../../../assets/images/svgs/information_1.svg" alt="ICON" />
   </div> -->
   <h1 class="para-title">Who are you?</h1>
-  <!-- <h5 class="" style="margin: 10px 0; font-weight: 500;">
-    You will need the following information:
-  </h5> -->
-  <!-- <p class="para-body">
-    <span class="block-element">1. Name of child</span>
-    <span class="block-element">2. Class of child</span>
-    <span class="block-element">3. Tuition fees</span>
-  </p> -->
 
   <div
     class="ui grid justify-center"
@@ -136,7 +128,7 @@
   </div>
 </div>
 
-<div *ngIf="view == 'enter-code'" class="h-100 text-center family-info">
+<!-- <div *ngIf="view == 'enter-code'" class="h-100 text-center family-info">
   <h1 class="para-title">Enter OTP sent to {{ selected }}</h1>
 
   <form class="w-100" style="position: relative">
@@ -150,6 +142,79 @@
     <div class="text-center mt-4">
       <button
         (click)="view = 'picture'"
+        type="submit"
+        class="ui primary button fluid"
+      >
+        Continue
+      </button>
+    </div>
+  </form>
+</div> -->
+
+<div class=" h-100 text-center family-info" *ngIf="view == 'phone'">
+  <h1 class="para-title">
+    Enter preferred phone number for contact
+  </h1>
+
+  <form class="w-100" style="position: relative">
+    <div class="ui form">
+      <div class="field">
+        <label>Phone</label>
+        <input type="number" placeholder="Eg: 09093345678" />
+      </div>
+    </div>
+
+    <div class="text-center mt-4">
+      <button
+        (click)="changeToStuff()"
+        type="submit"
+        class="ui primary button fluid"
+      >
+        Continue
+      </button>
+    </div>
+  </form>
+</div>
+
+<div class=" h-100 text-center family-info" *ngIf="view == 'email'">
+  <h1 class="para-title">
+    Enter preferred email for contact
+  </h1>
+
+  <form class="w-100" style="position: relative">
+    <div class="ui form">
+      <div class="field">
+        <label>Email</label>
+        <input type="email" placeholder="Eg: 09093345678" />
+      </div>
+    </div>
+
+    <div class="text-center mt-4">
+      <button
+        (click)="changeToStuff()"
+        type="submit"
+        class="ui primary button fluid"
+      >
+        Continue
+      </button>
+    </div>
+  </form>
+</div>
+
+<div class=" h-100 text-center family-info" *ngIf="view == 'verification'">
+  <h1 class="para-title">Enter OTP sent to {{ selected }}</h1>
+
+  <form class="w-100" style="position: relative">
+    <div class="ui form">
+      <div class="field">
+        <label>Verification code</label>
+        <input type="text" placeholder="Eg: 1we6679" />
+      </div>
+    </div>
+
+    <div class="text-center mt-4">
+      <button
+        (click)="changeToStuff()"
         type="submit"
         class="ui primary button fluid"
       >

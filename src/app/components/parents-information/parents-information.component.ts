@@ -13,6 +13,9 @@ export class ParentsInformationComponent implements OnInit {
     | "profile-form"
     | "work-form"
     | "picture"
+    | "phone"
+    | "email"
+    | "verification"
     | "email"
     | "confirm-email"
     | "enter-code"
@@ -60,5 +63,23 @@ export class ParentsInformationComponent implements OnInit {
       );
       this.generalservice.responseDisplayNotifier(chatbotResponse);
     }, 800);
+  }
+
+  changeToStuff() {
+    let something;
+    if (this.selected == "") {
+      this.view = "verification";
+      something = "phone";
+    }
+    if (this.selected == "phone") {
+      this.view = "email";
+      something = "email";
+    }
+    if (this.selected == "email") {
+      this.view = "picture";
+      something = "";
+    }
+
+    this.selected = something;
   }
 }
