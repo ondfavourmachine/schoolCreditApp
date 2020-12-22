@@ -3,6 +3,11 @@ import { Injectable, Inject } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Observable, forkJoin } from "rxjs";
 import { Reference } from "src/app/models/reference-type";
+import {
+  ParentRegistration,
+  Parent,
+  ParentRegistrationResponse
+} from "src/app/models/data-models";
 // import { retry } from "rxjs/operators";
 // import { LgaData } from "../../models/lgaData";
 
@@ -22,7 +27,7 @@ interface Questions {
   providedIn: "root"
 })
 export class ChatService {
-  generalUrl = `https://crediblesbackend.creditclan.com/public/index.php/api/`;
+  generalUrl = `https://covidreliefbackend.covidrelief.com.ng/schoolcredit/public/index.php/api/`;
   files: File;
   httpOptions: HttpHeaders = new HttpHeaders({
     "Content-Type": "application/json"
@@ -31,6 +36,23 @@ export class ChatService {
   constructor(private http: HttpClient) {
     // this.zeroAllSubmit().subscribe();
     // this.oneAllSubmit().subscribe();
+  }
+
+  // School credit api starts here
+
+  registerParent(
+    form: ParentRegistration
+  ): Observable<ParentRegistrationResponse> {
+    return this.http.post<ParentRegistrationResponse>(
+      `${this.generalUrl}parent/register`,
+      form
+    );
+  }
+
+  dispatchOTP(obj: { phone: string }): Promise<any> {
+    return this.http
+      .post<any>(`${this.generalUrl}sms/send/otp`, obj)
+      .toPromise();
   }
 
   uploadAnswers(obj: { ref_no?: string; answer?: string }): Observable<any> {

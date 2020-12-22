@@ -11,13 +11,16 @@
     class="ui grid justify-center"
     style="overflow: hidden; margin: 0 auto; cursor: pointer; z-index: 30;"
   >
-    <div (click)="changeThisToProfile()" class="seven wide column myborder ">
+    <div
+      (click)="changeThisToProfile($event)"
+      class="seven wide column myborder "
+    >
       <img src="../../../assets/images/svgs/user.svg" alt="" />
       <p class="bolded">Parent</p>
     </div>
 
     <div
-      (click)="view = 'profile-form'"
+      (click)="changeThisToProfile($event)"
       style="cursor: pointer; z-index: 30;"
       class="eight wide column myborder"
     >
@@ -156,24 +159,34 @@
     Enter preferred phone number for contact
   </h1>
 
-  <form class="w-100" style="position: relative">
+  <form [formGroup]="phoneForm" class="w-100" style="position: relative">
     <div class="ui form">
       <div class="field">
         <label>Phone</label>
-        <input type="number" placeholder="Eg: 09093345678" />
+        <input
+          formControlName="phone"
+          type="tel"
+          pattern="[0-9]*"
+          placeholder="Eg: 09093345678"
+        />
       </div>
     </div>
 
     <div class="text-center mt-4">
       <button
-        (click)="changeToStuff()"
-        type="submit"
+        [disabled]="!phoneForm.valid"
+        (click)="submitPhoneForm(phoneForm)"
+        type="button"
         class="ui primary button fluid"
       >
         Continue
       </button>
     </div>
+    <div *ngIf="spinner" class="spinner-container">
+      <i class="fa fa-circle-notch fa-spin fa-3x"></i>
+    </div>
   </form>
+  <!--  (click)="changeToStuff()" -->
 </div>
 
 <div class=" h-100 text-center family-info" *ngIf="view == 'email'">
@@ -190,11 +203,7 @@
     </div>
 
     <div class="text-center mt-4">
-      <button
-        (click)="changeToStuff()"
-        type="submit"
-        class="ui primary button fluid"
-      >
+      <button type="submit" class="ui primary button fluid">
         Continue
       </button>
     </div>
@@ -213,11 +222,7 @@
     </div>
 
     <div class="text-center mt-4">
-      <button
-        (click)="changeToStuff()"
-        type="submit"
-        class="ui primary button fluid"
-      >
+      <button type="submit" class="ui primary button fluid">
         Continue
       </button>
     </div>

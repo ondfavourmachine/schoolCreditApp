@@ -1,16 +1,37 @@
-<form class="w-100" style="position: relative">
+<form
+  [formGroup]="parentProfileForm"
+  (ngSubmit)="submitForm(parentProfileForm)"
+  class="w-100"
+  style="position: relative"
+>
   <div class="ui form">
     <div class="field">
       <label>Full name</label>
-      <input type="text" placeholder="eg: Tosin Chukwudi" />
+      <input
+        formControlName="full_name"
+        type="text"
+        placeholder="eg: Tosin Chukwudi"
+      />
     </div>
     <div class="field">
       <!-- -->
 
       <div class="field">
         <label>Age</label>
-        <input name="class" type="text" placeholder="Eg: 20" />
+        <input
+          formControlName="age"
+          name="class"
+          type="number"
+          pattern="[0-9]{2}"
+          placeholder="Eg: 20"
+        />
       </div>
+      <small
+        class="age_warning"
+        [style.display]="age.touched && !age.valid ? 'block' : 'none'"
+      >
+        Please enter age between 0 - 99
+      </small>
     </div>
     <div class="inline fields">
       <label for="fruit">Gender:</label>
@@ -20,8 +41,10 @@
           <input
             type="radio"
             id="male"
-            name="fruit"
+            formControlName="gender"
+            name="gender"
             tabindex="0"
+            value="1"
             class="hidden"
           />
           <label for="male">Male</label>
@@ -32,7 +55,9 @@
           <input
             type="radio"
             id="female"
-            name="fruit"
+            formControlName="gender"
+            value="2"
+            name="gender"
             tabindex="0"
             class="hidden"
           />
@@ -47,6 +72,7 @@
       <div class="field">
         <label>Address</label>
         <input
+          formControlName="address"
           name="class"
           type="text"
           placeholder="Eg: 21 Somolu road Lagos"
@@ -57,7 +83,7 @@
 
   <div class="text-center mt-4">
     <button
-      (click)="changeUpTheViewThree.emit('phone')"
+      [disabled]="!parentProfileForm.valid"
       type="submit"
       class="ui primary button fluid"
     >
