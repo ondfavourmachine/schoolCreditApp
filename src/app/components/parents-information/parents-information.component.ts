@@ -8,6 +8,7 @@ import * as generalActions from "../../store/actions/general.action";
 import { pluck } from "rxjs/operators";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { ChatService } from "src/app/services/ChatService/chat.service";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: "app-parents-information",
@@ -33,6 +34,9 @@ export class ParentsInformationComponent implements OnInit {
   type: "1" | "2" | "" = "";
   parent: Partial<Parent> = {};
   phoneForm: FormGroup;
+  phoneVerificationForm: FormGroup;
+  PINForm: FormGroup
+  emailForm: FormGroup;
   constructor(
     private generalservice: GeneralService,
     private store: Store<fromStore.AllState>,
@@ -57,6 +61,17 @@ export class ParentsInformationComponent implements OnInit {
     this.phoneForm = this.fb.group({
       phone: ["", Validators.required]
     });
+    this.phoneVerificationForm = this.fb.group({
+      OTP: ["", Validators.required]
+    });
+
+    this.emailForm = this.fb.group({
+      email: ["", Validators.required]
+    });
+
+    this.PINForm = this.fb.group({
+      pin: ["", Validators.required]
+    });
   }
 
   submitPhoneForm(form: FormGroup) {
@@ -75,6 +90,7 @@ export class ParentsInformationComponent implements OnInit {
           const res = await this.chatapi.dispatchOTP({ phone: data.phone });
           const refreshedState: Partial<Parent> = { OTP_sent: true };
           this.store.dispatch(new generalActions.addParents(refreshedState));
+          this.spinner = false;
           this.changeToAnotherView();
         } catch (error) {
           console.log(error);
@@ -111,9 +127,9 @@ export class ParentsInformationComponent implements OnInit {
     // ;
   }
 
-  saveParentInfo() {
+  saveParentInfo(form: FormGroup) {
     this.spinner = true;
-
+    let guardian
     const responseFromParent = new replyGiversOrReceivers(
       `I have provided my details`,
       "right"
@@ -123,26 +139,36 @@ export class ParentsInformationComponent implements OnInit {
       `Thank you for registering, Femi Bejide`,
       "left",
       "",
-      ``
+     ``
     );
+    const disconnect: Subscription = this.store
+      .pipe(pluck("manageParent", "parent_info", "guardian"))
+      .subscribe(val => (guardian = val));
+     this.chatapi.saveParentPIN({pin: form.value.pin, guardian}).subscribe(val =>{
+          this.generalservice.responseDisplayNotifier(responseFromParent);
+          this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
+          // this.generalservice.setStage("parent-info", {});
+          let ParentPin: Partial<Parent> = { pin: form.value.pin }
+          this.store.dispatch(new generalActions.addParents(ParentPin));
+          setTimeout(() => {
+            this.generalservice.handleFlowController("");
+            this.spinner = false;
+            this.generalservice.nextChatbotReplyToGiver = undefined;
+            this.spinner = false;
+            disconnect.unsubscribe();
+            const chatbotResponse = new replyGiversOrReceivers(
+              `How would you like to pay?`,
+              "left",
+              "Instalmental payments, Full Payment",
+              `installmental,fullpayment`,
+              "prevent"
+            );
+            this.generalservice.responseDisplayNotifier(chatbotResponse);
+          }, 600);
+     }, err => console.log(err))
 
-    this.generalservice.responseDisplayNotifier(responseFromParent);
-    this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
-    this.generalservice.setStage("parent-info", {});
-    setTimeout(() => {
-      this.generalservice.handleFlowController("");
-      this.spinner = false;
-      this.generalservice.nextChatbotReplyToGiver = undefined;
-
-      const chatbotResponse = new replyGiversOrReceivers(
-        `How would you like to pay?`,
-        "left",
-        "Instalmental payments, Full Payment",
-        `installmental,fullpayment`,
-        "prevent"
-      );
-      this.generalservice.responseDisplayNotifier(chatbotResponse);
-    }, 800);
+    
+   
   }
 
   changeToAnotherView() {
@@ -161,5 +187,57 @@ export class ParentsInformationComponent implements OnInit {
     }
 
     this.selected = something;
+  }
+
+  async confirmVerification(form: FormGroup) {
+    this.spinner = true;
+    let guardian;
+    //  i need to write selectors to stop doing this
+    const disconnect: Subscription = this.store
+      .pipe(pluck("manageParent", "parent_info", "guardian"))
+      .subscribe(val => (guardian = val));
+
+    try {
+      const { message } = await this.chatapi.verifyOTP({
+        phone_OTP: form.value.OTP,
+        guardian
+      });
+      if (message.toLowerCase() == "phone number has been validated!") {
+        this.spinner = false;
+        disconnect.unsubscribe();
+        this.changeToAnotherView();
+      }
+    } catch (error) {
+      this.spinner = false;
+    }
+  }
+
+  async submitEmail(form: FormGroup) {
+    this.spinner = true;
+    let guardian;
+    //  i need to write selectors to stop doing this
+    const disconnect: Subscription = this.store
+      .pipe(pluck("manageParent", "parent_info", "guardian"))
+      .subscribe(val => (guardian = val));
+
+    try {
+      await this.chatapi.updateEmail({
+        email: form.value.email,
+        guardian
+      });
+      const refreshedState: Partial<Parent> = { email: form.value.email };
+      this.store.dispatch(new generalActions.addParents(refreshedState));
+      this.spinner = false;
+
+      disconnect.unsubscribe();
+      this.changeToAnotherView();
+    } catch (error) {
+      this.spinner = false;
+    }
+  }
+
+  change(event) {
+    this.spinner = false;
+    this.view = "four-digit-pin";
   }
 }

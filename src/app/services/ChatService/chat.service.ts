@@ -55,6 +55,42 @@ export class ChatService {
       .toPromise();
   }
 
+  uploadParentPicture(obj: { picture: File; guardian: string }): Promise<any> {
+    let objToSubmit = new FormData();
+    objToSubmit.append("picture", obj.picture);
+    objToSubmit.append("guardian", obj.guardian);
+    return this.http
+      .post<any>(`${this.generalUrl}parent/picture`, objToSubmit)
+      .toPromise();
+  }
+
+  verifyOTP(obj: {
+    phone_OTP: string;
+    guardian: string;
+  }): Promise<{ message: string; status: boolean }> {
+    return this.http
+      .post<any>(`${this.generalUrl}sms/verify/otp`, obj)
+      .toPromise();
+  }
+
+  updateEmail(obj: {
+    email: string;
+    guardian: string;
+  }): Promise<{ message: string; status: boolean }> {
+    return this.http
+      .patch<any>(`${this.generalUrl}parent/email`, obj)
+      .toPromise();
+  }
+
+  saveParentPIN(obj: {
+    pin: string;
+    guardian: string;
+  }): Observable<{ message: string; status: boolean }> {
+    return this.http
+      .patch<any>(`${this.generalUrl}pin`, obj)
+ 
+  }
+
   uploadAnswers(obj: { ref_no?: string; answer?: string }): Observable<any> {
     return this.http.post(`${this.generalUrl}sendanswer`, obj, {
       headers: this.httpOptions

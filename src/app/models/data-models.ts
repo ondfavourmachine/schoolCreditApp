@@ -11,6 +11,7 @@ export interface Parent extends ParentRegistration {
   picture: string | File;
   email: string;
   guardian: any;
+  pin: any;
   OTP_sent: boolean;
 }
 
