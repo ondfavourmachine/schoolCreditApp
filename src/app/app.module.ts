@@ -12,6 +12,7 @@ import en from "@angular/common/locales/en";
 
 // External Packages
 import { StoreModule } from "@ngrx/store";
+import { ToastrModule } from "ngx-toastr";
 
 // components
 import { TermsAndConditionComponent } from "./components/terms-and-condition/terms-and-condition.component";
@@ -89,7 +90,15 @@ registerLocaleData(en);
     FormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    StoreModule.forRoot({ manageParent: reducers.parent_info })
+    ToastrModule.forRoot({
+      timeOut: 4000,
+      positionClass: "toast-top-right",
+      preventDuplicates: false
+    }),
+    StoreModule.forRoot({
+      manageParent: reducers.parent_info,
+      manageChild: reducers.child_info
+    })
   ],
   providers: [TitleCasePipe],
   bootstrap: [AppComponent]

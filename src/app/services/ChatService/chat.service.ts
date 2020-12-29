@@ -86,9 +86,7 @@ export class ChatService {
     pin: string;
     guardian: string;
   }): Observable<{ message: string; status: boolean }> {
-    return this.http
-      .patch<any>(`${this.generalUrl}pin`, obj)
- 
+    return this.http.post<any>(`${this.generalUrl}pin`, obj);
   }
 
   uploadAnswers(obj: { ref_no?: string; answer?: string }): Observable<any> {

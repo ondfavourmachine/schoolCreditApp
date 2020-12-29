@@ -175,13 +175,24 @@
 </div>
 
 <div *ngIf="viewToshow == 'upload-image'" style="position: relative">
-  <h1 class="para-title text-center">Add Child's Picture</h1>
+  <h1 class="para-title text-center mb-3">
+    Click the image to add child's picture
+  </h1>
+
   <img
+    (click)="addChildPictrue()"
     title="click to add a picture"
     class=" circular medium ui image modified-img"
     src="/assets/images/image-placeholder-1.svg"
   />
-  <input type="file" id="picture-upload" name="img" accept="image/*" hidden />
+  <input
+    (change)="loadChildImage($event)"
+    type="file"
+    id="picture-upload"
+    name="img"
+    accept="image/*"
+    hidden
+  />
   <button
     (click)="moveToNextChildOrNot()"
     type="submit"
@@ -220,11 +231,13 @@
   *ngIf="viewToshow == 'summary'"
 >
   <h1 class="para-title">Do you have any more children to enter?</h1>
-  <button disabled class="ui button primary basic mt-4">
-    Yes
-  </button>
+  <div class="w-100 flex justify-center align-center">
+    <button disabled class="ui button primary basic mt-4 mr-2">
+      Yes
+    </button>
 
-  <button (click)="doneAddingChildren()" class="ui button primary basic mt-4">
-    No
-  </button>
+    <button (click)="doneAddingChildren()" class="ui button primary basic mt-4">
+      No
+    </button>
+  </div>
 </div>

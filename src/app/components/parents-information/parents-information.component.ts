@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { GeneralService } from "src/app/services/generalService/general.service";
 import { replyGiversOrReceivers } from "src/app/models/GiverResponse";
 import { Parent, ParentRegistration } from "src/app/models/data-models";
@@ -9,13 +9,14 @@ import { pluck } from "rxjs/operators";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { ChatService } from "src/app/services/ChatService/chat.service";
 import { Subscription } from "rxjs";
+import { HttpErrorResponse } from "@angular/common/http";
 
 @Component({
   selector: "app-parents-information",
   templateUrl: "./parents-information.component.html",
   styleUrls: ["./parents-information.component.css"]
 })
-export class ParentsInformationComponent implements OnInit {
+export class ParentsInformationComponent implements OnInit, OnDestroy {
   view:
     | ""
     | "profile-form"
@@ -35,8 +36,9 @@ export class ParentsInformationComponent implements OnInit {
   parent: Partial<Parent> = {};
   phoneForm: FormGroup;
   phoneVerificationForm: FormGroup;
-  PINForm: FormGroup
+  PINForm: FormGroup;
   emailForm: FormGroup;
+  destroy: Subscription[] = [];
   constructor(
     private generalservice: GeneralService,
     private store: Store<fromStore.AllState>,
@@ -45,10 +47,10 @@ export class ParentsInformationComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.store
+    this.destroy[0] = this.store
       .pipe(pluck("manageParent", "parent_info"))
       .subscribe((val: Parent & Object) => {
-        console.log(val);
+        // console.log(val);
         if (
           val.hasOwnProperty("phone") &&
           val.hasOwnProperty("OTP_sent") &&
@@ -91,6 +93,9 @@ export class ParentsInformationComponent implements OnInit {
           const refreshedState: Partial<Parent> = { OTP_sent: true };
           this.store.dispatch(new generalActions.addParents(refreshedState));
           this.spinner = false;
+          this.generalservice.successNotification(
+            `OTP has been sent to ${this.phoneForm.value.phone}`
+          );
           this.changeToAnotherView();
         } catch (error) {
           console.log(error);
@@ -99,9 +104,11 @@ export class ParentsInformationComponent implements OnInit {
 
         this.store.dispatch(new generalActions.addParents(newState));
       },
-      err => {
+      (err: HttpErrorResponse) => {
         console.log(err);
+        const { message } = err.error;
         this.spinner = false;
+        this.generalservice.errorNotification(message);
       }
     );
   }
@@ -129,46 +136,58 @@ export class ParentsInformationComponent implements OnInit {
 
   saveParentInfo(form: FormGroup) {
     this.spinner = true;
-    let guardian
+    let guardianID, parentName;
+    const disconnect: Subscription = this.store
+      .pipe(pluck("manageParent", "parent_info"))
+      .subscribe((val: Parent) => {
+        const { guardian, full_name } = val;
+        guardianID = guardian;
+        parentName = full_name;
+      });
     const responseFromParent = new replyGiversOrReceivers(
       `I have provided my details`,
       "right"
     );
 
-    this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
-      `Thank you for registering, Femi Bejide`,
-      "left",
-      "",
-     ``
-    );
-    const disconnect: Subscription = this.store
-      .pipe(pluck("manageParent", "parent_info", "guardian"))
-      .subscribe(val => (guardian = val));
-     this.chatapi.saveParentPIN({pin: form.value.pin, guardian}).subscribe(val =>{
+    this.generalservice.nextChatbotReplyToGiver = undefined;
+
+    this.chatapi
+      .saveParentPIN({ pin: form.value.pin, guardian: guardianID })
+      .subscribe(
+        val => {
           this.generalservice.responseDisplayNotifier(responseFromParent);
-          this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
-          // this.generalservice.setStage("parent-info", {});
-          let ParentPin: Partial<Parent> = { pin: form.value.pin }
+          this.generalservice.ctrlDisableTheButtonsOfPreviousListElement(
+            "allow"
+          );
+          let ParentPin: Partial<Parent> = { pin: form.value.pin };
           this.store.dispatch(new generalActions.addParents(ParentPin));
+          this.generalservice.successNotification(val.message);
           setTimeout(() => {
             this.generalservice.handleFlowController("");
             this.spinner = false;
-            this.generalservice.nextChatbotReplyToGiver = undefined;
-            this.spinner = false;
-            disconnect.unsubscribe();
-            const chatbotResponse = new replyGiversOrReceivers(
+            this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
               `How would you like to pay?`,
               "left",
               "Instalmental payments, Full Payment",
               `installmental,fullpayment`,
               "prevent"
             );
+            this.spinner = false;
+            disconnect.unsubscribe();
+            const chatbotResponse = new replyGiversOrReceivers(
+              `Thank you for registering, ${parentName}`,
+              "left",
+              "",
+              ``
+            );
             this.generalservice.responseDisplayNotifier(chatbotResponse);
           }, 600);
-     }, err => console.log(err))
-
-    
-   
+        },
+        (err: HttpErrorResponse) => {
+          this.spinner = false;
+          this.generalservice.errorNotification(err.error.message);
+        }
+      );
   }
 
   changeToAnotherView() {
@@ -239,5 +258,9 @@ export class ParentsInformationComponent implements OnInit {
   change(event) {
     this.spinner = false;
     this.view = "four-digit-pin";
+  }
+
+  ngOnDestroy() {
+    this.destroy.forEach(element => element.unsubscribe());
   }
 }

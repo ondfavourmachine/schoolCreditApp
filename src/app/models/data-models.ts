@@ -15,7 +15,14 @@ export interface Parent extends ParentRegistration {
   OTP_sent: boolean;
 }
 
-export interface AChild {}
+export interface AChild {
+  guardian: string
+  full_name: string
+  class: string
+  tuition_fees: string
+  picture: File
+  index?: number
+}
 
 export interface BankPartnership {}
 

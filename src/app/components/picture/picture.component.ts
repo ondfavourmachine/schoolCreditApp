@@ -6,6 +6,7 @@ import { Store } from "@ngrx/store";
 import { ChatService } from "src/app/services/ChatService/chat.service";
 import { Subscription } from "rxjs";
 import { pluck } from "rxjs/operators";
+import { GeneralService } from "src/app/services/generalService/general.service";
 
 @Component({
   selector: "app-picture",
@@ -17,7 +18,8 @@ export class PictureComponent implements OnInit {
   @Output() startSpinner = new EventEmitter<boolean>();
   constructor(
     private store: Store<fromStore.AllState>,
-    private chatapi: ChatService
+    private chatapi: ChatService,
+    private generalservice: GeneralService
   ) {}
 
   ngOnInit(): void {}
@@ -62,6 +64,10 @@ export class PictureComponent implements OnInit {
       this.changeUpTheView.emit("four-digit-pin");
       disconnect.unsubscribe();
     } catch (error) {
+      this.startSpinner.emit(false);
+      this.generalservice.errorNotification(
+        "We could not upload the given picture. Please try again or try another picture!"
+      );
       console.log(error);
     }
   }

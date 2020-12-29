@@ -15,6 +15,7 @@ import {
   ReceiversResponse
 } from "src/app/models/GiverResponse";
 import { Message } from "../../models/message";
+import { ToastrService } from "ngx-toastr";
 
 @Injectable({
   providedIn: "root"
@@ -118,7 +119,7 @@ export class GeneralService {
   public userDidNotProvideID = false;
 
   public location: any;
-  constructor() {}
+  constructor(private toastr: ToastrService) {}
 
   communicateNextStage(stage: string) {
     this.nextStageForUserSubject.next(stage);
@@ -384,5 +385,17 @@ export class GeneralService {
 
   getStage(): object {
     return JSON.parse(localStorage.getItem("stages"));
+  }
+
+  successNotification(message) {
+    this.toastr.success(message, "Success");
+  }
+
+  warningNotification(message) {
+    this.toastr.warning(message, "Stop");
+  }
+
+  errorNotification(message) {
+    this.toastr.error(message, "Error");
   }
 }

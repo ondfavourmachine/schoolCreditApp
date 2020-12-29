@@ -1,15 +1,20 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { StoreService } from "src/app/services/mockstore/store.service";
 import { GeneralService } from "src/app/services/generalService/general.service";
 import { replyGiversOrReceivers } from "src/app/models/GiverResponse";
-
+import { AChild } from "src/app/models/data-models";
+import { Subscription } from "rxjs";
+import { Store } from "@ngrx/store";
+import { pluck } from "rxjs/operators";
+import * as generalActions from "../../store/actions/general.action";
+import * as fromStore from "../../store";
 @Component({
   selector: "app-child-information-forms",
   templateUrl: "./child-information-forms.component.html",
   styleUrls: ["./child-information-forms.component.css"]
 })
-export class ChildInformationFormsComponent implements OnInit {
+export class ChildInformationFormsComponent implements OnInit, OnDestroy {
   viewToshow:
     | ""
     | "selectChildren"
@@ -19,20 +24,19 @@ export class ChildInformationFormsComponent implements OnInit {
     | "upload-image" = "";
   selected: string = "";
   selectedChildren: Array<number> = [];
-  mapOfChildrensInfo: Map<
-    string,
-    { name?: string; class?: string; tuition_fees?: any; index?: number }
-  > = new Map();
+  mapOfChildrensInfo: Map<string, Partial<AChild>> = new Map();
   currentChild: string;
   iterator: Iterator<any>;
   childInfoForm: FormGroup;
   spinner: boolean = false;
   previous: string;
   currentKey: number;
+  destroy: Subscription[] = [];
   constructor(
     private fb: FormBuilder,
     public mockstore: StoreService,
-    private generalservice: GeneralService
+    private generalservice: GeneralService,
+    private store: Store<fromStore.AllState>
   ) {}
 
   ngOnInit(): void {
@@ -41,6 +45,34 @@ export class ChildInformationFormsComponent implements OnInit {
       class: ["", Validators.required],
       tuition_fees: ["", Validators.required]
     });
+
+    this.destroy[0] = this.store
+      .select(fromStore.getCurrentChildInfo)
+      .subscribe(val => console.log(val));
+    this.destroy[1] = this.store
+      .select(fromStore.fetchMapOfChildInfoFromReducer)
+      .subscribe(val => console.log(val));
+  }
+
+  addChildPictrue() {
+    document.getElementById("picture-upload").click();
+  }
+
+  async loadChildImage(event: Event) {
+    // const updateChildInfo: Partial<AChild> = {
+    //   picture: event.target["files"][0]
+    // };
+    // this.store.dispatch(new generalActions.addAChild(updateChildInfo));
+    let reader: FileReader;
+    if (FileReader) {
+      reader = new FileReader();
+      reader.onload = anevent => {
+        (document.querySelector(
+          ".modified-img"
+        ) as HTMLImageElement).src = `${anevent.target["result"]}`;
+      };
+      reader.readAsDataURL(event.target["files"][0]);
+    }
   }
 
   selectThis(event: Event) {
@@ -177,14 +209,14 @@ export class ChildInformationFormsComponent implements OnInit {
   }
 
   doneAddingChildren() {
-    // this.generalservice.handleFlowController('');
-    // console.log(this.mockstore.childrenInformationSubmittedByParent);
-    let total = this.mockstore.childrenInformationSubmittedByParent.reduce(
-      (acc, current, currentIndex, array) => {
-        return acc + +current.tuition_fees;
-      },
-      0
-    );
+    // let total = this.mockstore.childrenInformationSubmittedByParent.reduce(
+    //   (acc, current, currentIndex, array) => {
+    //     return acc + +current.tuition_fees;
+    //   },
+    //   0
+    // );
+    this.store.dispatch(new generalActions.addAChild(this.mapOfChildrensInfo));
+    this.store.dispatch(new generalActions.calculateFees());
     // console.log(total);
     this.generalservice.handleFlowController("");
     const responseFromParent = new replyGiversOrReceivers(
@@ -197,7 +229,7 @@ export class ChildInformationFormsComponent implements OnInit {
     );
     this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
       `Summary : 
-       You entered a total of ₦${new Intl.NumberFormat().format(total)}
+       You entered a total of ₦${new Intl.NumberFormat().format(20000)}
        Number of Children: ${this.mapOfChildrensInfo.size}`,
       "left",
       "",
@@ -224,5 +256,9 @@ export class ChildInformationFormsComponent implements OnInit {
       );
       this.generalservice.responseDisplayNotifier(chatbotResponse);
     }, 800);
+  }
+
+  ngOnDestroy() {
+    this.destroy.forEach(element => element.unsubscribe());
   }
 }

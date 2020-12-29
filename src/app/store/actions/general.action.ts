@@ -1,5 +1,5 @@
 import { Action } from "@ngrx/store";
-import { ParentRegistration, Parent } from "src/app/models/data-models";
+import { ParentRegistration, Parent, AChild } from "src/app/models/data-models";
 
 // add Parent information
 
@@ -11,3 +11,21 @@ export class addParents implements Action {
 }
 
 export type parentsAction = addParents;
+
+// add Child Information
+
+export const addChildrenInfo = "[children] ADD CHILDREN";
+export const calculateChildrenTuitionFees =
+  "[children] CalculateChildreenTuition";
+
+export class addAChild implements Action {
+  readonly type = addChildrenInfo;
+  constructor(public payload: Map<string, Partial<AChild>>) {}
+}
+
+export class calculateFees implements Action {
+  readonly type = calculateChildrenTuitionFees;
+  constructor() {}
+}
+
+export type childrenAction = addAChild | calculateFees;
