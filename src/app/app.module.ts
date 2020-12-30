@@ -97,7 +97,7 @@ registerLocaleData(en);
     }),
     StoreModule.forRoot({
       manageParent: reducers.parent_info,
-      manageChild: reducers.child_info
+      manageChild: reducers.children_info
     })
   ],
   providers: [TitleCasePipe],

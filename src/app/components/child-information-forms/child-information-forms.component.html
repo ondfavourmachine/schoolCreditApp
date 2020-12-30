@@ -229,6 +229,7 @@
 <div
   class="flex flex-column justify-center align-center h-100 text-center family-info"
   *ngIf="viewToshow == 'summary'"
+  style="position: relative"
 >
   <h1 class="para-title">Do you have any more children to enter?</h1>
   <div class="w-100 flex justify-center align-center">
@@ -239,5 +240,8 @@
     <button (click)="doneAddingChildren()" class="ui button primary basic mt-4">
       No
     </button>
+  </div>
+  <div *ngIf="spinner" class="spinner-container">
+    <i class="fa fa-circle-notch fa-spin fa-3x"></i>
   </div>
 </div>

@@ -8,12 +8,12 @@ import {
 
 export interface AllState {
   parent_info: Partial<fromParentReducerFile.ParentState>;
-  child_info: fromChildrenReducerFile.ChildrenState;
+  children_info: fromChildrenReducerFile.ChildrenState;
 }
 
 export const reducers: ActionReducerMap<AllState> = {
   parent_info: fromParentReducerFile.reducer,
-  child_info: fromChildrenReducerFile.reducer
+  children_info: fromChildrenReducerFile.reducer
 };
 
 // building Selectors for Children
@@ -22,20 +22,26 @@ export const getCurrentChildState = createFeatureSelector<AllState>(
   "manageChild"
 );
 
+export const getParentState = createFeatureSelector<AllState>("manageParent");
 // then get the child_info reducer
 //  this right here worked
 export const getCurrentChildInfo = createSelector(
   getCurrentChildState,
-  (state: AllState) => state.child_info
+  (state: AllState) => state.children_info
+);
+
+export const getCurrentParentInfo = createSelector(
+  getParentState,
+  (state: AllState) => state.parent_info
 );
 
 // then get the actual child_info which is a Map()
-export const fetchMapOfChildInfoFromReducer = createSelector(
-  getCurrentChildInfo,
-  fromChildrenReducerFile.aMapOfChildrenInfo
-);
+// export const fetchMapOfChildInfoFromReducer = createSelector(
+//   getCurrentChildInfo,
+//   fromChildrenReducerFile.aMapOfChildrenInfo
+// );
 
-export const fetchActualTotalTuition = createSelector(
-  getCurrentChildInfo,
-  fromChildrenReducerFile.totalTuitionOfAllChild
-);
+// export const fetchActualTotalTuition = createSelector(
+//   getCurrentChildInfo,
+//   fromChildrenReducerFile.totalTuitionOfAllChild
+// );

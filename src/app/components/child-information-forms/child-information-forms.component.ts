@@ -3,12 +3,15 @@ import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { StoreService } from "src/app/services/mockstore/store.service";
 import { GeneralService } from "src/app/services/generalService/general.service";
 import { replyGiversOrReceivers } from "src/app/models/GiverResponse";
-import { AChild } from "src/app/models/data-models";
+import { AChild, Parent } from "src/app/models/data-models";
 import { Subscription } from "rxjs";
 import { Store } from "@ngrx/store";
 import { pluck } from "rxjs/operators";
 import * as generalActions from "../../store/actions/general.action";
 import * as fromStore from "../../store";
+import { ChildrenState } from "src/app/store/reducers/children.reducer";
+import { ChatService } from "src/app/services/ChatService/chat.service";
+
 @Component({
   selector: "app-child-information-forms",
   templateUrl: "./child-information-forms.component.html",
@@ -32,11 +35,15 @@ export class ChildInformationFormsComponent implements OnInit, OnDestroy {
   previous: string;
   currentKey: number;
   destroy: Subscription[] = [];
+  tuitionFeesTotal;
+  guardianID: string;
+  childPicture: File;
   constructor(
     private fb: FormBuilder,
     public mockstore: StoreService,
     private generalservice: GeneralService,
-    private store: Store<fromStore.AllState>
+    private store: Store<fromStore.AllState>,
+    private chatapi: ChatService
   ) {}
 
   ngOnInit(): void {
@@ -47,11 +54,18 @@ export class ChildInformationFormsComponent implements OnInit, OnDestroy {
     });
 
     this.destroy[0] = this.store
-      .select(fromStore.getCurrentChildInfo)
-      .subscribe(val => console.log(val));
+      .select(fromStore.getCurrentChildState)
+      .subscribe((val: any) => {
+        const { total_tuition_fees } = val as ChildrenState;
+        this.tuitionFeesTotal = total_tuition_fees;
+      });
+
     this.destroy[1] = this.store
-      .select(fromStore.fetchMapOfChildInfoFromReducer)
-      .subscribe(val => console.log(val));
+      .select(fromStore.getCurrentParentInfo)
+      .subscribe(val => {
+        const { guardian } = val as Parent;
+        this.guardianID = guardian;
+      });
   }
 
   addChildPictrue() {
@@ -63,6 +77,7 @@ export class ChildInformationFormsComponent implements OnInit, OnDestroy {
     //   picture: event.target["files"][0]
     // };
     // this.store.dispatch(new generalActions.addAChild(updateChildInfo));
+    this.childPicture = event.target["files"][0];
     let reader: FileReader;
     if (FileReader) {
       reader = new FileReader();
@@ -76,6 +91,7 @@ export class ChildInformationFormsComponent implements OnInit, OnDestroy {
   }
 
   selectThis(event: Event) {
+    let guardianID;
     const p =
       event.target instanceof HTMLImageElement
         ? event.target.nextElementSibling
@@ -87,6 +103,20 @@ export class ChildInformationFormsComponent implements OnInit, OnDestroy {
         ? this.selectedChildren.push(+p.textContent)
         : this.selectedChildren.splice(0, 1, +p.textContent)
       : "";
+
+    const toBeDestroyed: Subscription = this.store
+      .select(fromStore.getCurrentParentInfo)
+      .subscribe(val => {
+        const { guardian } = val as Parent;
+        guardianID = guardian;
+      });
+
+    this.chatapi
+      .updateChildrenCount({
+        guardian: guardianID,
+        children_count: p.textContent != "3+" ? parseInt(p.textContent) : 4
+      })
+      .subscribe(val => toBeDestroyed.unsubscribe());
   }
 
   get numberOfSelected(): boolean {
@@ -136,11 +166,15 @@ export class ChildInformationFormsComponent implements OnInit, OnDestroy {
 
   moveToNextChildOrNot() {
     this.spinner = true;
-    let value = { ...this.childInfoForm.value };
+    let value: Partial<AChild> = { ...this.childInfoForm.value };
     const objectHoldingIndex = this.mapOfChildrensInfo.get(this.currentChild);
-    value = { ...value, index: objectHoldingIndex.index };
+    value = {
+      ...value,
+      picture: this.childPicture,
+      index: objectHoldingIndex.index
+    };
     this.mapOfChildrensInfo.set(this.currentChild, value);
-    // console.log(this.mapOfChildrensInfo);
+
     // this is necessary
     if (this.mockstore.childrenInformationSubmittedByParent.length < 1) {
       this.mockstore.childrenInformationSubmittedByParent.push(
@@ -208,16 +242,30 @@ export class ChildInformationFormsComponent implements OnInit, OnDestroy {
     this.childInfoForm.reset();
   }
 
-  doneAddingChildren() {
-    // let total = this.mockstore.childrenInformationSubmittedByParent.reduce(
-    //   (acc, current, currentIndex, array) => {
-    //     return acc + +current.tuition_fees;
-    //   },
-    //   0
-    // );
+  async doneAddingChildren() {
+    this.spinner = true;
     this.store.dispatch(new generalActions.addAChild(this.mapOfChildrensInfo));
     this.store.dispatch(new generalActions.calculateFees());
-    // console.log(total);
+    for (let [key, value] of this.mapOfChildrensInfo) {
+      try {
+        const res = await this.chatapi.saveChildData(
+          { ...value },
+          this.guardianID
+        );
+        const { child } = res;
+        if (res.message == "child info saved!") {
+          this.store.dispatch(
+            new generalActions.modifyIndividualChild({
+              name: key,
+              dataToChange: { child_id: child }
+            })
+          );
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    this.spinner = false;
     this.generalservice.handleFlowController("");
     const responseFromParent = new replyGiversOrReceivers(
       `I have provided my ${
@@ -228,8 +276,10 @@ export class ChildInformationFormsComponent implements OnInit, OnDestroy {
       "right"
     );
     this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
-      `Summary : 
-       You entered a total of ₦${new Intl.NumberFormat().format(20000)}
+      `Summary :
+       You entered a total of ₦${new Intl.NumberFormat().format(
+         this.tuitionFeesTotal
+       )}.
        Number of Children: ${this.mapOfChildrensInfo.size}`,
       "left",
       "",
@@ -260,5 +310,7 @@ export class ChildInformationFormsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.destroy.forEach(element => element.unsubscribe());
+    this.tuitionFeesTotal = undefined;
+    this.mapOfChildrensInfo = new Map();
   }
 }

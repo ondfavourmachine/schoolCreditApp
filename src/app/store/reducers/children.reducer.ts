@@ -34,6 +34,22 @@ export function reducer(
         total_tuition_fees: total
       };
     }
+
+    case generalActions.updateAChild: {
+      const keyInMapOfChild = action.payload.name;
+      const partOfChildToReplace = action.payload.dataToChange;
+      let mapOfChildren = state.child_info;
+      let childToChange = mapOfChildren.get(keyInMapOfChild);
+      childToChange = {
+        ...childToChange,
+        child_id: partOfChildToReplace.child_id
+      };
+      mapOfChildren.set(keyInMapOfChild, childToChange);
+      return {
+        ...state,
+        child_info: mapOfChildren
+      };
+    }
   }
 
   return state;

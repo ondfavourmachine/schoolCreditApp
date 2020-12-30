@@ -17,6 +17,7 @@ export type parentsAction = addParents;
 export const addChildrenInfo = "[children] ADD CHILDREN";
 export const calculateChildrenTuitionFees =
   "[children] CalculateChildreenTuition";
+export const updateAChild = "[children] UPDATE CHILD INFO";
 
 export class addAChild implements Action {
   readonly type = addChildrenInfo;
@@ -28,4 +29,11 @@ export class calculateFees implements Action {
   constructor() {}
 }
 
-export type childrenAction = addAChild | calculateFees;
+export class modifyIndividualChild implements Action {
+  readonly type = updateAChild;
+  constructor(
+    public payload: { name: string; dataToChange: Partial<AChild> }
+  ) {}
+}
+
+export type childrenAction = addAChild | calculateFees | modifyIndividualChild;

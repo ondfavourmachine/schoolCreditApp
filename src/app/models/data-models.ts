@@ -21,7 +21,8 @@ export interface AChild {
   class: string
   tuition_fees: string
   picture: File
-  index?: number
+  index?: number,
+  child_id: null | string | number
 }
 
 export interface BankPartnership {}

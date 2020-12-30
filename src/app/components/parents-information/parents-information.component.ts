@@ -47,10 +47,11 @@ export class ParentsInformationComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    //  this was done before i created selectors
+    //  i might come back to change it
     this.destroy[0] = this.store
       .pipe(pluck("manageParent", "parent_info"))
       .subscribe((val: Parent & Object) => {
-        // console.log(val);
         if (
           val.hasOwnProperty("phone") &&
           val.hasOwnProperty("OTP_sent") &&
@@ -59,6 +60,12 @@ export class ParentsInformationComponent implements OnInit, OnDestroy {
           this.sendParentInformationToServer(val);
         }
       });
+
+    // this.destroy[1] = this.store
+    //   .select(fromStore.getCurrentChildState)
+    //   .subscribe(val => console.log(val));
+
+    // this.destroy[2] =
 
     this.phoneForm = this.fb.group({
       phone: ["", Validators.required]

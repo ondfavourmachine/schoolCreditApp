@@ -6,7 +6,8 @@ import { Reference } from "src/app/models/reference-type";
 import {
   ParentRegistration,
   Parent,
-  ParentRegistrationResponse
+  ParentRegistrationResponse,
+  AChild
 } from "src/app/models/data-models";
 // import { retry } from "rxjs/operators";
 // import { LgaData } from "../../models/lgaData";
@@ -21,6 +22,14 @@ interface Questions {
   };
   finished: boolean;
   status: boolean;
+}
+interface GenericResponse {
+  message: string;
+  status: boolean;
+}
+
+interface ChildDataSavedResponse extends GenericResponse {
+  child: string | number;
 }
 
 @Injectable({
@@ -39,6 +48,8 @@ export class ChatService {
   }
 
   // School credit api starts here
+
+  // register Parent starts here
 
   registerParent(
     form: ParentRegistration
@@ -67,34 +78,54 @@ export class ChatService {
   verifyOTP(obj: {
     phone_OTP: string;
     guardian: string;
-  }): Promise<{ message: string; status: boolean }> {
+  }): Promise<GenericResponse> {
     return this.http
-      .post<any>(`${this.generalUrl}sms/verify/otp`, obj)
+      .post<GenericResponse>(`${this.generalUrl}sms/verify/otp`, obj)
       .toPromise();
   }
 
   updateEmail(obj: {
     email: string;
     guardian: string;
-  }): Promise<{ message: string; status: boolean }> {
+  }): Promise<GenericResponse> {
     return this.http
-      .patch<any>(`${this.generalUrl}parent/email`, obj)
+      .patch<GenericResponse>(`${this.generalUrl}parent/email`, obj)
       .toPromise();
   }
 
   saveParentPIN(obj: {
     pin: string;
     guardian: string;
-  }): Observable<{ message: string; status: boolean }> {
-    return this.http.post<any>(`${this.generalUrl}pin`, obj);
+  }): Observable<GenericResponse> {
+    return this.http.post<GenericResponse>(`${this.generalUrl}pin`, obj);
+  }
+  // ends here
+
+  // ask for children info starts here
+  updateChildrenCount(obj: {
+    guardian: string;
+    children_count: number;
+  }): Observable<GenericResponse> {
+    return this.http.patch<GenericResponse>(`${this.generalUrl}child`, obj);
   }
 
-  uploadAnswers(obj: { ref_no?: string; answer?: string }): Observable<any> {
-    return this.http.post(`${this.generalUrl}sendanswer`, obj, {
-      headers: this.httpOptions
-    });
+  saveChildData(
+    obj: Partial<AChild>,
+    guardianID
+  ): Promise<ChildDataSavedResponse> {
+    const formToSubmit = new FormData();
+    for (let key in obj) {
+      formToSubmit.append(key == "name" ? "full_name" : key, obj[key]);
+    }
+    formToSubmit.delete("index");
+    formToSubmit.append("guardian", guardianID);
+
+    return this.http
+      .post<ChildDataSavedResponse>(`${this.generalUrl}child`, formToSubmit)
+      .toPromise();
   }
 
+  // ends here
   getStartedByAskingForBvn(): Observable<any> {
     return this.http.get(`${this.generalUrl}bvnquestion`);
   }
