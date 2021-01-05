@@ -1,16 +1,45 @@
 import { Action } from "@ngrx/store";
-import { ParentRegistration, Parent, AChild } from "src/app/models/data-models";
+import {
+  ParentRegistration,
+  Parent,
+  AChild,
+  ParentWorkInfo,
+  ParentAddressInfo,
+  ParentIdInfo
+} from "src/app/models/data-models";
 
 // add Parent information
 
 export const addParentInfo = "[parents] ADD PARENTS";
+export const updateParentWorkInfo = "[parents] UPDATE PARENT WORK INFO";
+export const updateParentAddress = "[parents] UPDATE PARENT ADDRESS";
+export const updataParentID = "[parents] UPDATE PARENT IDENTIFICATION";
 
 export class addParents implements Action {
   readonly type = addParentInfo;
   constructor(public payload: ParentRegistration | Parent) {}
 }
 
-export type parentsAction = addParents;
+export class updateParentWorkInformation implements Action {
+  readonly type = updateParentWorkInfo;
+  constructor(public payload: ParentWorkInfo) {}
+}
+
+export class updateParentAddressInfo implements Action {
+  readonly type = updateParentAddress;
+  constructor(public payload: Partial<ParentAddressInfo> & Partial<Parent>) {}
+}
+
+export class updateParentIDInformation implements Action {
+  readonly type = updataParentID;
+  constructor(public payload: Partial<ParentIdInfo>) {}
+}
+
+export type parentsAction =
+  | addParents
+  | updateParentWorkInformation
+  | updateParentAddressInfo
+  | updateParentIDInformation;
 
 // add Child Information
 

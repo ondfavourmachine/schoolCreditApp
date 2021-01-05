@@ -7,7 +7,9 @@ import {
   ParentRegistration,
   Parent,
   ParentRegistrationResponse,
-  AChild
+  AChild,
+  ParentAddressInfo,
+  CompleteParentInfomation
 } from "src/app/models/data-models";
 // import { retry } from "rxjs/operators";
 // import { LgaData } from "../../models/lgaData";
@@ -30,6 +32,16 @@ interface GenericResponse {
 
 interface ChildDataSavedResponse extends GenericResponse {
   child: string | number;
+}
+
+interface ParentAWBAResponse extends GenericResponse {
+  data: CompleteParentInfomation;
+}
+
+export interface FinancialInstitution {
+  lender_name: string;
+  loan_amount: number;
+  duration: number;
 }
 
 @Injectable({
@@ -126,8 +138,33 @@ export class ChatService {
   }
 
   // ends here
-  getStartedByAskingForBvn(): Observable<any> {
-    return this.http.get(`${this.generalUrl}bvnquestion`);
+  saveParentBVN(
+    obj: Partial<CompleteParentInfomation>
+  ): Observable<ParentAWBAResponse> {
+    return this.http.post<ParentAWBAResponse>(`${this.generalUrl}bvn`, obj);
+  }
+
+  // get financial institution
+  getFinancialInstitution(): Observable<FinancialInstitution> {
+    return this.http.get<FinancialInstitution>(`${this.generalUrl}lender/rate`);
+  }
+
+  // save parent work information
+
+  saveParentWorkInformation(obj: {
+    employer: string;
+    role: string;
+    guardian: any;
+    annual_salary: any;
+  }): Observable<ParentAWBAResponse> {
+    return this.http.post<ParentAWBAResponse>(`${this.generalUrl}work`, obj);
+  }
+
+  // save parent address information
+  saveParentAddressInformation(
+    obj: Partial<Parent> & Partial<ParentAddressInfo>
+  ): Observable<ParentAWBAResponse> {
+    return this.http.post<ParentAWBAResponse>(`${this.generalUrl}address`, obj);
   }
 
   sendBvnAndDOB(bvnAndDOB: {

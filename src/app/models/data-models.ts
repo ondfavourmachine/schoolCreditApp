@@ -15,14 +15,43 @@ export interface Parent extends ParentRegistration {
   OTP_sent: boolean;
 }
 
+export interface ParentWorkInfo {
+  employer: string;
+  role: string;
+  annual_salary: string | number;
+}
+
+export interface ParentAddressInfo {
+  // address?:string,
+  bus_stop: string;
+  city: string;
+  state: string | number;
+  lga: string | number;
+  post_code: string | number;
+}
+export interface ParentIdInfo {
+  preferred_ID: any;
+  BVN: string;
+  ID_number: string;
+}
+export interface CompleteParentInfomation
+  extends Parent,
+    ParentWorkInfo,
+    ParentAddressInfo,
+    ParentIdInfo {
+  phone_verified: any;
+  verification_type: any;
+  children_count: string | number;
+}
+
 export interface AChild {
-  guardian: string
-  full_name: string
-  class: string
-  tuition_fees: string
-  picture: File
-  index?: number,
-  child_id: null | string | number
+  guardian: string;
+  full_name: string;
+  class: string;
+  tuition_fees: string;
+  picture: File;
+  index?: number;
+  child_id: null | string | number;
 }
 
 export interface BankPartnership {}

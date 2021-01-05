@@ -1,20 +1,21 @@
-<form class="w-100" style="position: relative">
+<form [formGroup]="parentWorkInfoForm" class="w-100" style="position: relative">
   <div class="ui form">
     <div class="field">
       <label>Employer</label>
-      <input type="text" placeholder="Eg: Credit clan" />
+      <input formControlName="employer" type="text" placeholder="Eg: Credit clan" />
     </div>
     <div class="field">
       <!-- -->
 
       <div class="field">
         <label>Role</label>
-        <input name="class" type="text" placeholder="Eg: Software Developer" />
+        <input formControlName="role" name="class" type="text" placeholder="Eg: Software Developer" />
       </div>
 
       <div class="field">
         <label>Annual Salary</label>
         <select
+          formControlName="annual_salary"
           style="height: auto;"
           class="ui fluid search dropdown"
           name="card[expire-month]"
@@ -39,11 +40,16 @@
 
   <div class="text-center mt-4">
     <button
-      (click)="changeUpTheViewTwo.emit('address-info')"
-      type="submit"
+      [disabled]="!parentWorkInfoForm.valid"
+      (click)="submitThisForm(parentWorkInfoForm)"
+      type="button"
       class="ui primary button fluid"
     >
       Next
     </button>
+  </div>
+
+  <div *ngIf="spinner" class="spinner-container">
+    <i class="fa fa-circle-notch fa-spin fa-3x"></i>
   </div>
 </form>

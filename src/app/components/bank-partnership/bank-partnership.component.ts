@@ -1,6 +1,10 @@
 import { Component, OnInit } from "@angular/core";
 import { GeneralService } from "src/app/services/generalService/general.service";
 import { replyGiversOrReceivers } from "src/app/models/GiverResponse";
+import {
+  ChatService,
+  FinancialInstitution
+} from "src/app/services/ChatService/chat.service";
 
 @Component({
   selector: "app-bank-partnership",
@@ -20,9 +24,19 @@ export class BankPartnershipComponent implements OnInit {
     | "address-info"
     | "preambleToForms" = "checking";
   selected: string;
-  constructor(private generalservice: GeneralService) {}
+  result: object & FinancialInstitution = undefined;
+  constructor(
+    private generalservice: GeneralService,
+    private chatservice: ChatService
+  ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.chatservice.getFinancialInstitution().subscribe(val => {
+      // console.log(val);
+      this.result = val;
+      this.page = "";
+    });
+  }
 
   selectThis(event) {
     const p =

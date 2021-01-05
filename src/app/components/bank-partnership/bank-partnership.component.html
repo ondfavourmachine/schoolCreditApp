@@ -5,7 +5,9 @@
   <h1 class="para-title">
     Congrats
     <strong
-      ><a href="" style="text-decoration: underline"> RexCredit </a></strong
+      ><a href="" style="text-decoration: underline">
+        {{ result?.lender_name }}
+      </a></strong
     >
     will like to fund this transaction.
   </h1>
@@ -14,9 +16,12 @@
   </h5>
   <p class="para-body">
     <span class="block-element"
-      >Amount: <strong>N30,000</strong> per month,
+      >Amount: <strong>{{ result?.loan_amount | currency: "NGN" }}</strong> per
+      month,
     </span>
-    <span class="block-element">Duration: For <strong>4 months</strong>.</span>
+    <span class="block-element"
+      >Duration: For <strong>{{ result?.duration }} months</strong>.</span
+    >
     <span class="block-element mt-3">
       this is an offer in principle and subject to final review</span
     >
@@ -230,7 +235,10 @@
   </form>
 </div>
 
-<div class=" h-100 text-center family-info" *ngIf="page == 'checking'">
+<div
+  class=" h-100 text-center family-info"
+  *ngIf="page == 'checking' && !result"
+>
   <h1 class="para-title">
     Searching for a financial institution for you...
   </h1>
@@ -296,9 +304,9 @@
     </svg>
   </p>
 
-  <button (click)="page = ''" class="ui button primary basic ">
+  <!-- <button (click)="page = ''" class="ui button primary basic ">
     See result
-  </button>
+  </button> -->
 </div>
 
 <div

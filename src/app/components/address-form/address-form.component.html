@@ -1,20 +1,20 @@
-<form class="w-100" style="position: relative">
+<form [formGroup]="parentAddressInfoForm" class="w-100" style="position: relative">
   <div class="ui form">
     <div class="field">
       <label>Address</label>
-      <input type="text" placeholder="Eg: 21, Bolaji Banwo street" />
+      <input formControlName="address" type="text" placeholder="Eg: 21, Bolaji Banwo street" />
     </div>
     <div class="field">
       <!-- -->
 
       <div class="field">
         <label>Nearest Bustop</label>
-        <input name="class" type="text" placeholder="Eg: Cassette Bustop" />
+        <input formControlName="bus_stop" name="class" type="text" placeholder="Eg: Cassette Bustop" />
       </div>
 
       <div class="field">
         <label>City</label>
-        <input name="class" type="text" placeholder="Eg: Lagos" />
+        <input formControlName="city" name="class" type="text" placeholder="Eg: Lagos" />
       </div>
 
       <div class="field">
@@ -24,6 +24,7 @@
           style="height: auto;"
           class="ui fluid search dropdown"
           name="card[expire-month]"
+          formControlName="state"
         >
           <option value="" selected>Select state...</option>
           <option
@@ -41,6 +42,7 @@
           style="height: auto;"
           class="ui fluid search dropdown"
           name="card[expire-month]"
+          formControlName="lga"
         >
           <option value="" selected>Select Local Govt Area...</option>
           <option [value]="lga.id" *ngFor="let lga of stateLgas; index as i">
@@ -51,18 +53,23 @@
 
       <div class="field">
         <label>Post Code</label>
-        <input name="class" type="text" placeholder="Eg: 101025" />
+        <input  formControlName="post_code" name="class" type="text" placeholder="Eg: 101025" />
       </div>
     </div>
   </div>
 
   <div class="text-center mt-4">
     <button
-      (click)="changeUpTheViewThree.emit('bvn')"
-      type="submit"
+      (click)="submitThisForm(parentAddressInfoForm)"
+      type="button"
+      [disabled]="!parentAddressInfoForm.valid"
       class="ui primary button fluid"
     >
       Next
     </button>
+  </div>
+
+  <div *ngIf="spinner" class="spinner-container">
+    <i class="fa fa-circle-notch fa-spin fa-3x"></i>
   </div>
 </form>

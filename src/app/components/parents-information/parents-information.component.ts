@@ -62,7 +62,7 @@ export class ParentsInformationComponent implements OnInit, OnDestroy {
       });
 
     // this.destroy[1] = this.store
-    //   .select(fromStore.getCurrentChildState)
+    //   .select(fromStore.getParentState)
     //   .subscribe(val => console.log(val));
 
     // this.destroy[2] =

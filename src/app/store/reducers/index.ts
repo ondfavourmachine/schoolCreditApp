@@ -35,6 +35,7 @@ export const getCurrentParentInfo = createSelector(
   (state: AllState) => state.parent_info
 );
 
+
 // then get the actual child_info which is a Map()
 // export const fetchMapOfChildInfoFromReducer = createSelector(
 //   getCurrentChildInfo,

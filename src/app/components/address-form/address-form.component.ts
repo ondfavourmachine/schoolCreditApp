@@ -1,6 +1,13 @@
 import { Component, OnInit, EventEmitter, Output } from "@angular/core";
 import { sandBoxData } from "src/app/models/sandboxData";
 import { LgaData } from "src/app/models/lgaData";
+import { FormGroup, FormBuilder, Validators } from "@angular/forms";
+import { Subscription } from "rxjs";
+import * as generalActions from "../../store/actions/general.action";
+import * as fromStore from "../../store";
+import { Store } from "@ngrx/store";
+import { ChatService } from "src/app/services/ChatService/chat.service";
+import { Parent, CompleteParentInfomation } from "src/app/models/data-models";
 
 interface State {
   id: string;
@@ -18,15 +25,67 @@ export class AddressFormComponent implements OnInit {
   NigerianStates: State[] = [];
   stateLgas: LGA[] = [];
   lgaData: any = {};
-  constructor() {
+  parentAddressInfoForm: FormGroup;
+  destroy: Subscription[] = [];
+  spinner: boolean = false;
+  guardianID: any = undefined;
+  constructor(
+    private fb: FormBuilder,
+    private store: Store,
+    private chatservice: ChatService
+  ) {
     this.NigerianStates = sandBoxData().data.states;
     this.lgaData = { ...LgaData() };
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.parentAddressInfoForm = this.fb.group({
+      address: ["", Validators.required],
+      bus_stop: ["", Validators.required],
+      city: ["", Validators.required],
+      state: ["", Validators.required],
+      lga: ["", Validators.required],
+      post_code: ["", Validators.required]
+    });
+
+    this.destroy[0] = this.store
+      .select(fromStore.getCurrentParentInfo)
+      .subscribe(val => {
+        console.log(val);
+        const { address, guardian } = val as Parent;
+        this.guardianID = guardian;
+        this.parentAddressInfoForm.get("address").patchValue(address);
+      });
+
+    this.destroy[1] = this.store
+      .select(fromStore.getParentState)
+      .subscribe(val => {
+        console.log(val);
+      });
+  }
 
   selectLgaInState(value: string) {
     const selectedLga = this.lgaData[value];
     this.stateLgas = selectedLga.data;
+  }
+
+  submitThisForm(form: FormGroup) {
+    // changeUpTheViewThree.emit('bvn')
+    this.spinner = true;
+    let formToSubmit = { ...form.value };
+    formToSubmit.guardian = this.guardianID;
+    this.chatservice.saveParentAddressInformation(formToSubmit).subscribe(
+      val => {
+        // console.log(val);
+        const { state, bus_stop, city, address, lga, post_code } = val.data;
+        let objToStore = { state, bus_stop, city, address, lga, post_code };
+        this.store.dispatch(
+          new generalActions.updateParentAddressInfo(objToStore)
+        );
+        this.spinner = false;
+        this.changeUpTheViewThree.emit("bvn");
+      },
+      err => console.log(err)
+    );
   }
 }
