@@ -112,27 +112,70 @@
 
   <form class="w-100" style="position: relative">
     <div class="ui form">
-      <div class="field">
+      <div style="margin-bottom: 0.5rem;" class="field">
         <label>Name on Card</label>
-        <input type="text" placeholder="Eg: Oke Tunde" />
+        <input  style="padding: 0.7rem 0 !important;" type="text" placeholder="Eg: Oke Tunde" />
       </div>
     </div>
     <div class="ui form">
-      <div class="field">
+      <div style="margin-bottom: 0.5rem;" class="field">
         <label>Card Number</label>
-        <input type="text" placeholder="Eg: 45450907890908934597" />
+        <input  style="padding: 0.7rem 0 !important;" type="text" placeholder="Eg: 45450907890908934597" />
       </div>
     </div>
     <div class="ui form">
-      <div class="field">
+      <div style="margin-bottom: 0.5rem;" class="field">
         <label>Security </label>
-        <input type="text" placeholder="Eg: 521" />
+        <input  style="padding: 0.7rem 0 !important;" type="text" placeholder="Eg: 521" />
       </div>
     </div>
     <div class="ui form">
-      <div class="field">
+      <div style="margin-bottom: 0.5rem;" class="field">
         <label>Expiry date</label>
-        <input type="text" placeholder="Eg: 05/2020" />
+        <div style="display: flex; gap: 5px">
+          <select
+            style="height: auto; padding: 0.7rem 0 !important;"
+            class="ui fluid search dropdown expiryMonth"
+            name="card[expire-month]"
+          >
+            <option value="" selected>Month</option>
+            <option value="01">01</option>
+            <option value="02">02</option>
+            <option value="03">03</option>
+            <option value="04">04</option>
+            <option value="05">05</option>
+            <option value="06">06</option>
+            <option value="07">07</option>
+            <option value="08">08</option>
+            <option value="09">09</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+          </select>
+
+          <select
+            style="height: auto; padding: 0.7rem 0 !important;"
+            class="ui fluid search dropdown expiryYear"
+            name="card[expire-month]"
+          >
+            <option value="" selected>Year</option>
+            <option value="2016">16</option>
+            <option value="2017">17</option>
+            <option value="2018">18</option>
+            <option value="2019">19</option>
+            <option value="2020">20</option>
+            <option value="2021">21</option>
+            <option value="2022">22</option>
+            <option value="2023">23</option>
+            <option value="2024">24</option>
+            <option value="2025">25</option>
+            <option value="2026">26</option>
+            <option value="2027">27</option>
+            <option value="2028">28</option>
+            <option value="2029">29</option>
+            <option value="2030">30</option>
+          </select>
+        </div>
       </div>
     </div>
     <div class="text-center mt-4">
