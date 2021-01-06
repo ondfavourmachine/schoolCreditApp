@@ -2,7 +2,8 @@ import {
   Parent,
   ParentWorkInfo,
   ParentAddressInfo,
-  ParentIdInfo
+  ParentIdInfo,
+  ParentAccountInfo
 } from "src/app/models/data-models";
 import * as generalActions from "../actions/general.action";
 
@@ -12,6 +13,7 @@ export interface ParentState {
   parent_work_info: Partial<ParentWorkInfo>;
   parent_address_info: Partial<ParentAddressInfo>;
   parent_ID_info: Partial<ParentIdInfo>;
+  parent_account_info: Partial<ParentAccountInfo>;
 }
 
 // Application state
@@ -19,7 +21,8 @@ export const initialState: ParentState = {
   parent_info: { OTP_sent: false },
   parent_work_info: {},
   parent_address_info: {},
-  parent_ID_info: {}
+  parent_ID_info: {},
+  parent_account_info: {}
 };
 
 export function reducer(
@@ -52,6 +55,13 @@ export function reducer(
       return {
         ...state,
         parent_ID_info: { ...state.parent_ID_info, ...action.payload }
+      };
+    }
+
+    case generalActions.updateParentAcctInformation: {
+      return {
+        ...state,
+        parent_account_info: { ...state.parent_account_info, ...action.payload }
       };
     }
   }

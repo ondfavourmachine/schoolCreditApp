@@ -25,6 +25,7 @@
     <div class="field">
       <label>Account number</label>
       <input formControlName="account_no" name="accountNumber" type="tel" placeholder="Enter accounter number"
+      
         pattern="[0-9]{10}" />
       <div *ngIf="accountNumber.touched && accountNumber.invalid" class="ng-invalid ng-touched">
         <small style="color: #f10b0b9d;">

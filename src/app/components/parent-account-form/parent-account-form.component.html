@@ -3,7 +3,7 @@
     We will like to check if you can repay. Please fill in your bank information
   </h1>
 
-  <form class="w-100" style="position: relative">
+  <form [formGroup]="bankAccountForm" class="w-100" style="position: relative">
     <div class="ui form">
       <div class="field">
         <label>Bank Name</label>
@@ -11,43 +11,47 @@
           style="height: auto;"
           class="ui fluid search dropdown"
           name="card[expire-month]"
+          formControlName="bank_code"
         >
           <option value="" selected>Providus Bank</option>
-          <option value="1">United Bank Of Africa</option>
-          <option value="2">Guarantee Trust Bank</option>
-          <option value="3">Union Bank Of Nigeria</option>
-          <option value="4">First Bank of Nigeria</option>
-          <option value="5">Keystone Bank </option>
-          <option value="6">Access Bank </option>
-          <option value="7">First City Monument Bank</option>
-          <option value="8">Globus Bank</option>
-          <option value="9">Fidelity Bank</option>
-          <option value="10">Providus Bank</option>
-          <option value="11">Sterling Bank</option>
-          <option value="12">Polaris Bank</option>
-          <option value="12">Zenith Bank</option>
+          <option [value]="bank?.bank_code" *ngFor="let bank of banks; index as i">
+            {{ bank?.name }}
+          </option>
         </select>
+        <div *ngIf="bankName.touched && bankName.invalid" class="ng-invalid ng-touched">
+          <small style="color: #f10b0b9d;" *ngIf="bankNameIsRequired()">
+            Your Bank Name is required!</small>
+        </div>
       </div>
 
       <div class="field">
         <label>Account number</label>
-        <input type="number" placeholder="001345898" />
+        <input (blur)="checkAccountDetailsEntered()" type="tel" pattern="[0-9]{10}" 
+        formControlName="account_number"
+        placeholder="Enter accounter number eg: 001345898" />
+        <div *ngIf="accountNumber.touched && accountNumber.invalid" class="ng-invalid ng-touched">
+          <small style="color: #f10b0b9d;">
+            Your account number is required and has to be 10 digits!</small>
+        </div>
       </div>
 
       <div class="field">
         <label>Account name</label>
-        <input type="number" readonly />
+        <input  formControlName="account_name" type="text" placeholder="eg: Chukwuka Hassan Oluwatope" readonly />
       </div>
     </div>
-
+<!--  (click)="page = 'info'" -->
     <div class="text-center mt-4">
       <button
-        (click)="page = 'info'"
+        (click)="submitAccountDetailsForm(bankAccountForm)"
         type="button"
         class="ui primary button fluid"
       >
         Continue
       </button>
+    </div>
+    <div *ngIf="spinner" class="spinner-container">
+      <i class="fa fa-circle-notch fa-spin fa-3x"></i>
     </div>
   </form>
 </div>

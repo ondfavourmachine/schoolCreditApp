@@ -5,15 +5,20 @@ import {
   AChild,
   ParentWorkInfo,
   ParentAddressInfo,
-  ParentIdInfo
+  ParentIdInfo,
+  ParentAccountInfo
 } from "src/app/models/data-models";
 
 // add Parent information
-
+// ** types **
 export const addParentInfo = "[parents] ADD PARENTS";
 export const updateParentWorkInfo = "[parents] UPDATE PARENT WORK INFO";
 export const updateParentAddress = "[parents] UPDATE PARENT ADDRESS";
 export const updataParentID = "[parents] UPDATE PARENT IDENTIFICATION";
+export const updateParentAcctInformation = "[parents] UPDATE PARENT ACCOUNT";
+// 
+
+// action classes for parent
 
 export class addParents implements Action {
   readonly type = addParentInfo;
@@ -35,11 +40,18 @@ export class updateParentIDInformation implements Action {
   constructor(public payload: Partial<ParentIdInfo>) {}
 }
 
+export class updateParentAcctInfo implements Action {
+  readonly type = updateParentAcctInformation;
+  constructor(public payload: Partial<ParentAccountInfo>) {}
+}
+
 export type parentsAction =
   | addParents
   | updateParentWorkInformation
   | updateParentAddressInfo
-  | updateParentIDInformation;
+  | updateParentIDInformation | updateParentAcctInfo;
+
+
 
 // add Child Information
 

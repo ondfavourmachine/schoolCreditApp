@@ -9,8 +9,11 @@ import {
   ParentRegistrationResponse,
   AChild,
   ParentAddressInfo,
-  CompleteParentInfomation
+  CompleteParentInfomation,
+  Bank,
+  ParentAccountInfo
 } from "src/app/models/data-models";
+import { timeout } from 'rxjs/operators';
 // import { retry } from "rxjs/operators";
 // import { LgaData } from "../../models/lgaData";
 
@@ -138,11 +141,20 @@ export class ChatService {
   }
 
   // ends here
+
+  // save parent BVN
   saveParentBVN(
     obj: Partial<CompleteParentInfomation>
   ): Observable<ParentAWBAResponse> {
     return this.http.post<ParentAWBAResponse>(`${this.generalUrl}bvn`, obj);
   }
+
+  // save parent ID information/verify it
+  saveAndVerifyParentID(obj: Partial<CompleteParentInfomation>): Observable<ParentAWBAResponse>{
+    return this.http.post<ParentAWBAResponse>(`${this.generalUrl}identity`, obj);
+  }
+
+
 
   // get financial institution
   getFinancialInstitution(): Observable<FinancialInstitution> {
@@ -165,6 +177,45 @@ export class ChatService {
     obj: Partial<Parent> & Partial<ParentAddressInfo>
   ): Observable<ParentAWBAResponse> {
     return this.http.post<ParentAWBAResponse>(`${this.generalUrl}address`, obj);
+  }
+
+  saveParentAccountInformation(
+    obj:Partial<CompleteParentInfomation> 
+  ): Observable<ParentAWBAResponse> {
+    return this.http.post<ParentAWBAResponse>(`${this.generalUrl}bank`, obj);
+  }
+
+  // fetch list of banks
+  fetchBankNames(): Bank[] {
+    let allBanks = JSON.parse(sessionStorage.getItem("allBanks"));
+    if (sessionStorage.getItem("allBanks")) {
+      return allBanks["data"] as Array<Bank>;;
+    }
+    let url = "https://mobile.creditclan.com/webapi/v1/banks";
+    let httpHeaders = new HttpHeaders({
+      "x-api-key": "z2BhpgFNUA99G8hZiFNv77mHDYcTlecgjybqDACv"
+    });
+    this.http.get(url, { headers: httpHeaders }).subscribe(
+      val => {
+       
+        // console.log(this.banks);
+        sessionStorage.setItem("allBanks", JSON.stringify(val));
+        return [...val["data"]];
+      },
+      err => console.log(err)
+    );
+  }
+
+  // confirm account details
+  confirmAccountDetailsOfParent(obj: {bank_code: any, account_number: any}){
+    let url = "https://mobile.creditclan.com/webapi/v1/account/resolve";
+    let httpHeaders = new HttpHeaders({
+      "x-api-key": "z2BhpgFNUA99G8hZiFNv77mHDYcTlecgjybqDACv"
+    });
+
+   return this.http
+    .post(url, obj, { headers: httpHeaders })
+    .pipe(timeout(50000))
   }
 
   sendBvnAndDOB(bvnAndDOB: {

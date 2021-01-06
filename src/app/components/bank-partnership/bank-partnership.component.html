@@ -84,26 +84,27 @@
     Enter BVN
   </h1>
 
-  <form class="w-100" style="position: relative">
+  <form [formGroup]="BVNFORM" class="w-100" style="position: relative">
     <div class="ui form">
       <div class="field">
         <label>BVN</label>
-        <input type="number" placeholder="22917134590" />
-        <!-- <div *ngIf="name.touched && name.invalid" class="ng-invalid ng-touched">
-            <small style="color: #f10b0b9d;" *ngIf="nameIsRequired()">
-              Your name is required!</small>
-          </div> -->
+        <input formControlName="bvn" type="number" placeholder="22917134590" />
+        
       </div>
     </div>
-
+<!--    (click)="page = 'valid-id'" -->
     <div class="text-center mt-4">
       <button
-        type="submit"
+        type="button"
         class="ui primary button fluid"
-        (click)="page = 'valid-id'"
+        (click)="submitParentBVN(BVNFORM)"
+        [disabled]="!BVNFORM.valid"
       >
         Continue
       </button>
+    </div>
+    <div *ngIf="spinner" class="spinner-container">
+      <i class="fa fa-circle-notch fa-spin fa-3x"></i>
     </div>
   </form>
 </div>
@@ -211,11 +212,11 @@
 <div class=" h-100 text-center family-info" *ngIf="page == 'enter-id'">
   <h1 class="para-title">Enter {{ selected }}</h1>
 
-  <form class="w-100" style="position: relative">
+  <form [formGroup]="IDForm" class="w-100" style="position: relative">
     <div class="ui form">
       <div class="field">
         <label>{{ selected }} </label>
-        <input type="number" placeholder="eg: AA100457u788" />
+        <input formControlName="ID_number" type="tel" placeholder="eg: AA100457u788" />
         <!-- <div *ngIf="name.touched && name.invalid" class="ng-invalid ng-touched">
               <small style="color: #f10b0b9d;" *ngIf="nameIsRequired()">
                 Your name is required!</small>
@@ -225,12 +226,16 @@
 
     <div class="text-center mt-4">
       <button
-        type="submit"
+        [disabled]="!IDForm.valid"
+        type="button"
         class="ui primary button fluid"
-        (click)="accepted()"
+        (click)="accepted(IDForm)"
       >
         Continue
       </button>
+    </div>
+    <div *ngIf="spinner" class="spinner-container">
+      <i class="fa fa-circle-notch fa-spin fa-3x"></i>
     </div>
   </form>
 </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output } from "@angular/core";
+import { Component, OnInit, EventEmitter, Output, OnDestroy } from "@angular/core";
 import { sandBoxData } from "src/app/models/sandboxData";
 import { LgaData } from "src/app/models/lgaData";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
@@ -7,7 +7,7 @@ import * as generalActions from "../../store/actions/general.action";
 import * as fromStore from "../../store";
 import { Store } from "@ngrx/store";
 import { ChatService } from "src/app/services/ChatService/chat.service";
-import { Parent, CompleteParentInfomation } from "src/app/models/data-models";
+import { Parent } from "src/app/models/data-models";
 
 interface State {
   id: string;
@@ -20,7 +20,7 @@ interface LGA extends State {}
   templateUrl: "./address-form.component.html",
   styleUrls: ["./address-form.component.css"]
 })
-export class AddressFormComponent implements OnInit {
+export class AddressFormComponent implements OnInit, OnDestroy {
   @Output() changeUpTheViewThree = new EventEmitter<string>();
   NigerianStates: State[] = [];
   stateLgas: LGA[] = [];
@@ -51,17 +51,17 @@ export class AddressFormComponent implements OnInit {
     this.destroy[0] = this.store
       .select(fromStore.getCurrentParentInfo)
       .subscribe(val => {
-        console.log(val);
+        // console.log(val);
         const { address, guardian } = val as Parent;
         this.guardianID = guardian;
         this.parentAddressInfoForm.get("address").patchValue(address);
       });
 
-    this.destroy[1] = this.store
-      .select(fromStore.getParentState)
-      .subscribe(val => {
-        console.log(val);
-      });
+    // this.destroy[1] = this.store
+    //   .select(fromStore.getParentState)
+    //   .subscribe(val => {
+    //     console.log(val);
+    //   });
   }
 
   selectLgaInState(value: string) {
@@ -87,5 +87,9 @@ export class AddressFormComponent implements OnInit {
       },
       err => console.log(err)
     );
+  }
+
+  ngOnDestroy(){
+    this.destroy.forEach(element => element.unsubscribe())
   }
 }

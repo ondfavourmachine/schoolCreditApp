@@ -34,11 +34,18 @@ export interface ParentIdInfo {
   BVN: string;
   ID_number: string;
 }
+
+export interface ParentAccountInfo {
+  account_number: string;
+  account_name: string;
+  bank_code: string;
+}
+
 export interface CompleteParentInfomation
   extends Parent,
     ParentWorkInfo,
     ParentAddressInfo,
-    ParentIdInfo {
+    ParentIdInfo, ParentAccountInfo {
   phone_verified: any;
   verification_type: any;
   children_count: string | number;
@@ -62,4 +69,11 @@ export interface ParentRegistrationResponse {
   status: boolean;
   data: Partial<Parent>;
   guardian: any;
+}
+
+
+export interface Bank {
+  id: string;
+  bank_code: string;
+  name: string;
 }

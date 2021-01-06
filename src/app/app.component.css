@@ -251,3 +251,15 @@ div.selectBeneficiary {
     flex-direction: row;
   }
 }
+
+.svgElement {
+  height: 35px;
+  inline-size: 4rem;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 1%;
+  left: 1%;
+  fill: #343a40;
+}
