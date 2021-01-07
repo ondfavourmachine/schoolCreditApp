@@ -13,7 +13,7 @@ import {
   Bank,
   ParentAccountInfo
 } from "src/app/models/data-models";
-import { timeout } from 'rxjs/operators';
+import { timeout } from "rxjs/operators";
 // import { retry } from "rxjs/operators";
 // import { LgaData } from "../../models/lgaData";
 
@@ -28,6 +28,7 @@ interface Questions {
   finished: boolean;
   status: boolean;
 }
+
 interface GenericResponse {
   message: string;
   status: boolean;
@@ -39,6 +40,29 @@ interface ChildDataSavedResponse extends GenericResponse {
 
 interface ParentAWBAResponse extends GenericResponse {
   data: CompleteParentInfomation;
+}
+interface ContinuingExistingRequestResponse {
+  data: {
+    token: string;
+    guardian_data: Partial<CompleteParentInfomation>;
+    guardian: number;
+    children: Array<Partial<AChild>>;
+    status: boolean;
+    stages: {
+      parent_data: 0 | 1;
+      parent_pic: 0 | 1;
+      parent_email: 0 | 1;
+      parent_pin: 0 | 1;
+      children_count: 0 | 1;
+      child_data: 0 | 1;
+      work: 0 | 1;
+      address: 0 | 1;
+      bvn: 0 | 1;
+      identity: 0 | 1;
+      account: 0 | 1;
+      card: 0 | 1;
+    };
+  };
 }
 
 export interface FinancialInstitution {
@@ -150,11 +174,14 @@ export class ChatService {
   }
 
   // save parent ID information/verify it
-  saveAndVerifyParentID(obj: Partial<CompleteParentInfomation>): Observable<ParentAWBAResponse>{
-    return this.http.post<ParentAWBAResponse>(`${this.generalUrl}identity`, obj);
+  saveAndVerifyParentID(
+    obj: Partial<CompleteParentInfomation>
+  ): Observable<ParentAWBAResponse> {
+    return this.http.post<ParentAWBAResponse>(
+      `${this.generalUrl}identity`,
+      obj
+    );
   }
-
-
 
   // get financial institution
   getFinancialInstitution(): Observable<FinancialInstitution> {
@@ -179,17 +206,37 @@ export class ChatService {
     return this.http.post<ParentAWBAResponse>(`${this.generalUrl}address`, obj);
   }
 
+  //  save parent card information
   saveParentAccountInformation(
-    obj:Partial<CompleteParentInfomation> 
+    obj: Partial<CompleteParentInfomation>
   ): Observable<ParentAWBAResponse> {
     return this.http.post<ParentAWBAResponse>(`${this.generalUrl}bank`, obj);
+  }
+
+  // save parent credit card information
+
+  saveParentCreditCardInformation(
+    obj: Partial<CompleteParentInfomation>
+  ): Observable<ParentAWBAResponse> {
+    return this.http.post<ParentAWBAResponse>(`${this.generalUrl}card`, obj);
+  }
+
+  // confirm parent Pin
+  confirmParentPIN(obj: {
+    PIN: string;
+    [propName: string]: string;
+  }): Observable<ContinuingExistingRequestResponse> {
+    return this.http.post<ContinuingExistingRequestResponse>(
+      `${this.generalUrl}card`,
+      obj
+    );
   }
 
   // fetch list of banks
   fetchBankNames(): Bank[] {
     let allBanks = JSON.parse(sessionStorage.getItem("allBanks"));
     if (sessionStorage.getItem("allBanks")) {
-      return allBanks["data"] as Array<Bank>;;
+      return allBanks["data"] as Array<Bank>;
     }
     let url = "https://mobile.creditclan.com/webapi/v1/banks";
     let httpHeaders = new HttpHeaders({
@@ -197,7 +244,6 @@ export class ChatService {
     });
     this.http.get(url, { headers: httpHeaders }).subscribe(
       val => {
-       
         // console.log(this.banks);
         sessionStorage.setItem("allBanks", JSON.stringify(val));
         return [...val["data"]];
@@ -207,15 +253,15 @@ export class ChatService {
   }
 
   // confirm account details
-  confirmAccountDetailsOfParent(obj: {bank_code: any, account_number: any}){
+  confirmAccountDetailsOfParent(obj: { bank_code: any; account_number: any }) {
     let url = "https://mobile.creditclan.com/webapi/v1/account/resolve";
     let httpHeaders = new HttpHeaders({
       "x-api-key": "z2BhpgFNUA99G8hZiFNv77mHDYcTlecgjybqDACv"
     });
 
-   return this.http
-    .post(url, obj, { headers: httpHeaders })
-    .pipe(timeout(50000))
+    return this.http
+      .post(url, obj, { headers: httpHeaders })
+      .pipe(timeout(50000));
   }
 
   sendBvnAndDOB(bvnAndDOB: {

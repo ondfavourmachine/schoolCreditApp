@@ -5,7 +5,7 @@
 .checking {
   position: absolute;
   left: -180px;
-  top: 50%;
+  top: 1%;
   padding: 5px;
   background: white;
   border: 1px solid #d4d4d5;
@@ -13,7 +13,7 @@
   box-shadow: 0 0 10px 5px rgb(212 212 213 / 0.3);
   -webkit-backdrop-filter: blur(1px);
   backdrop-filter: blur(1px);
-  z-index: 15;
+  z-index: 115;
 
   display: flex;
   -webkit-box-pack: start;
@@ -24,7 +24,7 @@
 }
 
 .checking.working {
-  left: 50px;
+  left: 25%;
 }
 
 .this-overlay {
@@ -33,9 +33,9 @@
   top: 0;
   left: 0;
   position: absolute;
-  z-index: 10;
+  z-index: 110;
 
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.7);
 }
 
 .bolded {

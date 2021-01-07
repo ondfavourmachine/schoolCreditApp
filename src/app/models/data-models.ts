@@ -41,14 +41,22 @@ export interface ParentAccountInfo {
   bank_code: string;
 }
 
+export interface ParentCreditCardInfo{
+  cvv: string,
+  card_number: string | number,
+  card_name: string,
+  expiry_month: string,
+  expiry_year: string
+}
+
 export interface CompleteParentInfomation
   extends Parent,
     ParentWorkInfo,
     ParentAddressInfo,
-    ParentIdInfo, ParentAccountInfo {
-  phone_verified: any;
-  verification_type: any;
-  children_count: string | number;
+    ParentIdInfo, ParentAccountInfo, ParentCreditCardInfo  {
+    phone_verified: any;
+    verification_type: any;
+    children_count: string | number;
 }
 
 export interface AChild {

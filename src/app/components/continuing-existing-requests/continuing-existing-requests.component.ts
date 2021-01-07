@@ -1,6 +1,14 @@
 import { Component, OnInit } from "@angular/core";
 import { GeneralService } from "src/app/services/generalService/general.service";
 import { replyGiversOrReceivers } from "src/app/models/GiverResponse";
+import { FormGroup, FormBuilder, Validators } from "@angular/forms";
+import { ChatService } from "src/app/services/ChatService/chat.service";
+
+interface checkWhoIsContinuing {
+  phone?: string;
+  email?: string;
+  PIN?: string;
+}
 
 @Component({
   selector: "app-continuing-existing-requests",
@@ -14,28 +22,56 @@ export class ContinuingExistingRequestsComponent implements OnInit {
   response: replyGiversOrReceivers = undefined;
   nextStage: string;
   overlay: boolean = false;
-  constructor(private generalservice: GeneralService) {}
+  spinner: boolean = true;
+  checkWhoIsTryingToContinue: checkWhoIsContinuing = {};
+  confirmPhoneOrEmailForm: FormGroup;
+  private emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+  constructor(
+    private generalservice: GeneralService,
+    private fb: FormBuilder,
+    private chatservice: ChatService
+  ) {}
 
   ngOnInit(): void {
     this.generalservice.nextStageForUser$.subscribe(val => {
       console.log(val);
       this.nextStage = val;
     });
+    this.confirmPhoneOrEmailForm = this.fb.group({
+      phoneOrEmail: ["", Validators.required]
+    });
   }
 
-  checking() {
-    this.overlay = true;
-    document.querySelector(".checking").classList.add("working");
-    setTimeout(() => {
+  get phoneOrEmail() {
+    return this.confirmPhoneOrEmailForm.get("phoneOrEmail");
+  }
+
+  collectEntry(): void {
+    const { phoneOrEmail } = this.confirmPhoneOrEmailForm.value;
+    if (this.emailRegex.test(phoneOrEmail)) {
+      this.checkWhoIsTryingToContinue.email = phoneOrEmail;
+      this.view = "four-digit-pin";
+      return;
+    }
+    this.checkWhoIsTryingToContinue.phone = phoneOrEmail;
+    this.view = "four-digit-pin";
+  }
+
+  checking(command?: "stop"): void {
+    if (command) {
       document.querySelector(".checking").classList.remove("working");
       this.overlay = false;
-      this.view = "four-digit-pin";
-    }, 1500);
+      return;
+    }
+    this.overlay = true;
+    document.querySelector(".checking").classList.add("working");
+    // setTimeout(() => {
+
+    // }, 1500);
   }
 
   enterContentIntoInput(event: Event) {
     const element = event.target as HTMLElement;
-
     if (element.classList.contains("backspace")) {
       this.input = this.input.substring(0, this.input.length - 1);
       return;
@@ -44,6 +80,14 @@ export class ContinuingExistingRequestsComponent implements OnInit {
       const key = element.textContent.trim();
       this.input += key;
     }
+  }
+
+  submitThisUser() {
+    this.checking();
+    this.checkWhoIsTryingToContinue.PIN = this.input;
+    const formToSubmit = { ...this.checkWhoIsTryingToContinue };
+    console.log(formToSubmit);
+    this.chatservice.confirmParentPIN(formToSubmit as any);
   }
 
   continue() {

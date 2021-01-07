@@ -3,28 +3,44 @@
   <div *ngIf="view == ''" class="h-100 text-center family-info">
     <h1 class="para-title">Please enter phone or email you registered with</h1>
 
-    <form class="w-100" style="position: relative">
+    <form
+      [formGroup]="confirmPhoneOrEmailForm"
+      class="w-100"
+      style="position: relative"
+    >
       <div class="ui form">
         <div class="field">
           <label>Phone or email</label>
-          <input type="text" placeholder="Eg: 1we6679" />
+          <input
+            formControlName="phoneOrEmail"
+            type="text"
+            placeholder="Eg: johnny@john.com"
+          />
         </div>
       </div>
 
       <div class="text-center mt-4">
+        <!-- checking(); -->
         <button
-          (click)="checking()"
-          type="submit"
+          (click)="collectEntry()"
+          [disabled]="!confirmPhoneOrEmailForm.valid"
+          type="button"
           class="ui primary button fluid"
         >
           Continue
         </button>
       </div>
+      <!-- <div *ngIf="spinner" class="spinner-container">
+        <i class="fa fa-circle-notch fa-spin fa-3x"></i>
+      </div> -->
     </form>
   </div>
 
   <div *ngIf="view == 'four-digit-pin'" class="h-100 text-center family-info">
-    <h1 class="para-title">Enter 4 digit pin sent to Email</h1>
+    <h1 class="para-title">
+      Enter 4 digit pin sent to
+      {{ checkWhoIsTryingToContinue.email || checkWhoIsTryingToContinue.phone }}
+    </h1>
 
     <form class="w-100" style="position: relative">
       <div class="ui form">
@@ -80,10 +96,11 @@
       </div>
 
       <div class="text-center mt-4">
+        <!-- (click)="continue()" -->
         <button
           [disabled]="input.length < 3"
           type="button"
-          (click)="continue()"
+          (click)="submitThisUser()"
           class="ui primary button fluid"
         >
           Submit
@@ -93,7 +110,7 @@
   </div>
 
   <span class="checking">
-    Checking email
+    Checking {{ checkWhoIsTryingToContinue.email ? "email" : "phone" }}
     <i style="margin-left: 7px" class="fa fa-circle-notch fa-spin"></i>
   </span>
 </div>
