@@ -3,6 +3,7 @@ import { GeneralService } from "src/app/services/generalService/general.service"
 import { replyGiversOrReceivers } from "src/app/models/GiverResponse";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { ChatService } from "src/app/services/ChatService/chat.service";
+import { HttpErrorResponse } from "@angular/common/http";
 
 interface checkWhoIsContinuing {
   phone?: string;
@@ -86,8 +87,17 @@ export class ContinuingExistingRequestsComponent implements OnInit {
     this.checking();
     this.checkWhoIsTryingToContinue.PIN = this.input;
     const formToSubmit = { ...this.checkWhoIsTryingToContinue };
-    console.log(formToSubmit);
-    this.chatservice.confirmParentPIN(formToSubmit as any);
+    // console.log(formToSubmit);
+    this.chatservice.confirmParentPIN(formToSubmit as any).subscribe(
+      val => {
+        console.log(val.stages);
+        this.checking("stop");
+      },
+      (err: HttpErrorResponse) => {
+        this.generalservice.errorNotification(`${err.error.message}!`);
+        this.checking("stop");
+      }
+    );
   }
 
   continue() {

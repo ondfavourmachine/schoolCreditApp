@@ -88,7 +88,7 @@ export class ParentAccountFormComponent implements OnInit, OnDestroy {
     formToSubmit.phone = this.currentParentPhone;
     this.chatservice.confirmParentPIN(formToSubmit).subscribe(
       val => {
-        const { status } = val.data;
+        const { status } = val;
         if (status) {
           this.spinner = false;
           this.page = "attach-card";

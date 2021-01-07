@@ -47,22 +47,22 @@ interface ContinuingExistingRequestResponse {
     guardian_data: Partial<CompleteParentInfomation>;
     guardian: number;
     children: Array<Partial<AChild>>;
-    status: boolean;
-    stages: {
-      parent_data: 0 | 1;
-      parent_pic: 0 | 1;
-      parent_email: 0 | 1;
-      parent_pin: 0 | 1;
-      children_count: 0 | 1;
-      child_data: 0 | 1;
-      work: 0 | 1;
-      address: 0 | 1;
-      bvn: 0 | 1;
-      identity: 0 | 1;
-      account: 0 | 1;
-      card: 0 | 1;
-    };
   };
+  stages: {
+    parent_data: 0 | 1;
+    parent_pic: 0 | 1;
+    parent_email: 0 | 1;
+    parent_pin: 0 | 1;
+    children_count: 0 | 1;
+    child_data: 0 | 1;
+    work: 0 | 1;
+    address: 0 | 1;
+    bvn: 0 | 1;
+    identity: 0 | 1;
+    account: 0 | 1;
+    card: 0 | 1;
+  };
+  status: boolean;
 }
 
 export interface FinancialInstitution {
@@ -227,7 +227,7 @@ export class ChatService {
     [propName: string]: string;
   }): Observable<ContinuingExistingRequestResponse> {
     return this.http.post<ContinuingExistingRequestResponse>(
-      `${this.generalUrl}card`,
+      `${this.generalUrl}continue/request`,
       obj
     );
   }
