@@ -2,7 +2,7 @@ input.ng-touched.ng-invalid {
   border-bottom: 1px solid red !important;
 }
 
-.age_warning {
+.dob_warning {
   display: block;
   text-align: left;
   line-height: 1px;

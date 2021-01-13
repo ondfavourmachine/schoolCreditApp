@@ -6,10 +6,19 @@ import { Store } from "@ngrx/store";
 import * as fromStore from "../../store";
 import * as generalActions from "../../store/actions/general.action";
 import { pluck } from "rxjs/operators";
-import { FormGroup, FormBuilder, Validators } from "@angular/forms";
+import { LgaData } from "src/app/models/lgaData";
+import { FormGroup, FormBuilder, Validators, FormControl, AbstractControl } from "@angular/forms";
 import { ChatService } from "src/app/services/ChatService/chat.service";
 import { Subscription } from "rxjs";
 import { HttpErrorResponse } from "@angular/common/http";
+import { sandBoxData } from "src/app/models/sandboxData";
+
+interface State {
+  id: string;
+  value: string;
+}
+
+interface LGA extends State {}
 
 @Component({
   selector: "app-parents-information",
@@ -19,13 +28,15 @@ import { HttpErrorResponse } from "@angular/common/http";
 export class ParentsInformationComponent implements OnInit, OnDestroy {
   view:
     | ""
+    | "state"
+    | "address"
+    | "lga"
     | "profile-form"
     | "work-form"
     | "picture"
     | "phone"
     | "email"
     | "verification"
-    | "email"
     | "confirm-email"
     | "enter-code"
     | "four-digit-pin"
@@ -34,17 +45,25 @@ export class ParentsInformationComponent implements OnInit, OnDestroy {
   selected: "email" | "phone" | "" = "";
   type: "1" | "2" | "" = "";
   parent: Partial<Parent> = {};
+  stateLgas: LGA[] = [];
+  NigerianStates: State[] = [];
   phoneForm: FormGroup;
   phoneVerificationForm: FormGroup;
   PINForm: FormGroup;
   emailForm: FormGroup;
+  address: string = "";
+  state: string = "1";
   destroy: Subscription[] = [];
+  lgaData: any = {};
   constructor(
     private generalservice: GeneralService,
     private store: Store<fromStore.AllState>,
     private fb: FormBuilder,
     private chatapi: ChatService
-  ) {}
+  ) {
+    this.NigerianStates = sandBoxData().data.states;
+    this.lgaData = { ...LgaData() };
+  }
 
   ngOnInit(): void {
     //  this was done before i created selectors
@@ -57,13 +76,13 @@ export class ParentsInformationComponent implements OnInit, OnDestroy {
           val.hasOwnProperty("OTP_sent") &&
           !val.OTP_sent
         ) {
-          this.sendParentInformationToServer(val);
+          // this.sendParentInformationToServer(val);
         }
       });
 
-    // this.destroy[1] = this.store
-    //   .select(fromStore.getParentState)
-    //   .subscribe(val => console.log(val));
+    this.destroy[1] = this.store
+      .select(fromStore.getParentState)
+      .subscribe(val => console.log(val));
 
     // this.destroy[2] =
 
@@ -83,10 +102,22 @@ export class ParentsInformationComponent implements OnInit, OnDestroy {
     });
   }
 
+  get phone(): AbstractControl {
+    return this.phoneForm.get("phone");
+  }
+
+  selectLgaInState(value: string) {
+    const selectedLga = this.lgaData[value];
+    // this.stateLgas = selectedLga.data;
+    console.log(selectedLga);
+  }
+
   submitPhoneForm(form: FormGroup) {
     this.spinner = true;
     let parentDetails: Partial<Parent> = form.value;
     this.store.dispatch(new generalActions.addParents(parentDetails));
+    this.view = "email";
+    this.spinner = false;
     // this.changeToStuff();
   }
 
@@ -246,25 +277,40 @@ export class ParentsInformationComponent implements OnInit, OnDestroy {
       .pipe(pluck("manageParent", "parent_info", "guardian"))
       .subscribe(val => (guardian = val));
 
-    try {
-      await this.chatapi.updateEmail({
-        email: form.value.email,
-        guardian
-      });
-      const refreshedState: Partial<Parent> = { email: form.value.email };
-      this.store.dispatch(new generalActions.addParents(refreshedState));
-      this.spinner = false;
+    // try {
+    //   await this.chatapi.updateEmail({
+    //     email: form.value.email,
+    //     guardian
+    //   });
+    const refreshedState: Partial<Parent> = { email: form.value.email };
+    this.store.dispatch(new generalActions.addParents(refreshedState));
+    this.view = "address";
+    // this.spinner = false;
 
-      disconnect.unsubscribe();
-      this.changeToAnotherView();
-    } catch (error) {
-      this.spinner = false;
-    }
+    disconnect.unsubscribe();
+    // this.changeToAnotherView();
+    // } catch (error) {
+    //   this.spinner = false;
+    // }
   }
 
   change(event) {
     this.spinner = false;
     this.view = "four-digit-pin";
+  }
+
+  submitAddressForm() {
+    console.log(this.address);
+    const refreshedState: Partial<Parent> = { address: this.address };
+    this.store.dispatch(new generalActions.addParents(refreshedState));
+    this.view = "state";
+  }
+
+  submitStateForm() {
+    console.log(this.state);
+    const refreshedState: Partial<Parent> = { state: this.state };
+    this.store.dispatch(new generalActions.addParents(refreshedState));
+    this.view = "lga";
   }
 
   ngOnDestroy() {

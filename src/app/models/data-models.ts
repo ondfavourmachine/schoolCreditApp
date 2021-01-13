@@ -1,9 +1,11 @@
 export interface ParentRegistration {
   full_name?: string;
-  age?: string;
+  dob?: string;
   gender?: string;
   address?: string;
   phone?: string;
+  lga?: string;
+  state?: string;
   type?: "1" | "2";
 }
 
@@ -25,8 +27,8 @@ export interface ParentAddressInfo {
   // address?:string,
   bus_stop: string;
   city: string;
-  state: string | number;
-  lga: string | number;
+  // state: string | number;
+  // lga: string | number;
   post_code: string | number;
 }
 export interface ParentIdInfo {
@@ -41,22 +43,24 @@ export interface ParentAccountInfo {
   bank_code: string;
 }
 
-export interface ParentCreditCardInfo{
-  cvv: string,
-  card_number: string | number,
-  card_name: string,
-  expiry_month: string,
-  expiry_year: string
+export interface ParentCreditCardInfo {
+  cvv: string;
+  card_number: string | number;
+  card_name: string;
+  expiry_month: string;
+  expiry_year: string;
 }
 
 export interface CompleteParentInfomation
   extends Parent,
     ParentWorkInfo,
     ParentAddressInfo,
-    ParentIdInfo, ParentAccountInfo, ParentCreditCardInfo  {
-    phone_verified: any;
-    verification_type: any;
-    children_count: string | number;
+    ParentIdInfo,
+    ParentAccountInfo,
+    ParentCreditCardInfo {
+  phone_verified: any;
+  verification_type: any;
+  children_count: string | number;
 }
 
 export interface AChild {
@@ -78,7 +82,6 @@ export interface ParentRegistrationResponse {
   data: Partial<Parent>;
   guardian: any;
 }
-
 
 export interface Bank {
   id: string;

@@ -17,20 +17,21 @@
       <!-- -->
 
       <div class="field">
-        <label>Age</label>
+        <label>Date Of Birth</label>
         <input
-          formControlName="age"
+          formControlName="dob"
+          onfocus="this.type = 'date'"
+          onblur="this.type='text'"
           name="class"
-          type="number"
-          pattern="[0-9]{2}"
-          placeholder="Eg: 20"
+          type="text"
+          placeholder="Eg: Month/Day/Year"
         />
       </div>
       <small
-        class="age_warning"
-        [style.display]="age.touched && !age.valid ? 'block' : 'none'"
+        class="dob_warning"
+        [style.display]="dob.touched && !dob.valid ? 'block' : 'none'"
       >
-        Please enter age between 0 - 99
+        Please enter your date of birth
       </small>
     </div>
     <div class="inline fields">
@@ -69,7 +70,7 @@
     <div class="field">
       <!-- -->
 
-      <div class="field">
+      <!-- <div class="field">
         <label>Address</label>
         <input
           formControlName="address"
@@ -77,7 +78,7 @@
           type="text"
           placeholder="Eg: 21 Somolu road Lagos"
         />
-      </div>
+      </div> -->
     </div>
   </div>
 

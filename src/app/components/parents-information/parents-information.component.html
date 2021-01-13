@@ -137,14 +137,87 @@
   </div>
 </div>
 
-<!-- <div *ngIf="view == 'enter-code'" class="h-100 text-center family-info">
-  <h1 class="para-title">Enter OTP sent to {{ selected }}</h1>
+<div *ngIf="view == 'address'" class="h-100 text-center family-info">
+  <h1 class="para-title">Please enter your residential address</h1>
 
   <form class="w-100" style="position: relative">
     <div class="ui form">
       <div class="field">
-        <label>Verification code</label>
-        <input type="text" placeholder="Eg: 1we6679" />
+        <label>Address </label>
+        <input
+          [(ngModel)]="address"
+          name="address"
+          type="text"
+          placeholder="Eg: 21, Bolaji Street Surulere "
+        />
+      </div>
+    </div>
+    <!-- (click)="view = 'state'" -->
+    <div class="text-center mt-4">
+      <button
+        (click)="submitAddressForm()"
+        [disabled]="address.length < 2"
+        type="submit"
+        class="ui primary button fluid"
+      >
+        Continue
+      </button>
+    </div>
+  </form>
+</div>
+
+<div *ngIf="view == 'state'" class="h-100 text-center family-info">
+  <h1 class="para-title">Please select your state of residence</h1>
+
+  <form class="w-100" style="position: relative">
+    <div class="ui form">
+      <div class="field">
+        <label>State </label>
+        <!-- <input
+          [(ngModel)]="state"
+          (change)="selectLgaInState(state)"
+          name="state"
+          type="text"
+          placeholder="Eg: Lagos"
+        /> -->
+        <select
+          (change)="selectLgaInState($event.target.value)"
+          style="height: auto;"
+          class="ui fluid search dropdown"
+          name="card[expire-month]"
+          [(ngModel)]="state"
+        >
+          <option value="" selected>Select state...</option>
+          <option
+            [value]="nigerianstate.id"
+            *ngFor="let nigerianstate of NigerianStates; index as i"
+          >
+            {{ nigerianstate.value }}
+          </option>
+        </select>
+      </div>
+    </div>
+    <!-- (click)="view = 'lga'" -->
+    <div class="text-center mt-4">
+      <button
+        (click)="submitStateForm()"
+        type="submit"
+        class="ui primary button fluid"
+      >
+        Continue
+      </button>
+    </div>
+  </form>
+</div>
+
+<div *ngIf="view == 'lga'" class="h-100 text-center family-info">
+  <h1 class="para-title">Please enter the Local Govt Area where you reside</h1>
+
+  <form class="w-100" style="position: relative">
+    <div class="ui form">
+      <div class="field">
+        <label>Local Govt Area </label>
+        <input type="text" placeholder="Eg: 21, Bolaji Street Surulere " />
       </div>
     </div>
 
@@ -158,7 +231,7 @@
       </button>
     </div>
   </form>
-</div> -->
+</div>
 
 <div class=" h-100 text-center family-info" *ngIf="view == 'phone'">
   <h1 class="para-title">
@@ -172,12 +245,18 @@
         <input
           formControlName="phone"
           type="tel"
-          pattern="[0-9]*"
+          pattern="[0-9]{11}"
           placeholder="Eg: 09093345678"
         />
+        <small
+        class="warning"
+        [style.display]="phone.touched && !phone.valid ? 'block' : 'none'"
+      >
+        Please enter age between 0 - 99
+      </small>
       </div>
     </div>
-
+<!-- pattern="[0-9]*" -->
     <div class="text-center mt-4">
       <button
         [disabled]="!phoneForm.valid"
