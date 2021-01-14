@@ -13,6 +13,7 @@ import en from "@angular/common/locales/en";
 // External Packages
 import { StoreModule } from "@ngrx/store";
 import { ToastrModule } from "ngx-toastr";
+import { ImageCropperModule } from "ngx-image-cropper";
 
 // components
 import { TermsAndConditionComponent } from "./components/terms-and-condition/terms-and-condition.component";
@@ -47,6 +48,7 @@ import { MakeFullPaymentComponent } from "./components/make-full-payment/make-fu
 // import { StoreModule } from '@ngrx/store';
 
 import { reducers } from "./store";
+import { VerifyParentDataComponent } from './components/verify-parent-data/verify-parent-data.component';
 
 registerLocaleData(en);
 
@@ -80,7 +82,8 @@ registerLocaleData(en);
     ContinuingExistingRequestsComponent,
     AddressFormComponent,
     ParentAccountFormComponent,
-    MakeFullPaymentComponent
+    MakeFullPaymentComponent,
+    VerifyParentDataComponent
   ],
   imports: [
     BrowserModule,
@@ -89,6 +92,7 @@ registerLocaleData(en);
     SharedModule,
     FormsModule,
     HttpClientModule,
+    ImageCropperModule,
     BrowserAnimationsModule,
     ToastrModule.forRoot({
       timeOut: 4000,

@@ -285,6 +285,9 @@ export class ChatMessagesDisplayComponent
       if (String(componentToLoad).toLowerCase() == "parent-account-form") {
         this.generalservice.handleFlowController(String(componentToLoad));
       }
+      if (String(componentToLoad).toLowerCase() == "verify-parent-data") {
+        this.generalservice.handleFlowController(String(componentToLoad));
+      }
       if (
         String(componentToLoad).toLowerCase() == "continuing-existing-requests"
       ) {

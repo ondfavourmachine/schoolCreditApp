@@ -6,7 +6,7 @@
     src="/assets/images/image-placeholder-1.svg"
   />
   <input
-    (change)="loadImage($event)"
+    (change)="fileToBeCropped($event)"
     type="file"
     id="picture-upload"
     name="img"
@@ -16,8 +16,68 @@
   <button
     (click)="uploadImage()"
     type="button"
+    [disabled]="!modifiedFile"
     class="ui primary button fluid modified-button"
   >
     Upload and continue
   </button>
+</div>
+
+<!-- <button (click)="lauchModal()" id="btnTrigger" class="btn btn button--no-width">
+  launch me
+</button> -->
+
+<div
+  id="myModal2"
+  class="modal"
+  style="z-index: 2000"
+  [style.display]="showModal"
+>
+  <!-- Modal content -->
+  <div class="modal-content" style="position: relative">
+    <button style="display: none" class="modal-close">
+      &times;
+    </button>
+
+    <!-- <button  class="fakeButton inner">
+      &times;
+    </button> -->
+
+    <div class="modal-body" style="display: 'block'">
+      <div>
+        <image-cropper
+          style="width: 100%; max-height: 500px;"
+          [imageChangedEvent]="imageChangedEvent"
+          [maintainAspectRatio]="true"
+          [aspectRatio]="1 / 1"
+          [resizeToWidth]="500"
+          [resizeToHeight]="500"
+          [cropperMinWidth]="510"
+          [cropperMinHeight]="510"
+          [onlyScaleDown]="true"
+          format="jpeg"
+          [imageQuality]="92"
+          (imageCropped)="imageCropped($event)"
+        >
+        </image-cropper>
+      </div>
+      <div class="text-center mt-5 w-100 flex justify-center align-center">
+        <button
+          (click)="imageCroppingDone()"
+          type="button"
+          class="btn btn-success modified mr-3"
+        >
+          Done
+        </button>
+
+        <button
+          (click)="closeModal()"
+          type="button"
+          class="btn btn-success modified warning"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
 </div>

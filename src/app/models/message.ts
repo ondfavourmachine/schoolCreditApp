@@ -356,6 +356,16 @@ export class Message {
         "parent-account-form"
       );
       break;
+
+      case "verifynow":
+      console.log('i am here!');
+      this.giverDispatchEvents(
+        "customGiverEventFromMsgClass",
+        "giver",
+        "verify-parent-data"
+      );
+      break;
+
       case "begin":
         this.dispatchevent(
           "customEventFromMessageClass",

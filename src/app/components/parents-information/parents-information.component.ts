@@ -7,7 +7,13 @@ import * as fromStore from "../../store";
 import * as generalActions from "../../store/actions/general.action";
 import { pluck } from "rxjs/operators";
 import { LgaData } from "src/app/models/lgaData";
-import { FormGroup, FormBuilder, Validators, FormControl, AbstractControl } from "@angular/forms";
+import {
+  FormGroup,
+  FormBuilder,
+  Validators,
+  FormControl,
+  AbstractControl
+} from "@angular/forms";
 import { ChatService } from "src/app/services/ChatService/chat.service";
 import { Subscription } from "rxjs";
 import { HttpErrorResponse } from "@angular/common/http";
@@ -39,7 +45,7 @@ export class ParentsInformationComponent implements OnInit, OnDestroy {
     | "verification"
     | "confirm-email"
     | "enter-code"
-    | "four-digit-pin"
+    | "done"
     | "choose-verification" = "";
   spinner: boolean = false;
   selected: "email" | "phone" | "" = "";
@@ -53,6 +59,7 @@ export class ParentsInformationComponent implements OnInit, OnDestroy {
   emailForm: FormGroup;
   address: string = "";
   state: string = "1";
+  localGovtArea: string = "1";
   destroy: Subscription[] = [];
   lgaData: any = {};
   constructor(
@@ -80,18 +87,18 @@ export class ParentsInformationComponent implements OnInit, OnDestroy {
         }
       });
 
-    this.destroy[1] = this.store
-      .select(fromStore.getParentState)
-      .subscribe(val => console.log(val));
+    // this.destroy[1] = this.store
+    //   .select(fromStore.getParentState)
+    //   .subscribe(val => console.log(val));
 
     // this.destroy[2] =
 
     this.phoneForm = this.fb.group({
       phone: ["", Validators.required]
     });
-    this.phoneVerificationForm = this.fb.group({
-      OTP: ["", Validators.required]
-    });
+    // this.phoneVerificationForm = this.fb.group({
+    //   OTP: ["", Validators.required]
+    // });
 
     this.emailForm = this.fb.group({
       email: ["", Validators.required]
@@ -107,9 +114,10 @@ export class ParentsInformationComponent implements OnInit, OnDestroy {
   }
 
   selectLgaInState(value: string) {
-    const selectedLga = this.lgaData[value];
-    // this.stateLgas = selectedLga.data;
-    console.log(selectedLga);
+    const selectedLga = this.lgaData[value || this.localGovtArea];
+    this.stateLgas = selectedLga.data;
+    // console.log(selectedLga);
+    this.localGovtArea = selectedLga.data[0].id;
   }
 
   submitPhoneForm(form: FormGroup) {
@@ -246,28 +254,28 @@ export class ParentsInformationComponent implements OnInit, OnDestroy {
     this.selected = something;
   }
 
-  async confirmVerification(form: FormGroup) {
-    this.spinner = true;
-    let guardian;
-    //  i need to write selectors to stop doing this
-    const disconnect: Subscription = this.store
-      .pipe(pluck("manageParent", "parent_info", "guardian"))
-      .subscribe(val => (guardian = val));
+  // async confirmVerification(form: FormGroup) {
+  //   this.spinner = true;
+  //   let guardian;
+  //   //  i need to write selectors to stop doing this
+  //   const disconnect: Subscription = this.store
+  //     .pipe(pluck("manageParent", "parent_info", "guardian"))
+  //     .subscribe(val => (guardian = val));
 
-    try {
-      const { message } = await this.chatapi.verifyOTP({
-        phone_OTP: form.value.OTP,
-        guardian
-      });
-      if (message.toLowerCase() == "phone number has been validated!") {
-        this.spinner = false;
-        disconnect.unsubscribe();
-        this.changeToAnotherView();
-      }
-    } catch (error) {
-      this.spinner = false;
-    }
-  }
+  //   try {
+  //     const { message } = await this.chatapi.verifyOTP({
+  //       phone_OTP: form.value.OTP,
+  //       guardian
+  //     });
+  //     if (message.toLowerCase() == "phone number has been validated!") {
+  //       this.spinner = false;
+  //       disconnect.unsubscribe();
+  //       this.changeToAnotherView();
+  //     }
+  //   } catch (error) {
+  //     this.spinner = false;
+  //   }
+  // }
 
   async submitEmail(form: FormGroup) {
     this.spinner = true;
@@ -296,21 +304,64 @@ export class ParentsInformationComponent implements OnInit, OnDestroy {
 
   change(event) {
     this.spinner = false;
-    this.view = "four-digit-pin";
+    //  this is new place to close modal;
+    let parentName;
+    const disconnect: Subscription = this.store
+      .pipe(pluck("manageParent", "parent_info"))
+      .subscribe((val: Parent) => {
+        const { full_name } = val;
+        // guardianID = guardian;
+        parentName = full_name;
+      });
+    const responseFromParent = new replyGiversOrReceivers(
+      `I have provided my details`,
+      "right"
+    );
+    this.generalservice.nextChatbotReplyToGiver = undefined;
+    this.generalservice.responseDisplayNotifier(responseFromParent);
+    this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
+    setTimeout(() => {
+      this.generalservice.handleFlowController("");
+      this.spinner = false;
+      this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
+        `Please ${parentName}, take a minute to verify the information you provided`,
+        "left",
+        `Ok let's verify it now, No later`,
+        `verifynow,verifylater`,
+        "prevent"
+      );
+      this.spinner = false;
+      disconnect.unsubscribe();
+      const chatbotResponse = new replyGiversOrReceivers(
+        `Thank you for registering, ${parentName || "John Bosco"}`,
+        "left",
+        "",
+        ``
+      );
+      this.generalservice.responseDisplayNotifier(chatbotResponse);
+    }, 600);
   }
 
   submitAddressForm() {
-    console.log(this.address);
+    // console.log(this.address);
     const refreshedState: Partial<Parent> = { address: this.address };
     this.store.dispatch(new generalActions.addParents(refreshedState));
     this.view = "state";
   }
 
   submitStateForm() {
-    console.log(this.state);
+    // console.log(this.state);
     const refreshedState: Partial<Parent> = { state: this.state };
     this.store.dispatch(new generalActions.addParents(refreshedState));
     this.view = "lga";
+  }
+
+  submitLGA() {
+    // console.log(this.localGovtArea);
+    const refreshedState: Partial<Parent> = { lga: this.localGovtArea };
+    this.store.dispatch(new generalActions.addParents(refreshedState));
+    this.spinner = false;
+    this.view = "picture";
   }
 
   ngOnDestroy() {

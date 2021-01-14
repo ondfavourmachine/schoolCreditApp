@@ -108,7 +108,7 @@
   <app-work-form (changeUpTheViewTwo)="view = 'confirm-email'"></app-work-form>
 </div>
 
-<div class=" h-100 text-center family-info" *ngIf="view == 'four-digit-pin'">
+<!-- <div class=" h-100 text-center family-info" *ngIf="view == 'four-digit-pin'">
   <h1 class="para-title">
     Select a 4 digit pin for future identification
   </h1>
@@ -135,7 +135,7 @@
   <div *ngIf="spinner" class="spinner-container">
     <i class="fa fa-circle-notch fa-spin fa-3x"></i>
   </div>
-</div>
+</div> -->
 
 <div *ngIf="view == 'address'" class="h-100 text-center family-info">
   <h1 class="para-title">Please enter your residential address</h1>
@@ -173,13 +173,7 @@
     <div class="ui form">
       <div class="field">
         <label>State </label>
-        <!-- <input
-          [(ngModel)]="state"
-          (change)="selectLgaInState(state)"
-          name="state"
-          type="text"
-          placeholder="Eg: Lagos"
-        /> -->
+       
         <select
           (change)="selectLgaInState($event.target.value)"
           style="height: auto;"
@@ -217,13 +211,23 @@
     <div class="ui form">
       <div class="field">
         <label>Local Govt Area </label>
-        <input type="text" placeholder="Eg: 21, Bolaji Street Surulere " />
+        <select
+        style="height: auto;"
+        class="ui fluid search dropdown"
+        name="card[expire-month]"
+        [(ngModel)]="localGovtArea"
+      >
+        <option value="" selected>Select Local Govt Area...</option>
+        <option [value]="lga.id" *ngFor="let lga of stateLgas; index as i">
+          {{ lga.value }}
+        </option>
+      </select>
       </div>
     </div>
-
+<!-- (click)="view = 'picture'" -->
     <div class="text-center mt-4">
       <button
-        (click)="view = 'picture'"
+        (click)="submitLGA()"
         type="submit"
         class="ui primary button fluid"
       >
@@ -306,7 +310,7 @@
   </form>
 </div>
 
-<div class=" h-100 text-center family-info" *ngIf="view == 'verification'">
+<!-- <div class=" h-100 text-center family-info" *ngIf="view == 'verification'">
   <h1 class="para-title">Enter OTP sent to {{ selected }}</h1>
 
   <form
@@ -334,4 +338,4 @@
       <i class="fa fa-circle-notch fa-spin fa-3x"></i>
     </div>
   </form>
-</div>
+</div> -->

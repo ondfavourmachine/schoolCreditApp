@@ -173,28 +173,6 @@ div.transparencyDisclaimer {
 
 /* spinner css starts here */
 
-.fakeButton {
-  position: absolute;
-  top: 2%;
-  right: 3%;
-  z-index: 1000;
-  width: 25px;
-  height: 25px;
-  background: #db2828;
-  color: #fff;
-  font-size: 1.5em;
-  border-radius: 50%;
-  display: -webkit-box;
-  display: flex;
-  -webkit-box-pack: center;
-  justify-content: center;
-  -webkit-box-align: center;
-  align-items: center;
-  padding: 0;
-  border: 0;
-  cursor: pointer;
-}
-
 .confirmation {
   display: none;
   z-index: 1020;

@@ -1,0 +1,54 @@
+<div
+  class="flex flex-column justify-center align-center h-100 text-center family-info"
+  *ngIf="view == ''"
+>
+  <!-- <div class="modal-icon">
+  <img src="../../../../assets/images/svgs/information_1.svg" alt="ICON" />
+</div> -->
+  <h1 class="para-title">An OTP will be sent to {{ parentDetails?.phone }}</h1>
+  <div class="w-100 flex justify-center align-center">
+    <button disabled class="ui button primary basic mt-4 mr-2">
+      I want to change this number
+    </button>
+
+    <button
+      (click)="sendOTP(parentDetails?.phone)"
+      class="ui button primary basic mt-4"
+    >
+      Ok, Continue
+    </button>
+  </div>
+  <div *ngIf="spinner" class="spinner-container">
+    <i class="fa fa-circle-notch fa-spin fa-3x"></i>
+  </div>
+</div>
+
+<div class=" h-100 text-center family-info" *ngIf="view == 'verification'">
+  <h1 class="para-title">Enter OTP sent to {{ parentDetails?.phone }}</h1>
+
+  <form
+    [formGroup]="phoneVerificationForm"
+    class="w-100"
+    style="position: relative"
+  >
+    <div class="ui form">
+      <div class="field">
+        <label>Verification code</label>
+        <input formControlName="OTP" type="tel" placeholder="Eg: 1we6679" />
+      </div>
+    </div>
+
+    <div class="text-center mt-4">
+      <button
+        (click)="confirmVerification(phoneVerificationForm)"
+        type="button"
+        class="ui primary button fluid"
+      >
+        Continue
+      </button>
+    </div>
+    <div *ngIf="spinner" class="spinner-container">
+      <i class="fa fa-circle-notch fa-spin fa-3x"></i>
+    </div>
+  </form>
+</div>
