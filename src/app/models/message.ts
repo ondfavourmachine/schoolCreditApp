@@ -67,6 +67,7 @@ export class Message {
   }
 
   makeAndInsertMessage(count: number) {
+    this.saveChats();
     // if the try block fails, then there isn't text in the button string to generate an
     // array from so control moves to the catch block and executes the code there
     try {
@@ -161,7 +162,7 @@ export class Message {
     let nodelist: NodeList = document.querySelectorAll(
       ".chat-box__wrapper.left"
     );
-    // debugger;
+    // console.log(nodelist);
     let time: number | string = (nodelist[nodelist.length - 1] as HTMLElement)
       .dataset.time;
     time = Number(time);
@@ -350,21 +351,21 @@ export class Message {
         );
         break;
       case "addaccount":
-      this.giverDispatchEvents(
-        "customGiverEventFromMsgClass",
-        "giver",
-        "parent-account-form"
-      );
-      break;
+        this.giverDispatchEvents(
+          "customGiverEventFromMsgClass",
+          "giver",
+          "parent-account-form"
+        );
+        break;
 
       case "verifynow":
-      console.log('i am here!');
-      this.giverDispatchEvents(
-        "customGiverEventFromMsgClass",
-        "giver",
-        "verify-parent-data"
-      );
-      break;
+        console.log("i am here!");
+        this.giverDispatchEvents(
+          "customGiverEventFromMsgClass",
+          "giver",
+          "verify-parent-data"
+        );
+        break;
 
       case "begin":
         this.dispatchevent(
@@ -424,7 +425,7 @@ export class Message {
         );
         // sessionStorage.setItem("anonymous", "2");
         break;
-        case "fullpayment":
+      case "fullpayment":
         this.giverDispatchEvents(
           "customGiverEventFromMsgClass",
           "giver",
@@ -638,5 +639,40 @@ export class Message {
       "parents-information",
       stringToPassAlong ? stringToPassAlong : ""
     );
+  }
+
+  saveChats() {
+    const savedChats = JSON.parse(sessionStorage.getItem("savedChats"));
+    // save the chats that was passed to this function.
+    if (!savedChats) {
+      let arrayOfChats = [];
+      arrayOfChats.push(
+        new Message(
+          this.text,
+          this.direction,
+          this.htmlElement,
+          this.buttonElement,
+          this.extraInfo
+        )
+      );
+      sessionStorage.setItem("savedChats", JSON.stringify(arrayOfChats));
+    } else {
+      const found = (savedChats as Array<Message>).findIndex(element => {
+        return element.text == this.text;
+      });
+      if (found == -1) {
+        (savedChats as Array<Message>).push(
+          new Message(
+            this.text,
+            this.direction,
+            this.htmlElement,
+            this.buttonElement,
+            this.extraInfo
+          )
+        );
+        sessionStorage.setItem("savedChats", JSON.stringify(savedChats));
+        // console.log(JSON.parse(sessionStorage.getItem("savedChats")));
+      }
+    }
   }
 }

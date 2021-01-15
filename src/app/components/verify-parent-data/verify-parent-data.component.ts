@@ -15,7 +15,7 @@ import { GeneralService } from "src/app/services/generalService/general.service"
   styleUrls: ["./verify-parent-data.component.css"]
 })
 export class VerifyParentDataComponent implements OnInit, OnDestroy {
-  view: "" | "verification" = "";
+  view: "" | "verification" | "email" = "";
   phoneVerificationForm: FormGroup;
   spinner: boolean = false;
   parentDetails: Partial<Parent>;
@@ -71,13 +71,18 @@ export class VerifyParentDataComponent implements OnInit, OnDestroy {
       });
       if (message.toLowerCase() == "phone number has been validated!") {
         this.spinner = false;
-        // disconnect.unsubscribe();
+        this.view = "email";
         // this.changeToAnotherView();
       }
     } catch (error) {
+      this.generalservice.warningNotification(
+        error.error.message || "You entered and incorrect otp!"
+      );
       this.spinner = false;
     }
   }
+
+  sendActivationCodeToEmail(email: string) {}
 
   ngOnDestroy() {
     this.destroy.forEach(element => element.unsubscribe());

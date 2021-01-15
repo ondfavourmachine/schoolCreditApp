@@ -173,7 +173,9 @@ export class ChatMessagesDisplayComponent
   }
 
   ngAfterViewInit(message?: string, direction?: string) {
+    // debugger;
     const ul = this.messagePlaceHolder.nativeElement as HTMLUListElement;
+    // watch this function below:
     this.generateWelcomeMsgForReceiverOrGiver(ul);
 
     ul.addEventListener("customReceiverEventFromMsgClass", (e: CustomEvent) => {
@@ -396,6 +398,32 @@ export class ChatMessagesDisplayComponent
         this.getQuestions();
       }
     });
+
+    setTimeout(() => {
+      this.refillChatBotWithChats();
+    }, 1000);
+  }
+
+  refillChatBotWithChats() {
+    const savedChats: Array<Message> = JSON.parse(
+      sessionStorage.getItem("savedChats")
+    );
+    if (!savedChats) return;
+    if (savedChats.length == 3) return;
+    const remainingChats = savedChats.slice(3);
+    this.generalservice.nextChatbotReplyToGiver = undefined;
+    remainingChats.forEach((element, index, array) => {
+      this.insertGiversResponseIntoDom(
+        new replyGiversOrReceivers(
+          element.text,
+          element.direction,
+          element.buttonElement,
+          element.extraInfo,
+          index == array.length - 1 ? "prevent" : "allow"
+        ),
+        undefined
+      );
+    });
   }
 
   // covid relief bot replies to givers
@@ -473,27 +501,6 @@ export class ChatMessagesDisplayComponent
     }
   }
 
-  // responseFromGiver(obj: GiverResponse, reply?: object) {
-  //   if (obj.message.length < 1) {
-  //     this.displaySubsequentMessages({
-  //       message: obj.text,
-  //       direction: "right"
-  //     });
-  //     if (!reply) {
-  //       this.generalservice.nextReplyFromCovidRelief({
-  //         message:
-  //           "Would you like to stay anonymous or be an identified giver?",
-  //         direction: "left",
-  //         button: "Identify,Anonymous",
-  //         extraInfo: "identify,anonymous"
-  //       });
-  //     }
-  //   } else {
-  //     this.changeModalTitle(String(obj.message));
-  //     this.generalservice.controlFormsToDisplay(obj.message);
-  //     this.generalservice.handleFlowController("formsContainer");
-  //   }
-  // }
   displaySubsequentMessages(obj: {
     message: string;
     direction: string;

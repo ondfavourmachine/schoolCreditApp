@@ -27,13 +27,13 @@ export class ProfileFormComponent implements OnInit {
 
     this.parentProfileForm = this.fb.group({
       full_name: ["", Validators.required],
-      dob: ["", Validators.required],
+      date_of_birth: ["", Validators.required],
       gender: ["", Validators.required]
     });
   }
 
   get dob() {
-    return this.parentProfileForm.get("dob");
+    return this.parentProfileForm.get("date_of_birth");
   }
 
   submitForm(form: FormGroup) {

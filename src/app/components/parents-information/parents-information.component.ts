@@ -70,23 +70,10 @@ export class ParentsInformationComponent implements OnInit, OnDestroy {
   ) {
     this.NigerianStates = sandBoxData().data.states;
     this.lgaData = { ...LgaData() };
+    this.selectLgaInState(this.localGovtArea);
   }
 
   ngOnInit(): void {
-    //  this was done before i created selectors
-    //  i might come back to change it
-    this.destroy[0] = this.store
-      .pipe(pluck("manageParent", "parent_info"))
-      .subscribe((val: Parent & Object) => {
-        if (
-          val.hasOwnProperty("phone") &&
-          val.hasOwnProperty("OTP_sent") &&
-          !val.OTP_sent
-        ) {
-          // this.sendParentInformationToServer(val);
-        }
-      });
-
     // this.destroy[1] = this.store
     //   .select(fromStore.getParentState)
     //   .subscribe(val => console.log(val));
@@ -127,36 +114,6 @@ export class ParentsInformationComponent implements OnInit, OnDestroy {
     this.view = "email";
     this.spinner = false;
     // this.changeToStuff();
-  }
-
-  sendParentInformationToServer(obj: Partial<ParentRegistration>) {
-    this.chatapi.registerParent(obj).subscribe(
-      async val => {
-        const { guardian, data } = val;
-        let newState: Partial<Parent> = { guardian };
-        try {
-          const res = await this.chatapi.dispatchOTP({ phone: data.phone });
-          const refreshedState: Partial<Parent> = { OTP_sent: true };
-          this.store.dispatch(new generalActions.addParents(refreshedState));
-          this.spinner = false;
-          this.generalservice.successNotification(
-            `OTP has been sent to ${this.phoneForm.value.phone}`
-          );
-          this.changeToAnotherView();
-        } catch (error) {
-          console.log(error);
-          this.spinner = false;
-        }
-
-        this.store.dispatch(new generalActions.addParents(newState));
-      },
-      (err: HttpErrorResponse) => {
-        console.log(err);
-        const { message } = err.error;
-        this.spinner = false;
-        this.generalservice.errorNotification(message);
-      }
-    );
   }
 
   changeThisToProfile(event: Event) {
@@ -302,44 +259,84 @@ export class ParentsInformationComponent implements OnInit, OnDestroy {
     // }
   }
 
-  change(event) {
-    this.spinner = false;
-    //  this is new place to close modal;
-    let parentName;
+  change() {
+    this.spinner = true;
+    let parentInfo: Parent;
     const disconnect: Subscription = this.store
       .pipe(pluck("manageParent", "parent_info"))
       .subscribe((val: Parent) => {
-        const { full_name } = val;
-        // guardianID = guardian;
-        parentName = full_name;
+        parentInfo = val;
       });
-    const responseFromParent = new replyGiversOrReceivers(
-      `I have provided my details`,
-      "right"
-    );
-    this.generalservice.nextChatbotReplyToGiver = undefined;
-    this.generalservice.responseDisplayNotifier(responseFromParent);
-    this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
-    setTimeout(() => {
-      this.generalservice.handleFlowController("");
-      this.spinner = false;
-      this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
-        `Please ${parentName}, take a minute to verify the information you provided`,
-        "left",
-        `Ok let's verify it now, No later`,
-        `verifynow,verifylater`,
-        "prevent"
+
+    const {
+      full_name,
+      type,
+      date_of_birth,
+      email,
+      phone,
+      lga,
+      picture,
+      gender,
+      address,
+      state
+    } = parentInfo;
+    this.chatapi
+      .registerParent({
+        full_name,
+        type,
+        email,
+        date_of_birth,
+        phone,
+        gender,
+        lga,
+        address,
+        state
+      })
+      .subscribe(
+        async val => {
+          await this.chatapi.uploadParentPicture({
+            picture: picture as File,
+            guardian: val.guardian
+          });
+          const responseFromParent = new replyGiversOrReceivers(
+            `I have provided my details`,
+            "right"
+          );
+          this.generalservice.nextChatbotReplyToGiver = undefined;
+          this.generalservice.responseDisplayNotifier(responseFromParent);
+          this.generalservice.ctrlDisableTheButtonsOfPreviousListElement(
+            "allow"
+          );
+          this.spinner = false;
+          setTimeout(() => {
+            this.generalservice.handleFlowController("");
+            this.spinner = false;
+            this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
+              `Please ${parentInfo.full_name}, take a minute to verify the information you provided`,
+              "left",
+              `Ok let's verify it now, No later`,
+              `verifynow,verifylater`,
+              "prevent"
+            );
+            this.spinner = false;
+            disconnect.unsubscribe();
+            const chatbotResponse = new replyGiversOrReceivers(
+              `Thank you for registering, ${parentInfo.full_name ||
+                "John Bosco"}`,
+              "left",
+              "",
+              ``
+            );
+            this.generalservice.responseDisplayNotifier(chatbotResponse);
+          }, 600);
+        },
+        (err: HttpErrorResponse) => {
+          console.log(err);
+          const { message } = err.error;
+          this.spinner = false;
+          this.generalservice.errorNotification(message);
+        }
       );
-      this.spinner = false;
-      disconnect.unsubscribe();
-      const chatbotResponse = new replyGiversOrReceivers(
-        `Thank you for registering, ${parentName || "John Bosco"}`,
-        "left",
-        "",
-        ``
-      );
-      this.generalservice.responseDisplayNotifier(chatbotResponse);
-    }, 600);
   }
 
   submitAddressForm() {

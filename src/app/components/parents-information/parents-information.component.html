@@ -93,7 +93,7 @@
 
   <app-picture
     (startSpinner)="spinner = $event"
-    (changeUpTheView)="change($event)"
+    (changeUpTheView)="change()"
   ></app-picture>
   <div *ngIf="spinner" class="spinner-container">
     <i class="fa fa-circle-notch fa-spin fa-3x"></i>
@@ -173,7 +173,7 @@
     <div class="ui form">
       <div class="field">
         <label>State </label>
-       
+
         <select
           (change)="selectLgaInState($event.target.value)"
           style="height: auto;"
@@ -212,19 +212,19 @@
       <div class="field">
         <label>Local Govt Area </label>
         <select
-        style="height: auto;"
-        class="ui fluid search dropdown"
-        name="card[expire-month]"
-        [(ngModel)]="localGovtArea"
-      >
-        <option value="" selected>Select Local Govt Area...</option>
-        <option [value]="lga.id" *ngFor="let lga of stateLgas; index as i">
-          {{ lga.value }}
-        </option>
-      </select>
+          style="height: auto;"
+          class="ui fluid search dropdown"
+          name="card[expire-month]"
+          [(ngModel)]="localGovtArea"
+        >
+          <option value="" selected>Select Local Govt Area...</option>
+          <option [value]="lga.id" *ngFor="let lga of stateLgas; index as i">
+            {{ lga.value }}
+          </option>
+        </select>
       </div>
     </div>
-<!-- (click)="view = 'picture'" -->
+    <!-- (click)="view = 'picture'" -->
     <div class="text-center mt-4">
       <button
         (click)="submitLGA()"
@@ -253,14 +253,14 @@
           placeholder="Eg: 09093345678"
         />
         <small
-        class="warning"
-        [style.display]="phone.touched && !phone.valid ? 'block' : 'none'"
-      >
-        Please enter age between 0 - 99
-      </small>
+          class="warning"
+          [style.display]="phone.touched && !phone.valid ? 'block' : 'none'"
+        >
+          Please enter age between 0 - 99
+        </small>
       </div>
     </div>
-<!-- pattern="[0-9]*" -->
+    <!-- pattern="[0-9]*" -->
     <div class="text-center mt-4">
       <button
         [disabled]="!phoneForm.valid"

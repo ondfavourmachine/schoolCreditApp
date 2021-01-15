@@ -1,9 +1,10 @@
 export interface ParentRegistration {
   full_name?: string;
-  dob?: string;
+  date_of_birth?: string;
   gender?: string;
   address?: string;
   phone?: string;
+  email?: string;
   lga?: string;
   state?: string;
   type?: "1" | "2";

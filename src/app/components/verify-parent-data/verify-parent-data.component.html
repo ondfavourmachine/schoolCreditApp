@@ -24,7 +24,10 @@
 </div>
 
 <div class=" h-100 text-center family-info" *ngIf="view == 'verification'">
-  <h1 class="para-title">Enter OTP sent to {{ parentDetails?.phone }}</h1>
+  <h1 class="para-title text-center">
+    Please enter code sent to {{ parentDetails?.phone }}
+    <small class="ml-2"><a class="resendCode">Resend</a></small>
+  </h1>
 
   <form
     [formGroup]="phoneVerificationForm"
@@ -51,4 +54,29 @@
       <i class="fa fa-circle-notch fa-spin fa-3x"></i>
     </div>
   </form>
+</div>
+
+<div
+  class="flex flex-column justify-center align-center h-100 text-center family-info"
+  *ngIf="view == 'email'"
+>
+  <!-- <div class="modal-icon">
+  <img src="../../../../assets/images/svgs/information_1.svg" alt="ICON" />
+</div> -->
+  <h1 class="para-title">We would like to verify your email</h1>
+  <div class="w-100 flex justify-center align-center">
+    <button disabled class="ui button primary basic mt-4 mr-2">
+      I want to change this email
+    </button>
+
+    <button
+      (click)="sendActivationCodeToEmail(parentDetails?.email)"
+      class="ui button primary basic mt-4"
+    >
+      Ok, Continue
+    </button>
+  </div>
+  <div *ngIf="spinner" class="spinner-container">
+    <i class="fa fa-circle-notch fa-spin fa-3x"></i>
+  </div>
 </div>
