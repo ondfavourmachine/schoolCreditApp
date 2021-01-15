@@ -12,11 +12,13 @@
   z-index: 1050 !important;
 }
 
+
 .modified {
   width: fit-content !important;
   padding: 0.8ch 1rem !important;
   cursor: pointer !important;
 }
+
 
 .warning {
   background: orangered;

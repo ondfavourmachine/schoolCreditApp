@@ -93,6 +93,8 @@ export class ParentsInformationComponent
     this.NigerianStates = sandBoxData().data.states;
     this.lgaData = { ...LgaData() };
     this.selectLgaInState(this.localGovtArea);
+    // this is necessary for the addEventListener
+    this.manageGoingBackAndForth = this.manageGoingBackAndForth.bind(this);
   }
 
   ngOnChanges() {
@@ -102,22 +104,7 @@ export class ParentsInformationComponent
   ngAfterViewInit() {
     document
       .getElementById("backspace")
-      .addEventListener("click", (e: Event) => {
-        // console.log(this.previous);
-        if (this.view == this.previous) {
-          const num = this.pageViews.indexOf(this.previous);
-          const ans = this.pageViews[num - 1];
-          this.view = ans as any;
-          return;
-        }
-        if (this.previous == "") {
-          this.view = "";
-          this.previousPage.emit("firstPage");
-          this.type = "";
-        } else {
-          this.view = this.previous;
-        }
-      });
+      .addEventListener("click", this.manageGoingBackAndForth);
   }
 
   ngOnInit(): void {
@@ -145,6 +132,22 @@ export class ParentsInformationComponent
 
   get phone(): AbstractControl {
     return this.phoneForm.get("phone");
+  }
+
+  manageGoingBackAndForth() {
+    if (this.view == this.previous) {
+      const num = this.pageViews.indexOf(this.previous);
+      const ans = this.pageViews[num - 1];
+      this.view = ans as any;
+      return;
+    }
+    if (this.previous == "") {
+      this.view = "";
+      this.previousPage.emit("firstPage");
+      this.type = "";
+    } else {
+      this.view = this.previous;
+    }
   }
 
   selectLgaInState(value: string) {
@@ -367,6 +370,7 @@ export class ParentsInformationComponent
             "allow"
           );
           this.spinner = false;
+          this.previousPage.emit("firstPage");
           setTimeout(() => {
             this.generalservice.handleFlowController("");
             this.spinner = false;
@@ -425,5 +429,8 @@ export class ParentsInformationComponent
 
   ngOnDestroy() {
     this.destroy.forEach(element => element.unsubscribe());
+    document
+      .getElementById("backspace")
+      .removeEventListener("click", this.manageGoingBackAndForth);
   }
 }

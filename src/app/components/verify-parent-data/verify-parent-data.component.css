@@ -3,3 +3,11 @@
   text-decoration: underline;
   cursor: pointer;
 }
+
+.validation_error {
+  display: block;
+  text-align: left;
+  line-height: 1px;
+  color: red;
+  margin-top: 10px;
+}

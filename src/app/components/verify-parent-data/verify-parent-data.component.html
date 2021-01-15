@@ -7,7 +7,10 @@
 </div> -->
   <h1 class="para-title">An OTP will be sent to {{ parentDetails?.phone }}</h1>
   <div class="w-100 flex justify-center align-center">
-    <button disabled class="ui button primary basic mt-4 mr-2">
+    <button
+      (click)="iWantToChangeNumber('phone', 'lauchModal')"
+      class="ui button primary basic mt-4 mr-2"
+    >
       I want to change this number
     </button>
 
@@ -65,7 +68,10 @@
 </div> -->
   <h1 class="para-title">We would like to verify your email</h1>
   <div class="w-100 flex justify-center align-center">
-    <button disabled class="ui button primary basic mt-4 mr-2">
+    <button
+      (click)="iWantToChangeNumber('email', 'lauchModal')"
+      class="ui button primary basic mt-4 mr-2"
+    >
       I want to change this email
     </button>
 
@@ -81,7 +87,7 @@
   </div>
 </div>
 
-<div class=" h-100 text-center family-info" *ngIf="view == 'verification'">
+<div class=" h-100 text-center family-info" *ngIf="view == 'activate-email'">
   <h1 class="para-title text-center">
     Please activation code sent to your email
     <small class="ml-2"><a class="resendCode">Resend</a></small>
@@ -116,4 +122,84 @@
       <i class="fa fa-circle-notch fa-spin fa-3x"></i>
     </div>
   </form>
+</div>
+
+<div
+  id="myModal2"
+  class="modal"
+  style="z-index: 2000"
+  [style.display]="showModal"
+>
+  <!-- Modal content -->
+  <div class="modal-content" style="position: relative">
+    <button style="display: none" class="modal-close">
+      &times;
+    </button>
+
+    <!-- <button  class="fakeButton inner">
+      &times;
+    </button> -->
+
+    <div class="modal-body" style="display: 'block'">
+      <div class=" h-100 text-center family-info">
+        <h1 class="para-title text-center">
+          Please enter the new
+          {{ contactChange == "phone" ? "phone number" : "email" }}
+        </h1>
+
+        <form
+          [formGroup]="newPhoneNumberForm"
+          class="w-100"
+          style="position: relative"
+        >
+          <div class="ui form">
+            <div class="field">
+              <label>Phone</label>
+              <input
+                formControlName="emailOrPhone"
+                [type]="type"
+                placeholder="Eg: 1we6679"
+                [pattern]="contactChange == 'phone' ? '[0-9]{11}' : ''"
+              />
+              <small
+                class="validation_error"
+                [style.display]="
+                  emailOrPhone.touched && !emailOrPhone.valid ? 'block' : 'none'
+                "
+              >
+                Please enter your Nigerian phone number
+              </small>
+            </div>
+          </div>
+
+          <div class="text-center mt-4 w-100 flex justify-center align-center">
+            <button
+              [disabled]="!newPhoneNumberForm.valid"
+              (click)="modifyPrefferedContact(newPhoneNumberForm)"
+              type="button"
+              class="ui primary button fluid"
+            >
+              Continue
+            </button>
+
+            <button
+              (click)="iWantToChangeNumber('phone', 'closeModal')"
+              type="button"
+              class="ui warning button fluid"
+            >
+              Cancel
+            </button>
+          </div>
+          <div *ngIf="spinner" class="spinner-container">
+            <i class="fa fa-circle-notch fa-spin fa-3x"></i>
+          </div>
+        </form>
+      </div>
+      <!-- <div class="text-center mt-5 w-100 flex justify-center align-center">
+        <button type="button" class="btn btn-success modified mr-3">
+          Done
+        </button>
+      </div> -->
+    </div>
+  </div>
 </div>

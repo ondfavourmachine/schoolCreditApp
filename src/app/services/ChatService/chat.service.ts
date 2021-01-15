@@ -232,6 +232,17 @@ export class ChatService {
     );
   }
 
+  // change contact or email
+  changePhoneOrEmail(obj: {
+    phone?: string;
+    guardian: string;
+    email?: string;
+  }): Promise<GenericResponse> {
+    return this.http
+      .patch<GenericResponse>(`${this.generalUrl}change/identity`, obj)
+      .toPromise();
+  }
+
   // fetch list of banks
   fetchBankNames(): Bank[] {
     let allBanks = JSON.parse(sessionStorage.getItem("allBanks"));

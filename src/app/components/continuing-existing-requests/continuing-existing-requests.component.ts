@@ -26,7 +26,6 @@ export class ContinuingExistingRequestsComponent implements OnInit {
   spinner: boolean = true;
   checkWhoIsTryingToContinue: checkWhoIsContinuing = {};
   confirmPhoneOrEmailForm: FormGroup;
-  private emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
   constructor(
     private generalservice: GeneralService,
     private fb: FormBuilder,
@@ -49,7 +48,7 @@ export class ContinuingExistingRequestsComponent implements OnInit {
 
   collectEntry(): void {
     const { phoneOrEmail } = this.confirmPhoneOrEmailForm.value;
-    if (this.emailRegex.test(phoneOrEmail)) {
+    if (this.generalservice.emailRegex.test(phoneOrEmail)) {
       this.checkWhoIsTryingToContinue.email = phoneOrEmail;
       this.view = "four-digit-pin";
       return;
