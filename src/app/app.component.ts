@@ -32,6 +32,7 @@ export class AppComponent
   private observableAggregator: observableAggregator = {};
   public globalOverlay: string = "none";
   public confirmationDialog = false;
+  goBack: string = "firstPage";
   errorHouse: { error: Alert } = { error: new Alert(false, "") };
   constructor(
     private router: Router,
@@ -45,6 +46,10 @@ export class AppComponent
         // this.welcomeMsgCtrl(url);
       }
     });
+  }
+
+  setPageToGoBackTo(event) {
+    this.goBack = event;
   }
 
   ngOnInit() {

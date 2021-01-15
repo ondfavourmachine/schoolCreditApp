@@ -1,4 +1,13 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  Output,
+  EventEmitter,
+  Input,
+  OnChanges,
+  AfterViewInit
+} from "@angular/core";
 import { GeneralService } from "src/app/services/generalService/general.service";
 import { replyGiversOrReceivers } from "src/app/models/GiverResponse";
 import { Parent, ParentRegistration } from "src/app/models/data-models";
@@ -31,7 +40,10 @@ interface LGA extends State {}
   templateUrl: "./parents-information.component.html",
   styleUrls: ["./parents-information.component.css"]
 })
-export class ParentsInformationComponent implements OnInit, OnDestroy {
+export class ParentsInformationComponent
+  implements OnInit, OnDestroy, OnChanges, AfterViewInit {
+  @Output("previousPage") previousPage = new EventEmitter<string>();
+  @Input("previous") previous: any;
   view:
     | ""
     | "state"
@@ -48,9 +60,19 @@ export class ParentsInformationComponent implements OnInit, OnDestroy {
     | "done"
     | "choose-verification" = "";
   spinner: boolean = false;
+  pageViews: string[] = [
+    "",
+    "profile-form",
+    "phone",
+    "email",
+    "address",
+    "state",
+    "lga",
+    "picture"
+  ];
   selected: "email" | "phone" | "" = "";
   type: "1" | "2" | "" = "";
-  parent: Partial<Parent> = {};
+  parent: Partial<Parent>;
   stateLgas: LGA[] = [];
   NigerianStates: State[] = [];
   phoneForm: FormGroup;
@@ -73,6 +95,31 @@ export class ParentsInformationComponent implements OnInit, OnDestroy {
     this.selectLgaInState(this.localGovtArea);
   }
 
+  ngOnChanges() {
+    // console.log(this.previous);
+  }
+
+  ngAfterViewInit() {
+    document
+      .getElementById("backspace")
+      .addEventListener("click", (e: Event) => {
+        // console.log(this.previous);
+        if (this.view == this.previous) {
+          const num = this.pageViews.indexOf(this.previous);
+          const ans = this.pageViews[num - 1];
+          this.view = ans as any;
+          return;
+        }
+        if (this.previous == "") {
+          this.view = "";
+          this.previousPage.emit("firstPage");
+          this.type = "";
+        } else {
+          this.view = this.previous;
+        }
+      });
+  }
+
   ngOnInit(): void {
     // this.destroy[1] = this.store
     //   .select(fromStore.getParentState)
@@ -88,7 +135,7 @@ export class ParentsInformationComponent implements OnInit, OnDestroy {
     // });
 
     this.emailForm = this.fb.group({
-      email: ["", Validators.required]
+      email: ["", [Validators.required, Validators.email]]
     });
 
     this.PINForm = this.fb.group({
@@ -113,6 +160,7 @@ export class ParentsInformationComponent implements OnInit, OnDestroy {
     this.store.dispatch(new generalActions.addParents(parentDetails));
     this.view = "email";
     this.spinner = false;
+    this.previousPage.emit("profile-form");
     // this.changeToStuff();
   }
 
@@ -124,17 +172,25 @@ export class ParentsInformationComponent implements OnInit, OnDestroy {
     switch (pa.textContent.toLowerCase()) {
       case "parent":
         this.type = "1";
+        this.parent = {}; // / this is nececssary else it would throw an undefined error
         this.parent.type = this.type;
         this.store.dispatch(new generalActions.addParents(this.parent));
         break;
       case "guardian":
         this.type = "2";
+        this.parent = {}; // this is nececssary else it would throw an undefined error
         this.parent.type = this.type;
         this.store.dispatch(new generalActions.addParents(this.parent));
         break;
     }
     this.view = "profile-form";
+    this.previousPage.emit("");
     // ;
+  }
+
+  changeToPhone(event) {
+    this.view = event;
+    this.previousPage.emit("profile-form");
   }
 
   saveParentInfo(form: FormGroup) {
@@ -250,7 +306,8 @@ export class ParentsInformationComponent implements OnInit, OnDestroy {
     const refreshedState: Partial<Parent> = { email: form.value.email };
     this.store.dispatch(new generalActions.addParents(refreshedState));
     this.view = "address";
-    // this.spinner = false;
+    this.previousPage.emit("phone");
+    this.spinner = false;
 
     disconnect.unsubscribe();
     // this.changeToAnotherView();
@@ -267,7 +324,7 @@ export class ParentsInformationComponent implements OnInit, OnDestroy {
       .subscribe((val: Parent) => {
         parentInfo = val;
       });
-
+    this.previousPage.emit("lga");
     const {
       full_name,
       type,
@@ -298,6 +355,8 @@ export class ParentsInformationComponent implements OnInit, OnDestroy {
             picture: picture as File,
             guardian: val.guardian
           });
+          const refreshedState: Partial<Parent> = { guardian: val.guardian };
+          this.store.dispatch(new generalActions.addParents(refreshedState));
           const responseFromParent = new replyGiversOrReceivers(
             `I have provided my details`,
             "right"
@@ -344,6 +403,7 @@ export class ParentsInformationComponent implements OnInit, OnDestroy {
     const refreshedState: Partial<Parent> = { address: this.address };
     this.store.dispatch(new generalActions.addParents(refreshedState));
     this.view = "state";
+    this.previousPage.emit("email");
   }
 
   submitStateForm() {
@@ -351,6 +411,7 @@ export class ParentsInformationComponent implements OnInit, OnDestroy {
     const refreshedState: Partial<Parent> = { state: this.state };
     this.store.dispatch(new generalActions.addParents(refreshedState));
     this.view = "lga";
+    this.previousPage.emit("address");
   }
 
   submitLGA() {
@@ -359,6 +420,7 @@ export class ParentsInformationComponent implements OnInit, OnDestroy {
     this.store.dispatch(new generalActions.addParents(refreshedState));
     this.spinner = false;
     this.view = "picture";
+    this.previousPage.emit("lga");
   }
 
   ngOnDestroy() {

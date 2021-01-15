@@ -15,8 +15,9 @@ import { GeneralService } from "src/app/services/generalService/general.service"
   styleUrls: ["./verify-parent-data.component.css"]
 })
 export class VerifyParentDataComponent implements OnInit, OnDestroy {
-  view: "" | "verification" | "email" = "";
+  view: "" | "verification" | "email" | "activate-email" = "";
   phoneVerificationForm: FormGroup;
+  emailVerificationForm: FormGroup;
   spinner: boolean = false;
   parentDetails: Partial<Parent>;
   destroy: Subscription[] = [];
@@ -30,6 +31,10 @@ export class VerifyParentDataComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.phoneVerificationForm = this.fb.group({
       OTP: ["", Validators.required]
+    });
+
+    this.emailVerificationForm = this.fb.group({
+      email_activation: ["", Validators.required]
     });
 
     this.destroy[1] = this.store
@@ -58,20 +63,23 @@ export class VerifyParentDataComponent implements OnInit, OnDestroy {
 
   async confirmVerification(form: FormGroup) {
     this.spinner = true;
-    let guardian;
+    let guardianID;
     //  i need to write selectors to stop doing this
-    // const disconnect: Subscription = this.store
-    //   .pipe(pluck("manageParent", "parent_info", "guardian"))
-    //   .subscribe(val => (guardian = val));
+    const disconnect: Subscription = this.store
+      .pipe(pluck("manageParent", "parent_info", "guardian"))
+      .subscribe(val => {
+        guardianID = val;
+      });
 
     try {
       const { message } = await this.chatapi.verifyOTP({
         phone_OTP: form.value.OTP,
-        guardian
+        guardian: guardianID
       });
       if (message.toLowerCase() == "phone number has been validated!") {
         this.spinner = false;
         this.view = "email";
+        disconnect.unsubscribe();
         // this.changeToAnotherView();
       }
     } catch (error) {
@@ -80,6 +88,10 @@ export class VerifyParentDataComponent implements OnInit, OnDestroy {
       );
       this.spinner = false;
     }
+  }
+
+  confirmEmailCode(form: FormGroup) {
+    console.log(form.value);
   }
 
   sendActivationCodeToEmail(email: string) {}

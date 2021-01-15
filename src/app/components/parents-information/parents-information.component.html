@@ -35,10 +35,10 @@
     Let's meet you
   </h1>
 
-  <app-profile-form (changeUpTheViewThree)="view = $event"></app-profile-form>
+  <app-profile-form (changeUpTheViewThree)="changeToPhone($event)"></app-profile-form>
 </div>
 
-<div
+<!-- <div
   class="flex flex-column justify-center align-center h-100 text-center family-info"
   *ngIf="view == 'choose-verification'"
 >
@@ -84,7 +84,7 @@
       Get code
     </button>
   </div>
-</div>
+</div> -->
 
 <div class=" h-100 text-center family-info" *ngIf="view == 'picture'">
   <h1 class="para-title">
@@ -256,7 +256,7 @@
           class="warning"
           [style.display]="phone.touched && !phone.valid ? 'block' : 'none'"
         >
-          Please enter age between 0 - 99
+          Please enter your Nigerian phone number
         </small>
       </div>
     </div>
@@ -299,6 +299,7 @@
       <button
         (click)="submitEmail(emailForm)"
         type="button"
+        [disabled]="!emailForm.valid"
         class="ui primary button fluid"
       >
         Continue

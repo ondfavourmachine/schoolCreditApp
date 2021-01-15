@@ -80,3 +80,40 @@
     <i class="fa fa-circle-notch fa-spin fa-3x"></i>
   </div>
 </div>
+
+<div class=" h-100 text-center family-info" *ngIf="view == 'verification'">
+  <h1 class="para-title text-center">
+    Please activation code sent to your email
+    <small class="ml-2"><a class="resendCode">Resend</a></small>
+  </h1>
+
+  <form
+    [formGroup]="emailVerificationForm"
+    class="w-100"
+    style="position: relative"
+  >
+    <div class="ui form">
+      <div class="field">
+        <label>Activation code</label>
+        <input
+          formControlName="email_activation"
+          type="tel"
+          placeholder="Eg: 443490"
+        />
+      </div>
+    </div>
+
+    <div class="text-center mt-4">
+      <button
+        (click)="confirmEmailCode(emailVerificationForm)"
+        type="button"
+        class="ui primary button fluid"
+      >
+        Continue
+      </button>
+    </div>
+    <div *ngIf="spinner" class="spinner-container">
+      <i class="fa fa-circle-notch fa-spin fa-3x"></i>
+    </div>
+  </form>
+</div>

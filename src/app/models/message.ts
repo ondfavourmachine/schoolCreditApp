@@ -107,6 +107,7 @@ export class Message {
         // button.setAttribute("data-button", `${arrayOfStrings[i]}`);
         button.className = "btn btn button--no-width dynamicButton";
         button.textContent = arrayOfStrings[i];
+        // attaches the click listener to the generated button
         button.onclick = this.handleButtonClick;
         buttonContainer.insertAdjacentElement("beforeend", button);
       }

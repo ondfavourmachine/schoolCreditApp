@@ -15,12 +15,12 @@ export interface ParentState {
   parent_address_info: Partial<ParentAddressInfo>;
   parent_ID_info: Partial<ParentIdInfo>;
   parent_account_info: Partial<ParentAccountInfo>;
-  parent_creditcard_info: Partial<ParentCreditCardInfo>
+  parent_creditcard_info: Partial<ParentCreditCardInfo>;
 }
 
 // Application state
 export const initialState: ParentState = {
-  parent_info: { OTP_sent: false },
+  parent_info: { type: "1", OTP_sent: false },
   parent_work_info: {},
   parent_address_info: {},
   parent_ID_info: {},
@@ -71,7 +71,10 @@ export function reducer(
     case generalActions.updateParentCardInformation: {
       return {
         ...state,
-        parent_creditcard_info: { ...state.parent_creditcard_info, ...action.payload }
+        parent_creditcard_info: {
+          ...state.parent_creditcard_info,
+          ...action.payload
+        }
       };
     }
   }

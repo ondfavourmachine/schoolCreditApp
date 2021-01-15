@@ -46,11 +46,16 @@
 <div id="myModal" class="modal" [style.display]="showModal">
   <!-- Modal content -->
   <div class="modal-content" style="position: relative">
-    <!-- <div class="backspace">
+    <!-- *ngIf="goBack != 'firstPage'"  -->
+    <div
+      [style.display]="goBack == 'firstPage' ? 'none' : 'block'"
+      class="backspace"
+      id="backspace"
+    >
       <svg viewBox="0 0 24 24" class="svgElement">
         <path d="M21 11H6.83l3.58-3.59L9 6l-6 6 6 6 1.41-1.41L6.83 13H21z" />
       </svg>
-    </div> -->
+    </div>
     <button
       hidden
       (click)="preventHidingOfbuttons(generalservice.nameOfModal)"
@@ -121,7 +126,10 @@
         <div *ngSwitchCase="'parents-information'">
           <div class="takeAPicture">
             <!-- <app-picture-component></app-picture-component> -->
-            <app-parents-information></app-parents-information>
+            <app-parents-information
+              [previous]="goBack"
+              (previousPage)="setPageToGoBackTo($event)"
+            ></app-parents-information>
           </div>
         </div>
 
