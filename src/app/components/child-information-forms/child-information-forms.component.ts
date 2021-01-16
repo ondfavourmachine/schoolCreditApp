@@ -38,6 +38,7 @@ export class ChildInformationFormsComponent implements OnInit, OnDestroy {
   tuitionFeesTotal;
   guardianID: string;
   childPicture: File;
+  fullpayment: boolean;
   constructor(
     private fb: FormBuilder,
     public mockstore: StoreService,
@@ -66,6 +67,9 @@ export class ChildInformationFormsComponent implements OnInit, OnDestroy {
         const { guardian } = val as Parent;
         this.guardianID = guardian;
       });
+
+    this.fullpayment = JSON.parse(sessionStorage.getItem("fullpayment"));
+    console.log(this.fullpayment);
   }
 
   addChildPictrue() {
@@ -266,6 +270,32 @@ export class ChildInformationFormsComponent implements OnInit, OnDestroy {
       }
     }
     this.spinner = false;
+    if (this.fullpayment) {
+      const responseFromParent = new replyGiversOrReceivers(
+        `I have provided my ${
+          this.mapOfChildrensInfo.size == 1
+            ? "child's information"
+            : "information about my children"
+        }!`,
+        "right"
+      );
+      this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
+        `Summary :
+         You entered a total of ₦${new Intl.NumberFormat().format(
+           this.tuitionFeesTotal
+         )}.
+         Number of Children: ${this.mapOfChildrensInfo.size}`,
+        "left",
+        "",
+        ``
+      );
+      this.generalservice.responseDisplayNotifier(responseFromParent);
+      this.generalservice.handleFlowController("");
+      this.generalservice.handleFlowController("make-full-payment");
+      this.fullpayment = false;
+      sessionStorage.removeItem("fullpayment");
+      return;
+    }
     this.generalservice.handleFlowController("");
     const responseFromParent = new replyGiversOrReceivers(
       `I have provided my ${

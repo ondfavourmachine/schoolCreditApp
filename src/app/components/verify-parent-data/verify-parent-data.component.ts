@@ -16,6 +16,7 @@ import * as generalActions from "../../store/actions/general.action";
 import { pluck } from "rxjs/operators";
 import { Parent } from "src/app/models/data-models";
 import { GeneralService } from "src/app/services/generalService/general.service";
+import { replyGiversOrReceivers } from 'src/app/models/GiverResponse';
 
 @Component({
   selector: "app-verify-parent-data",
@@ -86,8 +87,6 @@ export class VerifyParentDataComponent
     return this.newPhoneNumberForm.get("emailOrPhone");
   }
 
- 
-
   ngOnInit(): void {
     this.phoneVerificationForm = this.fb.group({
       OTP: ["", Validators.required]
@@ -115,46 +114,52 @@ export class VerifyParentDataComponent
 
   async modifyPrefferedContact(form: FormGroup) {
     this.spinner = true;
-    const {emailOrPhone} = form.value;
-    let formToSubmit = {guardian : this.parentDetails.guardian}
-    if(this.generalservice.emailRegex.test(emailOrPhone)){
-        formToSubmit['phone'] = emailOrPhone
-    }else{
-      formToSubmit['email'] = emailOrPhone;
+    const { emailOrPhone } = form.value;
+    let formToSubmit = { guardian: this.parentDetails.guardian };
+    if (this.generalservice.emailRegex.test(emailOrPhone)) {
+      formToSubmit["phone"] = emailOrPhone;
+    } else {
+      formToSubmit["email"] = emailOrPhone;
     }
-    try{
-     const res =  await this.chatapi.changePhoneOrEmail(formToSubmit);
+    try {
+      const res = await this.chatapi.changePhoneOrEmail(formToSubmit);
       this.generalservice.successNotification(res.message);
       this.spinner = false;
       this.closeModal();
-    }catch(e){
+    } catch (e) {
       console.log(e);
-      this.generalservice.warningNotification('Error occured!');
+      this.generalservice.warningNotification("Error occured!");
       this.spinner = false;
       this.closeModal();
     }
   }
 
-  async sendOTP(phoneNumber: string) {
-    // this.spinner = true;
-    this.view = "verification";
-    this.previousPage.emit("");
-    // try {
-    //   const res = await this.chatapi.dispatchOTP({ phone: phoneNumber });
-    //   const refreshedState: Partial<Parent> = { OTP_sent: true };
-    //   this.store.dispatch(new generalActions.addParents(refreshedState));
-    //   this.spinner = false;
-    //   this.generalservice.successNotification(
-    //     `OTP has been sent to ${phoneNumber}`
-    //   );
-    //   this.spinner = false;
-    //   // this.view = "verification";
-    //   // this.changeToAnotherView();
+  async sendOTP(
+    phoneNumber: string,
+    obj?: { element: HTMLElement | HTMLAnchorElement; text: string }
+  ) {
+    this.spinner = true;
+    try {
+      const res = await this.chatapi.dispatchOTP({ phone: phoneNumber });
+      const refreshedState: Partial<Parent> = { OTP_sent: true };
+      this.store.dispatch(new generalActions.addParents(refreshedState));
+      this.spinner = false;
+      this.generalservice.successNotification(
+        `OTP has been sent to ${phoneNumber}`
+      );
 
-    // } catch (error) {
-    //   console.log(error);
-    //   this.spinner = false;
-    // }
+      this.spinner = false;
+      this.view = "verification";
+      this.previousPage.emit("");
+      if (obj) obj.element.textContent = obj.text;
+    } catch (error) {
+      // console.log(error);
+      if (obj) obj.element.textContent = obj.text;
+      this.generalservice.warningNotification(
+        `An error occured while sending notification to ${phoneNumber}`
+      );
+      this.spinner = false;
+    }
   }
 
   async confirmVerification(form: FormGroup) {
@@ -175,6 +180,7 @@ export class VerifyParentDataComponent
       if (message.toLowerCase() == "phone number has been validated!") {
         this.spinner = false;
         this.view = "email";
+        // this.previousPage.emit("");
         disconnect.unsubscribe();
         // this.changeToAnotherView();
       }
@@ -187,10 +193,59 @@ export class VerifyParentDataComponent
   }
 
   confirmEmailCode(form: FormGroup) {
-    console.log(form.value);
+    this.spinner = true;
+    const refreshedState: Partial<Parent> = { email_verified: 1 };
+          this.store.dispatch(new generalActions.addParents(refreshedState));
+          const responseFromParent = new replyGiversOrReceivers(
+            `I have verified my email and phone number`,
+            "right"
+          );
+          this.generalservice.nextChatbotReplyToGiver = undefined;
+          this.generalservice.responseDisplayNotifier(responseFromParent);
+          this.generalservice.ctrlDisableTheButtonsOfPreviousListElement(
+            "allow"
+          );
+          this.spinner = false;
+          this.previousPage.emit("firstPage");
+          setTimeout(() => {
+            this.generalservice.handleFlowController("");
+            this.spinner = false;
+            this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
+              `How would you like to pay?`,
+              "left",
+              "Instalmental payments, Full Payment",
+              `installmental,fullpayment`,
+              "prevent"
+            );
+            this.spinner = false;
+            // disconnect.unsubscribe();
+            const chatbotResponse = new replyGiversOrReceivers(
+              `Thank you for taking time to verify your details, ${this.parentDetails.full_name ||
+                "John Bosco"}`,
+              "left",
+              "",
+              ``
+            );
+            this.generalservice.responseDisplayNotifier(chatbotResponse);
+          }, 600);
   }
 
-  sendActivationCodeToEmail(email: string) {}
+  resendCode(event: Event, contactType: 'phone' | 'email') {
+    const element = event.target as HTMLAnchorElement;
+    const prevText = element.textContent;
+    element.textContent = "Resending....";
+    contactType == 'phone' ? this.sendOTP(this.parentDetails.phone, { element, text: prevText }) : 
+     '';
+  }
+
+  sendActivationCodeToEmail(email: string) {
+    this.spinner = true;
+    setTimeout(() => {
+      this.generalservice.successNotification("Activation code sent!");
+      this.view = "activate-email";
+      this.spinner = false;
+    }, 1500);
+  }
 
   lauchModal() {
     this.showModal = "block";

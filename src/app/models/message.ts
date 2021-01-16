@@ -427,12 +427,20 @@ export class Message {
         // sessionStorage.setItem("anonymous", "2");
         break;
       case "fullpayment":
-        this.giverDispatchEvents(
-          "customGiverEventFromMsgClass",
-          "giver",
-          "make-full-payment"
+        this.giverResponsesEvent(
+          "customGiverResponse",
+          new replyGiversOrReceivers(
+            "We would like to collect your child's information.",
+            "left",
+            "Start",
+            "enterchildinfo",
+            "allow"
+          ),
+          new GiverResponse(
+            new replyGiversOrReceivers("I want to make full payment", "right")
+          )
         );
-        // sessionStorage.setItem("anonymous", "2");
+        sessionStorage.setItem("fullpayment", "true");
         break;
       case "installmental":
         this.giverResponsesEvent(
@@ -443,6 +451,12 @@ export class Message {
             "Start",
             "enterchildinfo",
             "allow"
+          ),
+          new GiverResponse(
+            new replyGiversOrReceivers(
+              "I want to make installmental payment",
+              "right"
+            )
           )
         );
         break;

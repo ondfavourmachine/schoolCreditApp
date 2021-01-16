@@ -135,10 +135,12 @@ export class ParentsInformationComponent
   }
 
   manageGoingBackAndForth() {
+    debugger;
     if (this.view == this.previous) {
       const num = this.pageViews.indexOf(this.previous);
       const ans = this.pageViews[num - 1];
       this.view = ans as any;
+      this.previousPage.emit(this.pageViews[this.pageViews.indexOf(ans) - 1]);
       return;
     }
     if (this.previous == "") {

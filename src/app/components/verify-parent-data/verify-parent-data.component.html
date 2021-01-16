@@ -29,7 +29,9 @@
 <div class=" h-100 text-center family-info" *ngIf="view == 'verification'">
   <h1 class="para-title text-center">
     Please enter code sent to {{ parentDetails?.phone }}
-    <small class="ml-2"><a class="resendCode">Resend</a></small>
+    <small class="ml-2"
+      ><a class="resendCode" (click)="resendCode($event, 'phone')">Resend</a></small
+    >
   </h1>
 
   <form
@@ -89,8 +91,10 @@
 
 <div class=" h-100 text-center family-info" *ngIf="view == 'activate-email'">
   <h1 class="para-title text-center">
-    Please activation code sent to your email
-    <small class="ml-2"><a class="resendCode">Resend</a></small>
+    Please enter activation code sent to your email
+    <small class="ml-2"
+      ><a class="resendCode" (click)="resendCode($event, 'email')">Resend</a></small
+    >
   </h1>
 
   <form
@@ -103,7 +107,7 @@
         <label>Activation code</label>
         <input
           formControlName="email_activation"
-          type="tel"
+          type="text"
           placeholder="Eg: 443490"
         />
       </div>

@@ -16,6 +16,7 @@ export interface Parent extends ParentRegistration {
   guardian: any;
   pin: any;
   OTP_sent: boolean;
+  email_verified: 0 | 1
 }
 
 export interface ParentWorkInfo {
