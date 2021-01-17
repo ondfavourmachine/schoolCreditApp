@@ -128,6 +128,36 @@
   </form>
 </div>
 
+
+<div class=" h-100 text-center family-info" *ngIf="view == 'four-digit-pin'">
+  <h1 class="para-title">
+    Select a 4 digit pin for future identification
+  </h1>
+
+  <form [formGroup]="PINForm" class="w-100" style="position: relative">
+    <div class="ui form">
+      <div class="field">
+        <label>PIN</label>
+        <input formControlName="pin" type="tel" placeholder="Eg: 1230045566" />
+      </div>
+    </div>
+
+    <div class="text-center mt-4">
+      <button
+        (click)="saveParentInfo(PINForm)"
+        type="button"
+        class="ui primary button fluid"
+      >
+        Save and continue
+      </button>
+    </div>
+  </form>
+
+  <div *ngIf="spinner" class="spinner-container">
+    <i class="fa fa-circle-notch fa-spin fa-3x"></i>
+  </div>
+</div>
+
 <div
   id="myModal2"
   class="modal"

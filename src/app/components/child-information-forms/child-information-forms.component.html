@@ -17,7 +17,7 @@
 
   <button
     class="ui button primary basic mt-4"
-    (click)="viewToshow = 'selectChildren'"
+    (click)="viewToshow = 'selectChildren'; previousPage.emit('')"
   >
     Continue
   </button>
@@ -166,7 +166,7 @@
         [disabled]="!childInfoForm.valid"
         type="submit"
         class="ui primary button fluid"
-        (click)="viewToshow = 'upload-image'"
+        (click)="viewToshow = 'upload-image'; previousPage.emit('enterInformation')"
       >
         Continue
       </button>

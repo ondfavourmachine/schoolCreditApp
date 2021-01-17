@@ -61,7 +61,7 @@ export class WorkFormComponent implements OnInit, OnDestroy {
           new generalActions.updateParentWorkInformation(objToStore)
         );
         this.spinner = false;
-        this.changeUpTheViewTwo.emit("address-info");
+        this.changeUpTheViewTwo.emit("bvn");
       },
       err => console.log(err)
     );

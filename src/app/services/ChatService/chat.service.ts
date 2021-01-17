@@ -169,8 +169,10 @@ export class ChatService {
   // save parent BVN
   saveParentBVN(
     obj: Partial<CompleteParentInfomation>
-  ): Observable<ParentAWBAResponse> {
-    return this.http.post<ParentAWBAResponse>(`${this.generalUrl}bvn`, obj);
+  ): Promise<ParentAWBAResponse> {
+    return this.http
+      .post<ParentAWBAResponse>(`${this.generalUrl}bvn`, obj)
+      .toPromise();
   }
 
   // save parent ID information/verify it
@@ -275,14 +277,31 @@ export class ChatService {
       .pipe(timeout(50000));
   }
 
-  sendBvnAndDOB(bvnAndDOB: {
-    ref_no: string;
-    BVN: string;
-    sent_dob: string;
-  }): Observable<any> {
-    return this.http.post(`${this.generalUrl}checkbvn`, bvnAndDOB, {
-      headers: this.httpOptions
+  // sendBvnAndDOB(bvnAndDOB: {
+  //   ref_no: string;
+  //   BVN: string;
+  //   sent_dob: string;
+  // }): Observable<any> {
+  //   return this.http.post(`${this.generalUrl}checkbvn`, bvnAndDOB, {
+  //     headers: this.httpOptions
+  //   });
+  // }
+
+  sendAndVerifyBvnAndDOB(bvnAndDOB: {
+    phone: string;
+    bvn: string;
+    dob: string;
+  }): Observable<GenericResponse> {
+    let httpHeaders = new HttpHeaders({
+      "x-api-key": "z2BhpgFNUA99G8hZiFNv77mHDYcTlecgjybqDACv"
     });
+    return this.http.post<GenericResponse>(
+      `https://mobile.creditclan.com/webapi/v1/verify_bvn_dob`,
+      bvnAndDOB,
+      {
+        headers: httpHeaders
+      }
+    );
   }
 
   // gets the Ref Number provided by the user from the url or manually typed in

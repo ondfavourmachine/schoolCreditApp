@@ -67,7 +67,7 @@ export class ParentAccountFormComponent implements OnInit, OnDestroy {
   }
 
   get accountNumber() {
-    return this.bankAccountForm.get("account_no");
+    return this.bankAccountForm.get("account_number");
   }
   get bankName() {
     return this.bankAccountForm.get("bank_code");
@@ -102,11 +102,18 @@ export class ParentAccountFormComponent implements OnInit, OnDestroy {
     if (this.accountNumber.value.length < 10) return;
     this.spinner = true;
     let obj = {
-      account_number: this.accountNumber,
+      account_number: this.accountNumber.value,
       bank_code: this.bankName.value
     };
     this.chatservice.confirmAccountDetailsOfParent(obj).subscribe(
       val => {
+        if (val["status"] !== "success") {
+          this.generalservice.warningNotification(
+            "We could not fetch the account name associated with the account number you provided. Please make sure you selected the correct bank and entered the correct account number!"
+          );
+          this.spinner = false;
+        }
+
         this.accountName.patchValue(val["data"].account_name);
         this.spinner = false;
       },
@@ -151,7 +158,7 @@ export class ParentAccountFormComponent implements OnInit, OnDestroy {
       "right"
     );
     this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
-      `Congrats, Your offer letter is ready. it will be sent to your eail: femiapps@gmail.com`,
+      `Congrats, Your offer letter is ready. it will be sent to your email: femiapps@gmail.com`,
       "left",
       "",
       ``
@@ -171,6 +178,8 @@ export class ParentAccountFormComponent implements OnInit, OnDestroy {
         "prevent"
       );
       this.generalservice.responseDisplayNotifier(chatbotResponse);
+      // remove items
+      sessionStorage.removeItem("savedChats");
     }, 800);
   }
 

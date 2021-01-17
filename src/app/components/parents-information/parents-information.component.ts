@@ -77,7 +77,7 @@ export class ParentsInformationComponent
   NigerianStates: State[] = [];
   phoneForm: FormGroup;
   phoneVerificationForm: FormGroup;
-  PINForm: FormGroup;
+
   emailForm: FormGroup;
   address: string = "";
   state: string = "1";
@@ -124,10 +124,6 @@ export class ParentsInformationComponent
     this.emailForm = this.fb.group({
       email: ["", [Validators.required, Validators.email]]
     });
-
-    this.PINForm = this.fb.group({
-      pin: ["", Validators.required]
-    });
   }
 
   get phone(): AbstractControl {
@@ -135,7 +131,6 @@ export class ParentsInformationComponent
   }
 
   manageGoingBackAndForth() {
-    debugger;
     if (this.view == this.previous) {
       const num = this.pageViews.indexOf(this.previous);
       const ans = this.pageViews[num - 1];
@@ -196,62 +191,6 @@ export class ParentsInformationComponent
   changeToPhone(event) {
     this.view = event;
     this.previousPage.emit("profile-form");
-  }
-
-  saveParentInfo(form: FormGroup) {
-    this.spinner = true;
-    let guardianID, parentName;
-    const disconnect: Subscription = this.store
-      .pipe(pluck("manageParent", "parent_info"))
-      .subscribe((val: Parent) => {
-        const { guardian, full_name } = val;
-        guardianID = guardian;
-        parentName = full_name;
-      });
-    const responseFromParent = new replyGiversOrReceivers(
-      `I have provided my details`,
-      "right"
-    );
-
-    this.generalservice.nextChatbotReplyToGiver = undefined;
-
-    this.chatapi
-      .saveParentPIN({ pin: form.value.pin, guardian: guardianID })
-      .subscribe(
-        val => {
-          this.generalservice.responseDisplayNotifier(responseFromParent);
-          this.generalservice.ctrlDisableTheButtonsOfPreviousListElement(
-            "allow"
-          );
-          let ParentPin: Partial<Parent> = { pin: form.value.pin };
-          this.store.dispatch(new generalActions.addParents(ParentPin));
-          this.generalservice.successNotification(val.message);
-          setTimeout(() => {
-            this.generalservice.handleFlowController("");
-            this.spinner = false;
-            this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
-              `How would you like to pay?`,
-              "left",
-              "Instalmental payments, Full Payment",
-              `installmental,fullpayment`,
-              "prevent"
-            );
-            this.spinner = false;
-            disconnect.unsubscribe();
-            const chatbotResponse = new replyGiversOrReceivers(
-              `Thank you for registering, ${parentName}`,
-              "left",
-              "",
-              ``
-            );
-            this.generalservice.responseDisplayNotifier(chatbotResponse);
-          }, 600);
-        },
-        (err: HttpErrorResponse) => {
-          this.spinner = false;
-          this.generalservice.errorNotification(err.error.message);
-        }
-      );
   }
 
   changeToAnotherView() {

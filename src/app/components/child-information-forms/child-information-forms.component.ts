@@ -1,4 +1,12 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  EventEmitter,
+  Output,
+  Input,
+  AfterViewInit
+} from "@angular/core";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { StoreService } from "src/app/services/mockstore/store.service";
 import { GeneralService } from "src/app/services/generalService/general.service";
@@ -17,7 +25,10 @@ import { ChatService } from "src/app/services/ChatService/chat.service";
   templateUrl: "./child-information-forms.component.html",
   styleUrls: ["./child-information-forms.component.css"]
 })
-export class ChildInformationFormsComponent implements OnInit, OnDestroy {
+export class ChildInformationFormsComponent
+  implements OnInit, AfterViewInit, OnDestroy {
+  @Output("previousPage") previousPage = new EventEmitter<string>();
+  @Input("back") back: any;
   viewToshow:
     | ""
     | "selectChildren"
@@ -25,6 +36,13 @@ export class ChildInformationFormsComponent implements OnInit, OnDestroy {
     | "modifyOrNot"
     | "summary"
     | "upload-image" = "";
+  pageViews: string[] = [
+    "",
+    "selectChildren",
+    "enterInformation",
+    "email",
+    "activate-email"
+  ];
   selected: string = "";
   selectedChildren: Array<number> = [];
   mapOfChildrensInfo: Map<string, Partial<AChild>> = new Map();
@@ -45,7 +63,28 @@ export class ChildInformationFormsComponent implements OnInit, OnDestroy {
     private generalservice: GeneralService,
     private store: Store<fromStore.AllState>,
     private chatapi: ChatService
-  ) {}
+  ) {
+    this.manageGoingBackAndForth = this.manageGoingBackAndForth.bind(this);
+  }
+
+  manageGoingBackAndForth() {
+    // debugger;
+    if (this.viewToshow == this.back) {
+      const num = this.pageViews.indexOf(this.back);
+      const ans = this.pageViews[num - 1];
+      this.viewToshow = ans as any;
+      this.back == "selectChildren" ? this.previousPage.emit("firstPage") : "";
+      return;
+    }
+    if (this.back == "") {
+      this.viewToshow = "";
+      this.previousPage.emit("firstPage");
+      this.selected = undefined;
+      this.mapOfChildrensInfo = new Map();
+    } else {
+      this.viewToshow = this.back;
+    }
+  }
 
   ngOnInit(): void {
     this.childInfoForm = this.fb.group({
@@ -64,12 +103,25 @@ export class ChildInformationFormsComponent implements OnInit, OnDestroy {
     this.destroy[1] = this.store
       .select(fromStore.getCurrentParentInfo)
       .subscribe(val => {
+        // console.log(val);
         const { guardian } = val as Parent;
         this.guardianID = guardian;
       });
 
+    // this.destroy[2] = this.store
+    //   .select(fromStore.getCurrentChildInfo)
+    //   .subscribe(val => {
+    //     console.log(val);
+    //   });
+
     this.fullpayment = JSON.parse(sessionStorage.getItem("fullpayment"));
     console.log(this.fullpayment);
+  }
+
+  ngAfterViewInit() {
+    document
+      .getElementById("backspace")
+      .addEventListener("click", this.manageGoingBackAndForth);
   }
 
   addChildPictrue() {
@@ -138,11 +190,13 @@ export class ChildInformationFormsComponent implements OnInit, OnDestroy {
       this.iterator = this.mapOfChildrensInfo.keys();
       this.currentChild = this.iterator.next().value;
       this.viewToshow = "enterInformation";
+      this.previousPage.emit("selectChildren");
       return;
     }
     this.iterator = this.mapOfChildrensInfo.keys();
     this.currentChild = this.iterator.next().value;
     this.viewToshow = "enterInformation";
+    this.previousPage.emit("selectChildren");
   }
 
   fetchWordForNumber(num: number): string {
@@ -219,6 +273,7 @@ export class ChildInformationFormsComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       this.viewToshow = "modifyOrNot";
       this.spinner = false;
+      this.previousPage.emit("");
     }, 500);
   }
 
@@ -250,6 +305,7 @@ export class ChildInformationFormsComponent implements OnInit, OnDestroy {
     this.spinner = true;
     this.store.dispatch(new generalActions.addAChild(this.mapOfChildrensInfo));
     this.store.dispatch(new generalActions.calculateFees());
+
     for (let [key, value] of this.mapOfChildrensInfo) {
       try {
         const res = await this.chatapi.saveChildData(
@@ -270,6 +326,7 @@ export class ChildInformationFormsComponent implements OnInit, OnDestroy {
       }
     }
     this.spinner = false;
+    this.previousPage.emit("firstPage");
     if (this.fullpayment) {
       const responseFromParent = new replyGiversOrReceivers(
         `I have provided my ${
@@ -335,6 +392,8 @@ export class ChildInformationFormsComponent implements OnInit, OnDestroy {
         ``
       );
       this.generalservice.responseDisplayNotifier(chatbotResponse);
+      this.viewToshow = "";
+      this.previousPage.emit("firstPage");
     }, 800);
   }
 
@@ -342,5 +401,8 @@ export class ChildInformationFormsComponent implements OnInit, OnDestroy {
     this.destroy.forEach(element => element.unsubscribe());
     this.tuitionFeesTotal = undefined;
     this.mapOfChildrensInfo = new Map();
+    document
+      .getElementById("backspace")
+      .removeEventListener("click", this.manageGoingBackAndForth);
   }
 }

@@ -90,7 +90,10 @@
           style="overflow-y: auto;"
           *ngSwitchCase="'child-information-forms'"
         >
-          <app-child-information-forms></app-child-information-forms>
+          <app-child-information-forms
+            [back]="goBack"
+            (previousPage)="setPageToGoBackTo($event)"
+          ></app-child-information-forms>
         </div>
         <div *ngSwitchCase="'foundBeneficiary'">
           <app-found-beneficiary></app-found-beneficiary>
@@ -121,8 +124,8 @@
         <div *ngSwitchCase="'verify-parent-data'">
           <div class="takeAPicture">
             <app-verify-parent-data
-            [previous]="goBack"
-            (previousPage)="setPageToGoBackTo($event)"
+              [previous]="goBack"
+              (previousPage)="setPageToGoBackTo($event)"
             ></app-verify-parent-data>
           </div>
         </div>
@@ -162,7 +165,10 @@
 
         <div *ngSwitchCase="'bank-partnership'">
           <div class="takeAPicture">
-            <app-bank-partnership></app-bank-partnership>
+            <app-bank-partnership
+              [previous]="goBack"
+              (previousPage)="setPageToGoBackTo($event)"
+            ></app-bank-partnership>
           </div>
         </div>
 

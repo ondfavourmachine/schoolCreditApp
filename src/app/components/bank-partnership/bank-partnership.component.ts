@@ -1,4 +1,11 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  Output,
+  EventEmitter,
+  Input
+} from "@angular/core";
 import { GeneralService } from "src/app/services/generalService/general.service";
 import { replyGiversOrReceivers } from "src/app/models/GiverResponse";
 import {
@@ -22,6 +29,8 @@ import * as fromStore from "../../store";
   styleUrls: ["./bank-partnership.component.css"]
 })
 export class BankPartnershipComponent implements OnInit, OnDestroy {
+  @Output("previousPage") previousPage = new EventEmitter<string>();
+  @Input("previous") previous: any;
   page:
     | ""
     | "bvn"
@@ -33,12 +42,13 @@ export class BankPartnershipComponent implements OnInit, OnDestroy {
     | "work-form"
     | "address-info"
     | "preambleToForms" = "checking";
+  pageViews: string[] = ["work-form"];
   selected: string;
   BVNFORM: FormGroup;
   IDForm: FormGroup;
-  guardianID: string = undefined;
   destroy: Subscription[] = [];
   spinner: boolean = false;
+  parentDetails: Parent;
   result: object & FinancialInstitution = undefined;
   constructor(
     private generalservice: GeneralService,
@@ -57,9 +67,7 @@ export class BankPartnershipComponent implements OnInit, OnDestroy {
     this.destroy[0] = this.store
       .select(fromStore.getCurrentParentInfo)
       .subscribe(val => {
-        // console.log(val);
-        const { guardian } = val as Parent;
-        this.guardianID = guardian;
+        this.parentDetails = val as Parent;
       });
 
     this.BVNFORM = this.fb.group({
@@ -84,79 +92,115 @@ export class BankPartnershipComponent implements OnInit, OnDestroy {
     let preferredID;
     this.spinner = true;
     let parentID: Partial<CompleteParentInfomation>;
-    if(/voters/i.test(this.selected)){
-      preferredID = '1';
+    if (/voters/i.test(this.selected)) {
+      preferredID = "1";
     }
-    if(/national/i.test(this.selected)){
-      preferredID = '2';
+    if (/national/i.test(this.selected)) {
+      preferredID = "2";
     }
-    if(/international/i.test(this.selected)){
-      preferredID = '3'
+    if (/international/i.test(this.selected)) {
+      preferredID = "3";
     }
-    if(/drivers/i.test(this.selected)){
-      preferredID = '4'
+    if (/drivers/i.test(this.selected)) {
+      preferredID = "4";
     }
 
-    parentID = {preferred_ID: preferredID, guardian: this.guardianID, ID_number: form.value.ID_number};
+    parentID = {
+      preferred_ID: preferredID,
+      guardian: this.parentDetails.guardian,
+      ID_number: form.value.ID_number
+    };
 
     this.chatservice.saveAndVerifyParentID(parentID).subscribe(
       val => {
-          const {preferred_ID, ID_number, BVN} = val.data;
-          this.store.dispatch(new generalActions.updateParentIDInformation({preferred_ID, ID_number, BVN}))
-           this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
-            this.generalservice.handleFlowController("");
-            this.generalservice.nextChatbotReplyToGiver = undefined;
-            const responseFromParent = new replyGiversOrReceivers(
-              `Thanks for this information. ${this.result.lender_name} is preparing your final offer`,
-              "left",
-              "",
-              "prevent"
-            );
+        const { preferred_ID, ID_number, BVN } = val.data;
+        this.store.dispatch(
+          new generalActions.updateParentIDInformation({
+            preferred_ID,
+            ID_number,
+            BVN
+          })
+        );
+        this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
+        this.generalservice.handleFlowController("");
+        this.generalservice.nextChatbotReplyToGiver = undefined;
+        const responseFromParent = new replyGiversOrReceivers(
+          `Thanks for this information. ${this.result.lender_name} is preparing your final offer`,
+          "left",
+          "",
+          "prevent"
+        );
 
-            this.generalservice.responseDisplayNotifier(responseFromParent);
-            // this.generalservice.setStage("bank-form", {});
-            this.spinner = false;
-            setTimeout(() => {
-              this.generalservice.nextChatbotReplyToGiver = undefined;
-              const chatbotResponse = new replyGiversOrReceivers(
-                `They will also like to know which Which account will we be debiting you from?`,
-                "left",
-                "Add Account",
-                `addaccount`,
-                "prevent"
-              );
-              this.generalservice.responseDisplayNotifier(chatbotResponse);
-            }, 800);
+        this.generalservice.responseDisplayNotifier(responseFromParent);
+        // this.generalservice.setStage("bank-form", {});
+        this.spinner = false;
+        setTimeout(() => {
+          this.generalservice.nextChatbotReplyToGiver = undefined;
+          const chatbotResponse = new replyGiversOrReceivers(
+            `They will also like to know which Which account will we be debiting you from?`,
+            "left",
+            "Add Account",
+            `addaccount`,
+            "prevent"
+          );
+          this.generalservice.responseDisplayNotifier(chatbotResponse);
+        }, 800);
       },
       err => {
         this.spinner = false;
-        this.generalservice.errorNotification(`We couldn't verify ${this.selected}: ${this.IDForm.value.ID_number}. Please check to make sure you entered correct information.`)
-        console.log(err)
+        this.generalservice.errorNotification(
+          `We couldn't verify ${this.selected}: ${this.IDForm.value.ID_number}. Please check to make sure you entered correct information.`
+        );
+        console.log(err);
       }
-    )
-   
+    );
   }
 
   submitParentBVN(form: FormGroup) {
     this.spinner = true;
-    const formToSubmit: Partial<CompleteParentInfomation> = {
-      BVN: form.value.bvn
-    };
-    formToSubmit.guardian = this.guardianID;
-    this.chatservice.saveParentBVN(formToSubmit).subscribe(
-      val => {
-        const { BVN } = val.data;
-        const updateTheStore: Partial<ParentIdInfo> = { BVN };
-        this.store.dispatch(
-          new generalActions.updateParentIDInformation(updateTheStore)
-        );
-        this.spinner = false;
-        this.page = "valid-id";
-      },
-      err => {
-        console.log(err);
-      }
-    );
+    this.chatservice
+      .sendAndVerifyBvnAndDOB({
+        phone: this.parentDetails.phone,
+        bvn: form.value.bvn,
+        dob: this.parentDetails.date_of_birth
+      })
+      .subscribe(
+        async val => {
+          const { status, message } = val;
+          if (!status) {
+            this.spinner = false;
+            this.generalservice.warningNotification(
+              message + "Please enter a valid bvn"
+            );
+            throw "Error";
+          }
+          try {
+            await this.chatservice.saveParentBVN({
+              BVN: form.value.bvn,
+              guardian: this.parentDetails.guardian
+            });
+          } catch (error) {
+            this.spinner = false;
+            this.generalservice.warningNotification(
+              `An error occured while validating your BVN. Please check your internet and try again!`
+            );
+          }
+
+          const updateTheStore: Partial<ParentIdInfo> = { BVN: form.value.bvn };
+          this.store.dispatch(
+            new generalActions.updateParentIDInformation(updateTheStore)
+          );
+          this.spinner = false;
+          this.page = "valid-id";
+        },
+        err => {
+          console.log(err);
+          this.spinner = false;
+          this.generalservice.warningNotification(
+            `Couldn't validate your BVN at this time. Please make sure you entered the correct BVN associated with you account and try again!`
+          );
+        }
+      );
   }
 
   ngOnDestroy() {

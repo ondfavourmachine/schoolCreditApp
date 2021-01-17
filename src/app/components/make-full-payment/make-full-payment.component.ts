@@ -45,6 +45,7 @@ export class MakeFullPaymentComponent implements OnInit {
         "prevent"
       );
       this.generalservice.responseDisplayNotifier(chatbotResponse);
+      sessionStorage.removeItem('savedChats');
     }, 800);
   }
 }

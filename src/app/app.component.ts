@@ -186,7 +186,7 @@ export class AppComponent
     } else {
       this.switchOfModal();
       this.cancel();
-      this.manageClosureOfModal(this.generalservice.flowControlHolder);
+      // this.manageClosureOfModal(this.generalservice.flowControlHolder);
     }
   }
 

@@ -16,7 +16,8 @@ import * as generalActions from "../../store/actions/general.action";
 import { pluck } from "rxjs/operators";
 import { Parent } from "src/app/models/data-models";
 import { GeneralService } from "src/app/services/generalService/general.service";
-import { replyGiversOrReceivers } from 'src/app/models/GiverResponse';
+import { replyGiversOrReceivers } from "src/app/models/GiverResponse";
+import { HttpErrorResponse } from "@angular/common/http";
 
 @Component({
   selector: "app-verify-parent-data",
@@ -29,15 +30,18 @@ export class VerifyParentDataComponent
   @Input("previous") previous: any;
   contactChange: "phone" | "email" = "phone";
   showModal: string = "none";
-  view: "" | "verification" | "email" | "activate-email" = "";
+  view: "" | "verification" | "email" | "activate-email" | "four-digit-pin" =
+    "";
   pageViews: string[] = [
     "",
     "verification",
     "phone",
     "email",
-    "activate-email"
+    "activate-email",
+    "four-digit-pin"
   ];
   phoneVerificationForm: FormGroup;
+  PINForm: FormGroup;
   emailVerificationForm: FormGroup;
   newPhoneNumberForm: FormGroup;
   spinner: boolean = false;
@@ -94,6 +98,10 @@ export class VerifyParentDataComponent
 
     this.emailVerificationForm = this.fb.group({
       email_activation: ["", Validators.required]
+    });
+
+    this.PINForm = this.fb.group({
+      pin: ["", Validators.required]
     });
 
     this.newPhoneNumberForm = this.fb.group({
@@ -192,10 +200,22 @@ export class VerifyParentDataComponent
     }
   }
 
-  confirmEmailCode(form: FormGroup) {
+  saveParentInfo(form: FormGroup) {
     this.spinner = true;
-    const refreshedState: Partial<Parent> = { email_verified: 1 };
-          this.store.dispatch(new generalActions.addParents(refreshedState));
+    // const responseFromParent = new replyGiversOrReceivers(
+    //   `I have provided my details`,
+    //   "right"
+    // );
+
+    // this.generalservice.nextChatbotReplyToGiver = undefined;
+
+    this.chatapi
+      .saveParentPIN({
+        pin: form.value.pin,
+        guardian: this.parentDetails.guardian
+      })
+      .subscribe(
+        val => {
           const responseFromParent = new replyGiversOrReceivers(
             `I have verified my email and phone number`,
             "right"
@@ -220,22 +240,38 @@ export class VerifyParentDataComponent
             this.spinner = false;
             // disconnect.unsubscribe();
             const chatbotResponse = new replyGiversOrReceivers(
-              `Thank you for taking time to verify your details, ${this.parentDetails.full_name ||
-                "John Bosco"}`,
+              `Thank you for taking time to verify your details, ${this
+                .parentDetails.full_name || "John Bosco"}`,
               "left",
               "",
               ``
             );
             this.generalservice.responseDisplayNotifier(chatbotResponse);
           }, 600);
+        },
+        (err: HttpErrorResponse) => {
+          this.spinner = false;
+          this.generalservice.errorNotification(err.error.message);
+        }
+      );
   }
 
-  resendCode(event: Event, contactType: 'phone' | 'email') {
+  confirmEmailCode(form: FormGroup) {
+    this.spinner = true;
+    this.view = "four-digit-pin";
+    this.spinner = false;
+    this.previousPage.emit("activate-email");
+    const refreshedState: Partial<Parent> = { email_verified: 1 };
+    this.store.dispatch(new generalActions.addParents(refreshedState));
+  }
+
+  resendCode(event: Event, contactType: "phone" | "email") {
     const element = event.target as HTMLAnchorElement;
     const prevText = element.textContent;
     element.textContent = "Resending....";
-    contactType == 'phone' ? this.sendOTP(this.parentDetails.phone, { element, text: prevText }) : 
-     '';
+    contactType == "phone"
+      ? this.sendOTP(this.parentDetails.phone, { element, text: prevText })
+      : "";
   }
 
   sendActivationCodeToEmail(email: string) {
