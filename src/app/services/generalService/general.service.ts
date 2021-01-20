@@ -91,7 +91,7 @@ export class GeneralService {
   public specialScenarios$ = this.specialSubject.asObservable();
 
   // 13 next reply observable
-  public objToReply: replyGiversOrReceivers | GiverResponse | string;
+  public objToReply: replyGiversOrReceivers | GiverResponse | string = '';
   private nextReplySubject = new BehaviorSubject(this.objToReply);
   public nextReply$ = this.nextReplySubject.asObservable();
 

@@ -14,6 +14,7 @@ export class Message {
   buttonElement: string;
   extraInfo: string;
   countForMessage: number = 0;
+  options: {classes: string[]} = undefined
   static timeOutMessages = [
     "You ran out of time! Try to answer as fast as possible",
     "Oops, didnt get a response! Try to answer as fast as possible",
@@ -56,18 +57,33 @@ export class Message {
     direction: string,
     HtmlElement: HTMLElement | HTMLUListElement,
     buttonElement?: string,
-    extraInfo?: string
+    extraInfo?: string,
+    options?: {classes: string[]}
   ) {
     this.text = text;
     this.direction = direction;
     this.htmlElement = HtmlElement;
     this.buttonElement = buttonElement;
     this.extraInfo = extraInfo;
+    this.options = options
     this.handleButtonClick = this.handleButtonClick.bind(this);
   }
 
+
+
+  managePresenceOfOptions(){
+    try {
+       const {classes} = this.options;
+       const classesAsText = classes.join(' ');
+       return  classesAsText || '';
+    } catch (error) {
+      return '';
+    }
+  }
+
   makeAndInsertMessage(count: number) {
-    this.saveChats();
+    // this.saveChats();
+    // debugger;
     // if the try block fails, then there isn't text in the button string to generate an
     // array from so control moves to the catch block and executes the code there
     try {
@@ -90,7 +106,7 @@ export class Message {
 
       // secondDiv after image
       const secondDivAfterImage = document.createElement("div");
-      secondDivAfterImage.className = "chat-box__text-wrapper";
+      secondDivAfterImage.className = `chat-box__text-wrapper ${this.managePresenceOfOptions()}`;
       secondDivAfterImage.textContent = `${this.text}`;
       // const thirdDiv = document.createElement("div");
       // thirdDiv.className = "text";
@@ -667,7 +683,8 @@ export class Message {
           this.direction,
           this.htmlElement,
           this.buttonElement,
-          this.extraInfo
+          this.extraInfo,
+          this.options
         )
       );
       sessionStorage.setItem("savedChats", JSON.stringify(arrayOfChats));

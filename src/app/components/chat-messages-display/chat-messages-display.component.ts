@@ -59,6 +59,9 @@ export class ChatMessagesDisplayComponent
   // private counter: number;
   private refNo: string;
   private receiverIsPresent: boolean = false;
+  
+  obs: MutationObserver
+  private config:MutationObserverInit = { attributes: true, childList: true, subtree: true, };
 
   public count: number = 0;
   observableToTrash: Trash = {};
@@ -121,6 +124,7 @@ export class ChatMessagesDisplayComponent
               "messageForUserToDisplayInResponseToPreviousStage"
             )
           ) {
+    
             this.responseFromReceiver(objCopy as ReceiversResponse);
             this.respondToReceiver(
               this.generalservice.nextChatbotReplyToReceiver
@@ -129,6 +133,7 @@ export class ChatMessagesDisplayComponent
           return;
         }
         if (val instanceof replyGiversOrReceivers) {
+          
           this.insertGiversResponseIntoDom(
             val,
             this.generalservice.nextChatbotReplyToGiver
@@ -402,6 +407,44 @@ export class ChatMessagesDisplayComponent
     setTimeout(() => {
       this.refillChatBotWithChats();
     }, 1000);
+
+    this.obs = new MutationObserver((mutations: MutationRecord[], observer)=> {
+      for(const mutation of mutations) {
+        if (mutation.type === 'childList') {
+            const {addedNodes} = mutation
+           const element = addedNodes[0];
+          if((element as HTMLElement).classList && (element as HTMLElement).classList.contains('left')){
+            const textWrapper = (element as HTMLElement).firstElementChild.childNodes.length == 1 ? (element as HTMLElement).firstElementChild.firstElementChild: (element as HTMLElement).firstElementChild.lastElementChild;
+            // debugger;
+            if(textWrapper.classList.contains('bot_helper_message')) {
+              const html = `
+              <div class="mutation-inserted__text">
+                Your entry is invalid! Here are a list of words that could help you quickly navigate the system.
+                 <br />
+                 <br />
+                 <span class="command">To restart: enter <strong>'restart'</strong> </span>
+                 <hr />
+                 <span class="command">To continue from previous stage: enter <strong>'continue previous'</strong></span>
+                 <hr />
+                 <span class="command">To register a child or children: enter <strong>'register child'</strong></span>
+                 <hr />
+                 <span class="command">To enter your account details: enter <strong>'register account details'</strong></span>
+               </div>
+                `;
+                textWrapper.innerHTML = '';
+                textWrapper.insertAdjacentHTML('afterbegin', html);
+            }
+          }
+        }
+        // else if (mutation.type === 'attributes') {
+        //     console.log('The ' + mutation.attributeName + ' attribute was modified.');
+        // }
+    }
+    })
+
+
+// Start observing the target node for configured mutations
+   this.obs.observe(ul, this.config);
   }
 
   refillChatBotWithChats() {
@@ -443,9 +486,10 @@ export class ChatMessagesDisplayComponent
     reply: replyGiversOrReceivers,
     chatbotReply?: replyGiversOrReceivers
   ) {
+   
     try {
-      const { message, direction } = reply["reply"];
-      // console.log(chatbotReply);
+      const { message, direction, options } = reply["reply"];
+      console.dir(options);
       this.displaySubsequentMessages({
         message: message,
         direction: direction
@@ -455,7 +499,8 @@ export class ChatMessagesDisplayComponent
         this.displaySubsequentMessages(chatbotReply);
       }, 1000);
     } catch (e) {
-      const { message, direction, preventOrAllow } = reply;
+      const { message, direction, preventOrAllow, options } = reply;
+      // console.dir(options);
       this.displaySubsequentMessages({
         message: message,
         direction: direction,
@@ -507,7 +552,9 @@ export class ChatMessagesDisplayComponent
     button?: string;
     extraInfo?: string;
     preventOrAllow?: string;
+    options?: {classes: string[]}
   }) {
+     
     let ul: HTMLUListElement;
     // back up plan if the above doesnt work;
     if (this.messagePlaceHolder) {
@@ -533,8 +580,10 @@ export class ChatMessagesDisplayComponent
           `${obj.direction ? obj.direction : "left"}`,
           ul,
           obj.button,
-          obj.extraInfo
+          obj.extraInfo,
+          obj.options
         );
+        if(obj.hasOwnProperty('options')) console.dir(obj.options);
         messageToDisplay.makeAndInsertMessage(this.count);
         // console.log(this.count);
       }

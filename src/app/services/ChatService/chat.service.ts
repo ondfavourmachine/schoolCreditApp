@@ -245,6 +245,12 @@ export class ChatService {
       .toPromise();
   }
 
+  // send activation code to parent
+  sendEmailOTP(obj: {email: string}): Observable<GenericResponse>{
+    return this.http
+    .post<GenericResponse>(`${this.generalUrl}email/send/otp`, obj)
+  }
+
   // fetch list of banks
   fetchBankNames(): Bank[] {
     let allBanks = JSON.parse(sessionStorage.getItem("allBanks"));

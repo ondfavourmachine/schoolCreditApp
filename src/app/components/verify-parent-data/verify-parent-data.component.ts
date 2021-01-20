@@ -276,11 +276,16 @@ export class VerifyParentDataComponent
 
   sendActivationCodeToEmail(email: string) {
     this.spinner = true;
-    setTimeout(() => {
+    this.chatapi.sendEmailOTP({email})
+    .subscribe(val => {
       this.generalservice.successNotification("Activation code sent!");
       this.view = "activate-email";
       this.spinner = false;
-    }, 1500);
+    }, err=> {
+      console.log(err);
+      this.spinner = false;
+      this.generalservice.warningNotification(`An error occured while sending activation otp to ${email}`)
+    })
   }
 
   lauchModal() {

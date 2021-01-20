@@ -96,6 +96,7 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
   processAndRespondToUserInput(actualText: string, value: string) {
     (this.inputFromUser.nativeElement as HTMLInputElement).value = "";
     const typeOfUser = this.router.url;
+  
     switch (actualText) {
       case "help":
       case "help my family":
@@ -103,7 +104,7 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
       case "receiver":
         if (!typeOfUser.includes("giver")) {
           const response = new replyGiversOrReceivers(`${value}`, "right");
-          this.generalservice.nextChatbotReplyToGiver = null;
+          // this.generalservice.nextChatbotReplyToGiver = null;
           this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
             `We are aware. Please click the button below to begin the process of receiving help.`,
             `left`,
@@ -199,13 +200,17 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
         break;
       default:
         if (typeOfUser.includes("giver")) {
+          
           const response = new replyGiversOrReceivers(`${value}`, "right");
-          this.generalservice.nextChatbotReplyToGiver = null;
+          // this.generalservice.nextChatbotReplyToGiver = null;
           this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
-            `Your entry is invalid! To provide financial help, please click one of the buttons`,
+            `Your entry is invalid! Here are a list of words that could help you quickly navigate the system.
+             `,
             `left`,
             "I want to be identified,Stay anonymous",
-            "identify,anonymous"
+            "identify,anonymous",
+            undefined,
+            {classes: ['bot_helper_message']}
           );
           setTimeout(() => {
             this.generalservice.responseDisplayNotifier(response);
