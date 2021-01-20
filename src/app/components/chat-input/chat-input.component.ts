@@ -33,6 +33,7 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
   @Output("readyToAnswerOrNot") readyToAnswerOrNot = new EventEmitter<string>();
   private arrayOfRegexes: Array<RegExp> = [
     /hello/gi,
+    /restart/gi,
     /hi/gi,
     /help/gi,
     /give/gi,
@@ -96,38 +97,20 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
   processAndRespondToUserInput(actualText: string, value: string) {
     (this.inputFromUser.nativeElement as HTMLInputElement).value = "";
     const typeOfUser = this.router.url;
-  
     switch (actualText) {
       case "help":
-      case "help my family":
-      case "need money":
-      case "receiver":
-        if (!typeOfUser.includes("giver")) {
-          const response = new replyGiversOrReceivers(`${value}`, "right");
-          // this.generalservice.nextChatbotReplyToGiver = null;
-          this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
-            `We are aware. Please click the button below to begin the process of receiving help.`,
-            `left`,
-            "I need monetary help",
-            "help,"
-          );
-          setTimeout(() => {
-            this.generalservice.responseDisplayNotifier(response);
-          }, 700);
-        } else {
-          const response = new replyGiversOrReceivers(`${value}`, "right");
-          this.generalservice.nextChatbotReplyToGiver = null;
-          this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
-            `I can't respond to your entry. If you want to give. Please click the buttons below.`,
-            `left`,
-            "I want to be identified,Stay anonymous",
-            "identify,anonymous"
-          );
-          setTimeout(() => {
-            this.generalservice.responseDisplayNotifier(response);
-          }, 700);
-        }
-        break;
+         this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
+          `Here is a list of commands you can type in for quick navigation around the system.`,
+          `left`,
+          "I want to be identified,Stay anonymous",
+          "identify,anonymous",
+          undefined,
+          {classes: ['helper']}
+        );
+        setTimeout(() => {
+          this.generalservice.responseDisplayNotifier(new replyGiversOrReceivers(`${value}`, "right"));
+        }, 300);
+      break;
       case "hi":
       case "hello":
         const reply = actualText == "hi" ? "Hello" : "Hi";
@@ -137,8 +120,10 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
           this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
             `${reply}, It's nice to meet you. I know you're here to donate to a family or families in need. Please click one of the buttons to begin`,
             `left`,
-            "I want to be identified,Stay anonymous",
-            "identify,anonymous"
+            "",
+            "",
+            undefined,
+            {classes: ['helper']}
           );
           setTimeout(() => {
             this.generalservice.responseDisplayNotifier(response);
@@ -198,11 +183,24 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
           }, 700);
         }
         break;
+        case 'restart': 
+        const response = new replyGiversOrReceivers(`${value}`, "right");
+        // this.generalservice.nextChatbotReplyToGiver = null;
+        this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
+          `You asked to restart the process. This will lead to loosing all previous entries.
+           Are you sure you want to restart?`,
+          `left`,
+          "Yes restart now,I want to begin a new request, Continue pre-existing request",
+          "restart,newRequest,continuingRequest",
+        );
+        setTimeout(() => {
+          this.generalservice.responseDisplayNotifier(response);
+        }, 400);
+        break;
       default:
         if (typeOfUser.includes("giver")) {
           
           const response = new replyGiversOrReceivers(`${value}`, "right");
-          // this.generalservice.nextChatbotReplyToGiver = null;
           this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
             `Your entry is invalid! Here are a list of words that could help you quickly navigate the system.
              `,

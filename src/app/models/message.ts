@@ -82,7 +82,7 @@ export class Message {
   }
 
   makeAndInsertMessage(count: number) {
-    // this.saveChats();
+    this.saveChats();
     // debugger;
     // if the try block fails, then there isn't text in the button string to generate an
     // array from so control moves to the catch block and executes the code there
@@ -383,7 +383,9 @@ export class Message {
           "verify-parent-data"
         );
         break;
-
+      case 'restart':
+        this.dispatchevent('customEventFromMessageClass', 'restart', undefined, () =>  ['generalservice', 'resetEverything'] )
+      break;
       case "begin":
         this.dispatchevent(
           "customEventFromMessageClass",
@@ -583,12 +585,7 @@ export class Message {
       case "money":
         this.dispatchevent("customEventFromMessageClass", "supportPage", "");
         break;
-      case "upload photo and statement":
-        this.dispatchevent(
-          "customEventFromMessageClass",
-          "uploadPhotoAndStatement"
-        );
-        break;
+     
       case "receive":
         this.receiverDispatchEvents(
           "customReceiverEventFromMsgClass",
@@ -600,12 +597,7 @@ export class Message {
       case "give":
         this.giverDispatchEvents("customGiverEventFromMsgClass", "giver", "");
         break;
-      case " no i do not":
-        this.dispatchevent("customEventFromMessageClass", "skip");
-        break;
-      case "play":
-        this.dispatchevent("customEventFromMessageClass", "startTest");
-        break;
+      
     }
   }
 
@@ -642,9 +634,9 @@ export class Message {
     this.htmlElement.dispatchEvent(event);
   }
 
-  dispatchevent(typeOfEvent: string, message?: string, text?: string) {
+  dispatchevent(typeOfEvent: string, message?: string, text?: string, callBack?: Function) {
     const event: Event = new CustomEvent(typeOfEvent, {
-      detail: { message, text },
+      detail: { message, text, callBack },
       bubbles: true
     });
     this.htmlElement.dispatchEvent(event);

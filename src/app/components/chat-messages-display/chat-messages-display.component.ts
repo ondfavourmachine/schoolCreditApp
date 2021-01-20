@@ -64,7 +64,7 @@ export class ChatMessagesDisplayComponent
   private config:MutationObserverInit = { attributes: true, childList: true, subtree: true, };
 
   public count: number = 0;
-  observableToTrash: Trash = {};
+  observableToTrash: Subscription[] = [];
   constructor(
     private generalservice: GeneralService,
     private chatservice: ChatService,
@@ -81,25 +81,8 @@ export class ChatMessagesDisplayComponent
   }
 
   ngOnInit() {
-    this.generalservice.reset$.subscribe((val: string) => {
-      if (val.length < 1) return;
-      const currentRoute = this.route.url;
-      sessionStorage.clear();
-      if (currentRoute.includes("giver")) {
-        this.route.navigateByUrl("/", { skipLocationChange: true }).then(() => {
-          this.route.navigate([currentRoute]);
-        });
-      } else {
-        this.route
-          .navigateByUrl("/giver", { skipLocationChange: true })
-          .then(() => {
-            this.route.navigate([currentRoute]);
-          });
-      }
-
-      // this.ngOnInit();
-    });
-    this.generalservice.congratsOrRegrets$.subscribe(val => {
+  
+   this.observableToTrash[0] = this.generalservice.congratsOrRegrets$.subscribe(val => {
       if (val.length < 1) {
         return;
       }
@@ -112,7 +95,7 @@ export class ChatMessagesDisplayComponent
       }
     });
 
-    this.observableToTrash.displayResponse = this.generalservice.intermediateResponse$.subscribe(
+    this.observableToTrash[1]  = this.generalservice.intermediateResponse$.subscribe(
       (val: ReceiversResponse | GiverResponse) => {
         // debugger;
         const objCopy: ReceiversResponse & object | GiverResponse & object = {
@@ -142,7 +125,7 @@ export class ChatMessagesDisplayComponent
       }
     );
 
-    this.observableToTrash.preventDisabling = this.generalservice.preventDisablingOfButtons$.subscribe(
+    this.observableToTrash[2]= this.generalservice.preventDisablingOfButtons$.subscribe(
       val => {
         // debugger;
         if (val == "prevent") {
@@ -153,7 +136,7 @@ export class ChatMessagesDisplayComponent
       }
     );
 
-    this.observableToTrash.destroyNextReply = this.generalservice.nextReply$
+    this.observableToTrash[2] = this.generalservice.nextReply$
       .pipe(delay(500))
       .subscribe(val => {
         let obj = new Object();
@@ -352,57 +335,16 @@ export class ChatMessagesDisplayComponent
       this.insertGiversResponseIntoDom(reply, message);
     });
 
-    ul.addEventListener("customEventFromMessageClass", (e: CustomEvent) => {
-      // debugger;
-      if (String(e.detail).includes("IdentifyOrAnonymousForms")) {
-        // console.log("i am here");
-        this.changeModalTitle(String(e.detail));
-        this.generalservice.handleFlowController("termsAndCondition");
-        // this.disableTheButtonsOfPreviousListElement();
-      } else if (typeof e.detail == "object") {
-        // this.responseFromGiver(e.detail);
-      } else if (String(e.detail).includes("bbrw")) {
-        const arr = String(e.detail).split(",");
-        this.changeModalTitle(String(e.detail));
-        this.generalservice.controlFormsToDisplay(arr);
-        this.generalservice.handleFlowController("formsContainer");
-        // this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
-        // this.disableTheButtonsOfPreviousListElement();
-      } else if (String(e.detail) == "bvn") {
-        this.changeModalTitle("bvnAndDOB");
-        this.generalservice.controlFormsToDisplay(String(e.detail));
-        this.generalservice.handleFlowController("formsContainer");
-        // this.disableTheButtonsOfPreviousListElement();
-      } else if (String(e.detail) == "stop") {
-        this.disableTheButtonsOfPreviousListElement();
-        // this.generalservice.responseDisplayNotifier("stop");
-        sessionStorage.clear();
-      } else if (String(e.detail) == "uploadPhotoAndStatement") {
-        this.changeModalTitle(String(e.detail));
-        this.generalservice.controlFormsToDisplay(String(e.detail));
-        this.generalservice.handleFlowController("formsContainer");
-        // this.getQuestions();
-        // console.log("i got here");
-      } else if (String(e.detail) == "licensevalidation") {
-        this.changeModalTitle(String(e.detail));
-        this.generalservice.controlFormsToDisplay(String(e.detail));
-        this.generalservice.handleFlowController("formsContainer");
-        this.getQuestions();
-      } else if (String(e.detail) == "startTest") {
-        this.changeModalTitle(String(e.detail));
-        // // this part will be reworked
-        // ends here
-        this.generalservice.handleFlowController("QuestionsContainer");
-        this.getQuestions();
-      } else if (String(e.detail) == "skip") {
-        // this part will be reworked
-        // ends here
-        this.changeModalTitle(String(e.detail));
-        this.userDidNotProvideDriversLicense();
-        this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
-        this.getQuestions();
-      }
-    });
+    ul.addEventListener("customEventFromMessageClass", (e: CustomEvent) =>
+     { 
+        const {message, callBack} = e.detail;
+        if(message == 'restart'){
+          const string = callBack();
+          // console.log(callBack);
+          this[string[0]][string[1]](message);
+        }
+    }
+    );
 
     setTimeout(() => {
       this.refillChatBotWithChats();
@@ -413,27 +355,50 @@ export class ChatMessagesDisplayComponent
         if (mutation.type === 'childList') {
             const {addedNodes} = mutation
            const element = addedNodes[0];
-          if((element as HTMLElement).classList && (element as HTMLElement).classList.contains('left')){
-            const textWrapper = (element as HTMLElement).firstElementChild.childNodes.length == 1 ? (element as HTMLElement).firstElementChild.firstElementChild: (element as HTMLElement).firstElementChild.lastElementChild;
-            // debugger;
-            if(textWrapper.classList.contains('bot_helper_message')) {
-              const html = `
-              <div class="mutation-inserted__text">
-                Your entry is invalid! Here are a list of words that could help you quickly navigate the system.
-                 <br />
-                 <br />
-                 <span class="command">To restart: enter <strong>'restart'</strong> </span>
-                 <hr />
-                 <span class="command">To continue from previous stage: enter <strong>'continue previous'</strong></span>
-                 <hr />
-                 <span class="command">To register a child or children: enter <strong>'register child'</strong></span>
-                 <hr />
-                 <span class="command">To enter your account details: enter <strong>'register account details'</strong></span>
-               </div>
-                `;
-                textWrapper.innerHTML = '';
-                textWrapper.insertAdjacentHTML('afterbegin', html);
+          try {
+           
+            if((element as HTMLElement).classList && (element as HTMLElement).classList.contains('left')){
+              const textWrapper = (element as HTMLElement).firstElementChild.childNodes.length == 1 ? (element as HTMLElement).firstElementChild.firstElementChild: (element as HTMLElement).firstElementChild.lastElementChild;
+              // debugger;
+              if(textWrapper.classList.contains('bot_helper_message')) {
+                const html = `
+                <div class="mutation-inserted__text">
+                  Your entry is invalid! <br /> <br /> Here are a list of words that could help you quickly navigate the system.
+                   <br />
+                   <br />
+                   <span class="command">To restart the whole process: enter <strong>'restart'</strong> </span>
+                   <hr />
+                   <span class="command">To continue from previous stage: enter <strong>'continue previous'</strong></span>
+                   <hr />
+                   <span class="command">To register a child or children: enter <strong>'register child'</strong></span>
+                   <hr />
+                   <span class="command">To enter your account details: enter <strong>'register account details'</strong></span>
+                 </div>
+                  `;
+                  textWrapper.innerHTML = '';
+                  textWrapper.insertAdjacentHTML('afterbegin', html);
+              }
+              else if(textWrapper.classList.contains('helper')){
+                const html = `
+                <div class="mutation-inserted__text">
+                  Hi, you asked for help!<br /> <br /> Here are a list of words that could help you quickly navigate the system.
+                   <br />
+                   <br />
+                   <span class="command">To restart the whole process: enter <strong>'restart'</strong> </span>
+                   <hr />
+                   <span class="command">To continue from previous stage: enter <strong>'continue previous'</strong></span>
+                   <hr />
+                   <span class="command">To register a child or children: enter <strong>'register child'</strong></span>
+                   <hr />
+                   <span class="command">To enter your account details: enter <strong>'register account details'</strong></span>
+                 </div>
+                  `;
+                  textWrapper.innerHTML = '';
+                  textWrapper.insertAdjacentHTML('afterbegin', html);
+              }
             }
+          } catch (error) {
+             return;
           }
         }
         // else if (mutation.type === 'attributes') {
@@ -445,6 +410,28 @@ export class ChatMessagesDisplayComponent
 
 // Start observing the target node for configured mutations
    this.obs.observe(ul, this.config);
+
+   this.observableToTrash[3] = this.generalservice.reset$.subscribe((val: string) => {
+    if (val.length < 1) return;
+    // const currentRoute = this.route.url;
+    sessionStorage.clear();
+    ul.innerHTML = '';
+    this.generateWelcomeMsgForReceiverOrGiver(ul);
+    // debugger;
+    // if (currentRoute.includes("giver")) {
+    //   this.route.navigateByUrl("/", { skipLocationChange: true }).then(() => {
+    //     this.route.navigate([currentRoute]);
+    //   });
+    // } else {
+    //   this.route
+    //     .navigateByUrl("/giver", { skipLocationChange: true })
+    //     .then(() => {
+    //       this.route.navigate([currentRoute]);
+    //     });
+    // }
+
+    // this.ngOnInit();
+  });
   }
 
   refillChatBotWithChats() {
@@ -489,7 +476,7 @@ export class ChatMessagesDisplayComponent
    
     try {
       const { message, direction, options } = reply["reply"];
-      console.dir(options);
+      // console.dir(options);
       this.displaySubsequentMessages({
         message: message,
         direction: direction
@@ -583,7 +570,7 @@ export class ChatMessagesDisplayComponent
           obj.extraInfo,
           obj.options
         );
-        if(obj.hasOwnProperty('options')) console.dir(obj.options);
+        // if(obj.hasOwnProperty('options')) console.dir(obj.options);
         messageToDisplay.makeAndInsertMessage(this.count);
         // console.log(this.count);
       }
@@ -776,19 +763,7 @@ export class ChatMessagesDisplayComponent
     });
   }
 
-  ngOnDestroy() {
-    // let remove: Subscription
-    // this.observableToTrash.displayResponse.unsubscribe
-
-    if (this.observableToTrash.preventDisabling)
-      this.observableToTrash.preventDisabling.unsubscribe();
-    if (this.observableToTrash.destroyNextReply)
-      this.observableToTrash.destroyNextReply.unsubscribe();
-
-    // this.observableToTrash.apiCall.unsubscribe();
-
-    this.observableToTrash.destroyNextReply.unsubscribe();
-  }
+  
 
   manageLocationIssuesScenario(message) {
     const userLatLng = JSON.parse(sessionStorage.getItem("userLatLng"));
@@ -881,5 +856,9 @@ export class ChatMessagesDisplayComponent
       }
       return stageToStartFrom;
     }
+  }
+
+  ngOnDestroy() {
+   this.observableToTrash.forEach(element => element.unsubscribe())
   }
 }
