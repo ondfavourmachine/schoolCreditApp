@@ -90,3 +90,25 @@ export interface Bank {
   bank_code: string;
   name: string;
 }
+
+export interface ContinuingExistingRequestResponse {
+  data: {
+    token: string;
+    guardian_data: Partial<CompleteParentInfomation>;
+    guardian: number;
+    children: Array<Partial<AChild>>;
+  };
+  stages: schoolCreditStage
+  status: boolean;
+}
+
+export interface schoolCreditStage{
+
+    child_data: 0 | 1
+    parent_account_info: 0 | 1
+    parent_address_info: 0 | 1
+    parent_creditcard_info: 0 | 1
+    parent_data: 0 | 1
+    parent_id_info: 0 | 1
+    parent_work_info: 0 | 1
+}

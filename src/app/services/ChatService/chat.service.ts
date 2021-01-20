@@ -11,7 +11,8 @@ import {
   ParentAddressInfo,
   CompleteParentInfomation,
   Bank,
-  ParentAccountInfo
+  ParentAccountInfo,
+  ContinuingExistingRequestResponse
 } from "src/app/models/data-models";
 import { timeout } from "rxjs/operators";
 // import { retry } from "rxjs/operators";
@@ -41,29 +42,7 @@ interface ChildDataSavedResponse extends GenericResponse {
 interface ParentAWBAResponse extends GenericResponse {
   data: CompleteParentInfomation;
 }
-interface ContinuingExistingRequestResponse {
-  data: {
-    token: string;
-    guardian_data: Partial<CompleteParentInfomation>;
-    guardian: number;
-    children: Array<Partial<AChild>>;
-  };
-  stages: {
-    parent_data: 0 | 1;
-    parent_pic: 0 | 1;
-    parent_email: 0 | 1;
-    parent_pin: 0 | 1;
-    children_count: 0 | 1;
-    child_data: 0 | 1;
-    work: 0 | 1;
-    address: 0 | 1;
-    bvn: 0 | 1;
-    identity: 0 | 1;
-    account: 0 | 1;
-    card: 0 | 1;
-  };
-  status: boolean;
-}
+
 
 export interface FinancialInstitution {
   lender_name: string;
