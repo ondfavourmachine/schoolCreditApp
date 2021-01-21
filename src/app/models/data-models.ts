@@ -8,6 +8,7 @@ export interface ParentRegistration {
   lga?: string;
   state?: string;
   type?: "1" | "2";
+  school_id?: number;
 }
 
 export interface Parent extends ParentRegistration {
@@ -17,6 +18,7 @@ export interface Parent extends ParentRegistration {
   pin: any;
   OTP_sent: boolean;
   email_verified: 0 | 1
+
 }
 
 export interface ParentWorkInfo {

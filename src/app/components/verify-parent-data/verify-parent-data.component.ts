@@ -125,9 +125,9 @@ export class VerifyParentDataComponent
     const { emailOrPhone } = form.value;
     let formToSubmit = { guardian: this.parentDetails.guardian };
     if (this.generalservice.emailRegex.test(emailOrPhone)) {
-      formToSubmit["phone"] = emailOrPhone;
-    } else {
       formToSubmit["email"] = emailOrPhone;
+    } else {
+      formToSubmit["phone"] = emailOrPhone;
     }
     try {
       const res = await this.chatapi.changePhoneOrEmail(formToSubmit);
@@ -164,7 +164,7 @@ export class VerifyParentDataComponent
       // console.log(error);
       if (obj) obj.element.textContent = obj.text;
       this.generalservice.warningNotification(
-        `An error occured while sending notification to ${phoneNumber}`
+        ` ${error.error.message}`
       );
       this.spinner = false;
     }
@@ -258,11 +258,19 @@ export class VerifyParentDataComponent
 
   confirmEmailCode(form: FormGroup) {
     this.spinner = true;
-    this.view = "four-digit-pin";
-    this.spinner = false;
-    this.previousPage.emit("activate-email");
+    
+    this.chatapi.verifyParentEmailActivationCode({token: form.value.email_activation, guardian: this.parentDetails.guardian})
+    .subscribe(val => {
     const refreshedState: Partial<Parent> = { email_verified: 1 };
     this.store.dispatch(new generalActions.addParents(refreshedState));
+    this.spinner = false;
+    this.view = "four-digit-pin";
+    this.previousPage.emit("activate-email");
+    }, (err:HttpErrorResponse)=> {
+      this.generalservice.warningNotification(err.error.message);
+      this.spinner = false;
+    })
+    
   }
 
   resendCode(event: Event, contactType: "phone" | "email") {

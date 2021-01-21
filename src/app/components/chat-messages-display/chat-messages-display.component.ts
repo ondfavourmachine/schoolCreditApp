@@ -11,14 +11,14 @@ import {
   Output,
   EventEmitter
 } from "@angular/core";
-import { Message, checkDOBResponse } from "../../models/message";
+import { Message } from "../../models/message";
 import { GeneralService } from "src/app/services/generalService/general.service";
 import { ChatService } from "src/app/services/ChatService/chat.service";
 // import { QuestionsToAsk, Questionaire } from "src/app/models/Questionaire";
 import { TitleCasePipe } from "@angular/common";
 import { Subscription } from "rxjs";
 // import { Location } from '@angular/common';
-import { delay, take } from "rxjs/operators";
+import { delay } from "rxjs/operators";
 import {
   replyGiversOrReceivers,
   GiverResponse,
@@ -32,14 +32,6 @@ interface GetBvnResponse {
   status?: boolean;
 }
 
-interface Trash {
-  reset?: Subscription;
-  apiCall?: Subscription;
-  displayResponse?: Subscription;
-  preventDisabling?: Subscription;
-  specialCases?: Subscription;
-  destroyNextReply?: Subscription;
-}
 @Component({
   selector: "app-chat-messages-display",
   templateUrl: "./chat-messages-display.component.html",
@@ -359,7 +351,7 @@ export class ChatMessagesDisplayComponent
            
             if((element as HTMLElement).classList && (element as HTMLElement).classList.contains('left')){
               const textWrapper = (element as HTMLElement).firstElementChild.childNodes.length == 1 ? (element as HTMLElement).firstElementChild.firstElementChild: (element as HTMLElement).firstElementChild.lastElementChild;
-              // debugger;
+              
               if(textWrapper.classList.contains('bot_helper_message')) {
                 const html = `
                 <div class="mutation-inserted__text">

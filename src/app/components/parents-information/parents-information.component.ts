@@ -279,7 +279,8 @@ export class ParentsInformationComponent
       picture,
       gender,
       address,
-      state
+      state,
+     
     } = parentInfo;
     this.chatapi
       .registerParent({
@@ -291,7 +292,8 @@ export class ParentsInformationComponent
         gender,
         lga,
         address,
-        state
+        state,
+        school_id: 1
       })
       .subscribe(
         async val => {

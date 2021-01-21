@@ -4,7 +4,13 @@ import { replyGiversOrReceivers } from "src/app/models/GiverResponse";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { ChatService } from "src/app/services/ChatService/chat.service";
 import { HttpErrorResponse } from "@angular/common/http";
-import { Parent, schoolCreditStage } from "src/app/models/data-models";
+import { AChild, Parent, schoolCreditStage } from "src/app/models/data-models";
+import { Store } from "@ngrx/store";
+import * as fromStore from "../../store";
+import * as generalActions from "../../store/actions/general.action";
+import { chdir } from "process";
+
+
 
 interface checkWhoIsContinuing {
   phone?: string;
@@ -25,6 +31,7 @@ export class ContinuingExistingRequestsComponent implements OnInit, AfterViewIni
   arrayOfNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 11];
   input: string = "";
   response: replyGiversOrReceivers = undefined;
+  mapOfChildrensInfo: Map<string, Partial<AChild>> = new Map();
   nextStage: string;
   overlay: boolean = false;
   spinner: boolean = true;
@@ -33,12 +40,12 @@ export class ContinuingExistingRequestsComponent implements OnInit, AfterViewIni
   constructor(
     private generalservice: GeneralService,
     private fb: FormBuilder,
-    private chatservice: ChatService
+    private chatservice: ChatService,
+    private store: Store
   ) { this.manageGoingBackAndForth = this.manageGoingBackAndForth.bind(this);}
 
   ngOnInit(): void {
     this.generalservice.nextStageForUser$.subscribe(val => {
-      console.log(val);
       this.nextStage = val;
     });
     this.confirmPhoneOrEmailForm = this.fb.group({
@@ -121,7 +128,12 @@ export class ContinuingExistingRequestsComponent implements OnInit, AfterViewIni
         const {stages} = val;
         const returnVal = this.rearrangeStaInOrderFashion(stages);
         this.checking("stop");
-        this.continue(returnVal, val.data);
+        const {full_name, date_of_birth, phone, picture, email, address, gender, lga, state, type } = val.data.guardian_data
+        const infoToStore: Partial<Parent> = {full_name, date_of_birth, phone, picture, email, address, state, type, lga, gender, guardian: val.data.guardian }
+        this.store.dispatch(new generalActions.addParents(infoToStore));
+        const childData = val.data.children;
+        childData.length > 0 ? this.handleDataInsideChildren(childData) : null;
+        this.continue(returnVal, val.data.guardian_data);
       },
       (err: HttpErrorResponse) => {
         this.generalservice.errorNotification(`${err.error.message}!`);
@@ -142,10 +154,20 @@ export class ContinuingExistingRequestsComponent implements OnInit, AfterViewIni
     return returnVal;
   }
 
+
+  handleDataInsideChildren(childrenData: Partial<AChild>[]){
+    for (let i = 0; i < childrenData.length; i++) {
+      const word = this.generalservice.fetchWordForNumber(i + 1);
+      childrenData[i].index = i + 1;
+      this.mapOfChildrensInfo.set(word, childrenData[i]);
+    }
+    this.store.dispatch(new generalActions.addAChild(this.mapOfChildrensInfo));
+  }
+
   continue(stage: string, data: Partial<Parent>) {
-   
+    this.generalservice.nextChatbotReplyToGiver = undefined;
     switch (stage) {
-      case "parent_data":
+      case "parent_work_info":
         this.generalservice.nextChatbotReplyToGiver = undefined;
         this.response = new replyGiversOrReceivers(
           `I see you previously provided your children's info`,
@@ -174,6 +196,7 @@ export class ContinuingExistingRequestsComponent implements OnInit, AfterViewIni
         }, 800);
         break;
       case "child_data":
+        
         this.response = new replyGiversOrReceivers(
           `Thank you for registering, ${data.full_name}`,
           "left",
@@ -195,7 +218,7 @@ export class ContinuingExistingRequestsComponent implements OnInit, AfterViewIni
           this.generalservice.responseDisplayNotifier(chatbotResponse);
         }, 800);
         break;
-      case "parent-info":
+      case "parent_data":
         this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
         this.generalservice.handleFlowController("");
         this.response = new replyGiversOrReceivers(
@@ -217,7 +240,9 @@ export class ContinuingExistingRequestsComponent implements OnInit, AfterViewIni
           this.generalservice.responseDisplayNotifier(nextresponse);
         }, 500);
         break;
-      case "account-info":
+      case "parent_account_info":
+        break;
+      case "parent_id_info":
         break;
     }
   }

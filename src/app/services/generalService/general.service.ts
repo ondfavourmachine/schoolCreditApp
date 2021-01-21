@@ -405,4 +405,27 @@ export class GeneralService {
     const blob: Blob = await res.blob();
     return new File([blob], fileName, { type: "image/jpeg" });
   }
+
+  fetchWordForNumber(num: number): string {
+    const arrayOfWords = [
+      "",
+      "first",
+      "second",
+      "third",
+      "fourth",
+      "fifth",
+      "sixth",
+      "seventh",
+      "eighth",
+      "nineth",
+      "Tenth"
+    ];
+    let returnVal: string;
+    arrayOfWords.forEach((element, index, array) => {
+      if (index == num) {
+        returnVal = array[num];
+      }
+    });
+    return returnVal;
+  }
 }

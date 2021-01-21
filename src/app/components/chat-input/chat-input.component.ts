@@ -99,6 +99,7 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
     const typeOfUser = this.router.url;
     switch (actualText) {
       case "help":
+        this.generalservice.nextChatbotReplyToGiver = undefined;
          this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
           `Here is a list of commands you can type in for quick navigation around the system.`,
           `left`,
@@ -199,7 +200,7 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
         break;
       default:
         if (typeOfUser.includes("giver")) {
-          
+          this.generalservice.nextChatbotReplyToGiver = undefined;
           const response = new replyGiversOrReceivers(`${value}`, "right");
           this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
             `Your entry is invalid! Here are a list of words that could help you quickly navigate the system.

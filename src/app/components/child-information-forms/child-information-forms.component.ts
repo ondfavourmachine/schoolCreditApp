@@ -115,7 +115,7 @@ export class ChildInformationFormsComponent
     //   });
 
     this.fullpayment = JSON.parse(sessionStorage.getItem("fullpayment"));
-    console.log(this.fullpayment);
+    // console.log(this.fullpayment);
   }
 
   ngAfterViewInit() {
@@ -183,7 +183,7 @@ export class ChildInformationFormsComponent
     const number: Number = this.selectedChildren[0];
 
     for (let i = 1; i <= number; i++) {
-      const word = this.fetchWordForNumber(i);
+      const word = this.generalservice.fetchWordForNumber(i);
       this.mapOfChildrensInfo.set(word, { index: i });
     }
     if (this.mapOfChildrensInfo.size > 1) {
@@ -199,28 +199,7 @@ export class ChildInformationFormsComponent
     this.previousPage.emit("selectChildren");
   }
 
-  fetchWordForNumber(num: number): string {
-    const arrayOfWords = [
-      "",
-      "first",
-      "second",
-      "third",
-      "fourth",
-      "fifth",
-      "sixth",
-      "seventh",
-      "eighth",
-      "nineth",
-      "Tenth"
-    ];
-    let returnVal: string;
-    arrayOfWords.forEach((element, index, array) => {
-      if (index == num) {
-        returnVal = array[num];
-      }
-    });
-    return returnVal;
-  }
+ 
 
   moveToNextChildOrNot() {
     this.spinner = true;
@@ -310,7 +289,8 @@ export class ChildInformationFormsComponent
       try {
         const res = await this.chatapi.saveChildData(
           { ...value },
-          this.guardianID
+          this.guardianID,
+          1
         );
         const { child } = res;
         if (res.message == "child info saved!") {

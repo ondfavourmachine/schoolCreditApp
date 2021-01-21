@@ -129,7 +129,8 @@ export class ChatService {
 
   saveChildData(
     obj: Partial<AChild>,
-    guardianID
+    guardianID,
+    schoolID
   ): Promise<ChildDataSavedResponse> {
     const formToSubmit = new FormData();
     for (let key in obj) {
@@ -137,6 +138,7 @@ export class ChatService {
     }
     formToSubmit.delete("index");
     formToSubmit.append("guardian", guardianID);
+    formToSubmit.append("school_id", schoolID);
 
     return this.http
       .post<ChildDataSavedResponse>(`${this.generalUrl}child`, formToSubmit)
@@ -200,6 +202,10 @@ export class ChatService {
     obj: Partial<CompleteParentInfomation>
   ): Observable<ParentAWBAResponse> {
     return this.http.post<ParentAWBAResponse>(`${this.generalUrl}card`, obj);
+  }
+
+  verifyParentEmailActivationCode(obj: {token: any, guardian: any}): Observable<GenericResponse>{
+    return this.http.patch<GenericResponse>(`${this.generalUrl}email/verify`, obj);
   }
 
   // confirm parent Pin
