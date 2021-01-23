@@ -4,7 +4,7 @@ import { replyGiversOrReceivers } from "src/app/models/GiverResponse";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { ChatService } from "src/app/services/ChatService/chat.service";
 import { HttpErrorResponse } from "@angular/common/http";
-import { AChild, Parent, schoolCreditStage } from "src/app/models/data-models";
+import { AChild, Parent, ParentWorkInfo, schoolCreditStage } from "src/app/models/data-models";
 import { Store } from "@ngrx/store";
 import * as fromStore from "../../store";
 import * as generalActions from "../../store/actions/general.action";
@@ -112,7 +112,7 @@ export class ContinuingExistingRequestsComponent implements OnInit, AfterViewIni
 
     this.chatservice.submitParentWithoutPin(obj)
       .subscribe(val => {
-        this.view = 'phone_verify';
+        this.view = "phone_verify_second";
         this.spinner = false;  
       }, err => {
         this.spinner = false;
@@ -216,6 +216,11 @@ export class ContinuingExistingRequestsComponent implements OnInit, AfterViewIni
         const infoToStore: Partial<Parent> = {full_name, date_of_birth, phone, picture, email, address, state, type, lga, gender, guardian: val.data.guardian }
         this.guardianID = val.data.guardian;
         this.store.dispatch(new generalActions.addParents(infoToStore));
+        if(val.data.guardian_data.employer.length > 1){
+          const { employer, role, annual_salary} = val.data.guardian_data
+          const parentEmployerDetails: ParentWorkInfo = {employer, role, annual_salary }
+          this.store.dispatch(new generalActions.updateParentWorkInformation(parentEmployerDetails));
+        }
         try {
           await this.chatservice.dispatchOTP({ phone });
         } catch (error) {
@@ -287,9 +292,8 @@ export class ContinuingExistingRequestsComponent implements OnInit, AfterViewIni
         }, 800);
         break;
       case "child_data":
-        
         this.response = new replyGiversOrReceivers(
-          `Thank you for registering, ${data.full_name}`,
+          `Thank you for registering and verifying your contacts, ${data.full_name}`,
           "left",
           "",
           ``
@@ -332,8 +336,50 @@ export class ContinuingExistingRequestsComponent implements OnInit, AfterViewIni
         }, 500);
         break;
       case "parent_account_info":
+        this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
+        this.generalservice.handleFlowController("");
+        this.generalservice.nextChatbotReplyToGiver = undefined;
+        const responseFromParent = new replyGiversOrReceivers(
+          `Thanks for this information. A financial institution is preparing your final offer`,
+          "left",
+          "",
+          "prevent"
+        );
+        this.generalservice.responseDisplayNotifier(responseFromParent);
+        this.spinner = false;
+        setTimeout(() => {
+          this.generalservice.nextChatbotReplyToGiver = undefined;
+          const chatbotResponse = new replyGiversOrReceivers(
+            `They will also like to know which Which account will we be debiting you from?`,
+            "left",
+            "Add Account",
+            `addaccount`,
+            "prevent"
+          );
+          this.generalservice.responseDisplayNotifier(chatbotResponse);
+        }, 800);
         break;
       case "parent_id_info":
+        this.response = new replyGiversOrReceivers(
+          `Thank you for providing your account details,${data.full_name}. However you have not submitted a valid id.`,
+          "left",
+          "",
+          ``
+        );
+        this.generalservice.handleFlowController("");
+        this.generalservice.responseDisplayNotifier(this.response);
+        this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
+        setTimeout(() => {
+          this.generalservice.nextChatbotReplyToGiver = undefined;
+          const chatbotResponse = new replyGiversOrReceivers(
+            `Would you like to submit a valid ID now?`,
+            "left",
+            "Yes i'm ready, No later",
+            `validid,noidnow`,
+            "prevent"
+          );
+          this.generalservice.responseDisplayNotifier(chatbotResponse);
+        }, 800);
         break;
       case "phone_verified":
         this.spinner = false;

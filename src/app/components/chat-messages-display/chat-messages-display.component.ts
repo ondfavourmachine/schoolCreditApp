@@ -279,8 +279,13 @@ export class ChatMessagesDisplayComponent
         this.generalservice.communicateNextStage(stage);
       }
       if (String(componentToLoad).toLowerCase() == "bank-partnership") {
+        const res = callBack();
+        if(res){
+           this.generalservice.handleSmartViewLoading({component: "bank-partnership", info: res});
+        }
         this.generalservice.handleFlowController(String(componentToLoad));
         this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
+       
       }
       if (moreInformation) {
         let arrToPush = [];
@@ -332,7 +337,6 @@ export class ChatMessagesDisplayComponent
         const {message, callBack} = e.detail;
         if(message == 'restart'){
           const string = callBack();
-          // console.log(callBack);
           this[string[0]][string[1]](message);
         }
     }

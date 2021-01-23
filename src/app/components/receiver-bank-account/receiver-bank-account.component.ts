@@ -5,6 +5,7 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { ReceiversResponse } from "src/app/models/GiverResponse";
 import { pipe, TimeoutError } from "rxjs";
 import { timeout } from "rxjs/operators";
+import { ChatService } from "src/app/services/ChatService/chat.service";
 
 interface Bank {
   id: string;
@@ -32,16 +33,18 @@ export class ReceiverBankAccountComponent implements OnInit {
   public selectedBank: string;
   public accountCheck: string;
 
-  constructor(
+   constructor(
     private generalservice: GeneralService,
     private http: HttpClient,
+    private chatapi: ChatService,
     private fb: FormBuilder
   ) {
-    this.fetchBankName();
-    this.getLocationFromIp();
+    
+    // this.getLocationFromIp();
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<any> {
+    this.banks = await this.chatapi.fetchBankNames();
     this.bankForm = this.fb.group({
       bank_name: ["", Validators.required],
       account_no: ["", [Validators.required]]
@@ -96,26 +99,26 @@ export class ReceiverBankAccountComponent implements OnInit {
   //   );
   // }
 
-  fetchBankName() {
-    let allBanks = JSON.parse(sessionStorage.getItem("allBanks"));
-    if (sessionStorage.getItem("allBanks")) {
-      this.banks = allBanks["data"] as Array<Bank>;
-      // console.log(this.banks);
-      return;
-    }
-    let url = "https://mobile.creditclan.com/webapi/v1/banks";
-    let httpHeaders = new HttpHeaders({
-      "x-api-key": "z2BhpgFNUA99G8hZiFNv77mHDYcTlecgjybqDACv"
-    });
-    this.http.get(url, { headers: httpHeaders }).subscribe(
-      val => {
-        this.banks = [...val["data"]];
-        // console.log(this.banks);
-        sessionStorage.setItem("allBanks", JSON.stringify(val));
-      },
-      err => console.log(err)
-    );
-  }
+  // fetchBankName() {
+  //   let allBanks = JSON.parse(sessionStorage.getItem("allBanks"));
+  //   if (sessionStorage.getItem("allBanks")) {
+  //     this.banks = allBanks["data"] as Array<Bank>;
+  //     // console.log(this.banks);
+  //     return;
+  //   }
+  //   let url = "https://mobile.creditclan.com/webapi/v1/banks";
+  //   let httpHeaders = new HttpHeaders({
+  //     "x-api-key": "z2BhpgFNUA99G8hZiFNv77mHDYcTlecgjybqDACv"
+  //   });
+  //   this.http.get(url, { headers: httpHeaders }).subscribe(
+  //     val => {
+  //       this.banks = [...val["data"]];
+  //       // console.log(this.banks);
+  //       sessionStorage.setItem("allBanks", JSON.stringify(val));
+  //     },
+  //     err => console.log(err)
+  //   );
+  // }
 
   submitForm() {
     // console.log(this.bankForm.value);

@@ -4,7 +4,9 @@ import {
   OnDestroy,
   Output,
   EventEmitter,
-  Input
+  Input,
+  ElementRef,
+  OnChanges
 } from "@angular/core";
 import { GeneralService } from "src/app/services/generalService/general.service";
 import { replyGiversOrReceivers } from "src/app/models/GiverResponse";
@@ -28,7 +30,7 @@ import * as fromStore from "../../store";
   templateUrl: "./bank-partnership.component.html",
   styleUrls: ["./bank-partnership.component.css"]
 })
-export class BankPartnershipComponent implements OnInit, OnDestroy {
+export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
   @Output("previousPage") previousPage = new EventEmitter<string>();
   @Input("previous") previous: any;
   page:
@@ -41,7 +43,7 @@ export class BankPartnershipComponent implements OnInit, OnDestroy {
     | "result"
     | "work-form"
     | "address-info"
-    | "preambleToForms" = "checking";
+    | "preambleToForms" = undefined;
   pageViews: string[] = ["work-form"];
   selected: string;
   BVNFORM: FormGroup;
@@ -49,19 +51,29 @@ export class BankPartnershipComponent implements OnInit, OnDestroy {
   destroy: Subscription[] = [];
   spinner: boolean = false;
   parentDetails: Parent;
+  smartView: {componentToLoad: string, info: any} = {componentToLoad: undefined, info: undefined}
   result: object & FinancialInstitution = undefined;
   constructor(
     private generalservice: GeneralService,
     private chatservice: ChatService,
     private fb: FormBuilder,
-    private store: Store
+    private store: Store,
+    private elem: ElementRef
   ) {}
+
+  ngOnChanges(){
+      this.destroy[1] = this.generalservice.smartView$.subscribe(val => {
+      if((this.elem.nativeElement.tagName as string).trim().substring(4).toLowerCase().includes(val.component)){
+        this.smartView = {...val}
+        this.page = this.smartView.info;
+      }
+    })
+  }
 
   ngOnInit(): void {
     this.chatservice.getFinancialInstitution().subscribe(val => {
-      // console.log(val);
       this.result = val;
-      this.page = "";
+      this.smartView.info ? this.page = this.smartView.info  : this.page = "";
     });
 
     this.destroy[0] = this.store
@@ -76,6 +88,8 @@ export class BankPartnershipComponent implements OnInit, OnDestroy {
     this.IDForm = this.fb.group({
       ID_number: ["", Validators.required]
     });
+
+    
   }
 
   selectThis(event) {
@@ -205,5 +219,7 @@ export class BankPartnershipComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.destroy.forEach(element => element.unsubscribe());
+    this.smartView.componentToLoad = undefined;
+    this.smartView.info = undefined;
   }
 }

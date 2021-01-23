@@ -556,21 +556,19 @@ export class Message {
             return checkForLastStop;
           }
         );
-        // this.giverResponsesEvent(
-        //   "customGiverResponse",
-        //   new replyGiversOrReceivers(
-        //     "Would you like to stay anonymous or be an identified giver?",
-        //     "left",
-        //     "I want to be identified,Stay anonymous",
-        //     "identify,stayanonymous"
-        //   ),
-        //   new GiverResponse(
-        //     new replyGiversOrReceivers(
-        //       "No, i am not a first time giver",
-        //       "right"
-        //     )
-        //   )
-        // );
+       
+        break;
+        case 'validid':
+          this.giverDispatchEvents(
+            "customGiverEventFromMsgClass",
+            "giver",
+            "bank-partnership",
+            "",
+            (): string => {
+              const startFrom: string = 'bvn';
+              return startFrom;
+            }
+          );
         break;
       case "givemoney":
         this.giverDispatchEvents(

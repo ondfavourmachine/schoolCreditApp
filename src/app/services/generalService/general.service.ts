@@ -119,6 +119,11 @@ export class GeneralService {
   public familiesForCashDonation: Array<any> = [];
   public userDidNotProvideID = false;
 
+  // this subject will allow me to notify a component that a particular view
+  // needs to be shown
+  private smartViewLoadingSubject = new BehaviorSubject(undefined);
+  public smartView$ = this.smartViewLoadingSubject.asObservable()
+
   public location: any;
   constructor(private toastr: ToastrService) {}
 
@@ -174,6 +179,10 @@ export class GeneralService {
 
   handleFlowController(anything): void {
     this.flowControllerSubject.next(anything);
+  }
+
+  handleSmartViewLoading(obj:{component: string, info: string}){
+    this.smartViewLoadingSubject.next(obj)
   }
 
   modifyDate(str: string) {
