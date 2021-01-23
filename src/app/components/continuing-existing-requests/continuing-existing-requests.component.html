@@ -30,9 +30,58 @@
           Continue
         </button>
       </div>
-      <!-- <div *ngIf="spinner" class="spinner-container">
+      <div *ngIf="spinner" class="spinner-container">
         <i class="fa fa-circle-notch fa-spin fa-3x"></i>
-      </div> -->
+      </div>
+    </form>
+  </div>
+
+  <div *ngIf="view == 'pin_not_set'" class="h-100 text-center family-info">
+    <h1 class="para-title">Please enter pin that was sent to {{confirmPhoneOrEmailForm?.value?.phoneOrEmail}} </h1>
+
+    <form
+      [formGroup]="setUpPinForm"
+      class="w-100"
+      style="position: relative"
+    >
+      <div class="ui form mb-2">
+        <div class="field">
+          <label>PIN sent</label>
+          <input
+            formControlName="pin_in_email"
+            type="text"
+            placeholder="Eg: 3348"
+          />
+        </div>
+      </div>
+
+      <div class="ui form">
+
+        <div class="field">
+          <label>New PIN</label>
+          <input
+            (input)="generalservice.restrictInputDigits($event, 4)"
+            formControlName="new_pin"
+            type="text"
+            placeholder="Eg: 1234"
+          />
+        </div>
+      </div>
+
+      <div class="text-center mt-4">
+        <!-- checking(); -->
+        <button
+          (click)="checkAndSetNewPin(setUpPinForm)"
+          [disabled]="!setUpPinForm.valid"
+          type="button"
+          class="ui primary button fluid"
+        >
+          Continue
+        </button>
+      </div>
+      <div *ngIf="spinner" class="spinner-container">
+        <i class="fa fa-circle-notch fa-spin fa-3x"></i>
+      </div>
     </form>
   </div>
 
@@ -108,6 +157,78 @@
         </button>
       </div>
     </div>
+  </div>
+
+  <div *ngIf="view == 'phone_verify_first'" class="h-100 text-center family-info">
+    <h1 class="para-title">Please enter phone you registered with</h1>
+
+    <form
+      [formGroup]="contactPhoneForm"
+      class="w-100"
+      style="position: relative"
+    >
+      <div class="ui form">
+        <div class="field">
+          <label>Phone</label>
+          <input
+            formControlName="phone"
+            type="text"
+            placeholder="Eg: 08033231589"
+          />
+        </div>
+      </div>
+
+      <div class="text-center mt-3">
+        <!-- checking(); -->
+        <button
+          (click)="submitContactPhone(contactPhoneForm)"
+          [disabled]="!contactPhoneForm.valid"
+          type="button"
+          class="ui primary button fluid"
+        >
+          Continue
+        </button>
+      </div>
+      <div *ngIf="spinner" class="spinner-container">
+        <i class="fa fa-circle-notch fa-spin fa-3x"></i>
+      </div>
+    </form>
+  </div>
+
+  <div *ngIf="view == 'phone_verify_second'" class="h-100 text-center family-info">
+    <h1 class="para-title">Please enter OTP sent to {{ parentDetails?.phone }}  </h1>
+
+    <form
+      [formGroup]="phoneOTPForm"
+      class="w-100"
+      style="position: relative"
+    >
+      <div class="ui form">
+        <div class="field">
+          <label>OTP</label>
+          <input
+            formControlName="OTP_for_phone"
+            type="text"
+            placeholder="Eg: 1234"
+          />
+        </div>
+      </div>
+
+      <div class="text-center mt-3">
+        <!-- checking(); -->
+        <button
+          (click)="submitOTPFromPhone(phoneOTPForm)"
+          [disabled]="!phoneOTPForm.valid"
+          type="button"
+          class="ui primary button fluid"
+        >
+          Continue
+        </button>
+      </div>
+      <div *ngIf="spinner" class="spinner-container">
+        <i class="fa fa-circle-notch fa-spin fa-3x"></i>
+      </div>
+    </form>
   </div>
 
   <span class="checking">

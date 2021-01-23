@@ -188,6 +188,11 @@ export class GeneralService {
     return date;
   }
 
+  restrictInputDigits(event: Event, number: number) {
+    const input = event.target as HTMLInputElement;
+    input.value = input.value.substring(0, number);
+  }
+
   modifyQuestions(): Array<DisplayQuestion> {
     if (
       this.allQuestions.length < 1

@@ -31,7 +31,7 @@ export class ParentAccountFormComponent implements OnInit, OnDestroy {
   PINFORM: FormGroup;
   currentParentPhone: string;
   constructor(
-    private generalservice: GeneralService,
+    public generalservice: GeneralService,
     private store: Store,
     private chatservice: ChatService,
     private fb: FormBuilder
@@ -218,10 +218,7 @@ export class ParentAccountFormComponent implements OnInit, OnDestroy {
     );
   }
 
-  restrictInputDigits(event: Event, number: number) {
-    const input = event.target as HTMLInputElement;
-    input.value = input.value.substring(0, number);
-  }
+ 
 
   ngOnDestroy() {
     this.destroy.forEach(element => element.unsubscribe());

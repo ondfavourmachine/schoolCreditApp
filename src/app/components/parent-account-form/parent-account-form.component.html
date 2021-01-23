@@ -106,7 +106,7 @@
       <div class="field">
         <label>PIN</label>
         <input
-          (input)="restrictInputDigits($event, 4)"
+          (input)="generalservice.restrictInputDigits($event, 4)"
           formControlName="PIN"
           type="text"
           placeholder="Eg: someone@someone.com"
@@ -163,7 +163,7 @@
         <label>Security <small style="color: #f10b0b9d;">*</small> </label>
         <input
           formControlName="cvv"
-          (input)="restrictInputDigits($event, 3)"
+          (input)="generalservice.restrictInputDigits($event, 3)"
           style="padding: 0.7rem 0 !important;"
           type="number"
           placeholder="Eg: 521"

@@ -8,7 +8,9 @@ import { AChild, Parent, schoolCreditStage } from "src/app/models/data-models";
 import { Store } from "@ngrx/store";
 import * as fromStore from "../../store";
 import * as generalActions from "../../store/actions/general.action";
-import { chdir } from "process";
+import { pluck } from "rxjs/operators";
+import { Subscription } from "rxjs";
+
 
 
 
@@ -27,18 +29,25 @@ export class ContinuingExistingRequestsComponent implements OnInit, AfterViewIni
   @Output("previousPage") previousPage = new EventEmitter<string>();
   @Input("previous") previous: any;
   pageViews: string[] = ["", "four-digit-pin"];
-  view: "" | "four-digit-pin" = "";
+  view: "" | "four-digit-pin" | 'pin_not_set' | 'phone_verify' | 'phone_verify_second' | 'phone_verify_first' = "";
   arrayOfNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 11];
   input: string = "";
   response: replyGiversOrReceivers = undefined;
   mapOfChildrensInfo: Map<string, Partial<AChild>> = new Map();
   nextStage: string;
   overlay: boolean = false;
-  spinner: boolean = true;
+  guardianID: string | number = undefined;
+  listOfStagesForLater: Record<string, any> = {};
+  spinner: boolean = false;
   checkWhoIsTryingToContinue: checkWhoIsContinuing = {};
   confirmPhoneOrEmailForm: FormGroup;
+  contactPhoneForm: FormGroup;
+  setUpPinForm: FormGroup;
+  phoneOTPForm: FormGroup;
+  destroy: Subscription[] = [];
+  parentDetails: Partial<Parent>;
   constructor(
-    private generalservice: GeneralService,
+    public generalservice: GeneralService,
     private fb: FormBuilder,
     private chatservice: ChatService,
     private store: Store
@@ -51,12 +60,66 @@ export class ContinuingExistingRequestsComponent implements OnInit, AfterViewIni
     this.confirmPhoneOrEmailForm = this.fb.group({
       phoneOrEmail: ["", Validators.required]
     });
+    this.setUpPinForm = this.fb.group({
+      pin_in_email: ['', Validators.required],
+      new_pin: ['', Validators.required]
+    })
+    this.contactPhoneForm = this.fb.group({
+      phone: ['', Validators.required]
+    })
+    this.phoneOTPForm = this.fb.group({
+      OTP_for_phone: ['', Validators.required]
+    })
+
+    this.destroy[1] = this.store
+    .select(fromStore.getParentState)
+    .pipe(pluck("parent_info"))
+    .subscribe(val => (this.parentDetails = val as Partial<Parent>));
   }
 
   ngAfterViewInit(){
     document
       .getElementById("backspace")
       .addEventListener("click", this.manageGoingBackAndForth);
+  }
+
+  async submitOTPFromPhone(form){
+    this.spinner = true;
+    // const {phone} = this.contactPhoneForm.value;
+    const res = await this.chatservice.verifyOTP({phone_OTP: form.value.OTP_for_phone, guardian: this.guardianID as string});
+    console.log(res);
+    this.spinner = false;
+    const returnVal = this.rearrangeStaInOrderFashion(this.listOfStagesForLater as schoolCreditStage);
+    this.continue(returnVal, this.parentDetails);
+  }
+
+  async submitContactPhone(form: FormGroup){
+    this.spinner = true;
+    const {phone} = form.value;
+    const res = await this.chatservice.verifyOTP({phone_OTP: phone, guardian: this.guardianID as string});
+    console.log(res);
+   
+  }
+
+   checkAndSetNewPin(form: FormGroup){
+    this.spinner = true;
+    console.log(form.value);
+    let obj = {token: '', pin: '', confirm_pin: '', email: ''}
+    obj.token = form.value.pin_in_email;
+    obj.pin = form.value.new_pin;
+    obj.confirm_pin = form.value.new_pin;
+    obj.email = this.checkWhoIsTryingToContinue.email
+
+    this.chatservice.submitParentWithoutPin(obj)
+      .subscribe(val => {
+        this.view = 'phone_verify';
+        this.spinner = false;  
+      }, err => {
+        this.spinner = false;
+        console.log(err);
+        this.generalservice.errorNotification('An error occured while trying to verify your');
+      })
+   
   }
 
   manageGoingBackAndForth() {
@@ -66,6 +129,7 @@ export class ContinuingExistingRequestsComponent implements OnInit, AfterViewIni
       this.view = ans as any;
       this.previousPage.emit(this.pageViews[this.pageViews.indexOf(ans) - 1]);
       return;
+
     }
     if (this.previous == "") {
       this.view = "";
@@ -80,11 +144,29 @@ export class ContinuingExistingRequestsComponent implements OnInit, AfterViewIni
   }
 
   collectEntry(): void {
+    this.spinner = true;
     const { phoneOrEmail } = this.confirmPhoneOrEmailForm.value;
     if (this.generalservice.emailRegex.test(phoneOrEmail)) {
       this.checkWhoIsTryingToContinue.email = phoneOrEmail;
-      this.view = "four-digit-pin";
-      this.previousPage.emit('');
+      this.chatservice.checkIfParentHasPreviouslySavedPIN({email: this.checkWhoIsTryingToContinue.email})
+      .subscribe( val => {
+        // console.log(val);
+        this.spinner = false;
+        this.view = "four-digit-pin";
+        this.previousPage.emit('');
+      },async ( err: HttpErrorResponse )=> {
+        // this.generalservice.errorNotification(err.error.message);
+         try {
+          const res = await (this.chatservice.sendEmailOTP({email: this.checkWhoIsTryingToContinue.email}, 'promise') as Promise<any>);
+          this.generalservice.successNotification(res.message);
+          this.view = 'pin_not_set';
+          this.spinner = false;
+         } catch (error) {
+           this.generalservice.errorNotification(error.error.message);
+           this.spinner = false;
+         }
+       
+      }) 
       return;
     }
     this.checkWhoIsTryingToContinue.phone = phoneOrEmail;
@@ -124,13 +206,21 @@ export class ContinuingExistingRequestsComponent implements OnInit, AfterViewIni
     const formToSubmit = { ...this.checkWhoIsTryingToContinue };
     // console.log(formToSubmit);
     this.chatservice.confirmParentPIN(formToSubmit as any).subscribe(
-      val => {
+      async val => {
         const {stages} = val;
         const returnVal = this.rearrangeStaInOrderFashion(stages);
+        // console.log(stages, returnVal);
+        this.listOfStagesForLater = {...stages};
         this.checking("stop");
         const {full_name, date_of_birth, phone, picture, email, address, gender, lga, state, type } = val.data.guardian_data
         const infoToStore: Partial<Parent> = {full_name, date_of_birth, phone, picture, email, address, state, type, lga, gender, guardian: val.data.guardian }
+        this.guardianID = val.data.guardian;
         this.store.dispatch(new generalActions.addParents(infoToStore));
+        try {
+          await this.chatservice.dispatchOTP({ phone });
+        } catch (error) {
+          // console.log(error);
+        }
         const childData = val.data.children;
         childData.length > 0 ? this.handleDataInsideChildren(childData) : null;
         this.continue(returnVal, val.data.guardian_data);
@@ -138,12 +228,13 @@ export class ContinuingExistingRequestsComponent implements OnInit, AfterViewIni
       (err: HttpErrorResponse) => {
         this.generalservice.errorNotification(`${err.error.message}!`);
         this.checking("stop");
+        console.log(err);
       }
     );
   }
 
   rearrangeStaInOrderFashion(stages:schoolCreditStage): string{
-    const arrangedStages = ['parent_data', 'child_data', 'parent_work_info', 'parent_account_info', 'parent_id_info', "parent_creditcard_info" ];
+    const arrangedStages = ['parent_data', 'email_validated', 'phone_verified', 'child_data', 'parent_work_info', 'parent_account_info', 'parent_id_info', "parent_creditcard_info" ];
     let returnVal;
     for(let element of arrangedStages){
       if(stages[element] == 0){
@@ -243,6 +334,11 @@ export class ContinuingExistingRequestsComponent implements OnInit, AfterViewIni
       case "parent_account_info":
         break;
       case "parent_id_info":
+        break;
+      case "phone_verified":
+        this.spinner = false;
+        this.view = "phone_verify_second";
+        
         break;
     }
   }

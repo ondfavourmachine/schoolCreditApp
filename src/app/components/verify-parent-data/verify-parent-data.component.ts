@@ -9,7 +9,7 @@ import {
 } from "@angular/core";
 import { FormGroup, Validators, FormBuilder } from "@angular/forms";
 import { ChatService } from "src/app/services/ChatService/chat.service";
-import { Subscription } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 import { Store } from "@ngrx/store";
 import * as fromStore from "../../store";
 import * as generalActions from "../../store/actions/general.action";
@@ -284,7 +284,7 @@ export class VerifyParentDataComponent
 
   sendActivationCodeToEmail(email: string) {
     this.spinner = true;
-    this.chatapi.sendEmailOTP({email})
+    (this.chatapi.sendEmailOTP({email}, 'observable') as Observable<any>)
     .subscribe(val => {
       this.generalservice.successNotification("Activation code sent!");
       this.view = "activate-email";

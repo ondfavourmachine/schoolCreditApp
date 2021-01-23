@@ -147,6 +147,11 @@ export class ChatService {
 
   // ends here
 
+  // check if Parent has PIN
+  checkIfParentHasPreviouslySavedPIN(obj: {email: string}){
+    return this.http.post<GenericResponse>(`${this.generalUrl}check/pin`, obj);
+  }
+
   // save parent BVN
   saveParentBVN(
     obj: Partial<CompleteParentInfomation>
@@ -230,10 +235,20 @@ export class ChatService {
       .toPromise();
   }
 
+  submitParentWithoutPin(obj: {token:any,pin:any,confirm_pin: any, email: string}){
+        return this.http.patch<GenericResponse>(`${this.generalUrl}email/verify`, obj)
+  }
+
   // send activation code to parent
-  sendEmailOTP(obj: {email: string}): Observable<GenericResponse>{
-    return this.http
-    .post<GenericResponse>(`${this.generalUrl}email/send/otp`, obj)
+  sendEmailOTP(obj: {email: string}, need: 'observable' | 'promise'): Observable<GenericResponse> | Promise<GenericResponse>{
+    switch(need){
+      case 'observable':
+        return this.http
+        .post<GenericResponse>(`${this.generalUrl}email/send/otp`, obj)
+      case 'promise':
+        return this.http
+        .post<GenericResponse>(`${this.generalUrl}email/send/otp`, obj).toPromise()
+    }
   }
 
   // fetch list of banks
