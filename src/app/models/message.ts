@@ -82,7 +82,7 @@ export class Message {
   }
 
   makeAndInsertMessage(count: number) {
-    // this.saveChats();
+    this.saveChats();
     // debugger;
     // if the try block fails, then there isn't text in the button string to generate an
     // array from so control moves to the catch block and executes the code there

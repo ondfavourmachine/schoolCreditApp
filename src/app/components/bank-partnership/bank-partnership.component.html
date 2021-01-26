@@ -245,7 +245,7 @@
   *ngIf="page == 'checking' && !result"
 >
   <h1 class="para-title">
-    Searching for a financial institution for you...
+    {{ text }}
   </h1>
   <p class="para-body mt-3">
     <svg
@@ -309,9 +309,9 @@
     </svg>
   </p>
 
-  <!-- <button (click)="page = ''" class="ui button primary basic ">
-    See result
-  </button> -->
+      <!-- <p class="para-title" style="text-align: center;">
+        Searching for a financial institution for you...
+      </p> -->
 </div>
 
 <div

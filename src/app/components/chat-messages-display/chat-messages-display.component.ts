@@ -279,7 +279,8 @@ export class ChatMessagesDisplayComponent
         this.generalservice.communicateNextStage(stage);
       }
       if (String(componentToLoad).toLowerCase() == "bank-partnership") {
-        const res = callBack();
+        let res;
+        callBack ? res = callBack() : undefined;
         if(res){
            this.generalservice.handleSmartViewLoading({component: "bank-partnership", info: res});
         }

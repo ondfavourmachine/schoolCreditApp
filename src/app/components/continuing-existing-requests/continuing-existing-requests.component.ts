@@ -216,7 +216,7 @@ export class ContinuingExistingRequestsComponent implements OnInit, AfterViewIni
         const infoToStore: Partial<Parent> = {full_name, date_of_birth, phone, picture, email, address, state, type, lga, gender, guardian: val.data.guardian }
         this.guardianID = val.data.guardian;
         this.store.dispatch(new generalActions.addParents(infoToStore));
-        if(val.data.guardian_data.employer.length > 1){
+        if(val.data.guardian_data.employer && val.data.guardian_data.employer.length > 1){
           const { employer, role, annual_salary} = val.data.guardian_data
           const parentEmployerDetails: ParentWorkInfo = {employer, role, annual_salary }
           this.store.dispatch(new generalActions.updateParentWorkInformation(parentEmployerDetails));
@@ -258,10 +258,12 @@ export class ContinuingExistingRequestsComponent implements OnInit, AfterViewIni
       this.mapOfChildrensInfo.set(word, childrenData[i]);
     }
     this.store.dispatch(new generalActions.addAChild(this.mapOfChildrensInfo));
+    this.store.dispatch(new generalActions.calculateFees());
   }
 
   continue(stage: string, data: Partial<Parent>) {
     this.generalservice.nextChatbotReplyToGiver = undefined;
+    // console.log(stage);
     switch (stage) {
       case "parent_work_info":
         this.generalservice.nextChatbotReplyToGiver = undefined;

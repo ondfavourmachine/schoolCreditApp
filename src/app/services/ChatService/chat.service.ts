@@ -251,6 +251,11 @@ export class ChatService {
     }
   }
 
+  // sendLoanRequest
+  sendLoanRequest(obj: {school_id: any, guardian_id: any, loan_amount: string}): Promise<GenericResponse>{
+    return this.http.post<GenericResponse>(`${this.generalUrl}loan/request`, obj).toPromise()
+  }
+
   // fetch list of banks
   fetchBankNames(): Bank[] {
     let allBanks = JSON.parse(sessionStorage.getItem("allBanks"));
@@ -417,4 +422,6 @@ export class ChatService {
     const ref_no = sessionStorage.getItem("ref_no");
     this.http.post(`${this.generalUrl}finishedanswer`, { ref_no }).subscribe();
   }
+
+  
 }
