@@ -169,7 +169,8 @@
         </div>
         <div *ngSwitchCase="'parent-account-form'">
           <div class="takeAPicture">
-            <app-parent-account-form></app-parent-account-form>
+            <app-parent-account-form
+            (previousPage)="setPageToGoBackTo($event)"></app-parent-account-form>
           </div>
         </div>
 

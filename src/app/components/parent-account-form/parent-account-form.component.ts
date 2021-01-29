@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ElementRef } from "@angular/core";
+import { Component, OnInit, OnDestroy, ElementRef, EventEmitter, Output, AfterViewInit } from "@angular/core";
 import { GeneralService } from "src/app/services/generalService/general.service";
 import { replyGiversOrReceivers } from "src/app/models/GiverResponse";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
@@ -20,7 +20,8 @@ import { Subscription } from "rxjs";
   templateUrl: "./parent-account-form.component.html",
   styleUrls: ["./parent-account-form.component.css"]
 })
-export class ParentAccountFormComponent implements OnInit, OnDestroy {
+export class ParentAccountFormComponent implements OnInit, AfterViewInit, OnDestroy {
+  @Output("previousPage") previousPage = new EventEmitter<string>();
   page: "" | "PIN" | "attach-card" | "info" = "";
   bankAccountForm: FormGroup;
   banks: Bank[] = [];
@@ -56,6 +57,7 @@ export class ParentAccountFormComponent implements OnInit, OnDestroy {
             .toLowerCase()
             .includes(val.component)
         ) {
+          this.previousPage.emit('firstPage');
           this.smartView = { ...val };
           this.page = this.smartView.info;
         }
@@ -89,6 +91,25 @@ export class ParentAccountFormComponent implements OnInit, OnDestroy {
         this.guardianID = guardian;
         this.currentParentPhone = phone;
       });
+  }
+
+  ngAfterViewInit(){
+    if(this.page == 'attach-card'){
+      this.insertIframeToDom();
+    }
+  }
+
+  insertIframeToDom(){
+    this.spinner = true;
+    const iframe = document.createElement('iframe');
+    iframe.setAttribute('sandbox', 'allow-same-origin allow-scripts allow-popups');
+    iframe.src = 'https://cardtoken.creditclan.com/payment?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJSRVFVRVNUX0lEIjoiMTE3MTU4IiwiUEVPUExFX0lEIjoiNzYyNDYiLCJEQVRFX0FEREVEIjoiMjAyMC0xMi0xNyAwOToyMSIsIkFEREVEX0JZIjoiMTE5NSIsIlBMQVRGT1JNX0lEIjoiNjc2MCIsIkJWTl9ET05FIjowLCJNSVNDX1RZUEUiOjJ9.I4L6b4FpGvS2dq-9INNkiNv3Q6HOPRjA-0FOGVjFj5o'
+    iframe.setAttribute('frameborder', '0');
+    iframe.height = "600";
+    iframe.width = '340'
+    iframe.onload = () => {this.spinner = false;}
+    (document.getElementById('insertionDiv') as HTMLDivElement).insertAdjacentElement('afterbegin', iframe);
+
   }
 
   get accountNumber() {
