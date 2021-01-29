@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Component, OnInit, OnDestroy, ElementRef } from "@angular/core";
 import { GeneralService } from "src/app/services/generalService/general.service";
 import { replyGiversOrReceivers } from "src/app/models/GiverResponse";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
@@ -30,14 +30,39 @@ export class ParentAccountFormComponent implements OnInit, OnDestroy {
   creditCardForm: FormGroup;
   PINFORM: FormGroup;
   currentParentPhone: string;
+  smartView: { componentToLoad: string; info: any } = {
+    componentToLoad: undefined,
+    info: undefined
+  };
   constructor(
     public generalservice: GeneralService,
     private store: Store,
     private chatservice: ChatService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private elem: ElementRef
   ) {}
 
+  testing(event) {
+    console.log(event);
+  }
+
   ngOnInit(): void {
+    this.destroy[1] = this.generalservice.smartView$.subscribe(val => {
+      if (val) {
+        if (
+          (this.elem.nativeElement.tagName as string)
+            .trim()
+            .substring(4)
+            .toLowerCase()
+            .includes(val.component)
+        ) {
+          this.smartView = { ...val };
+          this.page = this.smartView.info;
+        }
+      } else {
+        this.page = "";
+      }
+    });
     this.banks = this.chatservice.fetchBankNames();
     this.bankAccountForm = this.fb.group({
       bank_code: ["", Validators.required],
@@ -217,8 +242,6 @@ export class ParentAccountFormComponent implements OnInit, OnDestroy {
       }
     );
   }
-
- 
 
   ngOnDestroy() {
     this.destroy.forEach(element => element.unsubscribe());

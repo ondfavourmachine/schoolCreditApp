@@ -46,7 +46,7 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
     | "work-form"
     | "address-info"
     | "preambleToForms" = undefined;
-  text: string = 'Sending Loan request....'
+  text: string = "Sending Loan request....";
   pageViews: string[] = ["work-form"];
   selected: string;
   BVNFORM: FormGroup;
@@ -54,8 +54,11 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
   destroy: Subscription[] = [];
   spinner: boolean = false;
   parentDetails: Parent;
-  childInfo: any
-  smartView: {componentToLoad: string, info: any} = {componentToLoad: undefined, info: undefined}
+  childInfo: any;
+  smartView: { componentToLoad: string; info: any } = {
+    componentToLoad: undefined,
+    info: undefined
+  };
   result: object & FinancialInstitution = undefined;
   loanAmount: string | number;
   constructor(
@@ -66,48 +69,26 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
     private elem: ElementRef
   ) {}
 
-  ngOnChanges(){
-      this.destroy[1] = this.generalservice.smartView$.subscribe(val => {
-      if(val){
-        if((this.elem.nativeElement.tagName as string).trim().substring(4).toLowerCase().includes(val.component)){
-          this.smartView = {...val}
+  ngOnChanges() {
+    this.destroy[1] = this.generalservice.smartView$.subscribe(val => {
+      if (val) {
+        if (
+          (this.elem.nativeElement.tagName as string)
+            .trim()
+            .substring(4)
+            .toLowerCase()
+            .includes(val.component)
+        ) {
+          this.smartView = { ...val };
           this.page = this.smartView.info;
         }
-      }else{
-        this.page = 'checking';
+      } else {
+        this.page = "checking";
       }
-      
-    })
-  }
-
- async ngOnInit() {
-  this.destroy[0] = this.store
-  .select(fromStore.getCurrentParentInfo)
-  .subscribe(val => {
-    this.parentDetails = val as Parent;
-  });
-
-this.destroy[2] = this.store
-  .select(fromStore.getCurrentChildState)
-  .pipe(pluck('total_tuition_fees'))
-  .subscribe(val => {
-    this.loanAmount = val as string | number
-  });
-  try {
-    const res = await this.chatservice.sendLoanRequest({school_id: 1, guardian_id: this.parentDetails.guardian, loan_amount: this.loanAmount as string})
-    const {message} = res;
-    if(message == 'request created!') this.text = 'Awaiting response from financial institutions....';
-  } catch (error) {
-    this.text = 'Sending Loan request ...';
-    this.generalservice.errorNotification('An error occured while sending your loan request!');
-  }
-    this.chatservice.getFinancialInstitution().subscribe(val => {
-      this.result = val;
-      this.smartView.info ? this.page = this.smartView.info  : this.page = "";
     });
+  }
 
-   
-
+  async ngOnInit() {
     this.BVNFORM = this.fb.group({
       bvn: ["", Validators.required]
     });
@@ -115,7 +96,39 @@ this.destroy[2] = this.store
       ID_number: ["", Validators.required]
     });
 
-    
+    this.destroy[0] = this.store
+      .select(fromStore.getCurrentParentInfo)
+      .subscribe(val => {
+        this.parentDetails = val as Parent;
+      });
+
+    this.destroy[2] = this.store
+      .select(fromStore.getCurrentChildState)
+      .pipe(pluck("total_tuition_fees"))
+      .subscribe(val => {
+        this.loanAmount = val as string | number;
+      });
+    try {
+      const res = await this.chatservice.sendLoanRequest({
+        school_id: 1,
+        guardian_id: this.parentDetails.guardian,
+        loan_amount: this.loanAmount as string
+      });
+      const { message } = res;
+      if (message == "request created!")
+        this.text = "Awaiting response from financial institutions....";
+    } catch (error) {
+      this.text = "Sending Loan request ...";
+      this.generalservice.errorNotification(
+        "An error occured while sending your loan request!"
+      );
+    }
+    this.chatservice.getFinancialInstitution().subscribe(val => {
+      this.result = val;
+      this.smartView.info
+        ? (this.page = this.smartView.info)
+        : (this.page = "");
+    });
   }
 
   selectThis(event) {

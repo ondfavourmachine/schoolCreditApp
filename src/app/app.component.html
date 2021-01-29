@@ -84,7 +84,20 @@
       </div>
     </div>
 
-    <div class="modal-body" style="display: 'block'">
+    <div
+      class="modal-body"
+      [style.height]="
+        generalservice.flowControlHolder == 'parent-account-form'
+          ? '600px'
+          : ''
+      "
+      [style.padding]="
+        generalservice.flowControlHolder == 'parent-account-form'
+          ? '.5rem .5rem'
+          : ''
+      "
+      style="display: 'block'"
+    >
       <div [ngSwitch]="generalservice.flowControlHolder">
         <div
           style="overflow-y: auto;"
@@ -142,8 +155,9 @@
         <div *ngSwitchCase="'continuing-existing-requests'">
           <div class="takeAPicture">
             <app-continuing-existing-requests
-            [previous]="goBack"
-            (previousPage)="setPageToGoBackTo($event)">
+              [previous]="goBack"
+              (previousPage)="setPageToGoBackTo($event)"
+            >
             </app-continuing-existing-requests>
           </div>
         </div>

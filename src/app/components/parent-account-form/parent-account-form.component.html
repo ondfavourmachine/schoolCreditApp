@@ -130,12 +130,12 @@
   </form>
 </div>
 
-<div class=" h-100 text-center family-info" *ngIf="page == 'attach-card'">
-  <h1 class="para-title">
+<div class=" h-100 text-center family-info" id="iframe-holder" *ngIf="page == 'attach-card'">
+  <!-- <h1 class="para-title">
     Attach Card details
-  </h1>
+  </h1> -->
 
-  <form [formGroup]="creditCardForm" class="w-100" style="position: relative">
+  <!-- <form [formGroup]="creditCardForm" class="w-100" style="position: relative">
     <div class="ui form">
       <div style="margin-bottom: 0.5rem;" class="field">
         <label>Name on Card <small style="color: #f10b0b9d;">*</small></label>
@@ -238,8 +238,17 @@
         Let's do this later
       </button>
     </div>
-  </form>
-
+  </form> -->
+  <div style="height: 100%; width: 100%">
+    <iframe
+      src="https://cardtoken.creditclan.com/payment?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJSRVFVRVNUX0lEIjoiMTE3MTU4IiwiUEVPUExFX0lEIjoiNzYyNDYiLCJEQVRFX0FEREVEIjoiMjAyMC0xMi0xNyAwOToyMSIsIkFEREVEX0JZIjoiMTE5NSIsIlBMQVRGT1JNX0lEIjoiNjc2MCIsIkJWTl9ET05FIjowLCJNSVNDX1RZUEUiOjJ9.I4L6b4FpGvS2dq-9INNkiNv3Q6HOPRjA-0FOGVjFj5o"
+      frameborder="0"
+      height="600"
+      width="340"
+      (load)="testing($event)"
+      sandbox="allow-same-origin allow-scripts allow-popups"
+    ></iframe>
+  </div>
   <div *ngIf="spinner" class="spinner-container">
     <i class="fa fa-circle-notch fa-spin fa-3x"></i>
   </div>

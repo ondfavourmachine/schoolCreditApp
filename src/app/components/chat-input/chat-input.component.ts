@@ -100,18 +100,20 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
     switch (actualText) {
       case "help":
         this.generalservice.nextChatbotReplyToGiver = undefined;
-         this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
+        this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
           `Here is a list of commands you can type in for quick navigation around the system.`,
           `left`,
           "I want to be identified,Stay anonymous",
           "identify,anonymous",
           undefined,
-          {classes: ['helper']}
+          { classes: ["helper"] }
         );
         setTimeout(() => {
-          this.generalservice.responseDisplayNotifier(new replyGiversOrReceivers(`${value}`, "right"));
+          this.generalservice.responseDisplayNotifier(
+            new replyGiversOrReceivers(`${value}`, "right")
+          );
         }, 300);
-      break;
+        break;
       case "hi":
       case "hello":
         const reply = actualText == "hi" ? "Hello" : "Hi";
@@ -124,7 +126,7 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
             "",
             "",
             undefined,
-            {classes: ['helper']}
+            { classes: ["helper"] }
           );
           setTimeout(() => {
             this.generalservice.responseDisplayNotifier(response);
@@ -184,15 +186,15 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
           }, 700);
         }
         break;
-        case 'restart': 
+      case "restart":
         const response = new replyGiversOrReceivers(`${value}`, "right");
         // this.generalservice.nextChatbotReplyToGiver = null;
         this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
           `You asked to restart the process. This will lead to loosing all previous entries.
            Are you sure you want to restart?`,
           `left`,
-          "Yes restart now,I want to begin a new request, Continue pre-existing request",
-          "restart,newRequest,continuingRequest",
+          "Yes restart now,I want to begin a new request, Continue existing request",
+          "restart,newrequest,continuingrequest"
         );
         setTimeout(() => {
           this.generalservice.responseDisplayNotifier(response);
@@ -209,7 +211,7 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
             "I want to be identified,Stay anonymous",
             "identify,anonymous",
             undefined,
-            {classes: ['bot_helper_message']}
+            { classes: ["bot_helper_message"] }
           );
           setTimeout(() => {
             this.generalservice.responseDisplayNotifier(response);

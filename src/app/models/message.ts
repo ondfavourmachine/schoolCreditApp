@@ -14,7 +14,7 @@ export class Message {
   buttonElement: string;
   extraInfo: string;
   countForMessage: number = 0;
-  options: {classes: string[]} = undefined
+  options: { classes: string[] } = undefined;
   static timeOutMessages = [
     "You ran out of time! Try to answer as fast as possible",
     "Oops, didnt get a response! Try to answer as fast as possible",
@@ -58,26 +58,24 @@ export class Message {
     HtmlElement: HTMLElement | HTMLUListElement,
     buttonElement?: string,
     extraInfo?: string,
-    options?: {classes: string[]}
+    options?: { classes: string[] }
   ) {
     this.text = text;
     this.direction = direction;
     this.htmlElement = HtmlElement;
     this.buttonElement = buttonElement;
     this.extraInfo = extraInfo;
-    this.options = options
+    this.options = options;
     this.handleButtonClick = this.handleButtonClick.bind(this);
   }
 
-
-
-  managePresenceOfOptions(){
+  managePresenceOfOptions() {
     try {
-       const {classes} = this.options;
-       const classesAsText = classes.join(' ');
-       return  classesAsText || '';
+      const { classes } = this.options;
+      const classesAsText = classes.join(" ");
+      return classesAsText || "";
     } catch (error) {
-      return '';
+      return "";
     }
   }
 
@@ -374,7 +372,17 @@ export class Message {
           "parent-account-form"
         );
         break;
-
+      case "providedebitcard":
+        this.giverDispatchEvents(
+          "customGiverEventFromMsgClass",
+          "giver",
+          "parent-account-form",
+          "",
+          () => {
+            return "attach-card";
+          }
+        );
+        break;
       case "verifynow":
         console.log("i am here!");
         this.giverDispatchEvents(
@@ -383,9 +391,14 @@ export class Message {
           "verify-parent-data"
         );
         break;
-      case 'restart':
-        this.dispatchevent('customEventFromMessageClass', 'restart', undefined, () =>  ['generalservice', 'resetEverything'] )
-      break;
+      case "restart":
+        this.dispatchevent(
+          "customEventFromMessageClass",
+          "restart",
+          undefined,
+          () => ["generalservice", "resetEverything"]
+        );
+        break;
       case "begin":
         this.dispatchevent(
           "customEventFromMessageClass",
@@ -444,6 +457,7 @@ export class Message {
         );
         // sessionStorage.setItem("anonymous", "2");
         break;
+
       case "fullpayment":
         this.giverResponsesEvent(
           "customGiverResponse",
@@ -556,19 +570,19 @@ export class Message {
             return checkForLastStop;
           }
         );
-       
+
         break;
-        case 'validid':
-          this.giverDispatchEvents(
-            "customGiverEventFromMsgClass",
-            "giver",
-            "bank-partnership",
-            "",
-            (): string => {
-              const startFrom: string = 'bvn';
-              return startFrom;
-            }
-          );
+      case "validid":
+        this.giverDispatchEvents(
+          "customGiverEventFromMsgClass",
+          "giver",
+          "bank-partnership",
+          "",
+          (): string => {
+            const startFrom: string = "bvn";
+            return startFrom;
+          }
+        );
         break;
       case "givemoney":
         this.giverDispatchEvents(
@@ -583,7 +597,7 @@ export class Message {
       case "money":
         this.dispatchevent("customEventFromMessageClass", "supportPage", "");
         break;
-     
+
       case "receive":
         this.receiverDispatchEvents(
           "customReceiverEventFromMsgClass",
@@ -595,7 +609,6 @@ export class Message {
       case "give":
         this.giverDispatchEvents("customGiverEventFromMsgClass", "giver", "");
         break;
-      
     }
   }
 
@@ -632,7 +645,12 @@ export class Message {
     this.htmlElement.dispatchEvent(event);
   }
 
-  dispatchevent(typeOfEvent: string, message?: string, text?: string, callBack?: Function) {
+  dispatchevent(
+    typeOfEvent: string,
+    message?: string,
+    text?: string,
+    callBack?: Function
+  ) {
     const event: Event = new CustomEvent(typeOfEvent, {
       detail: { message, text, callBack },
       bubbles: true

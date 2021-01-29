@@ -1,18 +1,27 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output
+} from "@angular/core";
 import { GeneralService } from "src/app/services/generalService/general.service";
 import { replyGiversOrReceivers } from "src/app/models/GiverResponse";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { ChatService } from "src/app/services/ChatService/chat.service";
 import { HttpErrorResponse } from "@angular/common/http";
-import { AChild, Parent, ParentWorkInfo, schoolCreditStage } from "src/app/models/data-models";
+import {
+  AChild,
+  Parent,
+  ParentWorkInfo,
+  schoolCreditStage
+} from "src/app/models/data-models";
 import { Store } from "@ngrx/store";
 import * as fromStore from "../../store";
 import * as generalActions from "../../store/actions/general.action";
 import { pluck } from "rxjs/operators";
 import { Subscription } from "rxjs";
-
-
-
 
 interface checkWhoIsContinuing {
   phone?: string;
@@ -25,11 +34,18 @@ interface checkWhoIsContinuing {
   templateUrl: "./continuing-existing-requests.component.html",
   styleUrls: ["./continuing-existing-requests.component.css"]
 })
-export class ContinuingExistingRequestsComponent implements OnInit, AfterViewInit {
+export class ContinuingExistingRequestsComponent
+  implements OnInit, AfterViewInit {
   @Output("previousPage") previousPage = new EventEmitter<string>();
   @Input("previous") previous: any;
   pageViews: string[] = ["", "four-digit-pin"];
-  view: "" | "four-digit-pin" | 'pin_not_set' | 'phone_verify' | 'phone_verify_second' | 'phone_verify_first' = "";
+  view:
+    | ""
+    | "four-digit-pin"
+    | "pin_not_set"
+    | "phone_verify"
+    | "phone_verify_second"
+    | "phone_verify_first" = "";
   arrayOfNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 11];
   input: string = "";
   response: replyGiversOrReceivers = undefined;
@@ -51,7 +67,9 @@ export class ContinuingExistingRequestsComponent implements OnInit, AfterViewIni
     private fb: FormBuilder,
     private chatservice: ChatService,
     private store: Store
-  ) { this.manageGoingBackAndForth = this.manageGoingBackAndForth.bind(this);}
+  ) {
+    this.manageGoingBackAndForth = this.manageGoingBackAndForth.bind(this);
+  }
 
   ngOnInit(): void {
     this.generalservice.nextStageForUser$.subscribe(val => {
@@ -61,65 +79,74 @@ export class ContinuingExistingRequestsComponent implements OnInit, AfterViewIni
       phoneOrEmail: ["", Validators.required]
     });
     this.setUpPinForm = this.fb.group({
-      pin_in_email: ['', Validators.required],
-      new_pin: ['', Validators.required]
-    })
+      pin_in_email: ["", Validators.required],
+      new_pin: ["", Validators.required]
+    });
     this.contactPhoneForm = this.fb.group({
-      phone: ['', Validators.required]
-    })
+      phone: ["", Validators.required]
+    });
     this.phoneOTPForm = this.fb.group({
-      OTP_for_phone: ['', Validators.required]
-    })
+      OTP_for_phone: ["", Validators.required]
+    });
 
     this.destroy[1] = this.store
-    .select(fromStore.getParentState)
-    .pipe(pluck("parent_info"))
-    .subscribe(val => (this.parentDetails = val as Partial<Parent>));
+      .select(fromStore.getParentState)
+      .pipe(pluck("parent_info"))
+      .subscribe(val => (this.parentDetails = val as Partial<Parent>));
   }
 
-  ngAfterViewInit(){
+  ngAfterViewInit() {
     document
       .getElementById("backspace")
       .addEventListener("click", this.manageGoingBackAndForth);
   }
 
-  async submitOTPFromPhone(form){
+  async submitOTPFromPhone(form) {
     this.spinner = true;
     // const {phone} = this.contactPhoneForm.value;
-    const res = await this.chatservice.verifyOTP({phone_OTP: form.value.OTP_for_phone, guardian: this.guardianID as string});
+    const res = await this.chatservice.verifyOTP({
+      phone_OTP: form.value.OTP_for_phone,
+      guardian: this.guardianID as string
+    });
     console.log(res);
     this.spinner = false;
-    const returnVal = this.rearrangeStaInOrderFashion(this.listOfStagesForLater as schoolCreditStage);
+    const returnVal = this.rearrangeStaInOrderFashion(this
+      .listOfStagesForLater as schoolCreditStage);
     this.continue(returnVal, this.parentDetails);
   }
 
-  async submitContactPhone(form: FormGroup){
+  async submitContactPhone(form: FormGroup) {
     this.spinner = true;
-    const {phone} = form.value;
-    const res = await this.chatservice.verifyOTP({phone_OTP: phone, guardian: this.guardianID as string});
+    const { phone } = form.value;
+    const res = await this.chatservice.verifyOTP({
+      phone_OTP: phone,
+      guardian: this.guardianID as string
+    });
     console.log(res);
-   
   }
 
-   checkAndSetNewPin(form: FormGroup){
+  checkAndSetNewPin(form: FormGroup) {
     this.spinner = true;
     console.log(form.value);
-    let obj = {token: '', pin: '', confirm_pin: '', email: ''}
+    let obj = { token: "", pin: "", confirm_pin: "", email: "" };
     obj.token = form.value.pin_in_email;
     obj.pin = form.value.new_pin;
     obj.confirm_pin = form.value.new_pin;
-    obj.email = this.checkWhoIsTryingToContinue.email
+    obj.email = this.checkWhoIsTryingToContinue.email;
 
-    this.chatservice.submitParentWithoutPin(obj)
-      .subscribe(val => {
+    this.chatservice.submitParentWithoutPin(obj).subscribe(
+      val => {
         this.view = "phone_verify_second";
-        this.spinner = false;  
-      }, err => {
+        this.spinner = false;
+      },
+      err => {
         this.spinner = false;
         console.log(err);
-        this.generalservice.errorNotification('An error occured while trying to verify your');
-      })
-   
+        this.generalservice.errorNotification(
+          "An error occured while trying to verify your"
+        );
+      }
+    );
   }
 
   manageGoingBackAndForth() {
@@ -129,7 +156,6 @@ export class ContinuingExistingRequestsComponent implements OnInit, AfterViewIni
       this.view = ans as any;
       this.previousPage.emit(this.pageViews[this.pageViews.indexOf(ans) - 1]);
       return;
-
     }
     if (this.previous == "") {
       this.view = "";
@@ -148,30 +174,38 @@ export class ContinuingExistingRequestsComponent implements OnInit, AfterViewIni
     const { phoneOrEmail } = this.confirmPhoneOrEmailForm.value;
     if (this.generalservice.emailRegex.test(phoneOrEmail)) {
       this.checkWhoIsTryingToContinue.email = phoneOrEmail;
-      this.chatservice.checkIfParentHasPreviouslySavedPIN({email: this.checkWhoIsTryingToContinue.email})
-      .subscribe( val => {
-        // console.log(val);
-        this.spinner = false;
-        this.view = "four-digit-pin";
-        this.previousPage.emit('');
-      },async ( err: HttpErrorResponse )=> {
-        // this.generalservice.errorNotification(err.error.message);
-         try {
-          const res = await (this.chatservice.sendEmailOTP({email: this.checkWhoIsTryingToContinue.email}, 'promise') as Promise<any>);
-          this.generalservice.successNotification(res.message);
-          this.view = 'pin_not_set';
-          this.spinner = false;
-         } catch (error) {
-           this.generalservice.errorNotification(error.error.message);
-           this.spinner = false;
-         }
-       
-      }) 
+      this.chatservice
+        .checkIfParentHasPreviouslySavedPIN({
+          email: this.checkWhoIsTryingToContinue.email
+        })
+        .subscribe(
+          val => {
+            // console.log(val);
+            this.spinner = false;
+            this.view = "four-digit-pin";
+            this.previousPage.emit("");
+          },
+          async (err: HttpErrorResponse) => {
+            // this.generalservice.errorNotification(err.error.message);
+            try {
+              const res = await (this.chatservice.sendEmailOTP(
+                { email: this.checkWhoIsTryingToContinue.email },
+                "promise"
+              ) as Promise<any>);
+              this.generalservice.successNotification(res.message);
+              this.view = "pin_not_set";
+              this.spinner = false;
+            } catch (error) {
+              this.generalservice.errorNotification(error.error.message);
+              this.spinner = false;
+            }
+          }
+        );
       return;
     }
     this.checkWhoIsTryingToContinue.phone = phoneOrEmail;
     this.view = "four-digit-pin";
-    this.previousPage.emit('');
+    this.previousPage.emit("");
   }
 
   checking(command?: "stop"): void {
@@ -207,19 +241,53 @@ export class ContinuingExistingRequestsComponent implements OnInit, AfterViewIni
     // console.log(formToSubmit);
     this.chatservice.confirmParentPIN(formToSubmit as any).subscribe(
       async val => {
-        const {stages} = val;
+        const { stages } = val;
         const returnVal = this.rearrangeStaInOrderFashion(stages);
         // console.log(stages, returnVal);
-        this.listOfStagesForLater = {...stages};
+        this.listOfStagesForLater = { ...stages };
         this.checking("stop");
-        const {full_name, date_of_birth, phone, picture, email, address, gender, lga, state, type } = val.data.guardian_data
-        const infoToStore: Partial<Parent> = {full_name, date_of_birth, phone, picture, email, address, state, type, lga, gender, guardian: val.data.guardian }
+        const {
+          full_name,
+          date_of_birth,
+          phone,
+          picture,
+          email,
+          address,
+          gender,
+          lga,
+          state,
+          type
+        } = val.data.guardian_data;
+        const infoToStore: Partial<Parent> = {
+          full_name,
+          date_of_birth,
+          phone,
+          picture,
+          email,
+          address,
+          state,
+          type,
+          lga,
+          gender,
+          guardian: val.data.guardian
+        };
         this.guardianID = val.data.guardian;
         this.store.dispatch(new generalActions.addParents(infoToStore));
-        if(val.data.guardian_data.employer && val.data.guardian_data.employer.length > 1){
-          const { employer, role, annual_salary} = val.data.guardian_data
-          const parentEmployerDetails: ParentWorkInfo = {employer, role, annual_salary }
-          this.store.dispatch(new generalActions.updateParentWorkInformation(parentEmployerDetails));
+        if (
+          val.data.guardian_data.employer &&
+          val.data.guardian_data.employer.length > 1
+        ) {
+          const { employer, role, annual_salary } = val.data.guardian_data;
+          const parentEmployerDetails: ParentWorkInfo = {
+            employer,
+            role,
+            annual_salary
+          };
+          this.store.dispatch(
+            new generalActions.updateParentWorkInformation(
+              parentEmployerDetails
+            )
+          );
         }
         try {
           await this.chatservice.dispatchOTP({ phone });
@@ -238,11 +306,21 @@ export class ContinuingExistingRequestsComponent implements OnInit, AfterViewIni
     );
   }
 
-  rearrangeStaInOrderFashion(stages:schoolCreditStage): string{
-    const arrangedStages = ['parent_data', 'email_validated', 'phone_verified', 'child_data', 'parent_work_info', 'parent_account_info', 'parent_id_info', "parent_creditcard_info" ];
+  rearrangeStaInOrderFashion(stages: schoolCreditStage): string {
+    // "parent_creditcard_info" should be the last
+    const arrangedStages = [
+      "parent_data",
+      "email_validated",
+      "phone_verified",
+      "child_data",
+      "parent_work_info",
+      "parent_creditcard_info",
+      "parent_id_info",
+      "parent_account_info"
+    ];
     let returnVal;
-    for(let element of arrangedStages){
-      if(stages[element] == 0){
+    for (let element of arrangedStages) {
+      if (stages[element] == 0) {
         returnVal = element;
         break;
       }
@@ -250,8 +328,7 @@ export class ContinuingExistingRequestsComponent implements OnInit, AfterViewIni
     return returnVal;
   }
 
-
-  handleDataInsideChildren(childrenData: Partial<AChild>[]){
+  handleDataInsideChildren(childrenData: Partial<AChild>[]) {
     for (let i = 0; i < childrenData.length; i++) {
       const word = this.generalservice.fetchWordForNumber(i + 1);
       childrenData[i].index = i + 1;
@@ -363,7 +440,7 @@ export class ContinuingExistingRequestsComponent implements OnInit, AfterViewIni
         break;
       case "parent_id_info":
         this.response = new replyGiversOrReceivers(
-          `Thank you for providing your account details,${data.full_name}. However you have not submitted a valid id.`,
+          `Thank you for providing your details,${data.full_name}. However you have not submitted a valid id.`,
           "left",
           "",
           ``
@@ -386,7 +463,30 @@ export class ContinuingExistingRequestsComponent implements OnInit, AfterViewIni
       case "phone_verified":
         this.spinner = false;
         this.view = "phone_verify_second";
-        
+
+        break;
+      case "parent_creditcard_info":
+        this.response = new replyGiversOrReceivers(
+          `Thank you for providing your details,${data.full_name}. However we would like to get your card details. 
+         This is a secure process so be rest assured we will not share your information with anybody.`,
+          "left",
+          "",
+          ``
+        );
+        this.generalservice.handleFlowController("");
+        this.generalservice.responseDisplayNotifier(this.response);
+        this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
+        setTimeout(() => {
+          this.generalservice.nextChatbotReplyToGiver = undefined;
+          const chatbotResponse = new replyGiversOrReceivers(
+            `Would you like to provide your debit card details now?`,
+            "left",
+            "Yes i'm ready, No later",
+            `providedebitcard,nodebitcard`,
+            "prevent"
+          );
+          this.generalservice.responseDisplayNotifier(chatbotResponse);
+        }, 800);
         break;
     }
   }
