@@ -180,7 +180,6 @@ export class ContinuingExistingRequestsComponent
         })
         .subscribe(
           val => {
-            // console.log(val);
             this.spinner = false;
             this.view = "four-digit-pin";
             this.previousPage.emit("");
@@ -205,6 +204,7 @@ export class ContinuingExistingRequestsComponent
     }
     this.checkWhoIsTryingToContinue.phone = phoneOrEmail;
     this.view = "four-digit-pin";
+    this.spinner = false;
     this.previousPage.emit("");
   }
 

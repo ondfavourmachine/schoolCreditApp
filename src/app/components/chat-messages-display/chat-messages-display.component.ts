@@ -14,10 +14,10 @@ import {
 import { Message } from "../../models/message";
 import { GeneralService } from "src/app/services/generalService/general.service";
 import { ChatService } from "src/app/services/ChatService/chat.service";
-// import { QuestionsToAsk, Questionaire } from "src/app/models/Questionaire";
-import { TitleCasePipe } from "@angular/common";
+import * as generalActions from "../../store/actions/general.action";
+
+// import { TitleCasePipe } from "@angular/common";
 import { Subscription } from "rxjs";
-// import { Location } from '@angular/common';
 import { delay } from "rxjs/operators";
 import {
   replyGiversOrReceivers,
@@ -25,7 +25,10 @@ import {
   ReceiversResponse
 } from "src/app/models/GiverResponse";
 import { Router } from "@angular/router";
-// import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
+import { Store } from "@ngrx/store";
+import * as fromStore from "../../store";
+import { pluck } from "rxjs/operators";
+
 
 interface GetBvnResponse {
   text?: string;
@@ -58,14 +61,14 @@ export class ChatMessagesDisplayComponent
     childList: true,
     subtree: true
   };
-
+  private tokeniseProcess: string;
   public count: number = 0;
   observableToTrash: Subscription[] = [];
   constructor(
     private generalservice: GeneralService,
     private chatservice: ChatService,
-    private titleCasePipe: TitleCasePipe,
-    private route: Router
+    private route: Router,
+    private store: Store,
   ) {
     const stages = generalservice.getStage();
     if (!stages) {
@@ -131,17 +134,59 @@ export class ChatMessagesDisplayComponent
       }
     );
 
-    this.observableToTrash[2] = this.generalservice.nextReply$
+
+    
+
+    this.observableToTrash[3] = this.generalservice.nextReply$
       .pipe(delay(500))
       .subscribe(val => {
         let obj = new Object();
-        // console.log(val);
-        // obj = { ...val };
         if (!obj.hasOwnProperty("message")) return;
         // console.log(val);
         // this.respondToUsers(val);
       });
+
+      this.observableToTrash[5] = this.store
+      .select(fromStore.getCardTokenState)
+      .pipe(pluck('state_of_process'))
+      .subscribe((val: string )=> {
+        this.tokeniseProcess = val;
+        if(this.tokeniseProcess == 'not-checking'){
+          return;
+        }
+        if(this.tokeniseProcess == 'checking'){
+           new Promise((resolve, reject) => {
+             setTimeout(() => {
+               reject({message: 'Card token failed!', status: false})
+             }, 1500);
+           }).catch((err) => {
+            //  get the pulsing spinner
+            const pulsingLoader = document.querySelectorAll('.processing_tokenized_card');
+            // console.log(pulsingLoader);
+            // get its parent div
+            const parentElement: HTMLElement = pulsingLoader[pulsingLoader.length - 1].closest('div.chat-box__wrapper');
+            // remove it now
+            this.removeElement(this.messagePlaceHolder.nativeElement, parentElement);
+            this.removeProcessingPaymentChatFromSavedChats();
+            // display this in its place.
+            this.generalservice.nextChatbotReplyToGiver = undefined;
+            this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
+            const chatbotResponse = new replyGiversOrReceivers(
+              `We couldn't confirm your card at this time. Please try again.`,
+                `left`,
+                "Confirm card now,No later", // please these buttons are completely useless and will not be presented in the dom
+                "providedebitcard,nodebitcard",
+                 "prevent"
+            );
+            this.generalservice.responseDisplayNotifier(chatbotResponse);
+            this.store.dispatch(new generalActions.checkTokenizeProcess('not-checking'));
+           
+           })
+        }
+      });
   }
+
+  
 
   ngOnChanges(messages: SimpleChanges) {
     const msg = { ...messages.messages };
@@ -373,7 +418,7 @@ export class ChatMessagesDisplayComponent
                 1
                   ? (element as HTMLElement).firstElementChild.firstElementChild
                   : (element as HTMLElement).firstElementChild.lastElementChild;
-
+              // debugger;
               if (textWrapper.classList.contains("bot_helper_message")) {
                 const html = `
                 <div class="mutation-inserted__text">
@@ -391,7 +436,27 @@ export class ChatMessagesDisplayComponent
                   `;
                 textWrapper.innerHTML = "";
                 textWrapper.insertAdjacentHTML("afterbegin", html);
-              } else if (textWrapper.classList.contains("helper")) {
+              }
+
+               if(textWrapper.classList.contains('processing_tokenized_card')){
+                const html = `
+                <div class="mutation-inserted__text processing_div" style="height: 22px;">
+                    <div class="row">
+                    <div class="col-3">
+                    <div  data-title=".dot-pulse">
+                      <div class="stage" style="display: flex;justify-content: center;align-items: center; height: 20px;">
+                        <div class="dot-pulse"></div>
+                      </div>
+                    </div>
+                  </div>
+                    </div>
+                 </div>
+                  `;
+                  textWrapper.innerHTML = "";
+                textWrapper.insertAdjacentHTML("afterbegin", html);
+               }
+              
+              else if (textWrapper.classList.contains("helper")) {
                 const html = `
                 <div class="mutation-inserted__text">
                   Hi, you asked for help!<br /> <br /> Here are a list of words that could help you quickly navigate the system.
@@ -423,7 +488,7 @@ export class ChatMessagesDisplayComponent
     // Start observing the target node for configured mutations
     this.obs.observe(ul, this.config);
 
-    this.observableToTrash[3] = this.generalservice.reset$.subscribe(
+    this.observableToTrash[4] = this.generalservice.reset$.subscribe(
       (val: string) => {
         if (val.length < 1) return;
         // const currentRoute = this.route.url;
@@ -447,6 +512,20 @@ export class ChatMessagesDisplayComponent
       }
     );
   }
+
+  removeElement(parent: HTMLElement, child: HTMLElement){
+    parent.removeChild(child)
+  }
+
+  removeProcessingPaymentChatFromSavedChats(){
+    const savedChats: Array<Message> = JSON.parse(
+      sessionStorage.getItem("savedChats")
+    );
+    const number = savedChats.findIndex(element => /process your card details/gi.test(element.text));
+    savedChats.splice(number, 1);
+    sessionStorage.setItem('savedChats', JSON.stringify(savedChats));
+  }
+
 
   refillChatBotWithChats() {
     const savedChats: Array<Message> = JSON.parse(
@@ -487,12 +566,14 @@ export class ChatMessagesDisplayComponent
     reply: replyGiversOrReceivers,
     chatbotReply?: replyGiversOrReceivers
   ) {
+ 
     try {
       const { message, direction, options } = reply["reply"];
       // console.dir(options);
       this.displaySubsequentMessages({
         message: message,
-        direction: direction
+        direction: direction,
+
       });
       this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
       setTimeout(() => {
@@ -505,7 +586,8 @@ export class ChatMessagesDisplayComponent
         message: message,
         direction: direction,
         button: reply.button ? reply.button : "",
-        extraInfo: reply.extraInfo ? reply.extraInfo : ""
+        extraInfo: reply.extraInfo ? reply.extraInfo : "",
+        options
       });
       this.generalservice.ctrlDisableTheButtonsOfPreviousListElement(
         preventOrAllow ? preventOrAllow : "allow"
@@ -554,6 +636,7 @@ export class ChatMessagesDisplayComponent
     preventOrAllow?: string;
     options?: { classes: string[] };
   }) {
+    
     let ul: HTMLUListElement;
     // back up plan if the above doesnt work;
     if (this.messagePlaceHolder) {

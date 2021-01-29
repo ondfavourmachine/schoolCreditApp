@@ -208,7 +208,7 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
             `Your entry is invalid! Here are a list of words that could help you quickly navigate the system.
              `,
             `left`,
-            "I want to be identified,Stay anonymous",
+            "I want to be identified,Stay anonymous", // please these buttons are completely useless and will not be presented in the dom
             "identify,anonymous",
             undefined,
             { classes: ["bot_helper_message"] }

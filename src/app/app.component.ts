@@ -12,6 +12,8 @@ import { GeneralService } from "./services/generalService/general.service";
 import { Subscription } from "rxjs";
 import { Alert } from "./models/Alert";
 import { replyGiversOrReceivers } from "./models/GiverResponse";
+import * as generalActions from "./store/actions/general.action";
+import { Store } from "@ngrx/store";
 
 interface observableAggregator {
   flowControl?: Subscription;
@@ -37,6 +39,7 @@ export class AppComponent
   constructor(
     private router: Router,
     public generalservice: GeneralService,
+    private store: Store,
     private cd: ChangeDetectorRef
   ) {
     router.events.subscribe(val => {
@@ -186,7 +189,7 @@ export class AppComponent
     } else {
       this.switchOfModal();
       this.cancel();
-      // this.manageClosureOfModal(this.generalservice.flowControlHolder);
+      this.manageClosureOfModal(this.generalservice.flowControlHolder);
     }
   }
 
@@ -220,53 +223,58 @@ export class AppComponent
   manageClosureOfModal(val: string) {
     let chatbotResponse: replyGiversOrReceivers;
     switch (val) {
-      case "parents-information":
-        this.generalservice.nextChatbotReplyToGiver = undefined;
-        this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
-        chatbotResponse = new replyGiversOrReceivers(
-          `The information you provided is still incomplete. Please when you are ready let's continue`,
-          "left",
-          "Register me",
-          `continue,full_pay`,
-          "prevent"
-        );
-        this.generalservice.responseDisplayNotifier(chatbotResponse);
-        break;
-      case "child-information-forms":
-        this.generalservice.nextChatbotReplyToGiver = undefined;
-        this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
-        chatbotResponse = new replyGiversOrReceivers(
-          "We need your child's information to help process your request. When you ready let's continue",
-          "left",
-          "Ok Let's continue",
-          "enterchildinfo",
-          "prevent"
-        );
-        this.generalservice.responseDisplayNotifier(chatbotResponse);
-        break;
-      case "bank-partnership":
-        this.generalservice.nextChatbotReplyToGiver = undefined;
-        this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
-        chatbotResponse = new replyGiversOrReceivers(
-          "There are financial institutions waiting to finance this credit. Whenever you are ready let's go",
-          "left",
-          "Ok I'm ready, No let's forget it",
-          "connectme, notinterested",
-          "prevent"
-        );
-        this.generalservice.responseDisplayNotifier(chatbotResponse);
-        break;
+      // case "parents-information":
+      //   this.generalservice.nextChatbotReplyToGiver = undefined;
+      //   this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
+      //   chatbotResponse = new replyGiversOrReceivers(
+      //     `The information you provided is still incomplete. Please when you are ready let's continue`,
+      //     "left",
+      //     "Register me",
+      //     `continue,full_pay`,
+      //     "prevent"
+      //   );
+      //   this.generalservice.responseDisplayNotifier(chatbotResponse);
+      //   break;
+      // case "child-information-forms":
+      //   this.generalservice.nextChatbotReplyToGiver = undefined;
+      //   this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
+      //   chatbotResponse = new replyGiversOrReceivers(
+      //     "We need your child's information to help process your request. When you ready let's continue",
+      //     "left",
+      //     "Ok Let's continue",
+      //     "enterchildinfo",
+      //     "prevent"
+      //   );
+      //   this.generalservice.responseDisplayNotifier(chatbotResponse);
+      //   break;
+      // case "bank-partnership":
+      //   this.generalservice.nextChatbotReplyToGiver = undefined;
+      //   this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
+      //   chatbotResponse = new replyGiversOrReceivers(
+      //     "There are financial institutions waiting to finance this credit. Whenever you are ready let's go",
+      //     "left",
+      //     "Ok I'm ready, No let's forget it",
+      //     "connectme, notinterested",
+      //     "prevent"
+      //   );
+      //   this.generalservice.responseDisplayNotifier(chatbotResponse);
+      //   break;
       case "parent-account-form":
+        if( document.getElementById('insertionDiv')){
         this.generalservice.nextChatbotReplyToGiver = undefined;
         this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
         chatbotResponse = new replyGiversOrReceivers(
-          `Whenever you are ready we can continue with the process`,
-          "left",
-          "Continue now",
-          `addaccount`,
-          "prevent"
+          `Please wait while we process your card details....`,
+            `left`,
+            "anything,nothing", // please these buttons are completely useless and will not be presented in the dom
+            "anything,nothing",
+            undefined,
+            { classes: ["processing_tokenized_card"] }
         );
         this.generalservice.responseDisplayNotifier(chatbotResponse);
+        this.store.dispatch(new generalActions.checkTokenizeProcess('checking'));
+        }
+        
         break;
     }
   }

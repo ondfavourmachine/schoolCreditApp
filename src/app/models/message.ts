@@ -70,6 +70,7 @@ export class Message {
   }
 
   managePresenceOfOptions() {
+   
     try {
       const { classes } = this.options;
       const classesAsText = classes.join(" ");

@@ -85,3 +85,18 @@ export class modifyIndividualChild implements Action {
 }
 
 export type childrenAction = addAChild | calculateFees | modifyIndividualChild;
+
+
+
+// tokenizeCard Actions
+
+export const tokenizeCardProcess = "[card] check card token process";
+
+export class checkTokenizeProcess implements Action {
+  readonly type = tokenizeCardProcess;
+  constructor(
+    public payload: 'not-checking' | 'checking' | 'failed' | 'success'
+  ) {}
+}
+
+export type tokenizeCardActions = checkTokenizeProcess ;

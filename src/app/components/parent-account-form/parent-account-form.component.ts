@@ -41,7 +41,9 @@ export class ParentAccountFormComponent implements OnInit, AfterViewInit, OnDest
     private chatservice: ChatService,
     private fb: FormBuilder,
     private elem: ElementRef
-  ) {}
+  ) {
+    this.resizeIframe = this.resizeIframe.bind(this);
+  }
 
   testing(event) {
     console.log(event);
@@ -93,6 +95,7 @@ export class ParentAccountFormComponent implements OnInit, AfterViewInit, OnDest
       });
   }
 
+
   ngAfterViewInit(){
     if(this.page == 'attach-card'){
       this.insertIframeToDom();
@@ -100,16 +103,25 @@ export class ParentAccountFormComponent implements OnInit, AfterViewInit, OnDest
   }
 
   insertIframeToDom(){
+    const modalBody = document.querySelector('.modal-body') as HTMLElement
     this.spinner = true;
     const iframe = document.createElement('iframe');
     iframe.setAttribute('sandbox', 'allow-same-origin allow-scripts allow-popups');
     iframe.src = 'https://cardtoken.creditclan.com/payment?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJSRVFVRVNUX0lEIjoiMTE3MTU4IiwiUEVPUExFX0lEIjoiNzYyNDYiLCJEQVRFX0FEREVEIjoiMjAyMC0xMi0xNyAwOToyMSIsIkFEREVEX0JZIjoiMTE5NSIsIlBMQVRGT1JNX0lEIjoiNjc2MCIsIkJWTl9ET05FIjowLCJNSVNDX1RZUEUiOjJ9.I4L6b4FpGvS2dq-9INNkiNv3Q6HOPRjA-0FOGVjFj5o'
     iframe.setAttribute('frameborder', '0');
+    iframe.id = 'iframe_for_payment'
     iframe.height = "600";
-    iframe.width = '340'
+    iframe.width = (modalBody.offsetWidth - 5).toString();
     iframe.onload = () => {this.spinner = false;}
     (document.getElementById('insertionDiv') as HTMLDivElement).insertAdjacentElement('afterbegin', iframe);
 
+    window.addEventListener('resize', this.resizeIframe)
+
+  }
+
+  resizeIframe(){
+    (document.getElementById('iframe_for_payment') as HTMLIFrameElement).width = 
+    ((document.querySelector('.modal-body') as HTMLElement).offsetWidth - 5).toString();
   }
 
   get accountNumber() {
@@ -266,5 +278,6 @@ export class ParentAccountFormComponent implements OnInit, AfterViewInit, OnDest
 
   ngOnDestroy() {
     this.destroy.forEach(element => element.unsubscribe());
+    window.removeEventListener('resize', this.resizeIframe);
   }
 }

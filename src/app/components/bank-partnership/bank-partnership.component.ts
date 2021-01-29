@@ -16,7 +16,6 @@ import {
 } from "src/app/services/ChatService/chat.service";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import {
-  AChild,
   CompleteParentInfomation,
   Parent,
   ParentIdInfo

@@ -101,7 +101,8 @@ registerLocaleData(en);
     }),
     StoreModule.forRoot({
       manageParent: reducers.parent_info,
-      manageChild: reducers.children_info
+      manageChild: reducers.children_info,
+      manageCardTokenization: reducers.tokenize_process
     })
   ],
   providers: [TitleCasePipe],
