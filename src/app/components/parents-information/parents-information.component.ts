@@ -21,11 +21,12 @@ import {
   FormBuilder,
   Validators,
   FormControl,
-  AbstractControl
+  AbstractControl,
+  AsyncValidatorFn
 } from "@angular/forms";
 import { ChatService } from "src/app/services/ChatService/chat.service";
-import { Subscription } from "rxjs";
-import { HttpErrorResponse } from "@angular/common/http";
+import { Observable, Subscription } from "rxjs";
+import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { sandBoxData } from "src/app/models/sandboxData";
 
 interface State {
@@ -34,6 +35,29 @@ interface State {
 }
 
 interface LGA extends State {}
+
+const validateEmailIsUnique = (httpClient: HttpClient, regex: RegExp): AsyncValidatorFn => (control: AbstractControl): Promise<{emailExists: boolean}> | Observable<{emailExists: boolean}> | null => {
+   return new Promise((resolve, reject) => {
+      if(!control || !control.value || !regex.test(control.value)) return resolve(null);
+       const res: boolean = ['ondfavourmachine@gmail.com', 'ondfavour@yahoo.com', 'oke1stclass2011@gmail.com'].includes(control.value);
+       return res ? resolve({emailExists: true}) : resolve(null)
+   })
+
+  //  return off(null)
+  // return httpClient.post<any>('url', {email: control.value}).pipe(map(val: any[]) => val.length == 1 ? {emailExists: true}: null)
+}
+
+
+const validatePhoneIsUnique = (httpClient: HttpClient, regex: RegExp): AsyncValidatorFn => (control: AbstractControl): Promise<{emailExists: boolean}> | Observable<{emailExists: boolean}> | null => {
+  return new Promise((resolve, reject) => {
+     if(!control || control.value.length < 11 || !regex.test(control.value)) return resolve(null);
+      const res: boolean = ['09033251593', '08033251593', '08082981195'].includes(control.value);
+      return res ? resolve({emailExists: true}) : resolve(null)
+  })
+
+ //  return off(null)
+ // return httpClient.post<any>('url', {email: control.value}).pipe(map(val: any[]) => val.length == 1 ? {emailExists: true}: null)
+}
 
 @Component({
   selector: "app-parents-information",
@@ -88,6 +112,7 @@ export class ParentsInformationComponent
     private generalservice: GeneralService,
     private store: Store<fromStore.AllState>,
     private fb: FormBuilder,
+    private httpclient: HttpClient,
     private chatapi: ChatService
   ) {
     this.NigerianStates = sandBoxData().data.states;
@@ -113,16 +138,16 @@ export class ParentsInformationComponent
     //   .subscribe(val => console.log(val));
 
     // this.destroy[2] =
-
+  //   [validatePhoneIsUnique(this.httpclient, /\d{11}/)]
     this.phoneForm = this.fb.group({
-      phone: ["", Validators.required]
+      phone: ["", Validators.required, ]
     });
     // this.phoneVerificationForm = this.fb.group({
     //   OTP: ["", Validators.required]
     // });
 
     this.emailForm = this.fb.group({
-      email: ["", [Validators.required, Validators.email]]
+      email: ["", [Validators.required, Validators.email], [validateEmailIsUnique(this.httpclient, this.generalservice.emailRegex)]]
     });
   }
 
@@ -130,7 +155,12 @@ export class ParentsInformationComponent
     return this.phoneForm.get("phone");
   }
 
+  get emailField(): AbstractControl{
+    return this.emailForm.get('email')
+  }
+
   manageGoingBackAndForth() {
+    
     if (this.view == this.previous) {
       const num = this.pageViews.indexOf(this.previous);
       const ans = this.pageViews[num - 1];
@@ -168,7 +198,7 @@ export class ParentsInformationComponent
     const pa =
       event.target instanceof HTMLImageElement
         ? event.target.nextElementSibling
-        : (event.target as HTMLDivElement).querySelector(".bolded");
+        : event.target instanceof HTMLParagraphElement ? event.target :  (event.target as HTMLDivElement).querySelector(".bolded");
     switch (pa.textContent.toLowerCase()) {
       case "parent":
         this.type = "1";
@@ -185,7 +215,7 @@ export class ParentsInformationComponent
     }
     this.view = "profile-form";
     this.previousPage.emit("");
-    // ;
+    ;
   }
 
   changeToPhone(event) {
@@ -280,7 +310,6 @@ export class ParentsInformationComponent
       gender,
       address,
       state,
-     
     } = parentInfo;
     this.chatapi
       .registerParent({
@@ -303,6 +332,7 @@ export class ParentsInformationComponent
           });
           const refreshedState: Partial<Parent> = { guardian: val.guardian };
           this.store.dispatch(new generalActions.addParents(refreshedState));
+          sessionStorage.setItem('guardian', val.guardian);
           const responseFromParent = new replyGiversOrReceivers(
             `I have provided my details`,
             "right"
@@ -347,28 +377,28 @@ export class ParentsInformationComponent
 
   submitAddressForm() {
     // console.log(this.address);
-    const refreshedState: Partial<Parent> = { address: this.address };
+    const refreshedState: Partial<Parent> = { address: this.address, state: this.state, lga: this.localGovtArea };
     this.store.dispatch(new generalActions.addParents(refreshedState));
-    this.view = "state";
+    this.view = "picture";
     this.previousPage.emit("email");
   }
 
-  submitStateForm() {
-    // console.log(this.state);
-    const refreshedState: Partial<Parent> = { state: this.state };
-    this.store.dispatch(new generalActions.addParents(refreshedState));
-    this.view = "lga";
-    this.previousPage.emit("address");
-  }
+  // submitStateForm() {
+  //   // console.log(this.state);
+  //   const refreshedState: Partial<Parent> = { state: this.state };
+  //   this.store.dispatch(new generalActions.addParents(refreshedState));
+  //   this.view = "lga";
+  //   this.previousPage.emit("address");
+  // }
 
-  submitLGA() {
-    // console.log(this.localGovtArea);
-    const refreshedState: Partial<Parent> = { lga: this.localGovtArea };
-    this.store.dispatch(new generalActions.addParents(refreshedState));
-    this.spinner = false;
-    this.view = "picture";
-    this.previousPage.emit("lga");
-  }
+  // submitLGA() {
+  //   // console.log(this.localGovtArea);
+  //   const refreshedState: Partial<Parent> = { lga: this.localGovtArea };
+  //   this.store.dispatch(new generalActions.addParents(refreshedState));
+  //   this.spinner = false;
+  //   this.view = "picture";
+  //   this.previousPage.emit("lga");
+  // }
 
   ngOnDestroy() {
     this.destroy.forEach(element => element.unsubscribe());

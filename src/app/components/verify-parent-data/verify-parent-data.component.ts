@@ -59,7 +59,7 @@ export class VerifyParentDataComponent
   iWantToChangeNumber(contact: "phone" | "email", functionName: string) {
     this.contactChange = contact;
     this[functionName]();
-    this.newPhoneNumberForm.reset();
+    // this.newPhoneNumberForm.reset();
   }
 
   manageGoingBackAndForth() {
@@ -123,7 +123,8 @@ export class VerifyParentDataComponent
   async modifyPrefferedContact(form: FormGroup) {
     this.spinner = true;
     const { emailOrPhone } = form.value;
-    let formToSubmit = { guardian: this.parentDetails.guardian };
+    const guardianID = sessionStorage.getItem('guardian')
+    let formToSubmit = { guardian: this.parentDetails.guardian || guardianID };
     if (this.generalservice.emailRegex.test(emailOrPhone)) {
       formToSubmit["email"] = emailOrPhone;
     } else {
@@ -148,12 +149,12 @@ export class VerifyParentDataComponent
   ) {
     this.spinner = true;
     try {
-      const res = await this.chatapi.dispatchOTP({ phone: phoneNumber });
+      const res = await this.chatapi.dispatchOTP({ phone: phoneNumber || this.newPhoneNumberForm.value.emailOrPhone });
       const refreshedState: Partial<Parent> = { OTP_sent: true };
       this.store.dispatch(new generalActions.addParents(refreshedState));
       this.spinner = false;
       this.generalservice.successNotification(
-        `OTP has been sent to ${phoneNumber}`
+        `OTP has been sent to ${phoneNumber || this.newPhoneNumberForm.value.emailOrPhone}`
       );
 
       this.spinner = false;

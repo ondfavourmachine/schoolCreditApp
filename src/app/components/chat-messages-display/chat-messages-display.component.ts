@@ -492,7 +492,7 @@ export class ChatMessagesDisplayComponent
       (val: string) => {
         if (val.length < 1) return;
         // const currentRoute = this.route.url;
-        sessionStorage.clear();
+        sessionStorage.removeItem('savedChats');
         ul.innerHTML = "";
         this.generateWelcomeMsgForReceiverOrGiver(ul);
         // debugger;

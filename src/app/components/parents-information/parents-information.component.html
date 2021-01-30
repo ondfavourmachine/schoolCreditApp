@@ -151,12 +151,49 @@
           placeholder="Eg: 21, Bolaji Street Surulere "
         />
       </div>
+
+      <div class="field">
+        <label>State </label>
+
+        <select
+          (change)="selectLgaInState($event.target.value)"
+          style="height: auto;"
+          class="ui fluid search dropdown"
+          name="state"
+          [(ngModel)]="state"
+        >
+          <option value="" selected>Select state...</option>
+          <option
+            [value]="nigerianstate.id"
+            *ngFor="let nigerianstate of NigerianStates; index as i"
+          >
+            {{ nigerianstate.value }}
+          </option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Local Govt Area </label>
+        <select
+          style="height: auto;"
+          class="ui fluid search dropdown"
+          name="lga"
+          [(ngModel)]="localGovtArea"
+        >
+          <option value="" selected>Select Local Govt Area...</option>
+          <option [value]="lga.id" *ngFor="let lga of stateLgas; index as i">
+            {{ lga.value }}
+          </option>
+        </select>
+      </div>
+
+
     </div>
     <!-- (click)="view = 'state'" -->
     <div class="text-center mt-4">
       <button
         (click)="submitAddressForm()"
-        [disabled]="address.length < 2"
+        [disabled]="address.length < 2 && state.length < 2"
         type="submit"
         class="ui primary button fluid"
       >
@@ -166,7 +203,7 @@
   </form>
 </div>
 
-<div *ngIf="view == 'state'" class="h-100 text-center family-info">
+<!-- <div *ngIf="view == 'state'" class="h-100 text-center family-info">
   <h1 class="para-title">Please select your state of residence</h1>
 
   <form class="w-100" style="position: relative">
@@ -191,7 +228,7 @@
         </select>
       </div>
     </div>
-    <!-- (click)="view = 'lga'" -->
+  
     <div class="text-center mt-4">
       <button
         (click)="submitStateForm()"
@@ -202,9 +239,9 @@
       </button>
     </div>
   </form>
-</div>
+</div> -->
 
-<div *ngIf="view == 'lga'" class="h-100 text-center family-info">
+<!-- <div *ngIf="view == 'lga'" class="h-100 text-center family-info">
   <h1 class="para-title">Please enter the Local Govt Area where you reside</h1>
 
   <form class="w-100" style="position: relative">
@@ -224,7 +261,6 @@
         </select>
       </div>
     </div>
-    <!-- (click)="view = 'picture'" -->
     <div class="text-center mt-4">
       <button
         (click)="submitLGA()"
@@ -235,7 +271,7 @@
       </button>
     </div>
   </form>
-</div>
+</div> -->
 
 <div class=" h-100 text-center family-info" *ngIf="view == 'phone'">
   <h1 class="para-title">
@@ -285,14 +321,20 @@
 
   <form [formGroup]="emailForm" class="w-100" style="position: relative">
     <div class="ui form">
-      <div class="field">
+      <div class="field positioned-relative" >
         <label>Email</label>
         <input
           formControlName="email"
           type="email"
           placeholder="Eg: johndoe@gmail.com"
         />
+        <span class="positioned-absolute" style="top: 34px; left: 91px; display: none">  <i class="fa fa-circle-notch fa-spin"></i>
+          <!-- <i class="fas fa-check"></i> <i class="fas fa-times"></i> -->
+         </span>
       </div>
+       <span *ngIf="emailField?.errors?.emailExists" class="email_exists">  
+         This 
+       </span>
     </div>
 
     <div class="text-center mt-4">
