@@ -127,8 +127,12 @@ export class VerifyParentDataComponent
     let formToSubmit = { guardian: this.parentDetails.guardian || guardianID };
     if (this.generalservice.emailRegex.test(emailOrPhone)) {
       formToSubmit["email"] = emailOrPhone;
+      const refreshedState: Partial<Parent>  = {email : emailOrPhone}
+      this.store.dispatch(new generalActions.addParents(refreshedState));
     } else {
       formToSubmit["phone"] = emailOrPhone;
+      const refreshedState: Partial<Parent>  = {phone : emailOrPhone}
+      this.store.dispatch(new generalActions.addParents(refreshedState));
     }
     try {
       const res = await this.chatapi.changePhoneOrEmail(formToSubmit);
