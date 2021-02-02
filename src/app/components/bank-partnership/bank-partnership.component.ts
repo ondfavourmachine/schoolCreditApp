@@ -16,6 +16,7 @@ import {
 } from "src/app/services/ChatService/chat.service";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import {
+  AChild,
   CompleteParentInfomation,
   Parent,
   ParentIdInfo
@@ -100,18 +101,29 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
       .subscribe(val => {
         this.parentDetails = val as Parent;
       });
-
+    let childArray:Array<Partial<AChild>>
     this.destroy[2] = this.store
       .select(fromStore.getCurrentChildState)
-      .pipe(pluck("total_tuition_fees"))
+      .pipe(pluck("child_info"))
       .subscribe(val => {
-        this.loanAmount = val as string | number;
+       childArray = Array.from((val as Map<string, Partial<AChild>>).values());
+        this.loanAmount = childArray.reduce((acc, element) => {
+          acc = parseInt(element.tuition_fees) + acc;
+          return acc
+        }, 0)
       });
+      const arrayOfChildId: {id: any, amount: string}[] = childArray.map(element => {
+        return{
+          id: element.child_id,
+          amount: element.tuition_fees
+        }
+      })
     try {
       const res = await this.chatservice.sendLoanRequest({
         school_id: 1,
         guardian_id: this.parentDetails.guardian,
-        loan_amount: this.loanAmount as string
+        loan_amount: this.loanAmount as string,
+        child_data: arrayOfChildId
       });
       const { message } = res;
       if (message == "request created!")

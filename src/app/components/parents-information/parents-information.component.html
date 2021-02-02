@@ -280,7 +280,7 @@
 
   <form [formGroup]="phoneForm" class="w-100" style="position: relative">
     <div class="ui form">
-      <div class="field">
+      <div class="field positioned-relative">
         <label>Phone</label>
         <input
           formControlName="phone"
@@ -288,11 +288,30 @@
           pattern="[0-9]{11}"
           placeholder="Eg: 09093345678"
         />
+   <!--  [class.checkUnique] ="checkingUniqueness == 'checking' ? 'visible': 'hidden'" -->
+        <small class="positioned-absolute checkUnique" 
+           style="top: 35px; left: 88%; border: none">  
+          <i [style.display]="checkingUniqueness == 'checking' ? 'inline-block': 'none'" 
+             class="fa fa-circle-notch fa-spin">
+            </i>
+          <i class="fas fa-check"
+            style="color: green"
+           [style.display]="checkingUniqueness == 'unique' ? 'inline-block': 'none'">
+          </i> 
+            <i class="fas fa-times"
+              style="color: red"
+            [style.display]="checkingUniqueness == 'not-unique' ? 'inline-block': 'none'"
+            ></i> 
+        </small>
+
         <small
           class="warning"
-          [style.display]="phone.touched && !phone.valid ? 'block' : 'none'"
+          [style.display]="phone.touched && !phone.valid && !phoneField?.errors?.phoneExists ? 'block' : 'none'"
         >
           Please enter your Nigerian phone number
+        </small>
+        <small style="margin-top: 2px;" *ngIf="phoneField?.errors?.phoneExists" class="email_exists">  
+          This phone number has already been taken 
         </small>
       </div>
     </div>
@@ -328,13 +347,24 @@
           type="email"
           placeholder="Eg: johndoe@gmail.com"
         />
-        <span class="positioned-absolute" style="top: 34px; left: 91px; display: none">  <i class="fa fa-circle-notch fa-spin"></i>
-          <!-- <i class="fas fa-check"></i> <i class="fas fa-times"></i> -->
-         </span>
+        <small class="positioned-absolute checkUnique" 
+           style="top: 35px; left: 88%; border: none">  
+          <i [style.display]="checkingUniqueness == 'checking' ? 'inline-block': 'none'" 
+             class="fa fa-circle-notch fa-spin">
+            </i>
+          <i class="fas fa-check"
+            style="color: green"
+           [style.display]="checkingUniqueness == 'unique' ? 'inline-block': 'none'">
+          </i> 
+            <i class="fas fa-times"
+              style="color: red"
+            [style.display]="checkingUniqueness == 'not-unique' ? 'inline-block': 'none'"
+            ></i> 
+        </small>
       </div>
-       <span *ngIf="emailField?.errors?.emailExists" class="email_exists">  
-         This 
-       </span>
+       <small *ngIf="emailField?.errors?.emailExists" class="email_exists">  
+         This email has already been taken
+       </small>
     </div>
 
     <div class="text-center mt-4">

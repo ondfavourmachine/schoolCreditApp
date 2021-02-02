@@ -14,7 +14,7 @@ import { Parent, ParentRegistration } from "src/app/models/data-models";
 import { Store } from "@ngrx/store";
 import * as fromStore from "../../store";
 import * as generalActions from "../../store/actions/general.action";
-import { pluck } from "rxjs/operators";
+import { catchError, debounceTime, map, pluck, } from "rxjs/operators";
 import { LgaData } from "src/app/models/lgaData";
 import {
   FormGroup,
@@ -28,6 +28,7 @@ import { ChatService } from "src/app/services/ChatService/chat.service";
 import { Observable, Subscription } from "rxjs";
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { sandBoxData } from "src/app/models/sandboxData";
+import { of } from "rxjs";
 
 interface State {
   id: string;
@@ -36,27 +37,54 @@ interface State {
 
 interface LGA extends State {}
 
-const validateEmailIsUnique = (httpClient: HttpClient, regex: RegExp): AsyncValidatorFn => (control: AbstractControl): Promise<{emailExists: boolean}> | Observable<{emailExists: boolean}> | null => {
-   return new Promise((resolve, reject) => {
-      if(!control || !control.value || !regex.test(control.value)) return resolve(null);
-       const res: boolean = ['ondfavourmachine@gmail.com', 'ondfavour@yahoo.com', 'oke1stclass2011@gmail.com'].includes(control.value);
-       return res ? resolve({emailExists: true}) : resolve(null)
-   })
+const validateEmailIsUnique = (apiservice: ChatService, regex: RegExp, 
+  obj: ParentsInformationComponent): AsyncValidatorFn => (control: AbstractControl): Promise<{emailExists: boolean}> | Observable<{emailExists: boolean}> | null => {
+  obj.checkingUniqueness = 'checking';
+  if(!control || control.value.length < 2 || !regex.test(control.value)) { obj.checkingUniqueness = 'done'; return of(null)};
+     return apiservice.checkEmailUniqueness({email: control.value})
+      .pipe(map(val => {
+        if(val.message.includes('The email has already been taken')){
+          obj.checkingUniqueness = 'not-unique';
+          return { emailExists: true};
+        }
+        obj.checkingUniqueness = 'unique'
+        return null
+      }),
+      catchError(err =>  {
+        console.log(err);
+        obj.checkingUniqueness = 'not-unique';
+        return of({emailExists: true})
+      }))
 
   //  return off(null)
   // return httpClient.post<any>('url', {email: control.value}).pipe(map(val: any[]) => val.length == 1 ? {emailExists: true}: null)
 }
 
 
-const validatePhoneIsUnique = (httpClient: HttpClient, regex: RegExp): AsyncValidatorFn => (control: AbstractControl): Promise<{emailExists: boolean}> | Observable<{emailExists: boolean}> | null => {
-  return new Promise((resolve, reject) => {
-     if(!control || control.value.length < 11 || !regex.test(control.value)) return resolve(null);
-      const res: boolean = ['09033251593', '08033251593', '08082981195'].includes(control.value);
-      return res ? resolve({emailExists: true}) : resolve(null)
-  })
+const validatePhoneIsUnique = 
+  (apiservice: ChatService, regex: RegExp, obj: ParentsInformationComponent): AsyncValidatorFn => (control: AbstractControl): Promise<{phoneExists: boolean}> | Observable<{ phoneExists: boolean}> | null => {
+    obj.checkingUniqueness = 'checking';
+     if(!control || control.value.length < 11 || !regex.test(control.value)){ obj.checkingUniqueness = 'done'; return of(null)};
+    //  console.log(control.value);
+     return apiservice.checkPhoneUniqueness({phone: control.value})
+      .pipe(map(val => {
+        console.log('i am here!')
+        if(val.message.includes('The phone has already been taken')){
+          obj.checkingUniqueness = 'not-unique';
+          return { phoneExists: true};
+        }
+        obj.checkingUniqueness = 'unique'
+        return  null
+      }), catchError(err =>  {
+        console.log(err);
+        obj.checkingUniqueness = 'not-unique';
+        return of({phoneExists: true})
+      }))
+
 
  //  return off(null)
- // return httpClient.post<any>('url', {email: control.value}).pipe(map(val: any[]) => val.length == 1 ? {emailExists: true}: null)
+ // return httpClient.post<any>('url', {email: control.value})
+  // .pipe(map(val: any[]) => val.length == 1 ? {emailExists: true}: null)
 }
 
 @Component({
@@ -108,6 +136,7 @@ export class ParentsInformationComponent
   localGovtArea: string = "1";
   destroy: Subscription[] = [];
   lgaData: any = {};
+  checkingUniqueness: 'checking' | 'not-unique' | 'unique' | 'done' | '' = 'done';
   constructor(
     private generalservice: GeneralService,
     private store: Store<fromStore.AllState>,
@@ -140,14 +169,22 @@ export class ParentsInformationComponent
     // this.destroy[2] =
   //   [validatePhoneIsUnique(this.httpclient, /\d{11}/)]
     this.phoneForm = this.fb.group({
-      phone: ["", Validators.required, ]
+      phone: ["", [Validators.required], 
+      [validatePhoneIsUnique(this.chatapi, /\d{11}/gi, this)] ]
     });
     // this.phoneVerificationForm = this.fb.group({
     //   OTP: ["", Validators.required]
     // });
 
     this.emailForm = this.fb.group({
-      email: ["", [Validators.required, Validators.email], [validateEmailIsUnique(this.httpclient, this.generalservice.emailRegex)]]
+      // email: ["", [Validators.required, Validators.email], 
+      // [validateEmailIsUnique(this.chatapi, this.generalservice.emailRegex, this)]],
+
+      email: ['', {
+        validators: [Validators.required, Validators.email],
+        asyncValidators: [validateEmailIsUnique(this.chatapi, this.generalservice.emailRegex, this)],
+        updateOn: 'blur'
+      }]
     });
   }
 
@@ -157,6 +194,10 @@ export class ParentsInformationComponent
 
   get emailField(): AbstractControl{
     return this.emailForm.get('email')
+  }
+
+  get phoneField(): AbstractControl{
+    return this.phoneForm.get('phone')
   }
 
   manageGoingBackAndForth() {
@@ -191,7 +232,7 @@ export class ParentsInformationComponent
     this.view = "email";
     this.spinner = false;
     this.previousPage.emit("profile-form");
-    // this.changeToStuff();
+    this.checkingUniqueness = 'done';
   }
 
   changeThisToProfile(event: Event) {
@@ -282,7 +323,7 @@ export class ParentsInformationComponent
     this.view = "address";
     this.previousPage.emit("phone");
     this.spinner = false;
-
+    this.checkingUniqueness = 'done';
     disconnect.unsubscribe();
     // this.changeToAnotherView();
     // } catch (error) {

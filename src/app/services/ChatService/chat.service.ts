@@ -186,7 +186,7 @@ export class ChatService {
   }): Observable<ParentAWBAResponse> {
     return this.http.post<ParentAWBAResponse>(`${this.generalUrl}work`, obj);
   }
-
+  
   // save parent address information
   saveParentAddressInformation(
     obj: Partial<Parent> & Partial<ParentAddressInfo>
@@ -239,6 +239,15 @@ export class ChatService {
         return this.http.patch<GenericResponse>(`${this.generalUrl}email/verify`, obj)
   }
 
+  // check if email is unique
+  checkEmailUniqueness(email: {email: string}): Observable<GenericResponse>{
+    return this.http.post<GenericResponse>(`${this.generalUrl}email/unique`, email);
+  }
+
+  checkPhoneUniqueness(phone: {phone: string}): Observable<GenericResponse>{
+    return this.http.post<GenericResponse>(`${this.generalUrl}phone/unique`, phone);
+  }
+
   // send activation code to parent
   sendEmailOTP(obj: {email: string}, need: 'observable' | 'promise'): Observable<GenericResponse> | Promise<GenericResponse>{
     switch(need){
@@ -252,7 +261,9 @@ export class ChatService {
   }
 
   // sendLoanRequest
-  sendLoanRequest(obj: {school_id: any, guardian_id: any, loan_amount: string}): Promise<GenericResponse>{
+  sendLoanRequest(obj: {school_id: any, guardian_id: any, loan_amount: string,
+        child_data: {id: string, amount: string}[]}): Promise<GenericResponse>{
+    // child_data: {id: string, amount: string}[]
     return this.http.post<GenericResponse>(`${this.generalUrl}loan/request`, obj).toPromise()
   }
 
