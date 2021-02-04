@@ -155,33 +155,42 @@ export class ChatMessagesDisplayComponent
           return;
         }
         if(this.tokeniseProcess == 'checking'){
-           new Promise((resolve, reject) => {
-             setTimeout(() => {
-               reject({message: 'Card token failed!', status: false})
-             }, 1500);
-           }).catch((err) => {
-            //  get the pulsing spinner
-            const pulsingLoader = document.querySelectorAll('.processing_tokenized_card');
-            // console.log(pulsingLoader);
-            // get its parent div
-            const parentElement: HTMLElement = pulsingLoader[pulsingLoader.length - 1].closest('div.chat-box__wrapper');
-            // remove it now
-            this.removeElement(this.messagePlaceHolder.nativeElement, parentElement);
-            this.removeProcessingPaymentChatFromSavedChats();
-            // display this in its place.
-            this.generalservice.nextChatbotReplyToGiver = undefined;
-            this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
-            const chatbotResponse = new replyGiversOrReceivers(
-              `We couldn't confirm your card at this time. Please try again.`,
-                `left`,
-                "Confirm card now,No later", // please these buttons are completely useless and will not be presented in the dom
-                "providedebitcard,nodebitcard",
-                 "prevent"
-            );
-            this.generalservice.responseDisplayNotifier(chatbotResponse);
-            this.store.dispatch(new generalActions.checkTokenizeProcess('not-checking'));
+          this.chatservice.checkIfCardHasBeenAddedByParent().subscribe(
+            val => {
+                console.log(val);
+            },
+            err => {
+                console.log(val);
+                // get the pulsing spinner
+                  const pulsingLoader = document.querySelectorAll('.processing_tokenized_card');
+                  // console.log(pulsingLoader);
+                  // get its parent div
+                  const parentElement: HTMLElement = pulsingLoader[pulsingLoader.length - 1].closest('div.chat-box__wrapper');
+                  // remove it now
+                  this.removeElement(this.messagePlaceHolder.nativeElement, parentElement);
+                  this.removeProcessingPaymentChatFromSavedChats();
+                  // display this in its place.
+                  this.generalservice.nextChatbotReplyToGiver = undefined;
+                  this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
+                  const chatbotResponse = new replyGiversOrReceivers(
+                    `We couldn't confirm your card at this time. Please try again.`,
+                      `left`,
+                      "Confirm card now,No later", // please these buttons are completely useless and will not be presented in the dom
+                      "providedebitcard,nodebitcard",
+                       "prevent"
+                  );
+                  this.generalservice.responseDisplayNotifier(chatbotResponse);
+                  this.store.dispatch(new generalActions.checkTokenizeProcess('not-checking'));
+            }
+          )
+          //  new Promise((resolve, reject) => {
+          //    setTimeout(() => {
+          //      reject({message: 'Card token failed!', status: false})
+          //    }, 1500);
+          //  }).catch((err) => {
+          //   // 
            
-           })
+          //  })
         }
       });
   }

@@ -176,6 +176,12 @@ export class ChatService {
     return this.http.get<FinancialInstitution>(`${this.generalUrl}lender/rate`);
   }
 
+  // do a check if card has been added
+  checkIfCardHasBeenAddedByParent(): Observable<any>{
+    return this.http.get(`${this.generalUrl}card/57487`)
+  }
+  
+  // iframe for card tokenisation
   getIframeSrcForCardTokenization(): Promise<{url: string, status: boolean, token: string, message: string}>{
     const headers = new HttpHeaders({
       'x-api-key': 'z2BhpgFNUA99G8hZiFNv77mHDYcTlecgjybqDACv'
