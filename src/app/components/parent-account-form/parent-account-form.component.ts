@@ -102,21 +102,26 @@ export class ParentAccountFormComponent implements OnInit, AfterViewInit, OnDest
     }
   }
 
-  insertIframeToDom(){
+  async insertIframeToDom(){
     const modalBody = document.querySelector('.modal-body') as HTMLElement
     this.spinner = true;
-    const iframe = document.createElement('iframe');
-    iframe.setAttribute('sandbox', 'allow-same-origin allow-scripts allow-popups');
-    iframe.src = 'https://cardtoken.creditclan.com/payment?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJSRVFVRVNUX0lEIjoiMTE3MTU4IiwiUEVPUExFX0lEIjoiNzYyNDYiLCJEQVRFX0FEREVEIjoiMjAyMC0xMi0xNyAwOToyMSIsIkFEREVEX0JZIjoiMTE5NSIsIlBMQVRGT1JNX0lEIjoiNjc2MCIsIkJWTl9ET05FIjowLCJNSVNDX1RZUEUiOjJ9.I4L6b4FpGvS2dq-9INNkiNv3Q6HOPRjA-0FOGVjFj5o'
-    iframe.setAttribute('frameborder', '0');
-    iframe.id = 'iframe_for_payment'
-    iframe.height = "600";
-    iframe.width = (modalBody.offsetWidth - 5).toString();
-    iframe.onload = () => {this.spinner = false;}
-    (document.getElementById('insertionDiv') as HTMLDivElement).insertAdjacentElement('afterbegin', iframe);
-
-    window.addEventListener('resize', this.resizeIframe)
-
+    const res = await this.chatservice.getIframeSrcForCardTokenization();
+    const {url} = res
+    try{
+      const iframe = document.createElement('iframe');
+      iframe.setAttribute('sandbox', 'allow-same-origin allow-scripts allow-popups');
+      iframe.src = `${url}`
+      iframe.setAttribute('frameborder', '0');
+      iframe.id = 'iframe_for_payment'
+      iframe.height = "600";
+      iframe.width = (modalBody.offsetWidth - 5).toString();
+      iframe.onload = () => {this.spinner = false;}
+      (document.getElementById('insertionDiv') as HTMLDivElement).insertAdjacentElement('afterbegin', iframe);
+  
+      window.addEventListener('resize', this.resizeIframe)
+    }catch(e){
+        console.log(e);
+    }
   }
 
   resizeIframe(){
@@ -185,7 +190,7 @@ export class ParentAccountFormComponent implements OnInit, AfterViewInit, OnDest
   submitAccountDetailsForm(form: FormGroup) {
     this.spinner = true;
     const formToSubmit: Partial<CompleteParentInfomation> = { ...form.value };
-    formToSubmit.guardian = this.guardianID;
+    formToSubmit.guardian = this.guardianID || sessionStorage.getItem('guardian');
     this.chatservice.saveParentAccountInformation(formToSubmit).subscribe(
       val => {
         const { account_name, account_number, bank_code } = val.data;

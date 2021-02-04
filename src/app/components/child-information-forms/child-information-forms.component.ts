@@ -147,6 +147,7 @@ export class ChildInformationFormsComponent
   }
 
   selectThis(event: Event) {
+    // debugger;
     let guardianID;
     const p =
       event.target instanceof HTMLImageElement
@@ -173,6 +174,7 @@ export class ChildInformationFormsComponent
         children_count: p.textContent != "3+" ? parseInt(p.textContent) : 4
       })
       .subscribe(val => toBeDestroyed.unsubscribe());
+      // console.log(this.selectedChildren);
   }
 
   get numberOfSelected(): boolean {

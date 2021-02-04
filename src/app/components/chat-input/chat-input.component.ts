@@ -34,6 +34,10 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
   private arrayOfRegexes: Array<RegExp> = [
     /hello/gi,
     /restart/gi,
+    /register child/gi,
+    /continue previous/gi,
+    /register account details/gi,
+    /register account/gi,
     /hi/gi,
     /help/gi,
     /give/gi,
@@ -200,6 +204,23 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
           this.generalservice.responseDisplayNotifier(response);
         }, 400);
         break;
+      case "register child":
+      const responseToSender = new replyGiversOrReceivers(`${value}`, "right");
+      this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
+        `You asked to register a child. This will lead to loosing all previous entries.
+         Are you sure you want to restart?`,
+        `left`,
+        "Yes restart now,I want to begin a new request, Continue existing request",
+        "restart,newrequest,continuingrequest"
+      );
+      setTimeout(() => {
+        this.generalservice.responseDisplayNotifier(responseToSender);
+      }, 400);
+      break;
+      case "register account details":
+      case "register account":
+      console.log('i am here!');
+      break;
       default:
         if (typeOfUser.includes("giver")) {
           this.generalservice.nextChatbotReplyToGiver = undefined;

@@ -18,6 +18,7 @@ import { Store } from "@ngrx/store";
 interface observableAggregator {
   flowControl?: Subscription;
   intermediateResponse?: Subscription;
+  smartView?: Subscription
 }
 @Component({
   selector: "app-root",
@@ -36,6 +37,7 @@ export class AppComponent
   public confirmationDialog = false;
   goBack: string = "firstPage";
   errorHouse: { error: Alert } = { error: new Alert(false, "") };
+  changeStyles: boolean = false;
   constructor(
     private router: Router,
     public generalservice: GeneralService,
@@ -86,6 +88,23 @@ export class AppComponent
         // closeBtn.click();
       }
     );
+
+    this.observableAggregator.smartView = this.generalservice.smartView$.subscribe(
+      val => {
+        if (val) {
+          if (
+            (this.generalservice.flowControlHolder as string)
+              .trim()
+              .substring(4)
+              .toLowerCase()
+              .includes(val.component)
+          ) {
+            this.changeStyles = true;
+          }
+        } 
+        
+      }
+    )
   }
 
   ngAfterContentChecked() {
@@ -259,8 +278,9 @@ export class AppComponent
       //   );
       //   this.generalservice.responseDisplayNotifier(chatbotResponse);
       //   break;
+      case "bank-partnership":
       case "parent-account-form":
-        if( document.getElementById('insertionDiv')){
+        if( document.getElementById('divforIframe')){
         this.generalservice.nextChatbotReplyToGiver = undefined;
         this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
         chatbotResponse = new replyGiversOrReceivers(

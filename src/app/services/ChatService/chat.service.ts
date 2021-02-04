@@ -176,6 +176,14 @@ export class ChatService {
     return this.http.get<FinancialInstitution>(`${this.generalUrl}lender/rate`);
   }
 
+  getIframeSrcForCardTokenization(): Promise<{url: string, status: boolean, token: string, message: string}>{
+    const headers = new HttpHeaders({
+      'x-api-key': 'z2BhpgFNUA99G8hZiFNv77mHDYcTlecgjybqDACv'
+    })
+    return this.http.post<{url: string, status: boolean, token: string, message: string}>
+    (`https://mobile.creditclan.com/api/v3/card/tokenization`, {request_id: "57487"}, {headers}).toPromise()
+  }
+
   // save parent work information
 
   saveParentWorkInformation(obj: {

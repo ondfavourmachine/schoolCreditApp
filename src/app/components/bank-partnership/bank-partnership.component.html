@@ -1,3 +1,4 @@
+
 <div
   class="flex flex-column justify-center align-center h-100 text-center family-info"
   *ngIf="page == ''"
@@ -31,9 +32,9 @@
     We will also ask a few questions to determine your credibility.
     <strong> Is this ok? </strong>
   </p> -->
-
+  <!-- (click)="page = 'preambleToForms'" -->
   <button
-    (click)="page = 'preambleToForms'"
+  (click)="page = 'bank_statement'"
     class="ui button primary basic mt-4"
   >
     I Accept
@@ -50,7 +51,7 @@
   </h1>
 
   <div class="twelve wide column">
-    <button (click)="page = 'work-form'" class="ui button primary basic mr-3">
+    <button (click)="changeToWorkAndLoadWidget('work-form')" class="ui button primary basic mr-3">
       Ok
     </button>
 
@@ -59,6 +60,39 @@
     </button>
   </div>
 </div>
+
+<div
+  class="flex flex-column justify-center align-center h-100 text-center family-info"
+  *ngIf="page == 'bank_statement'"
+>
+  <h1 class="para-title">
+    Thank you for filling your data. We would like to tokenize your card to enable smooth payment 
+  </h1>
+
+  <div class="twelve wide column">
+    <button (click)="insertIframeToDom()" class="ui button primary basic mr-3">
+      Ok
+    </button>
+
+    <button disabled class="ui button primary basic">
+      Cancel
+    </button>
+  </div>
+</div>
+
+<div
+  class="flex flex-column justify-center align-center h-100 text-center family-info"
+  id="divforIframe"
+  *ngIf="page == 'iframe_container'"
+>
+
+   
+      <div *ngIf="spinner" class="spinner-container">
+        <i class="fa fa-circle-notch fa-spin fa-3x"></i>
+      </div> 
+</div>
+
+
 
 <!-- work form -->
 <div class=" h-100 text-center family-info" *ngIf="page == 'work-form'">

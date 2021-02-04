@@ -295,6 +295,7 @@ export class ContinuingExistingRequestsComponent
           // console.log(error);
         }
         const childData = val.data.children;
+        // console.log(childData);
         childData.length > 0 ? this.handleDataInsideChildren(childData) : null;
         this.continue(returnVal, val.data.guardian_data);
       },
@@ -314,9 +315,9 @@ export class ContinuingExistingRequestsComponent
       "phone_verified",
       "child_data",
       "parent_work_info",
-      "parent_creditcard_info",
+      "parent_account_info",
       "parent_id_info",
-      "parent_account_info"
+      "parent_creditcard_info"
     ];
     let returnVal;
     for (let element of arrangedStages) {
@@ -334,6 +335,7 @@ export class ContinuingExistingRequestsComponent
       childrenData[i].index = i + 1;
       this.mapOfChildrensInfo.set(word, childrenData[i]);
     }
+    // console.log(this.mapOfChildrensInfo);
     this.store.dispatch(new generalActions.addAChild(this.mapOfChildrensInfo));
     this.store.dispatch(new generalActions.calculateFees());
   }

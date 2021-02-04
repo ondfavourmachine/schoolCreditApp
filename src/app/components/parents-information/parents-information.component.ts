@@ -162,9 +162,7 @@ export class ParentsInformationComponent
   }
 
   ngOnInit(): void {
-    // this.destroy[1] = this.store
-    //   .select(fromStore.getParentState)
-    //   .subscribe(val => console.log(val));
+   
 
     // this.destroy[2] =
   //   [validatePhoneIsUnique(this.httpclient, /\d{11}/)]
@@ -201,7 +199,6 @@ export class ParentsInformationComponent
   }
 
   manageGoingBackAndForth() {
-    
     if (this.view == this.previous) {
       const num = this.pageViews.indexOf(this.previous);
       const ans = this.pageViews[num - 1];
@@ -231,7 +228,7 @@ export class ParentsInformationComponent
     this.store.dispatch(new generalActions.addParents(parentDetails));
     this.view = "email";
     this.spinner = false;
-    this.previousPage.emit("profile-form");
+    this.previousPage.emit("phone");
     this.checkingUniqueness = 'done';
   }
 
@@ -321,7 +318,7 @@ export class ParentsInformationComponent
     const refreshedState: Partial<Parent> = { email: form.value.email };
     this.store.dispatch(new generalActions.addParents(refreshedState));
     this.view = "address";
-    this.previousPage.emit("phone");
+    this.previousPage.emit("email");
     this.spinner = false;
     this.checkingUniqueness = 'done';
     disconnect.unsubscribe();

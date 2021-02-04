@@ -86,16 +86,8 @@
 
     <div
       class="modal-body"
-      [style.height]="
-        generalservice.flowControlHolder == 'parent-account-form'
-          ? '600px'
-          : ''
-      "
-      [style.padding]="
-        generalservice.flowControlHolder == 'parent-account-form'
-          ? '.5rem .5rem'
-          : ''
-      "
+      [style.height]="changeStyles ? '600px': ''"
+      [style.padding]="changeStyles? '.5rem .5rem': ''"
       style="display: 'block'"
     >
       <div [ngSwitch]="generalservice.flowControlHolder">
@@ -135,10 +127,11 @@
           </div>
         </div>
         <div *ngSwitchCase="'verify-parent-data'">
+          <!-- [previous]="goBack"
+              (previousPage)="setPageToGoBackTo($event)" -->
           <div class="takeAPicture">
             <app-verify-parent-data
-              [previous]="goBack"
-              (previousPage)="setPageToGoBackTo($event)"
+              
             ></app-verify-parent-data>
           </div>
         </div>

@@ -313,7 +313,7 @@ export class ChatMessagesDisplayComponent
         this.generalservice.handleFlowController(String(componentToLoad));
       }
       if (String(componentToLoad).toLowerCase() == "parent-account-form") {
-        if (typeof callBack() == "string" && callBack() == "attach-card") {
+        if (callBack && typeof callBack() == "string" && callBack() == "attach-card") {
           this.generalservice.handleSmartViewLoading({
             component: String(componentToLoad),
             info: "attach-card"

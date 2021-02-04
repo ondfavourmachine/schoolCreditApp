@@ -74,6 +74,7 @@ export interface AChild {
   tuition_fees: string;
   picture: File;
   index?: number;
+  id?: any;
   child_id: null | string | number;
 }
 

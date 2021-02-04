@@ -27,6 +27,8 @@ import * as generalActions from "../../store/actions/general.action";
 import * as fromStore from "../../store";
 import { pluck } from "rxjs/operators";
 
+const cc = window["CreditClan"];
+
 @Component({
   selector: "app-bank-partnership",
   templateUrl: "./bank-partnership.component.html",
@@ -44,7 +46,7 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
     | "enter-id"
     | "result"
     | "work-form"
-    | "address-info"
+    | "address-info" | 'bank_statement' | 'iframe_container'
     | "preambleToForms" = undefined;
   text: string = "Sending Loan request....";
   pageViews: string[] = ["work-form"];
@@ -89,6 +91,7 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   async ngOnInit() {
+    this.previousPage.emit('firstPage');
     this.BVNFORM = this.fb.group({
       bvn: ["", Validators.required]
     });
@@ -114,7 +117,7 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
       });
       const arrayOfChildId: {id: any, amount: string}[] = childArray.map(element => {
         return{
-          id: element.child_id,
+          id: element.child_id || element.id,
           amount: element.tuition_fees
         }
       })
@@ -140,6 +143,11 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
         ? (this.page = this.smartView.info)
         : (this.page = "");
     });
+  }
+
+  changeToWorkAndLoadWidget(page: string){
+    const a =  (document.querySelector('.hiddenWidget') as HTMLElement);
+    cc.open();
   }
 
   selectThis(event) {
@@ -265,6 +273,30 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
           );
         }
       );
+  }
+
+  // this will be removed Later
+  async insertIframeToDom(){
+    const modalBody = document.querySelector('.modal-body') as HTMLElement
+    this.spinner = true;
+    this.page = 'iframe_container';
+    const res = await this.chatservice.getIframeSrcForCardTokenization();
+    const {url} = res;
+    try{ 
+      const iframe = document.createElement('iframe');
+      iframe.setAttribute('sandbox', 'allow-same-origin allow-scripts allow-popups');
+      iframe.src = `${url}`
+      iframe.setAttribute('frameborder', '0');
+      iframe.id = 'iframe_for_payment'
+      iframe.height = "600";
+      iframe.width = (modalBody.offsetWidth - 5).toString();
+      iframe.onload = () => {this.spinner = false;}
+      (document.getElementById('divforIframe') as HTMLDivElement).insertAdjacentElement('afterbegin', iframe);
+  
+      // window.addEventListener('resize', this.resizeIframe)
+    }catch(e){
+        console.log(e);
+    }
   }
 
   ngOnDestroy() {

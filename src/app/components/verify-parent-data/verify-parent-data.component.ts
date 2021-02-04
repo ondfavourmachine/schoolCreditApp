@@ -53,7 +53,7 @@ export class VerifyParentDataComponent
     private store: Store<fromStore.AllState>,
     private generalservice: GeneralService
   ) {
-    this.manageGoingBackAndForth = this.manageGoingBackAndForth.bind(this);
+    // this.manageGoingBackAndForth = this.manageGoingBackAndForth.bind(this);
   }
 
   iWantToChangeNumber(contact: "phone" | "email", functionName: string) {
@@ -62,25 +62,25 @@ export class VerifyParentDataComponent
     // this.newPhoneNumberForm.reset();
   }
 
-  manageGoingBackAndForth() {
-    if (this.view == this.previous) {
-      const num = this.pageViews.indexOf(this.previous);
-      const ans = this.pageViews[num - 1];
-      this.view = ans as any;
-      return;
-    }
-    if (this.previous == "") {
-      this.view = "";
-      this.previousPage.emit("firstPage");
-    } else {
-      this.view = this.previous;
-    }
-  }
+  // manageGoingBackAndForth() {
+  //   if (this.view == this.previous) {
+  //     const num = this.pageViews.indexOf(this.previous);
+  //     const ans = this.pageViews[num - 1];
+  //     this.view = ans as any;
+  //     return;
+  //   }
+  //   if (this.previous == "") {
+  //     this.view = "";
+  //     this.previousPage.emit("firstPage");
+  //   } else {
+  //     this.view = this.previous;
+  //   }
+  // }
 
   ngAfterViewInit() {
-    document
-      .getElementById("backspace")
-      .addEventListener("click", this.manageGoingBackAndForth);
+    // document
+    //   .getElementById("backspace")
+    //   .addEventListener("click", this.manageGoingBackAndForth);
   }
 
   get type(): string {
@@ -311,8 +311,8 @@ export class VerifyParentDataComponent
 
   ngOnDestroy() {
     this.destroy.forEach(element => element.unsubscribe());
-    document
-      .getElementById("backspace")
-      .removeEventListener("click", this.manageGoingBackAndForth);
+    // document
+    //   .getElementById("backspace")
+    //   .removeEventListener("click", this.manageGoingBackAndForth);
   }
 }
