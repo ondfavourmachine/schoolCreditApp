@@ -180,6 +180,15 @@ export class ChatService {
   checkIfCardHasBeenAddedByParent(): Observable<any>{
     return this.http.get(`${this.generalUrl}card/57487`)
   }
+
+  // get bank statement url for iframe
+  getIframeSrcForBankstatement(){
+    const headers = new HttpHeaders({
+      'x-api-key': 'z2BhpgFNUA99G8hZiFNv77mHDYcTlecgjybqDACv'
+    })
+    return this.http.post<{url: string, status: boolean, token: string, message: string}>
+   (`https://mobile.creditclan.com/api/v3/bankstatement/initiate`, {request_id: "57487", has_online_banking : '1'}, {headers}).toPromise()
+  }
   
   // iframe for card tokenisation
   getIframeSrcForCardTokenization(): Promise<{url: string, status: boolean, token: string, message: string}>{

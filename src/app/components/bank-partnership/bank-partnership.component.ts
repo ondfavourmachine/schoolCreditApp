@@ -47,7 +47,7 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
     | "result"
     | "work-form"
     | "address-info" | 'bank_statement' | 'iframe_container'
-    | "preambleToForms" = undefined;
+    | "preambleToForms" | 'pre_bankstatement' = undefined;
   text: string = "Sending Loan request....";
   pageViews: string[] = ["work-form"];
   selected: string;
@@ -281,6 +281,29 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
     this.spinner = true;
     this.page = 'iframe_container';
     const res = await this.chatservice.getIframeSrcForCardTokenization();
+    const {url} = res;
+    try{ 
+      const iframe = document.createElement('iframe');
+      iframe.setAttribute('sandbox', 'allow-same-origin allow-scripts allow-popups');
+      iframe.src = `${url}`
+      iframe.setAttribute('frameborder', '0');
+      iframe.id = 'iframe_for_payment'
+      iframe.height = "600";
+      iframe.width = (modalBody.offsetWidth - 5).toString();
+      iframe.onload = () => {this.spinner = false;}
+      (document.getElementById('divforIframe') as HTMLDivElement).insertAdjacentElement('afterbegin', iframe);
+  
+      // window.addEventListener('resize', this.resizeIframe)
+    }catch(e){
+        console.log(e);
+    }
+  }
+
+  async insertBSIframeIntoDOM(){
+    const modalBody = document.querySelector('.modal-body') as HTMLElement
+    this.spinner = true;
+    this.page = 'iframe_container';
+    const res = await this.chatservice.getIframeSrcForBankstatement();
     const {url} = res;
     try{ 
       const iframe = document.createElement('iframe');

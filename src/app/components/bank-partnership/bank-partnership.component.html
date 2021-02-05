@@ -34,8 +34,9 @@
   </p> -->
   <!-- (click)="page = 'preambleToForms'" -->
   <!--  (click)="page = 'bank_statement'" -->
+  <!-- (click)="page = 'preambleToForms'" -->
   <button
-  (click)="page = 'preambleToForms'"
+   (click)="page = 'bank_statement'"
     class="ui button primary basic mt-4"
   >
     I Accept
@@ -79,6 +80,29 @@
       Cancel
     </button>
   </div>
+</div>
+
+
+<div
+  class="flex flex-column justify-center align-center h-100 text-center family-info"
+  *ngIf="page == 'pre_bankstatement'"
+>
+  <h1 class="para-title">
+    Thank you for filling your data. We would like to analyse your statement. Please select your preferred method 
+  </h1>
+
+  <div class="twelve wide column">
+    <button (click)="insertBSIframeIntoDOM()" class="ui button primary basic mr-3">
+      Online banking
+    </button>
+
+    <button disabled class="ui button primary basic">
+      Statement
+    </button>
+  </div>
+  <div *ngIf="spinner" class="spinner-container">
+    <i class="fa fa-circle-notch fa-spin fa-3x"></i>
+  </div> 
 </div>
 
 <div
