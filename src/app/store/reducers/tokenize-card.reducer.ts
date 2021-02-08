@@ -1,11 +1,4 @@
-import {
-    Parent,
-    ParentWorkInfo,
-    ParentAddressInfo,
-    ParentIdInfo,
-    ParentAccountInfo,
-    ParentCreditCardInfo
-  } from "src/app/models/data-models";
+
   import * as generalActions from "../actions/general.action";
   
   // interface for state

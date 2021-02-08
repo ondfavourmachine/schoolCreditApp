@@ -12,7 +12,8 @@ import {
   CompleteParentInfomation,
   Bank,
   ParentAccountInfo,
-  ContinuingExistingRequestResponse
+  ContinuingExistingRequestResponse,
+  SchoolDetailsModel
 } from "src/app/models/data-models";
 import { timeout } from "rxjs/operators";
 // import { retry } from "rxjs/operators";
@@ -282,7 +283,22 @@ export class ChatService {
         .post<GenericResponse>(`${this.generalUrl}email/send/otp`, obj).toPromise()
     }
   }
+  
 
+  // getschoolDetails
+  fetchSchoolDetails(nameOfSchool: string): Observable<{data: {school: SchoolDetailsModel}, message: string, status: boolean}>{
+    return this.http.get<any>(`${this.generalUrl}user/${nameOfSchool}`)
+  }
+
+  // get offers
+    getLoanOffers(request_id: any){
+      const url = "https://mobile.creditclan.com/api/v3/schoolportal/offers";
+      const headers = new HttpHeaders({
+        "x-api-key": "z2BhpgFNUA99G8hZiFNv77mHDYcTlecgjybqDACv"
+      });
+      return this.http.post(url, {request_id : request_id || "57487"}, {headers})
+    }
+  
   // sendLoanRequest
   sendLoanRequest(obj: {school_id: any, guardian_id: any, loan_amount: string,
         child_data: {id: string, amount: string}[]}): Promise<GenericResponse>{

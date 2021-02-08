@@ -7,7 +7,8 @@ import {
   ParentAddressInfo,
   ParentIdInfo,
   ParentAccountInfo,
-  ParentCreditCardInfo
+  ParentCreditCardInfo,
+  SchoolDetailsModel
 } from "src/app/models/data-models";
 
 // add Parent information
@@ -100,3 +101,24 @@ export class checkTokenizeProcess implements Action {
 }
 
 export type tokenizeCardActions = checkTokenizeProcess ;
+
+
+// school actions start here
+export const updateSchoolInformation = "[school] UPDATE SCHOOL";
+
+export class loadSchoolDetails implements Action{
+  readonly type = updateSchoolInformation;
+  constructor(public payload: SchoolDetailsModel){
+
+  }
+}
+
+
+export type schoolActions = loadSchoolDetails
+
+
+
+
+
+
+

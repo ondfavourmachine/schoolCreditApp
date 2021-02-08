@@ -115,3 +115,20 @@ export interface schoolCreditStage{
     parent_id_info: 0 | 1
     parent_work_info: 0 | 1
 }
+
+export interface SchoolDetailsModel{
+  address: string
+  created_at: string
+email: string
+id: number
+licensed: number
+name: string
+nursery: number
+payment_link: null | string
+phone: string
+picture: null | string
+primary: string
+secondary: string
+students_range: string
+username: string
+}

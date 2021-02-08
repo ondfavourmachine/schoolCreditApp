@@ -123,7 +123,7 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
       })
     try {
       const res = await this.chatservice.sendLoanRequest({
-        school_id: 1,
+        school_id: this.parentDetails.school_id || 1,
         guardian_id: this.parentDetails.guardian,
         loan_amount: this.loanAmount as string,
         child_data: arrayOfChildId

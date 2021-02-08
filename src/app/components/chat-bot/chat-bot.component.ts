@@ -5,7 +5,10 @@ import {
   ChangeDetectorRef,
   ViewChild,
   ElementRef,
-  OnDestroy
+  OnDestroy,
+  Input,
+  OnChanges,
+  SimpleChanges
 } from "@angular/core";
 import { ChatService } from "src/app/services/ChatService/chat.service";
 import { GeneralService } from "src/app/services/generalService/general.service";
@@ -13,6 +16,10 @@ import { GeneralService } from "src/app/services/generalService/general.service"
 import { DisplayQuestion } from "src/app/models/Questionaire";
 import { Router, NavigationEnd } from "@angular/router";
 import { TimeoutError, Subscription } from "rxjs";
+import { Store } from "@ngrx/store";
+import * as fromStore from "../../store";
+import * as generalActions from "../../store/actions/general.action";
+import { SchoolDetailsModel } from "src/app/models/data-models";
 // import { ValidateRefResponse } from "../../models/validaterRefRes";
 
 @Component({
@@ -20,7 +27,8 @@ import { TimeoutError, Subscription } from "rxjs";
   templateUrl: "./chat-bot.component.html",
   styleUrls: ["./chat-bot.component.css"]
 })
-export class ChatBotComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ChatBotComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
+  @Input('schoolName') schoolName: string
   messages: string | { message: string; direction: string; button?: string };
   public referenceNumber: string;
   private destroyAnything: Subscription;
@@ -31,8 +39,22 @@ export class ChatBotComponent implements OnInit, AfterViewInit, OnDestroy {
     private chatservice: ChatService,
     private generalservice: GeneralService,
     private router: Router,
+    private store: Store,
     private changeDetection: ChangeDetectorRef
   ) {}
+
+    ngOnChanges(changes: SimpleChanges){
+      if(changes.schoolName.currentValue){
+        this.chatservice.fetchSchoolDetails(changes.schoolName.currentValue) 
+      .subscribe(val => {
+          const {school} = val.data;
+          this.store.dispatch(new generalActions.loadSchoolDetails(school));
+          this.store.dispatch(new generalActions.addParents({school_id: school.id}));
+
+      }, err => console.log(err))
+      }
+     
+    }
 
   ngOnInit() {
     this.router.events.subscribe(evt => {
@@ -48,7 +70,12 @@ export class ChatBotComponent implements OnInit, AfterViewInit, OnDestroy {
       err => console.log(err)
     );
 
+    // this.store.select(fromStore.getSchoolDetailsState).subscribe(val => console.log(val))
+
     this.changeDetection.detectChanges();
+
+   
+    
   }
 
   ngAfterViewInit() {

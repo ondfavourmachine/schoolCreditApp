@@ -162,7 +162,12 @@ export class ParentsInformationComponent
   }
 
   ngOnInit(): void {
-   
+    //  this.destroy[0]= this.store.select(fromStore.getParentState).subscribe(val => console.log(val))
+     this.destroy[0] = this.store
+     .select(fromStore.getCurrentParentInfo)
+     .subscribe(val => {
+       this.parent = val as Parent;
+     });
 
     // this.destroy[2] =
   //   [validatePhoneIsUnique(this.httpclient, /\d{11}/)]
@@ -360,7 +365,7 @@ export class ParentsInformationComponent
         lga,
         address,
         state,
-        school_id: 1
+        school_id: this.parent.school_id || 1
       })
       .subscribe(
         async val => {

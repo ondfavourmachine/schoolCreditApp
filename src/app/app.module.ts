@@ -49,6 +49,7 @@ import { MakeFullPaymentComponent } from "./components/make-full-payment/make-fu
 
 import { reducers } from "./store";
 import { VerifyParentDataComponent } from './components/verify-parent-data/verify-parent-data.component';
+import { reducer } from "./store/reducers/parent.reducer";
 
 registerLocaleData(en);
 
@@ -102,7 +103,8 @@ registerLocaleData(en);
     StoreModule.forRoot({
       manageParent: reducers.parent_info,
       manageChild: reducers.children_info,
-      manageCardTokenization: reducers.tokenize_process
+      manageCardTokenization: reducers.tokenize_process,
+      schoolDetails: reducers.schoolDetails
     })
   ],
   providers: [TitleCasePipe],
