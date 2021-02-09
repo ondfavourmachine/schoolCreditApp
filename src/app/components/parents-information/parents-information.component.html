@@ -283,6 +283,7 @@
       <div class="field positioned-relative">
         <label>Phone</label>
         <input
+          (blur)="checkingUniqueness = 'done'"
           formControlName="phone"
           type="tel"
           pattern="[0-9]{11}"

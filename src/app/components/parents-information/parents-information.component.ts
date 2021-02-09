@@ -64,11 +64,12 @@ const validateEmailIsUnique = (apiservice: ChatService, regex: RegExp,
 const validatePhoneIsUnique = 
   (apiservice: ChatService, regex: RegExp, obj: ParentsInformationComponent): AsyncValidatorFn => (control: AbstractControl): Promise<{phoneExists: boolean}> | Observable<{ phoneExists: boolean}> | null => {
     obj.checkingUniqueness = 'checking';
-     if(!control || control.value.length < 11 || !regex.test(control.value)){ obj.checkingUniqueness = 'done'; return of(null)};
-    //  console.log(control.value);
+     if(!control && control.value.length < 11 && !regex.test(control.value)){ 
+       obj.checkingUniqueness = 'done'; 
+       return of(null);
+      };
      return apiservice.checkPhoneUniqueness({phone: control.value})
       .pipe(map(val => {
-        console.log('i am here!')
         if(val.message.includes('The phone has already been taken')){
           obj.checkingUniqueness = 'not-unique';
           return { phoneExists: true};
@@ -174,6 +175,7 @@ export class ParentsInformationComponent
     this.phoneForm = this.fb.group({
       phone: ["", [Validators.required], 
       [validatePhoneIsUnique(this.chatapi, /\d{11}/gi, this)] ]
+      // phone: ['', {}]
     });
     // this.phoneVerificationForm = this.fb.group({
     //   OTP: ["", Validators.required]
