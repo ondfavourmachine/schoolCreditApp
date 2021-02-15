@@ -1,13 +1,41 @@
 
 <div class=" h-100 text-center family-info" >
-    <h1 class="para-title">Please Select books for your child</h1>
+    <h1 class="para-title">Please select books for your child</h1>
+
+    <div class="selection_controls" [class.show]="booksSelected.size > 0">
+        <div class="all_container">
+            <input (click)="selectAllBooks($event)" id="selectAll" type="checkbox">
+            <label for="selectAll">select all</label>
+        </div>
+
+        <div class="selected_number">
+            {{ booksSelected.size }} {{ booksSelected.size == 1 ? 'book': 'books' }} selected
+        </div>
+
+        <div class="small_drop_down">
+          <div class="ellipsis"> 
+              <i class="fas fa-ellipsis-v"></i>
+              <span class="sub_menu"> 
+                <a (click)="cancelAllSelection()" ><i class="fa fa-times-circle"></i> clear selection</a>  
+                <a ><i class="fa fa-plus-circle"></i> Add selected </a>  
+              </span>
+        </div>
+            <!-- <ul class="drop_down_container">
+                <li>
+
+                </li>
+            </ul> -->
+        </div>
+    </div>
   
     <div class="ui grid justify-center" style="overflow: hidden; margin: 0 auto;">
       <div
         *ngFor="let book of booksToDisplay; index as i"
-        style=" max-height: 250px; padding-left: .2rem; padding-right: .2rem"
+        style=" max-height: 250px; padding-left: .2rem; padding-right: .2rem; position: relative;"
         class="six wide column myborder positioned-relative"
       >
+
+       <input (click)="addThisBookToSelected($event)" [id]="book?.id" type="checkbox" class="selectionInput">
         <img
           [src]="book?.picture"
           alt=""

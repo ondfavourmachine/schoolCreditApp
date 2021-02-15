@@ -17,7 +17,8 @@ import { SchoolBook } from "src/app/models/data-models";
     @Output("previousPage") previousPage = new EventEmitter<string>();
     destroy: Subscription[] = [];
     selected: string = '';
-    booksToDisplay: SchoolBook[] = []
+    booksToDisplay: SchoolBook[] = [];
+    booksSelected: Set<number | string> = new Set()
     constructor(private store: Store) {
         this.previousPage.emit("firstPage");
     }
@@ -27,5 +28,43 @@ import { SchoolBook } from "src/app/models/data-models";
         .pipe(pluck('school_books')).subscribe((val: SchoolBook[]) => {
             this.booksToDisplay = [...val];
         })
+    }
+
+
+    addThisBookToSelected(event: Event){
+        const input = event.target as HTMLInputElement;
+        if(input.checked){
+        this.booksSelected.add(input.id);
+        console.log(this.booksSelected)
+        return;
+        }
+
+        this.booksSelected.delete(input.id);
+        console.log(this.booksSelected);
+    }
+
+    selectAllBooks(event){
+        const selectionInputs = (document.querySelectorAll('.selectionInput') as NodeListOf<HTMLInputElement>);
+        if((event.target as HTMLInputElement).checked){
+            selectionInputs.forEach(element => {
+                element.checked = true;
+                this.booksSelected.add(element.id);
+            })
+        }else{
+            selectionInputs.forEach(element => {
+                element.checked = false;
+                this.booksSelected.delete(element.id);
+            })
+        }
+        
+    }
+
+    cancelAllSelection(){
+        const selectionInputs = (document.querySelectorAll('.selectionInput') as NodeListOf<HTMLInputElement>);
+        
+        selectionInputs.forEach(element => {
+            element.checked = false;
+            this.booksSelected.delete(element.id);
+        }) 
     }
   }
