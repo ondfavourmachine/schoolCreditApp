@@ -182,6 +182,14 @@
           </div>
         </div>
 
+        <div *ngSwitchCase="'school-books'">
+          <div class="takeAPicture">
+            <app-school-books
+            (previousPage)="setPageToGoBackTo($event)"
+            ></app-school-books>
+          </div>
+        </div>
+
         <div *ngSwitchCase="'receiverBankAccount'">
           <div class="receiverBankAccount">
             <app-receiver-bank-account></app-receiver-bank-account>

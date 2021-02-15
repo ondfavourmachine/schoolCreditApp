@@ -356,19 +356,35 @@ export class ContinuingExistingRequestsComponent
         this.generalservice.handleFlowController("");
         this.generalservice.responseDisplayNotifier(this.response);
         setTimeout(() => {
-          this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
-            `Are you ready to be connected to a financial institution?`,
-            "left",
-            "Yes, No Later",
-            `connectme, notinterested`,
-            "allow"
-          );
+          // const chatbotResponse = new replyGiversOrReceivers(
+          //   `The school mandates that you add books required by your child or children`,
+          //   'left',
+          //   `Select Books`,
+          //   `addbooks`,
+          //   `allow`
+          // )
+          // this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
+          //   `Are you ready to be connected to a financial institution?`,
+          //   "left",
+          //   "Yes, No Later",
+          //   `connectme, notinterested`,
+          //   "allow"
+          // );
+          // const chatbotResponse = new replyGiversOrReceivers(
+          //   `To fund this request, We have partnered with banks on your behalf`,
+          //   "left",
+          //   "",
+          //   ``
+          // );
+
           const chatbotResponse = new replyGiversOrReceivers(
-            `To fund this request, We have partnered with banks on your behalf`,
-            "left",
-            "",
-            ``
-          );
+              `The school mandates that you add books required by your child or children`,
+            'left',
+            `Select Books`,
+            `addbooks`,
+            `prevent`
+       
+          )
           this.generalservice.responseDisplayNotifier(chatbotResponse);
         }, 800);
         break;

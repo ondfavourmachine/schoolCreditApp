@@ -306,6 +306,15 @@ export class ChatMessagesDisplayComponent
         this.generalservice.handleFlowController(String(componentToLoad));
       }
 
+
+      if (String(componentToLoad).toLowerCase() == "school-books") {
+        this.generalservice.handleFlowController(String(componentToLoad));
+        this.generalservice.handleSmartViewLoading({
+          component: String(componentToLoad),
+          info: "schoolBooks"
+        });
+      }
+
       if (String(componentToLoad).toLowerCase() == "make-full-payment") {
         this.generalservice.handleFlowController(String(componentToLoad));
       }

@@ -163,13 +163,12 @@ export class ParentsInformationComponent
   }
 
   ngOnInit(): void {
-    //  this.destroy[0]= this.store.select(fromStore.getParentState).subscribe(val => console.log(val))
      this.destroy[0] = this.store
      .select(fromStore.getCurrentParentInfo)
      .subscribe(val => {
        this.parent = val as Parent;
      });
-
+    
     // this.destroy[2] =
   //   [validatePhoneIsUnique(this.httpclient, /\d{11}/)]
     this.phoneForm = this.fb.group({
@@ -193,6 +192,7 @@ export class ParentsInformationComponent
     });
   }
 
+ 
   get phone(): AbstractControl {
     return this.phoneForm.get("phone");
   }
@@ -286,28 +286,8 @@ export class ParentsInformationComponent
     this.selected = something;
   }
 
-  // async confirmVerification(form: FormGroup) {
-  //   this.spinner = true;
-  //   let guardian;
-  //   //  i need to write selectors to stop doing this
-  //   const disconnect: Subscription = this.store
-  //     .pipe(pluck("manageParent", "parent_info", "guardian"))
-  //     .subscribe(val => (guardian = val));
+  
 
-  //   try {
-  //     const { message } = await this.chatapi.verifyOTP({
-  //       phone_OTP: form.value.OTP,
-  //       guardian
-  //     });
-  //     if (message.toLowerCase() == "phone number has been validated!") {
-  //       this.spinner = false;
-  //       disconnect.unsubscribe();
-  //       this.changeToAnotherView();
-  //     }
-  //   } catch (error) {
-  //     this.spinner = false;
-  //   }
-  // }
 
   async submitEmail(form: FormGroup) {
     this.spinner = true;
@@ -428,22 +408,7 @@ export class ParentsInformationComponent
     this.previousPage.emit("email");
   }
 
-  // submitStateForm() {
-  //   // console.log(this.state);
-  //   const refreshedState: Partial<Parent> = { state: this.state };
-  //   this.store.dispatch(new generalActions.addParents(refreshedState));
-  //   this.view = "lga";
-  //   this.previousPage.emit("address");
-  // }
-
-  // submitLGA() {
-  //   // console.log(this.localGovtArea);
-  //   const refreshedState: Partial<Parent> = { lga: this.localGovtArea };
-  //   this.store.dispatch(new generalActions.addParents(refreshedState));
-  //   this.spinner = false;
-  //   this.view = "picture";
-  //   this.previousPage.emit("lga");
-  // }
+ 
 
   ngOnDestroy() {
     this.destroy.forEach(element => element.unsubscribe());

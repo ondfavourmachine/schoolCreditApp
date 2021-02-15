@@ -19,8 +19,7 @@ import { TimeoutError, Subscription } from "rxjs";
 import { Store } from "@ngrx/store";
 import * as fromStore from "../../store";
 import * as generalActions from "../../store/actions/general.action";
-import { SchoolDetailsModel } from "src/app/models/data-models";
-// import { ValidateRefResponse } from "../../models/validaterRefRes";
+import { map } from "rxjs/operators";
 
 @Component({
   selector: "app-chat-bot",
@@ -31,7 +30,7 @@ export class ChatBotComponent implements OnInit, OnChanges, AfterViewInit, OnDes
   @Input('schoolName') schoolName: string
   messages: string | { message: string; direction: string; button?: string };
   public referenceNumber: string;
-  private destroyAnything: Subscription;
+  private destroyAnything: Subscription[] = [];
   actionToTake: string;
   @ViewChild("parentContainer") parentContainer: ElementRef;
   // timeHasElapsed: number = 0;
@@ -45,13 +44,17 @@ export class ChatBotComponent implements OnInit, OnChanges, AfterViewInit, OnDes
 
     ngOnChanges(changes: SimpleChanges){
       if(changes.schoolName.currentValue){
+        this.store.dispatch(new generalActions.schoolDetailsIsLoading());
         this.chatservice.fetchSchoolDetails(changes.schoolName.currentValue) 
       .subscribe(val => {
           const {school} = val.data;
           this.store.dispatch(new generalActions.loadSchoolDetails(school));
           this.store.dispatch(new generalActions.addParents({school_id: school.id}));
-
-      }, err => console.log(err))
+          this.store.dispatch(new generalActions.schoolDetailsIsLoaded());
+      }, err =>{
+        console.log(err);
+        this.store.dispatch(new generalActions.schoolDetailsFailedToLoad());
+      })
       }
      
     }
@@ -63,7 +66,7 @@ export class ChatBotComponent implements OnInit, OnChanges, AfterViewInit, OnDes
         this.ngAfterViewInit();
       }
     });
-    this.destroyAnything = this.generalservice.startAskingAndChangeQuestions$.subscribe(
+    this.destroyAnything[0] = this.generalservice.startAskingAndChangeQuestions$.subscribe(
       val => {
         // do something here
       },
@@ -71,6 +74,13 @@ export class ChatBotComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     );
 
     // this.store.select(fromStore.getSchoolDetailsState).subscribe(val => console.log(val))
+
+    this.destroyAnything[1]= this.store.select(fromStore.getSchoolDetailsState)
+    .pipe(map((val) => {
+      // console.log(val);
+      return {schoolInfoLoadState : val['school_Info_Load_state'], school_id: val['school_Info']['id'], }
+    }))
+    .subscribe((val) => this.fetchSchoolBooks(val.school_id, val.schoolInfoLoadState))
 
     this.changeDetection.detectChanges();
 
@@ -89,6 +99,22 @@ export class ChatBotComponent implements OnInit, OnChanges, AfterViewInit, OnDes
         behavior: "smooth"
       });
     });
+  }
+
+  fetchSchoolBooks(schoolId, schoolLoadState: 'loading' | 'loaded' | 'failed'){
+    // console.log(schoolId, schoolLoadState);
+      if(schoolLoadState == 'loaded'){
+        this.chatservice.getAllBooksFromSchool(schoolId)
+         .subscribe(val => { 
+           this.store.dispatch(new generalActions.schoolDetailsLoadingIsCompleted());
+           this.store.dispatch(new generalActions.updateSchoolBooks(val.data));
+         }, err => {
+           this.generalservice.errorNotification('Could not load books associated with school!')
+           console.log(err);
+         })
+      }else{
+        // console.log('i am here!')
+      }
   }
 
   sendMessageFromInput(event) {
@@ -154,6 +180,6 @@ export class ChatBotComponent implements OnInit, OnChanges, AfterViewInit, OnDes
   }
 
   ngOnDestroy() {
-    // this.destroyAnything.unsubscribe();
+    this.destroyAnything.forEach(elem => elem.unsubscribe());
   }
 }

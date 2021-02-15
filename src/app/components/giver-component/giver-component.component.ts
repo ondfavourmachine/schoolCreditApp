@@ -17,6 +17,6 @@ export class GiverComponentComponent implements OnInit {
   ngOnInit(): void {
     sessionStorage.removeItem("userLatLng");
     // this.generalservice.nextChatbotReplyToGiver = null;
-    this.activatedRoute.queryParams.subscribe((map: {name: string, token: string}) => this.name = map.name)
+    this.activatedRoute.queryParams.subscribe((map: {name: string, token: string}) => this.name = map.name);
   }
 }

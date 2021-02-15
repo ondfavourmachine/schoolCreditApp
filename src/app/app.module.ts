@@ -49,7 +49,8 @@ import { MakeFullPaymentComponent } from "./components/make-full-payment/make-fu
 
 import { reducers } from "./store";
 import { VerifyParentDataComponent } from './components/verify-parent-data/verify-parent-data.component';
-import { reducer } from "./store/reducers/parent.reducer";
+// import { reducer } from "./store/reducers/parent.reducer";
+import { SchoolBooksComponent } from "./components/school-books-display/school-books.component";
 
 registerLocaleData(en);
 
@@ -59,7 +60,7 @@ registerLocaleData(en);
     TermsAndConditionComponent,
     GeneralFormsComponent,
     IdentifyOrAnonymousComponent,
-
+    SchoolBooksComponent,
     SupportPageComponent,
     FoundBeneficiaryComponent,
     EligibilityChecksComponent,

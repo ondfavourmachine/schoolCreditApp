@@ -132,3 +132,18 @@ secondary: string
 students_range: string
 username: string
 }
+
+export interface SchoolBook{
+book_id: number
+created_at: string
+deleted: number
+id: number
+link: string
+name: string
+picture: string
+price: string
+publisher_id: number
+publisher_price: string
+school_id: number
+updated_at: string
+}

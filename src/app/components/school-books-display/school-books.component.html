@@ -1,0 +1,94 @@
+
+<div class=" h-100 text-center family-info" >
+    <h1 class="para-title">Please Select books for your child</h1>
+  
+    <div class="ui grid justify-center" style="overflow: hidden; margin: 0 auto;">
+      <div
+        *ngFor="let book of booksToDisplay; index as i"
+        style=" max-height: 250px; padding-left: .2rem; padding-right: .2rem"
+        class="six wide column myborder positioned-relative"
+      >
+        <img
+          [src]="book?.picture"
+          alt=""
+          style="max-width: 115px; max-height: 115px; object-fit: cover;"
+        />
+        <p
+          class="nameOfBook mb-3"
+          style=""
+        >
+         {{ book?.name }}
+        <br>
+        <p class="bolded price">
+            {{ book?.price | currency:'NGN' }}
+        </p>
+        <i
+          *ngIf="selected == 'Voters ID'"
+          class="fa fa-check positioned-absolute"
+        ></i>
+      </div>
+  
+      <!-- <div
+      
+        class="six wide column myborder positioned-relative"
+      >
+        <img
+          src="../../../assets/images/svgs/name.svg"
+          style="max-width: 50px;"
+          alt=""
+        />
+        <p
+          class="bolded"
+          style="line-height: 1rem; font-weight: bold; text-align: center;"
+        >
+          National ID
+        </p>
+        <i
+          *ngIf="selected == 'National ID'"
+          class="fa fa-check positioned-absolute"
+        ></i>
+      </div>
+  
+      <div
+        class="seven wide column myborder positioned-relative"
+      >
+        <img
+          src="../../../assets/images/svgs/name.svg"
+          style="max-width: 50px;"
+          alt=""
+        />
+        <p
+          style="line-height: 1rem; font-weight: bold; text-align: center;"
+          class="bolded"
+        >
+          International Passport
+        </p>
+        <i
+          *ngIf="selected == 'International Passport'"
+          class="fa fa-check positioned-absolute"
+        ></i>
+      </div>
+  
+      <div
+    
+        class="six wide column myborder positioned-relative"
+      >
+        <img
+          src="../../../assets/images/svgs/name.svg"
+          alt=""
+          style="max-width: 50px;"
+        />
+        <p
+          class="bolded"
+          style="line-height: 1rem; font-weight: bold; text-align: center;"
+        >
+          Drivers licence
+        </p>
+        <i
+          *ngIf="selected == 'Drivers licence'"
+          class="fa fa-check positioned-absolute"
+        ></i>
+      </div> -->
+    </div>
+  
+  </div>

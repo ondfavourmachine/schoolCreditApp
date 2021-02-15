@@ -458,7 +458,13 @@ export class Message {
         );
         // sessionStorage.setItem("anonymous", "2");
         break;
-
+      case 'addbooks':
+        this.giverDispatchEvents(
+          "customGiverEventFromMsgClass",
+          "giver",
+          "school-books"
+        );
+       break;
       case "fullpayment":
         this.giverResponsesEvent(
           "customGiverResponse",

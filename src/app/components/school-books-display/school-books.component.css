@@ -1,0 +1,18 @@
+
+
+.myborder{
+    background: transparent;
+}
+
+.nameOfBook{
+    line-height: 1rem !important;
+          white-space: nowrap !important; 
+          overflow: hidden !important;
+          text-overflow: ellipsis !important;
+          font-weight: bold; text-align: center !important;
+}
+
+.price{
+    font-weight: bold;
+    font-size: 1rem;
+}

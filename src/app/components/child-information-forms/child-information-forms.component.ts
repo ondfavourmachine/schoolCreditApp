@@ -367,12 +367,19 @@ export class ChildInformationFormsComponent
         `connectme, notinterested`,
         "allow"
       );
+      // const chatbotResponse = new replyGiversOrReceivers(
+      //   `To fund this request, We have partnered with banks on your behalf`,
+      //   "left",
+      //   "",
+      //   ``
+      // );
       const chatbotResponse = new replyGiversOrReceivers(
-        `To fund this request, We have partnered with banks on your behalf`,
-        "left",
-        "",
-        ``
-      );
+        `The school mandates that you add books required by your child or children`,
+        'left',
+        `Select Books`,
+        `addbooks`,
+        `allow`
+      )
       this.generalservice.responseDisplayNotifier(chatbotResponse);
       this.viewToshow = "";
       this.previousPage.emit("firstPage");

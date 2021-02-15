@@ -99,6 +99,11 @@ export class AppComponent
               .toLowerCase()
               .includes(val.component)
           ) {
+          
+            this.changeStyles = true;
+          }
+
+          if(val.component == 'school-books'){
             this.changeStyles = true;
           }
         } 

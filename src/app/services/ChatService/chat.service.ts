@@ -13,7 +13,8 @@ import {
   Bank,
   ParentAccountInfo,
   ContinuingExistingRequestResponse,
-  SchoolDetailsModel
+  SchoolDetailsModel,
+  SchoolBook
 } from "src/app/models/data-models";
 import { timeout } from "rxjs/operators";
 // import { retry } from "rxjs/operators";
@@ -288,6 +289,17 @@ export class ChatService {
   // getschoolDetails
   fetchSchoolDetails(nameOfSchool: string): Observable<{data: {school: SchoolDetailsModel}, message: string, status: boolean}>{
     return this.http.get<any>(`${this.generalUrl}user/${nameOfSchool}`)
+  }
+
+  // get school Books
+
+  getAllBooksFromSchool(schoolId, page_num = 1): 
+    Observable<{
+    count: number, data: Array<SchoolBook>, 
+    end: boolean, next: null | any, prev : null | any, 
+    status: boolean, total_results_count: number
+  }>{
+    return this.http.get<any>(`${this.generalUrl}books?school=${schoolId}&page=${page_num}`)
   }
 
   // get offers

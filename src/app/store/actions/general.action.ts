@@ -8,7 +8,8 @@ import {
   ParentIdInfo,
   ParentAccountInfo,
   ParentCreditCardInfo,
-  SchoolDetailsModel
+  SchoolDetailsModel,
+  SchoolBook
 } from "src/app/models/data-models";
 
 // add Parent information
@@ -103,8 +104,18 @@ export class checkTokenizeProcess implements Action {
 export type tokenizeCardActions = checkTokenizeProcess ;
 
 
+export enum schoolLoadingState{
+  loading = '[school] Loading',
+  loaded = '[school] loaded',
+  failed = '[school] failed',
+  completed = '[school] completed'
+}
+
 // school actions start here
 export const updateSchoolInformation = "[school] UPDATE SCHOOL";
+export const AddSchoolBooks = "[school] ADD SCHOOL BOOKS";
+// export const loadedSchoolState = "[school] LOADED";
+// export const loadingSchoolStateFailes = "[school] Failed";
 
 export class loadSchoolDetails implements Action{
   readonly type = updateSchoolInformation;
@@ -113,8 +124,42 @@ export class loadSchoolDetails implements Action{
   }
 }
 
+export class updateSchoolBooks implements Action{
+  readonly type = AddSchoolBooks;
+  constructor(public payload: Array<SchoolBook>){
 
-export type schoolActions = loadSchoolDetails
+  }
+}
+
+
+export class schoolDetailsIsLoading implements Action{
+  readonly type = schoolLoadingState.loading;
+  constructor(){
+  }
+}
+
+export class schoolDetailsLoadingIsCompleted implements Action{
+  readonly type = schoolLoadingState.completed;
+  constructor(){
+  }
+}
+
+export class schoolDetailsIsLoaded implements Action{
+  readonly type = schoolLoadingState.loaded;
+  constructor(){
+  }
+}
+
+export class schoolDetailsFailedToLoad implements Action{
+  readonly type = schoolLoadingState.failed;
+  constructor(){
+  }
+}
+
+export type schoolActions  = updateSchoolBooks | 
+loadSchoolDetails | schoolDetailsLoadingIsCompleted | 
+schoolDetailsFailedToLoad | schoolDetailsIsLoaded | 
+schoolDetailsIsLoading
 
 
 
