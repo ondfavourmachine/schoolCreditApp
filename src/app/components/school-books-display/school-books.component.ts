@@ -18,7 +18,9 @@ import { SchoolBook } from "src/app/models/data-models";
     destroy: Subscription[] = [];
     selected: string = '';
     booksToDisplay: SchoolBook[] = [];
-    booksSelected: Set<number | string> = new Set()
+    booksSelected: Set<number | string> = new Set();
+    totalCostOfBooks: number;
+    view : 'book-selection' | 'cost' | '' = 'book-selection'
     constructor(private store: Store) {
         this.previousPage.emit("firstPage");
     }
@@ -66,5 +68,16 @@ import { SchoolBook } from "src/app/models/data-models";
             element.checked = false;
             this.booksSelected.delete(element.id);
         }) 
+    }
+
+    calculateTotalCostOfBooks(){
+    let totalCostsOfBooks = 0;
+     this.booksSelected.forEach((id) => {
+         const foundBook = this.booksToDisplay.find(elem => elem.id == id);
+         if(foundBook) totalCostsOfBooks += parseInt(foundBook.price)
+     })
+     console.log(totalCostsOfBooks)
+     this.totalCostOfBooks = totalCostsOfBooks
+      this.view = 'cost';
     }
   }

@@ -1,5 +1,5 @@
 
-<div class=" h-100 text-center family-info" >
+<div class=" h-100 text-center family-info" *ngIf="view == 'book-selection'">
     <h1 class="para-title">Please select books for your child</h1>
 
     <div class="selection_controls" [class.show]="booksSelected.size > 0">
@@ -17,14 +17,10 @@
               <i class="fas fa-ellipsis-v"></i>
               <span class="sub_menu"> 
                 <a (click)="cancelAllSelection()" ><i class="fa fa-times-circle"></i> clear selection</a>  
-                <a ><i class="fa fa-plus-circle"></i> Add selected </a>  
+                <a (click)="calculateTotalCostOfBooks()" ><i class="fa fa-plus-circle"></i> Add selected </a>  
               </span>
         </div>
-            <!-- <ul class="drop_down_container">
-                <li>
-
-                </li>
-            </ul> -->
+            
         </div>
     </div>
   
@@ -119,4 +115,31 @@
       </div> -->
     </div>
   
-  </div>
+</div>
+
+
+
+<div [style.height]="view == 'cost' ? '395px': '100%'" 
+     [class.makeAFlex]="view == 'cost'"
+    class=" h-100 text-center family-info" *ngIf="view == 'cost'">
+    <h1 class="para-title">The Total cost of books selected is  {{ totalCostOfBooks | currency: 'NGN'}} </h1>
+
+ 
+
+    <div class="button_container">
+        <button
+    class="ui button primary basic mt-4"
+  >
+    Add these books for my children
+  </button>
+
+  <button
+ 
+    class="ui button primary basic mt-1"
+  >
+    These books are not necessary
+  </button>
+    </div>
+  
+  
+</div>
