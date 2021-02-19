@@ -76,7 +76,11 @@ export interface AChild {
   index?: number;
   id?: any;
   child_id: null | string | number;
+  child_book: Array<SchoolBook>;
 }
+
+
+
 
 export interface BankPartnership {}
 

@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { GeneralService } from "src/app/services/generalService/general.service";
 
 @Component({
@@ -10,13 +10,15 @@ import { GeneralService } from "src/app/services/generalService/general.service"
 
 export class GiverComponentComponent implements OnInit {
   name: string;
-  constructor(private generalservice: GeneralService, private activatedRoute: ActivatedRoute) {
+  constructor(private generalservice: GeneralService, private router: Router) {
 
   }
 
   ngOnInit(): void {
     sessionStorage.removeItem("userLatLng");
     // this.generalservice.nextChatbotReplyToGiver = null;
-    this.activatedRoute.queryParams.subscribe((map: {name: string, token: string}) => this.name = map.name);
+    // console.log(this.router.url.split('/'));
+    const userNameOfSchool = this.router.url.split('/').length > 2 ?  this.router.url.split('/').slice(-1)[0] : undefined;
+    this.name = userNameOfSchool;
   }
 }

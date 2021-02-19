@@ -40,9 +40,9 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
     /register account/gi,
     /hi/gi,
     /help/gi,
-    /give/gi,
-    /giver/gi,
-    /receiver/gi,
+    // /give/gi,
+    // /giver/gi,
+    // /receiver/gi,
     /help my family/gi,
     /done/gi,
     /sent/gi,
@@ -174,9 +174,9 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
           }, 700);
         }
         break;
-      case "giver":
+      case "school":
       case "give":
-        if (typeOfUser.includes("giver")) {
+        if (typeOfUser.includes("school")) {
           const response = new replyGiversOrReceivers(`${value}`, "right");
           this.generalservice.nextChatbotReplyToGiver = null;
           this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
@@ -219,10 +219,9 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
       break;
       case "register account details":
       case "register account":
-      console.log('i am here!');
       break;
       default:
-        if (typeOfUser.includes("giver")) {
+        if (typeOfUser.includes("school")) {
           this.generalservice.nextChatbotReplyToGiver = undefined;
           const response = new replyGiversOrReceivers(`${value}`, "right");
           this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(

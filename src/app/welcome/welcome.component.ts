@@ -17,7 +17,7 @@ export class WelcomeComponent implements OnInit {
   }
 
   gotoGiver() {
-    this.router.navigate(["giver"]);
+    this.router.navigate(["school"]);
     (document.querySelector(".modal-close") as HTMLSpanElement).click();
   }
 }

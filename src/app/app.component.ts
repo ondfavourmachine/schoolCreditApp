@@ -44,17 +44,18 @@ export class AppComponent
     private store: Store,
     private cd: ChangeDetectorRef
   ) {
-    router.events.subscribe(val => {
-      if (val instanceof NavigationStart) {
-        const { url } = val;
-        generalservice.receiver = url.substring(1, url.length);
-        // this.welcomeMsgCtrl(url);
-      }
-    });
+    // router.events.subscribe(val => {
+    //   if (val instanceof NavigationStart) {
+    //     const { url } = val;
+    //     generalservice.receiver = url.substring(1, url.length);
+    //     // this.welcomeMsgCtrl(url);
+    //     console.log(this.generalservice.receiver);
+    //   }
+    // });
   }
 
   setPageToGoBackTo(event) {
-    console.log(event);
+    // console.log(event);
     this.goBack = event;
   }
 
@@ -104,8 +105,10 @@ export class AppComponent
             this.changeStyles = true;
           }
 
-          if(val.component == 'school-books'){
+          if(val.info.includes('schoolBooks') || val.component == 'school-books' ){
             this.changeStyles = true;
+          }else{
+            this.changeStyles = false;
           }
         } 
         
@@ -247,7 +250,9 @@ export class AppComponent
 
   manageClosureOfModal(val: string) {
     let chatbotResponse: replyGiversOrReceivers;
+   
     switch (val) {
+    
       // case "parents-information":
       //   this.generalservice.nextChatbotReplyToGiver = undefined;
       //   this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
@@ -285,8 +290,23 @@ export class AppComponent
       //   this.generalservice.responseDisplayNotifier(chatbotResponse);
       //   break;
       case "bank-partnership":
+        this.generalservice.nextChatbotReplyToGiver = undefined;
+        this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
+        chatbotResponse = new replyGiversOrReceivers(
+          `Please wait while we process your loan application....`,
+            `left`,
+            "anything,nothing", // please these buttons are completely useless and will not be presented in the dom
+            "anything,nothing",
+            undefined,
+            { classes: ["truncated_loan_process"] }
+        );
+     
+        this.generalservice.responseDisplayNotifier(chatbotResponse);
+        
+      break;
       case "parent-account-form":
-        if( document.getElementById('divforIframe')){
+       
+        // if( document.getElementById('divforIframe')){
         this.generalservice.nextChatbotReplyToGiver = undefined;
         this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
         chatbotResponse = new replyGiversOrReceivers(
@@ -297,10 +317,10 @@ export class AppComponent
             undefined,
             { classes: ["processing_tokenized_card"] }
         );
+     
         this.generalservice.responseDisplayNotifier(chatbotResponse);
         this.store.dispatch(new generalActions.checkTokenizeProcess('checking'));
-        }
-        
+        // }
         break;
     }
   }

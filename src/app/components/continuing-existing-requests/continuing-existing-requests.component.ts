@@ -108,7 +108,7 @@ export class ContinuingExistingRequestsComponent
       phone_OTP: form.value.OTP_for_phone,
       guardian: this.guardianID as string
     });
-    console.log(res);
+ 
     this.spinner = false;
     const returnVal = this.rearrangeStaInOrderFashion(this
       .listOfStagesForLater as schoolCreditStage);
@@ -122,12 +122,12 @@ export class ContinuingExistingRequestsComponent
       phone_OTP: phone,
       guardian: this.guardianID as string
     });
-    console.log(res);
+   
   }
 
   checkAndSetNewPin(form: FormGroup) {
     this.spinner = true;
-    console.log(form.value);
+ 
     let obj = { token: "", pin: "", confirm_pin: "", email: "" };
     obj.token = form.value.pin_in_email;
     obj.pin = form.value.new_pin;
@@ -363,28 +363,28 @@ export class ContinuingExistingRequestsComponent
           //   `addbooks`,
           //   `allow`
           // )
-          // this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
-          //   `Are you ready to be connected to a financial institution?`,
-          //   "left",
-          //   "Yes, No Later",
-          //   `connectme, notinterested`,
-          //   "allow"
-          // );
-          // const chatbotResponse = new replyGiversOrReceivers(
-          //   `To fund this request, We have partnered with banks on your behalf`,
-          //   "left",
-          //   "",
-          //   ``
-          // );
-
+          this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
+            `Are you ready to be connected to a financial institution?`,
+            "left",
+            "Yes, No Later",
+            `connectme, notinterested`,
+            "allow"
+          );
           const chatbotResponse = new replyGiversOrReceivers(
-              `The school mandates that you add books required by your child or children`,
-            'left',
-            `Select Books`,
-            `addbooks`,
-            `prevent`
+            `To fund this request, We have partnered with banks on your behalf`,
+            "left",
+            "",
+            ``
+          );
+
+          // const chatbotResponse = new replyGiversOrReceivers(
+          //     `The school mandates that you add books required by your child or children`,
+          //   'left',
+          //   `Select Books`,
+          //   `addbooks`,
+          //   `prevent`
        
-          )
+          // )
           this.generalservice.responseDisplayNotifier(chatbotResponse);
         }, 800);
         break;

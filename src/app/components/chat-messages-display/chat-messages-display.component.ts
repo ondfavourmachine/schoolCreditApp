@@ -160,6 +160,7 @@ export class ChatMessagesDisplayComponent
                 console.log(val);
             },
             err => {
+
                 console.log(val);
                 // get the pulsing spinner
                   const pulsingLoader = document.querySelectorAll('.processing_tokenized_card');
@@ -168,7 +169,7 @@ export class ChatMessagesDisplayComponent
                   const parentElement: HTMLElement = pulsingLoader[pulsingLoader.length - 1].closest('div.chat-box__wrapper');
                   // remove it now
                   this.removeElement(this.messagePlaceHolder.nativeElement, parentElement);
-                  this.removeProcessingPaymentChatFromSavedChats();
+                  this.removeProcessingFromSavedChats();
                   // display this in its place.
                   this.generalservice.nextChatbotReplyToGiver = undefined;
                   this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
@@ -193,6 +194,36 @@ export class ChatMessagesDisplayComponent
           //  })
         }
       });
+
+      this.observableToTrash[6] = this.store.select(fromStore.getLoanApplicationState)
+      .pipe(pluck('loan_application_process'))
+      .subscribe((val: string) => {
+        // console.log(val);
+        setTimeout(() => {
+         if(val == 'failed'){
+            // get the pulsing spinner
+          const pulsingLoader = document.querySelectorAll('.truncated_loan_process');
+          // console.log(pulsingLoader);
+          // get its parent div
+          const parentElement: HTMLElement = pulsingLoader[pulsingLoader.length - 1].closest('div.chat-box__wrapper');
+          // remove it now
+          this.removeElement(this.messagePlaceHolder.nativeElement, parentElement);
+          this.removeProcessingFromSavedChats('incomplete loan application');
+          // display this in its place.
+          this.generalservice.nextChatbotReplyToGiver = undefined;
+          this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
+          const chatbotResponse = new replyGiversOrReceivers(
+            `Your loan application is not complete. Please click the buttons below to continue:`,
+              `left`,
+              "continue loan application,i am not interested", // please these buttons are completely useless and will not be presented in the dom
+              `connectme, notinterested`,
+               "prevent"
+          );
+          this.generalservice.responseDisplayNotifier(chatbotResponse);
+          this.store.dispatch(new generalActions.checkTokenizeProcess('not-checking'));
+         }
+        }, 1500);
+      })
   }
 
   
@@ -297,10 +328,11 @@ export class ChatMessagesDisplayComponent
         moreInformation,
         callBack
       } = e.detail;
-      if (String(message).includes("giver")) {
+      // debugger;
+      if (String(message).includes( 'giver')) {
         sessionStorage.setItem("route", String(message));
-        this.generalservice.receiver = "giver";
-        this.route.navigate(["giver"]);
+        // this.generalservice.receiver = "school";
+        // this.route.navigate(["school"]);
       }
       if (String(componentToLoad).toLowerCase() == "child-information-forms") {
         this.generalservice.handleFlowController(String(componentToLoad));
@@ -473,6 +505,23 @@ export class ChatMessagesDisplayComponent
                   textWrapper.innerHTML = "";
                 textWrapper.insertAdjacentHTML("afterbegin", html);
                }
+               if(textWrapper.classList.contains('truncated_loan_process')){
+                const html = `
+                <div class="mutation-inserted__text processing_div" style="height: 22px;">
+                    <div class="row">
+                    <div class="col-3">
+                    <div  data-title=".dot-pulse">
+                      <div class="stage" style="display: flex;justify-content: center;align-items: center; height: 20px;">
+                        <div class="dot-pulse"></div>
+                      </div>
+                    </div>
+                  </div>
+                    </div>
+                 </div>
+                  `;
+                  textWrapper.innerHTML = "";
+                textWrapper.insertAdjacentHTML("afterbegin", html);
+               }
               
               else if (textWrapper.classList.contains("helper")) {
                 const html = `
@@ -535,13 +584,25 @@ export class ChatMessagesDisplayComponent
     parent.removeChild(child)
   }
 
-  removeProcessingPaymentChatFromSavedChats(){
+  removeProcessingFromSavedChats(typeOfChatToRemove?: string){
     const savedChats: Array<Message> = JSON.parse(
       sessionStorage.getItem("savedChats")
     );
-    const number = savedChats.findIndex(element => /process your card details/gi.test(element.text));
-    savedChats.splice(number, 1);
-    sessionStorage.setItem('savedChats', JSON.stringify(savedChats));
+    let number = undefined;
+    switch(typeOfChatToRemove){
+      case 'incomplete loan application':
+        number = savedChats.findIndex(element => /process your loan application/gi.test(element.text));
+        savedChats.splice(number, 1);
+        sessionStorage.setItem('savedChats', JSON.stringify(savedChats));
+     
+      break;
+      default:
+        number = savedChats.findIndex(element => /process your card details/gi.test(element.text));
+        savedChats.splice(number, 1);
+        sessionStorage.setItem('savedChats', JSON.stringify(savedChats));
+      break;
+    }
+    
   }
 
 
@@ -811,27 +872,28 @@ export class ChatMessagesDisplayComponent
   ) {
     // console.log(this.receiverIsPresent);
     setTimeout(() => {
-      if (this.generalservice.receiver == "receiver") {
-        const msgs = Message.welcomeMsgForReceiver;
-        let messageToDisplay: Message;
-        msgs.forEach((msg, index) => {
-          if (index == 2) {
-            this.count = index;
-            messageToDisplay = new Message(
-              `${msg}`,
-              `left`,
-              ul,
-              "Yes,No i am giving",
-              "help,give"
-              // "receive,give"
-            );
-            messageToDisplay.makeAndInsertMessage(this.count);
-            return;
-          }
-          messageToDisplay = new Message(`${msg}`, `left`, ul);
-          messageToDisplay.makeAndInsertMessage(index);
-        });
-      } else {
+      // if (this.generalservice.receiver == "receiver") {
+      //   const msgs = Message.welcomeMsgForReceiver;
+      //   let messageToDisplay: Message;
+      //   msgs.forEach((msg, index) => {
+      //     if (index == 2) {
+      //       this.count = index;
+      //       messageToDisplay = new Message(
+      //         `${msg}`,
+      //         `left`,
+      //         ul,
+      //         "Yes,No i am giving",
+      //         "help,give"
+      //         // "receive,give"
+      //       );
+      //       messageToDisplay.makeAndInsertMessage(this.count);
+      //       return;
+      //     }
+      //     messageToDisplay = new Message(`${msg}`, `left`, ul);
+      //     messageToDisplay.makeAndInsertMessage(index);
+      //   });
+      // } 
+      
         // "identify,stayanonymous"
         const msgs = Message.welcomeMessagesForGiver;
         // debugger;
@@ -854,7 +916,7 @@ export class ChatMessagesDisplayComponent
           messageToDisplay = new Message(`${msg}`, `left`, ul);
           messageToDisplay.makeAndInsertMessage(index);
         });
-      }
+    
     }, 1000);
   }
 

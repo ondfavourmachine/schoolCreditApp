@@ -4,7 +4,7 @@ import { Routes, RouterModule } from "@angular/router";
 const routes: Routes = [
   {
     path: "",
-    redirectTo: "giver",
+    redirectTo: "school",
     pathMatch: "full"
   },
 
@@ -14,14 +14,19 @@ const routes: Routes = [
       import("./modules/chatbot/chatbot.module").then(m => m.ChatbotModule)
   },
 
-  {
-    path: "receiver",
-    loadChildren: () =>
-      import("./modules/receiver/receiver.module").then(m => m.ReceiverModule)
-  },
+  // {
+  //   path: "receiver",
+  //   loadChildren: () =>
+  //     import("./modules/receiver/receiver.module").then(m => m.ReceiverModule)
+  // },
 
   {
-    path: "giver",
+    path: "school",
+    loadChildren: () =>
+      import("./modules/givers/giver/giver.module").then(m => m.GiverModule)
+  },
+  {
+    path: "school/:name",
     loadChildren: () =>
       import("./modules/givers/giver/giver.module").then(m => m.GiverModule)
   }

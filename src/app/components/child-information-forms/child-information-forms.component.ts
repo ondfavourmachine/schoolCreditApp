@@ -11,7 +11,7 @@ import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { StoreService } from "src/app/services/mockstore/store.service";
 import { GeneralService } from "src/app/services/generalService/general.service";
 import { replyGiversOrReceivers } from "src/app/models/GiverResponse";
-import { AChild, Parent } from "src/app/models/data-models";
+import { AChild, Parent, SchoolBook } from "src/app/models/data-models";
 import { Subscription } from "rxjs";
 import { Store } from "@ngrx/store";
 // import { pluck } from "rxjs/operators";
@@ -35,13 +35,14 @@ export class ChildInformationFormsComponent
     | "enterInformation"
     | "modifyOrNot"
     | "summary"
-    | "upload-image" = "";
+    | "upload-image" | 'select-books' = "";
   pageViews: string[] = [
     "",
     "selectChildren",
     "enterInformation",
-    "email",
-    "activate-email"
+    // "email",
+    // "activate-email",
+    "upload-image"
   ];
   selected: string = "";
   selectedChildren: Array<number> = [];
@@ -56,6 +57,7 @@ export class ChildInformationFormsComponent
   tuitionFeesTotal;
   guardianID: string;
   childPicture: File;
+  base64FormOfPicture: string | ArrayBuffer;
   fullpayment: boolean;
   constructor(
     private fb: FormBuilder,
@@ -68,25 +70,36 @@ export class ChildInformationFormsComponent
   }
 
   manageGoingBackAndForth() {
-    // debugger;
-    if (this.viewToshow == this.back) {
+    if (this.viewToshow == this.back) { 
       const num = this.pageViews.indexOf(this.back);
       const ans = this.pageViews[num - 1];
+      this.generalservice.handleSmartViewLoading({component: 'child-information-forms', info: 'childForms'})
       this.viewToshow = ans as any;
-      this.back == "selectChildren" ? this.previousPage.emit("firstPage") : "";
+      if(ans == ''){
+        this.previousPage.emit("firstPage");
+        return;
+      }
+      // ans == "" ?  : "";
+      let secondNum = this.pageViews.indexOf(ans);
+      this.back = this.pageViews[secondNum - 1];
       return;
     }
     if (this.back == "") {
       this.viewToshow = "";
       this.previousPage.emit("firstPage");
       this.selected = undefined;
+      this.generalservice.handleSmartViewLoading({component: 'child-information-forms', info: 'childForms'})
       this.mapOfChildrensInfo = new Map();
+      
     } else {
+      this.generalservice.handleSmartViewLoading({component: 'child-information-forms', info: 'childForms'})
       this.viewToshow = this.back;
+      
     }
   }
 
   ngOnInit(): void {
+    this.previousPage.emit('firstPage');
     this.childInfoForm = this.fb.group({
       name: ["", Validators.required],
       class: ["", Validators.required],
@@ -108,11 +121,11 @@ export class ChildInformationFormsComponent
         this.guardianID = guardian;
       });
 
-    // this.destroy[2] = this.store
-    //   .select(fromStore.getCurrentChildInfo)
-    //   .subscribe(val => {
-    //     console.log(val);
-    //   });
+    this.destroy[2] = this.store
+      .select(fromStore.getCurrentChildInfo)
+      .subscribe(val => {
+        console.log(val);
+      });
 
     this.fullpayment = JSON.parse(sessionStorage.getItem("fullpayment"));
     // console.log(this.fullpayment);
@@ -141,11 +154,13 @@ export class ChildInformationFormsComponent
         (document.querySelector(
           ".modified-img"
         ) as HTMLImageElement).src = `${anevent.target["result"]}`;
+        this.base64FormOfPicture = anevent.target.result;
       };
       reader.readAsDataURL(event.target["files"][0]);
     }
   }
 
+ 
   selectThis(event: Event) {
     // debugger;
     let guardianID;
@@ -203,14 +218,15 @@ export class ChildInformationFormsComponent
 
  
 
-  moveToNextChildOrNot() {
+  moveToNextChildOrNot(schoolBooks?: Array<SchoolBook>) {
     this.spinner = true;
     let value: Partial<AChild> = { ...this.childInfoForm.value };
     const objectHoldingIndex = this.mapOfChildrensInfo.get(this.currentChild);
     value = {
       ...value,
       picture: this.childPicture,
-      index: objectHoldingIndex.index
+      index: objectHoldingIndex.index,
+      child_book : schoolBooks
     };
     this.mapOfChildrensInfo.set(this.currentChild, value);
 
@@ -367,23 +383,42 @@ export class ChildInformationFormsComponent
         `connectme, notinterested`,
         "allow"
       );
-      // const chatbotResponse = new replyGiversOrReceivers(
-      //   `To fund this request, We have partnered with banks on your behalf`,
-      //   "left",
-      //   "",
-      //   ``
-      // );
       const chatbotResponse = new replyGiversOrReceivers(
-        `The school mandates that you add books required by your child or children`,
-        'left',
-        `Select Books`,
-        `addbooks`,
-        `allow`
-      )
+        `To fund this request, We have partnered with banks on your behalf`,
+        "left",
+        "",
+        ``
+      );
+      this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
+            `Are you ready to be connected to a financial institution?`,
+            "left",
+            "Yes, No Later",
+            `connectme, notinterested`,
+            "allow"
+          );
+      // const chatbotResponse = new replyGiversOrReceivers(
+      //   `The school mandates that you add books required by your child or children`,
+      //   'left',
+      //   `Select Books`,
+      //   `addbooks`,
+      //   `allow`
+      // )
       this.generalservice.responseDisplayNotifier(chatbotResponse);
       this.viewToshow = "";
       this.previousPage.emit("firstPage");
     }, 800);
+  }
+
+  showBookSelectionPage(){
+    this.generalservice.handleSmartViewLoading({component : 'school-books', info: 'schoolBooks'})
+    this.viewToshow = 'select-books';
+    this.previousPage.emit("upload-image");
+  }
+
+  childBooksHasBeenAdded(event){
+    console.log(event);
+    this.generalservice.handleSmartViewLoading({component: 'child-information-forms', info: 'childForms'});
+    this.moveToNextChildOrNot(event);
   }
 
   ngOnDestroy() {

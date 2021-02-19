@@ -339,6 +339,7 @@ export class Message {
   }
 
   handleButtonClick(event: MouseEvent) {
+   
     let button = event.srcElement as HTMLButtonElement;
     let c = button.dataset["button"].toString().toLowerCase();
     c = c.split("-")[1];
@@ -385,7 +386,6 @@ export class Message {
         );
         break;
       case "verifynow":
-        console.log("i am here!");
         this.giverDispatchEvents(
           "customGiverEventFromMsgClass",
           "giver",

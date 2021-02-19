@@ -24,13 +24,14 @@
         </div>
     </div>
   
-    <div class="ui grid justify-center" style="overflow: hidden; margin: 0 auto;">
+    <div [class.justify-center]="booksToDisplay.length > 2" class="ui grid " 
+         [style.paddingLeft]="booksToDisplay.length > 1 && booksToDisplay.length < 3  ? '6px' : '0'"
+      style="overflow: hidden; margin: 0 auto;">
       <div
         *ngFor="let book of booksToDisplay; index as i"
         style=" max-height: 250px; padding-left: .2rem; padding-right: .2rem; position: relative;"
         class="six wide column myborder positioned-relative"
       >
-
        <input (click)="addThisBookToSelected($event)" [id]="book?.id" type="checkbox" class="selectionInput">
         <img
           [src]="book?.picture"
@@ -126,11 +127,12 @@
 
  
 
-    <div class="button_container">
-        <button
+<div class="button_container">
+  <button
+    (click)="completeBookSelection()"
     class="ui button primary basic mt-4"
   >
-    Add these books for my children
+    Add these books for my child
   </button>
 
   <button

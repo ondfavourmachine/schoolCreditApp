@@ -43,6 +43,7 @@ export class ChatBotComponent implements OnInit, OnChanges, AfterViewInit, OnDes
   ) {}
 
     ngOnChanges(changes: SimpleChanges){
+      // console.log(changes);
       if(changes.schoolName.currentValue){
         this.store.dispatch(new generalActions.schoolDetailsIsLoading());
         this.chatservice.fetchSchoolDetails(changes.schoolName.currentValue) 
@@ -60,12 +61,13 @@ export class ChatBotComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     }
 
   ngOnInit() {
-    this.router.events.subscribe(evt => {
-      if (evt instanceof NavigationEnd) {
-        this.ngOnInit();
-        this.ngAfterViewInit();
-      }
-    });
+    // this.router.events.subscribe(evt => {
+    //   if (evt instanceof NavigationEnd) {
+    //     console.log('i am here!');
+    //     this.ngOnInit();
+    //     this.ngAfterViewInit();
+    //   }
+    // });
     this.destroyAnything[0] = this.generalservice.startAskingAndChangeQuestions$.subscribe(
       val => {
         // do something here
@@ -175,6 +177,7 @@ export class ChatBotComponent implements OnInit, OnChanges, AfterViewInit, OnDes
   // this function will restart the questioning process
   // when it receives an event from app-chat-messages-display restartProcess eventEmitter
   callNgOnInitAgain() {
+    console.log(' i am here ')
     sessionStorage.clear();
     this.ngOnInit();
   }

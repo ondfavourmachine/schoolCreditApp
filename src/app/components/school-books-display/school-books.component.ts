@@ -15,6 +15,7 @@ import { SchoolBook } from "src/app/models/data-models";
   })
   export class SchoolBooksComponent implements OnInit  {
     @Output("previousPage") previousPage = new EventEmitter<string>();
+    @Output("selectionComplete") selectionComplete = new EventEmitter<SchoolBook[]>();
     destroy: Subscription[] = [];
     selected: string = '';
     booksToDisplay: SchoolBook[] = [];
@@ -37,12 +38,10 @@ import { SchoolBook } from "src/app/models/data-models";
         const input = event.target as HTMLInputElement;
         if(input.checked){
         this.booksSelected.add(input.id);
-        console.log(this.booksSelected)
         return;
         }
 
         this.booksSelected.delete(input.id);
-        console.log(this.booksSelected);
     }
 
     selectAllBooks(event){
@@ -76,8 +75,17 @@ import { SchoolBook } from "src/app/models/data-models";
          const foundBook = this.booksToDisplay.find(elem => elem.id == id);
          if(foundBook) totalCostsOfBooks += parseInt(foundBook.price)
      })
-     console.log(totalCostsOfBooks)
+    //  console.log(totalCostsOfBooks)
      this.totalCostOfBooks = totalCostsOfBooks
       this.view = 'cost';
+    }
+
+    completeBookSelection(){
+        const books: SchoolBook[] = []
+        this.booksSelected.forEach((id) => {
+            const foundBook = this.booksToDisplay.find(elem => elem.id == id);
+           books.push(foundBook);
+        })
+        this.selectionComplete.emit(books);
     }
   }

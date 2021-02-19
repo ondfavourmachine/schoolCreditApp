@@ -104,6 +104,21 @@ export class checkTokenizeProcess implements Action {
 export type tokenizeCardActions = checkTokenizeProcess ;
 
 
+// loan Application Actions
+
+export const loanProcess = "[card] check loan process";
+
+export class checkLoanProcess implements Action {
+  readonly type = tokenizeCardProcess;
+  constructor(
+    public payload: 'not-processing' | 'processing' | 'failed' | 'success'
+  ) {}
+}
+
+export type loanActions = checkLoanProcess ;
+
+
+
 export enum schoolLoadingState{
   loading = '[school] Loading',
   loaded = '[school] loaded',

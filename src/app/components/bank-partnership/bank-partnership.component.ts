@@ -26,8 +26,10 @@ import { Store } from "@ngrx/store";
 import * as generalActions from "../../store/actions/general.action";
 import * as fromStore from "../../store";
 import { pluck } from "rxjs/operators";
+import { ChildrenState } from "src/app/store/reducers/children.reducer";
 
-const cc = window["CreditClan"];
+const CreditClan = window['CreditClan'];
+const cc = CreditClan.init('z2BhpgFNUA99G8hZiFNv77mHDYcTlecgjybqDACv');
 
 @Component({
   selector: "app-bank-partnership",
@@ -47,7 +49,7 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
     | "result"
     | "work-form"
     | "address-info" | 'bank_statement' | 'iframe_container'
-    | "preambleToForms" | 'pre_bankstatement' = undefined;
+    | "preambleToForms" | 'pre_bankstatement' = "preambleToForms";
   text: string = "Sending Loan request....";
   pageViews: string[] = ["work-form"];
   selected: string;
@@ -85,7 +87,8 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
           this.page = this.smartView.info;
         }
       } else {
-        this.page = "checking";
+        this.page = "preambleToForms";
+        // this.page = 'checking'
       }
     });
   }
@@ -137,17 +140,18 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
         "An error occured while sending your loan request!"
       );
     }
-    this.chatservice.getFinancialInstitution().subscribe(val => {
-      this.result = val;
-      this.smartView.info
-        ? (this.page = this.smartView.info)
-        : (this.page = "");
-    });
+    // this.chatservice.getFinancialInstitution().subscribe(val => {
+    //   this.result = val;
+    //   this.smartView.info
+    //     ? (this.page = this.smartView.info)
+    //     : (this.page = "");
+    // });
   }
 
   changeToWorkAndLoadWidget(page: string){
     const a =  (document.querySelector('.hiddenWidget') as HTMLElement);
-    cc.open();
+    this.spinner = true;
+    this.launchWidget()
   }
 
   selectThis(event) {
@@ -320,6 +324,90 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
     }catch(e){
         console.log(e);
     }
+  }
+
+  launchWidget() {
+    this.spinner = true;
+    let totalFees: number = 0;
+    const disconnect = this.store
+      .select(fromStore.getCurrentChildState)
+      .subscribe((val: any) => {
+        const { total_tuition_fees } = val as ChildrenState;
+        totalFees += total_tuition_fees;
+      });
+    cc.open();
+     // listen for ready event window 
+    cc.on('ready', () => {
+      console.log('Ready..');
+      // const merchant = this._auth.merchant;
+      const data = {
+        loan:  {amount: totalFees, tenor: 3 },
+        picture: this.parentDetails.picture,
+        personal: {
+          user_id: this.parentDetails.guardian,
+          full_name: this.parentDetails.full_name,
+          email: this.parentDetails.email,
+          phone: this.parentDetails.phone,
+          date_of_birth: this.parentDetails.date_of_birth,
+          gender: this.parentDetails.gender,
+          marital_status: '',
+          nationality: '',  // 
+          state_of_origin: this.parentDetails.state // pass the id of state you collected
+        },
+        address:{
+          street_address: this.parentDetails.address,
+          state: this.parentDetails.state,
+          lga: this.parentDetails.lga,
+        }
+        // bank: {
+        //   bank_id: merchant.bank_id,
+        //   bank_code: merchant.bank_code,
+        //   account_name: merchant.account_name,
+        //   account_number: merchant.account_number
+        // }
+      };
+      const forms = [
+        'location',
+        'personal',
+        'bvn',
+        'address',
+        'picture',
+        'employment', //
+        'education',
+        'nok',
+        'frequently_called_numbers',
+        'identity',
+        'attachment',
+        // 'categories',
+        // 'bank',
+        // 'company_profile',
+        // 'products_pictures',
+        // 'sales_summary',
+        // 'physical_store',
+        // 'business_address',
+        // 'operating_expenses',
+        // 'business_income',
+        'expense',
+        // 'attachment_business',
+      ];
+      cc.start(data, forms);
+      this.spinner = false;
+      disconnect.unsubscribe();
+    });
+    cc.on('request', (data) => {
+      //  if the request was created successfully
+      console.log('Request..', data);
+    });
+    cc.on('cancel', (data) => {
+      //  if the user cancels the widget / clicks the close button
+      console.log('Cancel..', data);
+      this.store.dispatch(new generalActions.checkLoanProcess('failed'));
+      this.kickStartResponse();
+    });
+  }
+
+  kickStartResponse(){
+    (document.querySelector('.fakeButton') as HTMLElement).click();
   }
 
   ngOnDestroy() {

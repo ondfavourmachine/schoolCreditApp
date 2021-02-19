@@ -183,7 +183,7 @@
     (click)="addChildPictrue()"
     title="click to add a picture"
     class=" circular medium ui image modified-img"
-    src="/assets/images/image-placeholder-1.svg"
+     [src]="base64FormOfPicture ? base64FormOfPicture : '/assets/images/image-placeholder-1.svg'"
   />
   <input
     (change)="loadChildImage($event)"
@@ -193,8 +193,9 @@
     accept="image/*"
     hidden
   />
+  <!--  (click)="moveToNextChildOrNot()" --> 
   <button
-    (click)="moveToNextChildOrNot()"
+    (click)="showBookSelectionPage()"
     type="submit"
     class="ui primary button fluid modified-button"
   >
@@ -244,4 +245,9 @@
   <div *ngIf="spinner" class="spinner-container">
     <i class="fa fa-circle-notch fa-spin fa-3x"></i>
   </div>
+</div>
+
+<div *ngIf="viewToshow == 'select-books'">
+  <app-school-books
+   (selectionComplete)="childBooksHasBeenAdded($event)"></app-school-books>
 </div>

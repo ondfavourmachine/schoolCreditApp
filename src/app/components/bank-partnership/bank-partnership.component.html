@@ -52,18 +52,22 @@
   *ngIf="page == 'preambleToForms'"
 >
   <h1 class="para-title">
-    To help us do final review of your application, We require a few information
-    from you
+    To help your loan application, We require a some information
+    from you.
   </h1>
 
   <div class="twelve wide column">
     <button (click)="changeToWorkAndLoadWidget('work-form')" class="ui button primary basic mr-3">
-      Ok
+      Ok, i am ready
     </button>
 
     <button disabled class="ui button primary basic">
-      Cancel
+      let's do this later.
     </button>
+  </div>
+
+  <div *ngIf="spinner" class="spinner-container">
+    <i class="fa fa-circle-notch fa-spin fa-3x"></i>
   </div>
 </div>
 
@@ -114,8 +118,6 @@
   id="divforIframe"
   *ngIf="page == 'iframe_container'"
 >
-
-   
       <div *ngIf="spinner" class="spinner-container">
         <i class="fa fa-circle-notch fa-spin fa-3x"></i>
       </div> 

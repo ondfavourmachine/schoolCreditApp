@@ -105,7 +105,8 @@ registerLocaleData(en);
       manageParent: reducers.parent_info,
       manageChild: reducers.children_info,
       manageCardTokenization: reducers.tokenize_process,
-      schoolDetails: reducers.schoolDetails
+      schoolDetails: reducers.schoolDetails,
+      manageLoanApplicationProcess: reducers.loanApplicationProcess
     })
   ],
   providers: [TitleCasePipe],
