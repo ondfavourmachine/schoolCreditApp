@@ -9,7 +9,8 @@ import {
   ParentAccountInfo,
   ParentCreditCardInfo,
   SchoolDetailsModel,
-  SchoolBook
+  SchoolBook,
+  SchoolBookStructure
 } from "src/app/models/data-models";
 
 // add Parent information
@@ -141,7 +142,7 @@ export class loadSchoolDetails implements Action{
 
 export class updateSchoolBooks implements Action{
   readonly type = AddSchoolBooks;
-  constructor(public payload: Array<SchoolBook>){
+  constructor(public payload: SchoolBookStructure){
 
   }
 }

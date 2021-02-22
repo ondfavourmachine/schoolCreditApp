@@ -14,7 +14,8 @@ import {
   ParentAccountInfo,
   ContinuingExistingRequestResponse,
   SchoolDetailsModel,
-  SchoolBook
+  SchoolBook,
+  SchoolBookStructure
 } from "src/app/models/data-models";
 import { timeout } from "rxjs/operators";
 // import { retry } from "rxjs/operators";
@@ -295,9 +296,8 @@ export class ChatService {
 
   getAllBooksFromSchool(schoolId, page_num = 1): 
     Observable<{
-    count: number, data: Array<SchoolBook>, 
-    end: boolean, next: null | any, prev : null | any, 
-    status: boolean, total_results_count: number
+    code: number, data: SchoolBookStructure,  
+    status: boolean, message: string
   }>{
     return this.http.get<any>(`${this.generalUrl}books?school=${schoolId}&page=${page_num}`)
   }

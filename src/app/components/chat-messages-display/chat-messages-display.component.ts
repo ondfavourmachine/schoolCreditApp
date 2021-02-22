@@ -900,6 +900,8 @@ export class ChatMessagesDisplayComponent
             return;
           }
           newString = msg.replace('Adama', this.titleCase.transform(userNameOfSchool));
+          newString = newString.split('?')[0] + ' High School. The Citadel of excellence';
+          
           messageToDisplay = new Message(`${newString ? newString : 'Adama'}`, `left`, ul);
           messageToDisplay.makeAndInsertMessage(index);
         });

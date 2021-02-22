@@ -137,6 +137,11 @@ students_range: string
 username: string
 }
 
+export interface SchoolBookStructure {
+  books_count: number;
+  books: Array<SchoolBook>
+}
+
 export interface SchoolBook{
 book_id: number
 created_at: string
