@@ -51,6 +51,7 @@ import { reducers } from "./store";
 import { VerifyParentDataComponent } from './components/verify-parent-data/verify-parent-data.component';
 // import { reducer } from "./store/reducers/parent.reducer";
 import { SchoolBooksComponent } from "./components/school-books-display/school-books.component";
+import { FilterPipe } from "./pipes/filter.pipe";
 
 registerLocaleData(en);
 
@@ -85,6 +86,7 @@ registerLocaleData(en);
     AddressFormComponent,
     ParentAccountFormComponent,
     MakeFullPaymentComponent,
+    FilterPipe,
     VerifyParentDataComponent
   ],
   imports: [

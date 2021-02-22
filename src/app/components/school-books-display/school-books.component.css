@@ -118,16 +118,14 @@
 
 .floating_search_bar{
     position: absolute;
-    /* height: 50px; */
     width: 100%;
     display: flex;
-    align-items: center;
-    top: 83%;
-
-    /* flex-shrink: 1; */
+    align-items: flex-start;
+    top: 86%;
     justify-content: space-around;
-    height: 70px;
+    height: 100%;
     padding: 0 10px 0 10px;
+    backdrop-filter: blur(1px);
    
 }
 
@@ -139,8 +137,12 @@
     border-radius: 20px;
     box-shadow: 0 2px 3px 1px rgb(17 65 101 / 0.1);
     padding-left: 2px;
+   
 }
 
+.floating_search_bar input:focus{
+    outline: 1px solid rgb(17 65 101 / 0.7);
+}
 
 
 .floating_button_parent{

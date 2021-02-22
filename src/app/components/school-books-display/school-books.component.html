@@ -1,6 +1,6 @@
 
 <div class=" text-center family-info" *ngIf="view == 'book-selection'" 
-  style="position:relative; height: 90vh; overflow:hidden;">
+  style="position:relative; height: 90vh; overflow: hidden;">
     <h1 class="para-title">Please select books for your child</h1>
 
     <div class="selection_controls" [class.show]="booksSelected.size > 0">
@@ -27,9 +27,9 @@
   
     <div [class.justify-center]="booksToDisplay.length > 2" class="ui grid " 
          [style.paddingLeft]="booksToDisplay.length > 1 && booksToDisplay.length < 3  ? '6px' : '0'"
-      style="overflow: hidden; margin: 0 auto;">
+      style="overflow-y: auto; margin: 0 auto; height: 100%;">
       <div
-        *ngFor="let book of booksToDisplay; index as i"
+        *ngFor="let book of booksToDisplay | filter:searchTerm; index as i"
         style=" max-height: 250px; padding-left: .2rem; padding-right: .2rem; position: relative;"
         class="six wide column myborder positioned-relative"
       >
@@ -118,7 +118,7 @@
     </div>
 
     <div [style.display]="booksToDisplay.length > 4 ? 'flex':'none'" class="floating_search_bar">
-      <input type="text"  placeholder="Search through books...">
+      <input type="text" [(ngModel)]="searchTerm" name="searchTerm" placeholder="Search through books...">
 
       <div class="floating_button_parent">
       

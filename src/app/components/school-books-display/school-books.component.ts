@@ -21,7 +21,8 @@ import { SchoolBook } from "src/app/models/data-models";
     booksToDisplay: SchoolBook[] = [];
     booksSelected: Set<number | string> = new Set();
     totalCostOfBooks: number;
-    noBookFromSchool
+    noBookFromSchool;
+    searchTerm: string;
     view : 'book-selection' | 'cost' | '' = 'book-selection'
     constructor(private store: Store) {
         this.previousPage.emit("firstPage");
