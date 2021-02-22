@@ -29,7 +29,8 @@ import { pluck } from "rxjs/operators";
 import { ChildrenState } from "src/app/store/reducers/children.reducer";
 
 const CreditClan = window['CreditClan'];
-const cc = CreditClan.init('z2BhpgFNUA99G8hZiFNv77mHDYcTlecgjybqDACv');
+let cc;
+CreditClan ?  cc = CreditClan.init('z2BhpgFNUA99G8hZiFNv77mHDYcTlecgjybqDACv') : cc = {};
 
 @Component({
   selector: "app-bank-partnership",
