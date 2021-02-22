@@ -900,7 +900,7 @@ export class ChatMessagesDisplayComponent
             return;
           }
           newString = msg.replace('Adama', this.titleCase.transform(userNameOfSchool));
-          messageToDisplay = new Message(`${newString}`, `left`, ul);
+          messageToDisplay = new Message(`${newString ? newString : 'Adama'}`, `left`, ul);
           messageToDisplay.makeAndInsertMessage(index);
         });
     
