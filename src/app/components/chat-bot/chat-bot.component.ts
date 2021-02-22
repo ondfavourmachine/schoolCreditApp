@@ -14,12 +14,13 @@ import { ChatService } from "src/app/services/ChatService/chat.service";
 import { GeneralService } from "src/app/services/generalService/general.service";
 // import { timeout } from "rxjs/operators";
 import { DisplayQuestion } from "src/app/models/Questionaire";
-import { Router, NavigationEnd } from "@angular/router";
-import { TimeoutError, Subscription } from "rxjs";
+import { Router } from "@angular/router";
+import { Subscription } from "rxjs";
 import { Store } from "@ngrx/store";
 import * as fromStore from "../../store";
 import * as generalActions from "../../store/actions/general.action";
 import { map } from "rxjs/operators";
+
 
 @Component({
   selector: "app-chat-bot",

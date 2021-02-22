@@ -1,5 +1,6 @@
 
-<div class=" h-100 text-center family-info" *ngIf="view == 'book-selection'">
+<div class=" text-center family-info" *ngIf="view == 'book-selection'" 
+  style="position:relative; height: 90vh; overflow:hidden;">
     <h1 class="para-title">Please select books for your child</h1>
 
     <div class="selection_controls" [class.show]="booksSelected.size > 0">
@@ -115,7 +116,22 @@
         ></i>
       </div> -->
     </div>
-  
+
+    <div [style.display]="booksToDisplay.length > 4 ? 'flex':'none'" class="floating_search_bar">
+      <input type="text"  placeholder="Search through books...">
+
+      <div class="floating_button_parent">
+      
+        <span class="floating_button_search" >
+          <i class="fa fa-search"></i>
+        </span>
+        <!-- <span class="floating_button_cancel" >
+          <i class="fa fa-times"></i>
+        </span> -->
+      </div>
+    </div>
+
+   
 </div>
 
 
@@ -145,3 +161,28 @@
   
   
 </div>
+
+<!-- <div 
+    class=" h-100 text-center family-info" *ngIf="view == 'cost'">
+    <h1 class="para-title">The Total cost of books selected is  {{ totalCostOfBooks | currency: 'NGN'}} </h1>
+
+ 
+
+<div class="button_container">
+  <button
+    (click)="completeBookSelection()"
+    class="ui button primary basic mt-4"
+  >
+    Add these books for my child
+  </button>
+
+  <button
+ 
+    class="ui button primary basic mt-1"
+  >
+    These books are not necessary
+  </button>
+    </div>
+  
+  
+</div> -->

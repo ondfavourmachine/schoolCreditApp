@@ -115,3 +115,79 @@
 .selectionInput:checked{
     box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.12);
 }
+
+.floating_search_bar{
+    position: absolute;
+    /* height: 50px; */
+    width: 100%;
+    display: flex;
+    align-items: center;
+    top: 83%;
+
+    /* flex-shrink: 1; */
+    justify-content: space-around;
+    height: 70px;
+    padding: 0 10px 0 10px;
+   
+}
+
+.floating_search_bar input{
+    flex-grow: 1;
+    margin: 0px 5px 0px 5px;
+    height: 45px;
+    border: 1px solid rgb(17 65 101 / 0.3);
+    border-radius: 20px;
+    box-shadow: 0 2px 3px 1px rgb(17 65 101 / 0.1);
+    padding-left: 2px;
+}
+
+
+
+.floating_button_parent{
+    
+    height: 50px;
+    width: 50px;
+    background-color: #114165;
+    border-radius: 50%;
+    /* left: 82%; */
+   
+}
+
+.floating_button_search, .floating_button_cancel {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.5s ease-in;
+
+}
+
+.floating_button_search{
+    transform: translateY(0px);
+}
+
+.floating_button_cancel{
+    transform: translateY(100px);
+}
+
+
+.floating_button_search.up{
+    transform: translateY(-100px);
+}
+
+.floating_button_cancel.cancel{
+    transform: translateY(-50px);
+}
+
+.floating_button_search  > .fa-search, .floating_button_cancel > .fa-times {
+    color: white;
+    font-size: 1.2rem;
+}
+
+.floating_button_parent.show{
+    transform: translateY(0px);
+}
+
+
+

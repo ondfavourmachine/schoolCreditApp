@@ -19,6 +19,7 @@ import * as generalActions from "../../store/actions/general.action";
 import * as fromStore from "../../store";
 import { ChildrenState } from "src/app/store/reducers/children.reducer";
 import { ChatService } from "src/app/services/ChatService/chat.service";
+import { pluck } from "rxjs/operators";
 
 @Component({
   selector: "app-child-information-forms",
@@ -59,6 +60,7 @@ export class ChildInformationFormsComponent
   childPicture: File;
   base64FormOfPicture: string | ArrayBuffer;
   fullpayment: boolean;
+  numberOfSchoolBooks: number = 0;
   constructor(
     private fb: FormBuilder,
     public mockstore: StoreService,
@@ -121,14 +123,19 @@ export class ChildInformationFormsComponent
         this.guardianID = guardian;
       });
 
-    this.destroy[2] = this.store
-      .select(fromStore.getCurrentChildInfo)
-      .subscribe(val => {
-        console.log(val);
-      });
+    // this.destroy[2] = this.store
+    //   .select(fromStore.getCurrentChildInfo)
+    //   .subscribe(val => {
+    //     console.log(val);
+    //   });
 
     this.fullpayment = JSON.parse(sessionStorage.getItem("fullpayment"));
     // console.log(this.fullpayment);
+    this.destroy[0]= this.store.select(fromStore.getSchoolDetailsState)
+    .pipe(pluck('school_books')).subscribe((val: SchoolBook[]) => {
+      console.log(val);
+      (val as Array<any>).length > 0 ? this.numberOfSchoolBooks = val.length : this.numberOfSchoolBooks = 0;
+    })
   }
 
   ngAfterViewInit() {
@@ -185,7 +192,7 @@ export class ChildInformationFormsComponent
 
     this.chatapi
       .updateChildrenCount({
-        guardian: guardianID,
+        guardian: guardianID || sessionStorage.getItem('guardian'),
         children_count: p.textContent != "3+" ? parseInt(p.textContent) : 4
       })
       .subscribe(val => toBeDestroyed.unsubscribe());
@@ -226,7 +233,7 @@ export class ChildInformationFormsComponent
       ...value,
       picture: this.childPicture,
       index: objectHoldingIndex.index,
-      child_book : schoolBooks
+      child_book : schoolBooks ? schoolBooks : []
     };
     this.mapOfChildrensInfo.set(this.currentChild, value);
 
@@ -410,8 +417,12 @@ export class ChildInformationFormsComponent
   }
 
   showBookSelectionPage(){
-    this.generalservice.handleSmartViewLoading({component : 'school-books', info: 'schoolBooks'})
-    this.viewToshow = 'select-books';
+    
+    if(this.numberOfSchoolBooks > 0){
+      this.generalservice.handleSmartViewLoading({component : 'school-books', info: 'schoolBooks'});
+      this.viewToshow = 'select-books'
+    }
+    else {this.moveToNextChildOrNot()};
     this.previousPage.emit("upload-image");
   }
 

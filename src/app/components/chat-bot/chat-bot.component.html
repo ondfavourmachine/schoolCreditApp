@@ -2,7 +2,8 @@
 <div #parentContainer class="parentOfChatWindow">
   <div class="chat_window">
     <div>
-      <app-chat-messages-display [messages]="messages" [referenceNumberInMsg]="referenceNumber"
+      <app-chat-messages-display
+       [messages]="messages" [referenceNumberInMsg]="referenceNumber"
         (actionDispatched)="changeActionInput($event)" (restartProcess)="callNgOnInitAgain()">
       </app-chat-messages-display>
     </div>

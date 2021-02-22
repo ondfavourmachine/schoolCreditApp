@@ -28,6 +28,8 @@ import { Router } from "@angular/router";
 import { Store } from "@ngrx/store";
 import * as fromStore from "../../store";
 import { pluck } from "rxjs/operators";
+import { SchoolDetailsModel } from "src/app/models/data-models";
+import { TitleCasePipe } from "@angular/common";
 
 
 interface GetBvnResponse {
@@ -43,6 +45,7 @@ interface GetBvnResponse {
 export class ChatMessagesDisplayComponent
   implements OnInit, AfterViewInit, OnChanges, OnDestroy {
   @Input("messages") messages: string | Object | GetBvnResponse;
+  // @Input('schoolDetails') schoolDetails: Partial<SchoolDetailsModel> = {}
   // lets come back to this input property later!
   @Input("referenceNumberInMsg") referenceNumberInMsg: any;
   @ViewChild("messagesPlaceHolder")
@@ -69,6 +72,8 @@ export class ChatMessagesDisplayComponent
     private chatservice: ChatService,
     private route: Router,
     private store: Store,
+    private titleCase: TitleCasePipe
+
   ) {
     const stages = generalservice.getStage();
     if (!stages) {
@@ -868,40 +873,21 @@ export class ChatMessagesDisplayComponent
 
   generateWelcomeMsgForReceiverOrGiver(
     ul: HTMLUListElement,
-    giverOrReceiver?: string
+    giverOrReceiver?: string,
+    schoolDetails?: Partial<SchoolDetailsModel>
   ) {
     // console.log(this.receiverIsPresent);
     setTimeout(() => {
-      // if (this.generalservice.receiver == "receiver") {
-      //   const msgs = Message.welcomeMsgForReceiver;
-      //   let messageToDisplay: Message;
-      //   msgs.forEach((msg, index) => {
-      //     if (index == 2) {
-      //       this.count = index;
-      //       messageToDisplay = new Message(
-      //         `${msg}`,
-      //         `left`,
-      //         ul,
-      //         "Yes,No i am giving",
-      //         "help,give"
-      //         // "receive,give"
-      //       );
-      //       messageToDisplay.makeAndInsertMessage(this.count);
-      //       return;
-      //     }
-      //     messageToDisplay = new Message(`${msg}`, `left`, ul);
-      //     messageToDisplay.makeAndInsertMessage(index);
-      //   });
-      // } 
-      
-        // "identify,stayanonymous"
         const msgs = Message.welcomeMessagesForGiver;
-        // debugger;
+        let newString = '';
+        const userNameOfSchool = this.route.url.split('/').length > 2 ?  this.route.url.split('/').slice(-1)[0] : undefined
         let messageToDisplay: Message;
         this.count = 0;
+        
         msgs.forEach((msg, index) => {
           if (index == 2) {
             this.count = index;
+         
             // Continue existing request
             messageToDisplay = new Message(
               `${msg}`,
@@ -913,7 +899,8 @@ export class ChatMessagesDisplayComponent
             messageToDisplay.makeAndInsertMessage(this.count);
             return;
           }
-          messageToDisplay = new Message(`${msg}`, `left`, ul);
+          newString = msg.replace('Adama', this.titleCase.transform(userNameOfSchool));
+          messageToDisplay = new Message(`${newString}`, `left`, ul);
           messageToDisplay.makeAndInsertMessage(index);
         });
     
