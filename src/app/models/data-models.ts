@@ -17,9 +17,12 @@ export interface Parent extends ParentRegistration {
   guardian: any;
   pin: any;
   OTP_sent: boolean;
-  email_verified: 0 | 1
+  email_verified: 0 | 1,
+  loan_request: null | number;
 
 }
+
+export interface LoanRequest{creditclan_request_id:null | number, eligible: boolean}
 
 export interface ParentWorkInfo {
   employer: string;
@@ -105,19 +108,21 @@ export interface ContinuingExistingRequestResponse {
     guardian: number;
     children: Array<Partial<AChild>>;
   };
+  loan_request: null | number,
   stages: schoolCreditStage
   status: boolean;
 }
 
 export interface schoolCreditStage{
 
-    child_data: 0 | 1
-    parent_account_info: 0 | 1
-    parent_address_info: 0 | 1
-    parent_creditcard_info: 0 | 1
-    parent_data: 0 | 1
-    parent_id_info: 0 | 1
-    parent_work_info: 0 | 1
+    child_data: 0 | 1,
+    parent_data: 0 | 1,
+    email_validated: 1,
+    phone_verified: 0 | 1,
+    widget_card: 0 | 1,
+    widget_cashflow: 0 | 1,
+    widget_data: 0 | 1
+ 
 }
 
 export interface SchoolDetailsModel{

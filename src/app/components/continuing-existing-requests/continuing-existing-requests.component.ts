@@ -14,7 +14,6 @@ import { HttpErrorResponse } from "@angular/common/http";
 import {
   AChild,
   Parent,
-  ParentWorkInfo,
   schoolCreditStage
 } from "src/app/models/data-models";
 import { Store } from "@ngrx/store";
@@ -269,33 +268,22 @@ export class ContinuingExistingRequestsComponent
           type,
           lga,
           gender,
+          loan_request: val.loan_request,
           guardian: val.data.guardian
         };
         this.guardianID = val.data.guardian;
         this.store.dispatch(new generalActions.addParents(infoToStore));
-        if (
-          val.data.guardian_data.employer &&
-          val.data.guardian_data.employer.length > 1
-        ) {
-          const { employer, role, annual_salary } = val.data.guardian_data;
-          const parentEmployerDetails: ParentWorkInfo = {
-            employer,
-            role,
-            annual_salary
-          };
-          this.store.dispatch(
-            new generalActions.updateParentWorkInformation(
-              parentEmployerDetails
-            )
-          );
-        }
-        try {
-          await this.chatservice.dispatchOTP({ phone });
-        } catch (error) {
-          // console.log(error);
+        this.store.dispatch(new generalActions.updateParentWidgetCardStage(stages.widget_card));
+        this.store.dispatch(new generalActions.updateParentWidgetDataStage(stages.widget_data));
+        this.store.dispatch(new generalActions.updateParentWidgetCashflowStage(stages.widget_cashflow))
+        if(stages.phone_verified == 0){
+          try {
+            await this.chatservice.dispatchOTP({ phone });
+          } catch (error) {
+            console.log(error);
+          }
         }
         const childData = val.data.children;
-        // console.log(childData);
         childData.length > 0 ? this.handleDataInsideChildren(childData) : null;
         this.continue(returnVal, val.data.guardian_data);
       },
@@ -314,10 +302,9 @@ export class ContinuingExistingRequestsComponent
       "email_validated",
       "phone_verified",
       "child_data",
-      "parent_work_info",
-      "parent_account_info",
-      "parent_id_info",
-      "parent_creditcard_info"
+      "widget_data",
+      "widget_cashflow",
+      "widget_card",
     ];
     let returnVal;
     for (let element of arrangedStages) {
@@ -344,7 +331,7 @@ export class ContinuingExistingRequestsComponent
     this.generalservice.nextChatbotReplyToGiver = undefined;
     // console.log(stage);
     switch (stage) {
-      case "parent_work_info":
+      case "widget_data":
         this.generalservice.nextChatbotReplyToGiver = undefined;
         this.response = new replyGiversOrReceivers(
           `I see you previously provided your children's info`,
@@ -432,12 +419,12 @@ export class ContinuingExistingRequestsComponent
           this.generalservice.responseDisplayNotifier(nextresponse);
         }, 500);
         break;
-      case "parent_account_info":
+      case "widget_cashflow":
         this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
         this.generalservice.handleFlowController("");
         this.generalservice.nextChatbotReplyToGiver = undefined;
         const responseFromParent = new replyGiversOrReceivers(
-          `Thanks for this information. A financial institution is preparing your final offer`,
+          `Thanks for this information. A financial institution is preparing your final offer.`,
           "left",
           "",
           "prevent"
@@ -447,7 +434,7 @@ export class ContinuingExistingRequestsComponent
         setTimeout(() => {
           this.generalservice.nextChatbotReplyToGiver = undefined;
           const chatbotResponse = new replyGiversOrReceivers(
-            `They will also like to know which Which account will we be debiting you from?`,
+            `They will also like to know which account will we be debiting you from?`,
             "left",
             "Add Account",
             `addaccount`,
@@ -456,34 +443,13 @@ export class ContinuingExistingRequestsComponent
           this.generalservice.responseDisplayNotifier(chatbotResponse);
         }, 800);
         break;
-      case "parent_id_info":
-        this.response = new replyGiversOrReceivers(
-          `Thank you for providing your details,${data.full_name}. However you have not submitted a valid id.`,
-          "left",
-          "",
-          ``
-        );
-        this.generalservice.handleFlowController("");
-        this.generalservice.responseDisplayNotifier(this.response);
-        this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
-        setTimeout(() => {
-          this.generalservice.nextChatbotReplyToGiver = undefined;
-          const chatbotResponse = new replyGiversOrReceivers(
-            `Would you like to submit a valid ID now?`,
-            "left",
-            "Yes i'm ready, No later",
-            `validid,noidnow`,
-            "prevent"
-          );
-          this.generalservice.responseDisplayNotifier(chatbotResponse);
-        }, 800);
-        break;
+      
       case "phone_verified":
         this.spinner = false;
         this.view = "phone_verify_second";
 
         break;
-      case "parent_creditcard_info":
+      case "widget_card":
         this.response = new replyGiversOrReceivers(
           `Thank you for providing your details,${data.full_name}. However we would like to get your card details. 
          This is a secure process so be rest assured we will not share your information with anybody.`,

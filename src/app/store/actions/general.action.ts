@@ -3,24 +3,21 @@ import {
   ParentRegistration,
   Parent,
   AChild,
-  ParentWorkInfo,
-  ParentAddressInfo,
-  ParentIdInfo,
   ParentAccountInfo,
-  ParentCreditCardInfo,
   SchoolDetailsModel,
-  SchoolBook,
-  SchoolBookStructure
+ 
+  SchoolBookStructure,
+  LoanRequest
 } from "src/app/models/data-models";
 
 // add Parent information
 // ** types **
 export const addParentInfo = "[parents] ADD PARENTS";
-export const updateParentWorkInfo = "[parents] UPDATE PARENT WORK INFO";
-export const updateParentAddress = "[parents] UPDATE PARENT ADDRESS";
-export const updataParentID = "[parents] UPDATE PARENT IDENTIFICATION";
+export const updateWidgetData = "[parents] UPDATE WIDGET DATA STAGE";
+export const updateWidgetCard = "[parents] UPDATE WIDGET CARD";
+export const updateWidgetCashflow = "[parents] UPDATE WIDGET CASH FLOW";
+export const updateParentLoanStatus = "[parents] UPDATE LOAN REQUEST";
 export const updateParentAcctInformation = "[parents] UPDATE PARENT ACCOUNT";
-export const updateParentCardInformation = "[parents] UPDATE PARENT CARD"
 // 
 
 // action classes for parent
@@ -30,19 +27,24 @@ export class addParents implements Action {
   constructor(public payload: ParentRegistration | Parent) {}
 }
 
-export class updateParentWorkInformation implements Action {
-  readonly type = updateParentWorkInfo;
-  constructor(public payload: ParentWorkInfo) {}
+export class updateParentWidgetDataStage implements Action {
+  readonly type = updateWidgetData;
+  constructor(public payload: 0 | 1 ) {}
 }
 
-export class updateParentAddressInfo implements Action {
-  readonly type = updateParentAddress;
-  constructor(public payload: Partial<ParentAddressInfo> & Partial<Parent>) {}
+export class updateParentWidgetCashflowStage implements Action {
+  readonly type = updateWidgetCashflow;
+  constructor(public payload: 0 | 1) {}
 }
 
-export class updateParentIDInformation implements Action {
-  readonly type = updataParentID;
-  constructor(public payload: Partial<ParentIdInfo>) {}
+export class updateParentWidgetCardStage implements Action {
+  readonly type = updateWidgetCard;
+  constructor(public payload: 0 | 1) {}
+}
+
+export class updateParentLoanRequest implements Action{
+  readonly type = updateParentLoanStatus;
+  constructor(public payload: LoanRequest){}
 }
 
 export class updateParentAcctInfo implements Action {
@@ -50,16 +52,13 @@ export class updateParentAcctInfo implements Action {
   constructor(public payload: Partial<ParentAccountInfo>) {}
 }
 
-export class updateParentCreditCardInfo implements Action {
-  readonly type = updateParentCardInformation;
-  constructor(public payload: Partial<ParentCreditCardInfo>) {}
-}
+
 
 export type parentsAction =
   | addParents
-  | updateParentWorkInformation
-  | updateParentAddressInfo
-  | updateParentIDInformation | updateParentAcctInfo | updateParentCreditCardInfo;
+  | updateParentWidgetCardStage
+  | updateParentWidgetCashflowStage
+  | updateParentWidgetDataStage | updateParentLoanRequest | updateParentAcctInfo;
 
 
 

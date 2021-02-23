@@ -57,9 +57,9 @@ export class WorkFormComponent implements OnInit, OnDestroy {
         // console.log(val);
         const { employer, role, annual_salary } = val.data;
         let objToStore = { employer, role, annual_salary };
-        this.store.dispatch(
-          new generalActions.updateParentWorkInformation(objToStore)
-        );
+        // this.store.dispatch(
+        //   new generalActions.updateParentWorkInformation(objToStore)
+        // );
         this.spinner = false;
         this.changeUpTheViewTwo.emit("bvn");
       },

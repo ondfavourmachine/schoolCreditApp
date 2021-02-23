@@ -22,6 +22,7 @@ import { Subscription } from "rxjs";
 })
 export class ParentAccountFormComponent implements OnInit, AfterViewInit, OnDestroy {
   @Output("previousPage") previousPage = new EventEmitter<string>();
+  @Output() changeUpTheViewThree = new EventEmitter<string>();
   page: "" | "PIN" | "attach-card" | "info" = "";
   bankAccountForm: FormGroup;
   banks: Bank[] = [];
@@ -202,7 +203,7 @@ export class ParentAccountFormComponent implements OnInit, AfterViewInit, OnDest
           })
         );
         this.spinner = false;
-        this.page = "info";
+        this.changeUpTheViewThree.emit('pre_bankstatement');
       },
       err => {
         this.generalservice.errorNotification(
@@ -260,15 +261,15 @@ export class ParentAccountFormComponent implements OnInit, AfterViewInit, OnDest
           expiry_month,
           expiry_year
         } = val.data;
-        this.store.dispatch(
-          new generalActions.updateParentCreditCardInfo({
-            cvv,
-            card_name,
-            card_number,
-            expiry_month,
-            expiry_year
-          })
-        );
+        // this.store.dispatch(
+        //   new generalActions.updateParentCreditCardInfo({
+        //     cvv,
+        //     card_name,
+        //     card_number,
+        //     expiry_month,
+        //     expiry_year
+        //   })
+        // );
         this.completeThis();
       },
       err => {

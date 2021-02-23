@@ -185,12 +185,12 @@ export class ChatService {
   }
 
   // get bank statement url for iframe
-  getIframeSrcForBankstatement(){
+  getIframeSrcForBankstatement(request_id, account: {account_name: string, account_number: string, bank_id: any}){
     const headers = new HttpHeaders({
       'x-api-key': 'z2BhpgFNUA99G8hZiFNv77mHDYcTlecgjybqDACv'
     })
     return this.http.post<{url: string, status: boolean, token: string, message: string}>
-   (`https://mobile.creditclan.com/api/v3/bankstatement/initiate`, {request_id: "57487", has_online_banking : '1'}, {headers}).toPromise()
+   (`https://mobile.creditclan.com/api/v3/bankstatement/initiate`, {request_id: request_id || "57487", has_online_banking : '1', account}, {headers}).toPromise()
   }
   
   // iframe for card tokenisation
@@ -200,6 +200,14 @@ export class ChatService {
     })
     return this.http.post<{url: string, status: boolean, token: string, message: string}>
     (`https://mobile.creditclan.com/api/v3/card/tokenization`, {request_id: "57487"}, {headers}).toPromise()
+  }
+
+  // send the new Creditclan requestId to nebechi
+
+  updateCreditClanRequestId(request_id: any, creditclanrequestid: any ): Promise<any>{
+    return this.http.patch<any>(`${this.generalUrl}request/${request_id}`, {
+      creditclan_request_id: creditclanrequestid
+    }).toPromise();
   }
 
   // save parent work information
@@ -313,9 +321,9 @@ export class ChatService {
   
   // sendLoanRequest
   sendLoanRequest(obj: {school_id: any, guardian_id: any, loan_amount: string,
-        child_data: {id: string, amount: string}[]}): Promise<GenericResponse>{
+        child_data: {id: string, amount: string}[]}): Promise<{message: string; request: number; status:boolean}>{
     // child_data: {id: string, amount: string}[]
-    return this.http.post<GenericResponse>(`${this.generalUrl}loan/request`, obj).toPromise()
+    return this.http.post<any>(`${this.generalUrl}loan/request`, obj).toPromise()
   }
 
   // fetch list of banks

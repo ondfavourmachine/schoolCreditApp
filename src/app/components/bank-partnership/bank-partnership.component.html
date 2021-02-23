@@ -57,7 +57,7 @@
   </h1>
 
   <div class="twelve wide column">
-    <button (click)="changeToWorkAndLoadWidget('work-form')" class="ui button primary basic mr-3">
+    <button (click)="changeToWorkAndLoadWidget('work-form')" class="ui button primary basic mr-3 mb-3">
       Ok, i am ready
     </button>
 
@@ -73,7 +73,7 @@
 
 <div
   class="flex flex-column justify-center align-center h-100 text-center family-info"
-  *ngIf="page == 'bank_statement'"
+  *ngIf="page == 'card_tokenisation'"
 >
   <h1 class="para-title">
     Thank you for filling your data. We would like to tokenize your card to enable smooth payment 
@@ -96,7 +96,9 @@
   *ngIf="page == 'pre_bankstatement'"
 >
   <h1 class="para-title">
-    Thank you for filling your data. We would like to analyse your statement. Please select your preferred method 
+    Thank you for filling your bank details. 
+    We would like to analyse your bank statement to determine if you can pay this loan.
+    Please select your preferred method for analysis. 
   </h1>
 
   <div class="twelve wide column">
@@ -142,6 +144,39 @@
 
   <app-address-form (changeUpTheViewThree)="page = $event"></app-address-form>
 </div>
+
+<div class=" h-100 text-center family-info" *ngIf="page == 'preamble_to_bankdetails'">
+  <h1 class="para-title">
+    We would like to know what account your loan repayment will be debited from?
+  </h1>
+
+  <div class="twelve wide column">
+    <button (click)="page = 'bank-details'" class="ui button primary basic mr-3 mb-3">
+      Ok, let's go
+    </button>
+
+    <button disabled class="ui button primary basic">
+      let's do this later.
+    </button>
+  </div>
+  
+
+
+</div>
+
+<div class=" h-100 text-center family-info" *ngIf="page == 'bank-details'">
+  <h1 class="para-title">
+   Please enter your bank details
+  </h1>
+  
+
+<app-parent-account-form
+ (changeUpTheViewThree)="changeUpView($event)">
+</app-parent-account-form>
+
+</div>
+
+
 
 <!-- BVN -->
 <div class=" h-100 text-center family-info" *ngIf="page == 'bvn'">

@@ -25,7 +25,7 @@ import { Subscription } from "rxjs";
 import { Store } from "@ngrx/store";
 import * as generalActions from "../../store/actions/general.action";
 import * as fromStore from "../../store";
-import { pluck } from "rxjs/operators";
+import { map, pluck } from "rxjs/operators";
 import { ChildrenState } from "src/app/store/reducers/children.reducer";
 
 const CreditClan = window['CreditClan'];
@@ -44,12 +44,12 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
     | ""
     | "bvn"
     | "valid-id"
-    | "bank-details"
+    | "bank-details" | "preamble_to_bankdetails"
     | "checking"
     | "enter-id"
     | "result"
     | "work-form"
-    | "address-info" | 'bank_statement' | 'iframe_container'
+    | "address-info" | 'bank_statement' | 'iframe_container' | "card_tokenisation"
     | "preambleToForms" | 'pre_bankstatement' = "preambleToForms";
   text: string = "Sending Loan request....";
   pageViews: string[] = ["work-form"];
@@ -60,6 +60,7 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
   spinner: boolean = false;
   parentDetails: Parent;
   childInfo: any;
+  parentRequestAndAccount: {}
   smartView: { componentToLoad: string; info: any } = {
     componentToLoad: undefined,
     info: undefined
@@ -75,23 +76,23 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
   ) {}
 
   ngOnChanges() {
-    this.destroy[1] = this.generalservice.smartView$.subscribe(val => {
-      if (val) {
-        if (
-          (this.elem.nativeElement.tagName as string)
-            .trim()
-            .substring(4)
-            .toLowerCase()
-            .includes(val.component)
-        ) {
-          this.smartView = { ...val };
-          this.page = this.smartView.info;
-        }
-      } else {
-        this.page = "preambleToForms";
-        // this.page = 'checking'
-      }
-    });
+    // this.destroy[1] = this.generalservice.smartView$.subscribe(val => {
+    //   if (val) {
+    //     if (
+    //       (this.elem.nativeElement.tagName as string)
+    //         .trim()
+    //         .substring(4)
+    //         .toLowerCase()
+    //         .includes(val.component)
+    //     ) {
+    //       this.smartView = { ...val };
+    //       this.page = this.smartView.info;
+    //     }
+    //   } else {
+    //     this.page = "preambleToForms";
+    //     // this.page = 'checking'
+    //   }
+    // });
   }
 
   async ngOnInit() {
@@ -108,6 +109,20 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
       .subscribe(val => {
         this.parentDetails = val as Parent;
       });
+
+    this.destroy[1] = this.store.select(fromStore.getParentState)
+    .pipe(map(val => {
+      const parent = val as any;
+      return {
+        request_id: parent['parent_loan_request_status']['creditclan_request_id'],
+        account: parent['parent_account_info']
+      }
+    }))
+    .subscribe(
+      val => {
+        this.parentRequestAndAccount = {...val};
+      }
+    )
     let childArray:Array<Partial<AChild>>
     this.destroy[2] = this.store
       .select(fromStore.getCurrentChildState)
@@ -125,22 +140,25 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
           amount: element.tuition_fees
         }
       })
-    try {
-      const res = await this.chatservice.sendLoanRequest({
-        school_id: this.parentDetails.school_id || 1,
-        guardian_id: this.parentDetails.guardian,
-        loan_amount: this.loanAmount as string,
-        child_data: arrayOfChildId
-      });
-      const { message } = res;
-      if (message == "request created!")
-        this.text = "Awaiting response from financial institutions....";
-    } catch (error) {
-      this.text = "Sending Loan request ...";
-      this.generalservice.errorNotification(
-        "An error occured while sending your loan request!"
-      );
-    }
+      if(this.parentDetails.loan_request == null){
+        try {
+          const res = await this.chatservice.sendLoanRequest({
+            school_id: this.parentDetails.school_id || 1,
+            guardian_id: this.parentDetails.guardian,
+            loan_amount: this.loanAmount as string,
+            child_data: arrayOfChildId
+          });
+          const { message } = res;
+          if (message == "request created!")
+            this.text = "Awaiting response from financial institutions....";
+        } catch (error) {
+          this.text = "Sending Loan request ...";
+          this.generalservice.errorNotification(
+            "An error occured while sending your loan request!"
+          );
+        }
+      }
+    
     // this.chatservice.getFinancialInstitution().subscribe(val => {
     //   this.result = val;
     //   this.smartView.info
@@ -191,13 +209,13 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
     this.chatservice.saveAndVerifyParentID(parentID).subscribe(
       val => {
         const { preferred_ID, ID_number, BVN } = val.data;
-        this.store.dispatch(
-          new generalActions.updateParentIDInformation({
-            preferred_ID,
-            ID_number,
-            BVN
-          })
-        );
+        // this.store.dispatch(
+        //   new generalActions.updateParentIDInformation({
+        //     preferred_ID,
+        //     ID_number,
+        //     BVN
+        //   })
+        // );
         this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
         this.generalservice.handleFlowController("");
         this.generalservice.nextChatbotReplyToGiver = undefined;
@@ -264,9 +282,9 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
           }
 
           const updateTheStore: Partial<ParentIdInfo> = { BVN: form.value.bvn };
-          this.store.dispatch(
-            new generalActions.updateParentIDInformation(updateTheStore)
-          );
+          // this.store.dispatch(
+          //   new generalActions.updateParentIDInformation(updateTheStore)
+          // );
           this.spinner = false;
           this.page = "valid-id";
         },
@@ -308,7 +326,10 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
     const modalBody = document.querySelector('.modal-body') as HTMLElement
     this.spinner = true;
     this.page = 'iframe_container';
-    const res = await this.chatservice.getIframeSrcForBankstatement();
+    const res = await this.chatservice.getIframeSrcForBankstatement(
+      this.parentRequestAndAccount['request_id'],
+       this.parentRequestAndAccount['account']
+      );
     const {url} = res;
     try{ 
       const iframe = document.createElement('iframe');
@@ -327,7 +348,7 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
-  launchWidget() {
+   launchWidget() {
     this.spinner = true;
     let totalFees: number = 0;
     const disconnect = this.store
@@ -395,9 +416,17 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
       this.spinner = false;
       disconnect.unsubscribe();
     });
-    cc.on('request', (data) => {
+    cc.on('request', async (data) => {
       //  if the request was created successfully
       console.log('Request..', data);
+      const loanRequest = {creditclan_request_id: data.dd, eligible: data.eligible};
+      this.store.dispatch(new generalActions.updateParentLoanRequest(loanRequest));
+      this.spinner = true;
+      this.page = 'preamble_to_bankdetails';
+      await this.chatservice.updateCreditClanRequestId(this.parentDetails.loan_request, loanRequest.creditclan_request_id);
+      this.spinner = false;
+     
+      
     });
     cc.on('cancel', (data) => {
       //  if the user cancels the widget / clicks the close button
@@ -409,6 +438,11 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
 
   kickStartResponse(){
     (document.querySelector('.fakeButton') as HTMLElement).click();
+  }
+
+  changeUpView(event: any){
+    // this.generalservice.handleSmartViewLoading({})
+    this.page = event;
   }
 
   ngOnDestroy() {

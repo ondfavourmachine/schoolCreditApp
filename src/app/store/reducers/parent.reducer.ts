@@ -1,31 +1,28 @@
 import {
+  LoanRequest,
   Parent,
-  ParentWorkInfo,
-  ParentAddressInfo,
-  ParentIdInfo,
   ParentAccountInfo,
-  ParentCreditCardInfo
 } from "src/app/models/data-models";
 import * as generalActions from "../actions/general.action";
 
 // interface for state
 export interface ParentState {
   parent_info: Partial<Parent>;
-  parent_work_info: Partial<ParentWorkInfo>;
-  parent_address_info: Partial<ParentAddressInfo>;
-  parent_ID_info: Partial<ParentIdInfo>;
+  widget_data: 0 | 1,
+  widget_cashflow: 0 | 1,
+  widget_card: 0 | 1,
+  parent_loan_request_status: Partial<LoanRequest>,
   parent_account_info: Partial<ParentAccountInfo>;
-  parent_creditcard_info: Partial<ParentCreditCardInfo>;
 }
 
 // Application state
 export const initialState: ParentState = {
   parent_info: { type: "1", OTP_sent: false },
-  parent_work_info: {},
-  parent_address_info: {},
-  parent_ID_info: {},
-  parent_account_info: {},
-  parent_creditcard_info: {}
+  widget_data: 0,
+  widget_cashflow: 0,
+  widget_card: 0,
+  parent_loan_request_status: {creditclan_request_id: null, eligible: false},
+  parent_account_info: {}
 };
 
 export function reducer(
@@ -40,24 +37,24 @@ export function reducer(
       };
     }
 
-    case generalActions.updateParentWorkInfo: {
+    case generalActions.updateWidgetData: {
       return {
         ...state,
-        parent_work_info: { ...state.parent_work_info, ...action.payload }
+        widget_data: action.payload
       };
     }
 
-    case generalActions.updateParentAddress: {
+    case generalActions.updateWidgetCashflow: {
       return {
         ...state,
-        parent_address_info: { ...state.parent_address_info, ...action.payload }
+        widget_cashflow: action.payload
       };
     }
 
-    case generalActions.updataParentID: {
+    case generalActions.updateWidgetCard: {
       return {
         ...state,
-        parent_ID_info: { ...state.parent_ID_info, ...action.payload }
+        widget_card: action.payload
       };
     }
 
@@ -68,15 +65,14 @@ export function reducer(
       };
     }
 
-    case generalActions.updateParentCardInformation: {
+    case generalActions.updateParentLoanStatus: {
       return {
         ...state,
-        parent_creditcard_info: {
-          ...state.parent_creditcard_info,
-          ...action.payload
-        }
+        parent_loan_request_status: { ...state.parent_loan_request_status, ...action.payload }
       };
     }
+
+    
   }
 
   return state;

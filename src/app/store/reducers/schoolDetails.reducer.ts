@@ -24,7 +24,7 @@ import * as generalActions from "../actions/general.action";
   ): SchoolDetails {
     switch (action.type) {
       case generalActions.AddSchoolBooks: {
-        console.log(action.payload);
+        // console.log(action.payload);
         return {
           ...state,
           school_books: [...state.school_books, ...action.payload.books]

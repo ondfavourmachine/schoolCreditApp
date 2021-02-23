@@ -79,9 +79,9 @@ export class AddressFormComponent implements OnInit, OnDestroy {
         // console.log(val);
         const { state, bus_stop, city, address, lga, post_code } = val.data;
         let objToStore = { state, bus_stop, city, address, lga, post_code };
-        this.store.dispatch(
-          new generalActions.updateParentAddressInfo(objToStore)
-        );
+        // this.store.dispatch(
+        //   new generalActions.updateParentAddressInfo(objToStore)
+        // );
         this.spinner = false;
         this.changeUpTheViewThree.emit("bvn");
       },
