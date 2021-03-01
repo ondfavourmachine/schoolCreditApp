@@ -14,6 +14,7 @@ import {
 import * as generalActions from "../../store/actions/general.action";
 import * as fromStore from "../../store";
 import { Subscription } from "rxjs";
+import { tap } from "rxjs/operators";
 
 @Component({
   selector: "app-parent-account-form",
@@ -30,6 +31,7 @@ export class ParentAccountFormComponent implements OnInit, AfterViewInit, OnDest
   guardianID: string = undefined;
   destroy: Subscription[] = [];
   creditCardForm: FormGroup;
+  requestid: string;
   PINFORM: FormGroup;
   currentParentPhone: string;
   smartView: { componentToLoad: string; info: any } = {
@@ -94,6 +96,16 @@ export class ParentAccountFormComponent implements OnInit, AfterViewInit, OnDest
         this.guardianID = guardian;
         this.currentParentPhone = phone;
       });
+
+
+      this.destroy[1] = this.store.select(fromStore.getParentState)
+      .pipe(tap(val => {
+        console.log(val);
+        const parent = val as any;
+          this.requestid = parent['parent_loan_request_status']['creditclan_request_id'];
+        
+      }))
+      .subscribe()
   }
 
 
@@ -106,7 +118,7 @@ export class ParentAccountFormComponent implements OnInit, AfterViewInit, OnDest
   async insertIframeToDom(){
     const modalBody = document.querySelector('.modal-body') as HTMLElement
     this.spinner = true;
-    const res = await this.chatservice.getIframeSrcForCardTokenization();
+    const res = await this.chatservice.getIframeSrcForCardTokenization(this.requestid);
     const {url} = res
     try{
       const iframe = document.createElement('iframe');

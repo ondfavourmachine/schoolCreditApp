@@ -194,12 +194,17 @@ export class ChatService {
   }
   
   // iframe for card tokenisation
-  getIframeSrcForCardTokenization(): Promise<{url: string, status: boolean, token: string, message: string}>{
+  getIframeSrcForCardTokenization(requestid): Promise<{url: string, status: boolean, token: string, message: string}>{
     const headers = new HttpHeaders({
       'x-api-key': 'z2BhpgFNUA99G8hZiFNv77mHDYcTlecgjybqDACv'
     })
     return this.http.post<{url: string, status: boolean, token: string, message: string}>
-    (`https://mobile.creditclan.com/api/v3/card/tokenization`, {request_id: "57487"}, {headers}).toPromise()
+    (`https://mobile.creditclan.com/api/v3/card/tokenization`, {request_id: requestid || "57487"}, {headers}).toPromise()
+  }
+
+  // update Nebechi of Parent Widget stages
+  updateBackEndOfSuccessfulCompletionOfWidgetStage(requestid: string, stage: string): Promise<GenericResponse>{
+    return this.http.patch<GenericResponse>(`${this.generalUrl}loan/${requestid}/stage`, {stage}).toPromise()
   }
 
   // send the new Creditclan requestId to nebechi

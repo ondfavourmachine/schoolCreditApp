@@ -19,7 +19,7 @@ import { Subscription } from "rxjs";
 import { Store } from "@ngrx/store";
 import * as fromStore from "../../store";
 import * as generalActions from "../../store/actions/general.action";
-import { map } from "rxjs/operators";
+import { map, tap } from "rxjs/operators";
 
 
 @Component({
@@ -79,8 +79,11 @@ export class ChatBotComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     // this.store.select(fromStore.getSchoolDetailsState).subscribe(val => console.log(val))
 
     this.destroyAnything[1]= this.store.select(fromStore.getSchoolDetailsState)
-    .pipe(map((val) => {
-      // console.log(val);
+    .pipe(tap(val => {
+      if(val["school_Info"].hasOwnProperty('id') && !sessionStorage.getItem('school_avatar')){
+        sessionStorage.setItem('school_avatar', val["school_Info"].picture);
+      }
+    }), map((val) => {
       return {schoolInfoLoadState : val['school_Info_Load_state'], school_id: val['school_Info']['id'], }
     }))
     .subscribe((val) => this.fetchSchoolBooks(val.school_id, val.schoolInfoLoadState))

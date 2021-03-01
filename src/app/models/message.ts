@@ -98,9 +98,10 @@ export class Message {
       firstAfterPArentDiv.className = "chat-box__inner-wrapper";
 
       // set image
-      avatarImage.src = `../../../assets/chatbotImages/${
-        this.direction == "left" ? "avatar.png" : "avatar2.png"
-      }`;
+      avatarImage.src = this.getSchoolPicture(this.direction);
+      // `../../../assets/chatbotImages/${
+      //   this.direction == "left" ? "avatar.png" : "avatar2.png"
+      // }`;
       avatarImage.className = "avatar";
 
       // secondDiv after image
@@ -141,6 +142,7 @@ export class Message {
       this.htmlElement.insertAdjacentElement("beforeend", parentWrapperDiv);
     } catch (e) {
       // debugger;
+      // "../../../assets/chatbotImages/avatar.png"
       if (count == 0) {
         // console.log(0);
         const html = `
@@ -149,7 +151,7 @@ export class Message {
         }">  
         <div class="chat-box__inner-wrapper">
           <img
-            src="../../../assets/chatbotImages/avatar.png"
+            src= ${this.getSchoolPicture(this.direction)}
             alt=""
             class="avatar"
           />
@@ -270,16 +272,18 @@ export class Message {
         //  avatarImage.className = "avatar";
         // do nothing
       } else {
-        avatar.src = `../../../assets/chatbotImages/${
-          this.direction == "left" ? "avatar.png" : "avatar2.png"
-        }`;
+        avatar.src = this.getSchoolPicture(this.direction);
+        // `../../../assets/chatbotImages/${
+        //   this.direction == "left" ? "avatar.png" : "avatar2.png"
+        // }`;
         avatar.className = "avatar";
         parentDiv.insertAdjacentElement("afterbegin", avatar);
       }
     } else {
-      avatar.src = `../../../assets/chatbotImages/${
-        this.direction == "left" ? "avatar.png" : "avatar2.png"
-      }`;
+      avatar.src = this.getSchoolPicture(this.direction);
+      // avatar.src = `../../../assets/chatbotImages/${
+      //   this.direction == "left" ? "avatar.png" : "avatar2.png"
+      // }`;
       avatar.className = "avatar";
       parentDiv.insertAdjacentElement("afterbegin", avatar);
     }
@@ -336,6 +340,13 @@ export class Message {
         break;
     }
     return result;
+  }
+
+  getSchoolPicture(direction: string){
+    if(sessionStorage.getItem('school_avatar')){
+      return direction == 'left' ? sessionStorage.getItem('school_avatar') : `../../../assets/chatbotImages/avatar.png`
+    }
+  //  return  sessionStorage.getItem('school_avatar') ? sessionStorage.getItem('school_avatar') : ''
   }
 
   handleButtonClick(event: MouseEvent) {

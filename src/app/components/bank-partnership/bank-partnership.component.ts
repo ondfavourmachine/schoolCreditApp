@@ -112,6 +112,7 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
 
     this.destroy[1] = this.store.select(fromStore.getParentState)
     .pipe(map(val => {
+      console.log(val);
       const parent = val as any;
       return {
         request_id: parent['parent_loan_request_status']['creditclan_request_id'],
@@ -165,6 +166,14 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
     //     ? (this.page = this.smartView.info)
     //     : (this.page = "");
     // });
+
+    window.addEventListener('message', async (e)=> {
+        if(e['origin'] == 'https://bankstatementwidget.creditclan.com'){
+          console.log(e);
+          await this.chatservice.updateBackEndOfSuccessfulCompletionOfWidgetStage(this.parentRequestAndAccount['request_id'], '2');
+          this.page = 'card_tokenisation';
+        }
+    })
   }
 
   changeToWorkAndLoadWidget(page: string){
@@ -303,7 +312,8 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
     const modalBody = document.querySelector('.modal-body') as HTMLElement
     this.spinner = true;
     this.page = 'iframe_container';
-    const res = await this.chatservice.getIframeSrcForCardTokenization();
+    console.log(this.parentRequestAndAccount);
+    const res = await this.chatservice.getIframeSrcForCardTokenization(this.parentRequestAndAccount['request_id']);
     const {url} = res;
     try{ 
       const iframe = document.createElement('iframe');
@@ -421,9 +431,9 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
       console.log('Request..', data);
       const loanRequest = {creditclan_request_id: data.dd, eligible: data.eligible};
       this.store.dispatch(new generalActions.updateParentLoanRequest(loanRequest));
-      this.spinner = true;
       this.page = 'preamble_to_bankdetails';
       await this.chatservice.updateCreditClanRequestId(this.parentDetails.loan_request, loanRequest.creditclan_request_id);
+      await this.chatservice.updateBackEndOfSuccessfulCompletionOfWidgetStage(data.dd, '1');
       this.spinner = false;
      
       
@@ -438,6 +448,10 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
 
   kickStartResponse(){
     (document.querySelector('.fakeButton') as HTMLElement).click();
+  }
+
+  showResponseToCompleteBSAnalysis(){
+
   }
 
   changeUpView(event: any){
