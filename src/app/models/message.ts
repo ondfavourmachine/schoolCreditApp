@@ -346,6 +346,8 @@ export class Message {
     if(sessionStorage.getItem('school_avatar')){
       return direction == 'left' ? sessionStorage.getItem('school_avatar') : `../../../assets/chatbotImages/avatar.png`
     }
+
+    console.log('i am here!');
   //  return  sessionStorage.getItem('school_avatar') ? sessionStorage.getItem('school_avatar') : ''
   }
 

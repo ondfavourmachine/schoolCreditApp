@@ -22,6 +22,7 @@ import * as generalActions from "../../store/actions/general.action";
 import { pluck } from "rxjs/operators";
 import { Subscription } from "rxjs";
 
+
 interface checkWhoIsContinuing {
   phone?: string;
   email?: string;
@@ -61,6 +62,7 @@ export class ContinuingExistingRequestsComponent
   phoneOTPForm: FormGroup;
   destroy: Subscription[] = [];
   parentDetails: Partial<Parent>;
+  loanAmountByParent: number;
   constructor(
     public generalservice: GeneralService,
     private fb: FormBuilder,
@@ -88,10 +90,19 @@ export class ContinuingExistingRequestsComponent
       OTP_for_phone: ["", Validators.required]
     });
 
-    this.destroy[1] = this.store
+    this.destroy[0] = this.store
       .select(fromStore.getParentState)
       .pipe(pluck("parent_info"))
       .subscribe(val => (this.parentDetails = val as Partial<Parent>));
+
+      this.destroy[1] = this.store
+      .select(fromStore.getCurrentChildState)
+      .pipe(pluck('total_tuition_fees'))
+      .subscribe(val => this.loanAmountByParent = val as number);
+
+      // this.destroy[2] = this.store
+      // .select(fromStore.getParentState)
+      // .subscribe(val => console.log(val))
   }
 
   ngAfterViewInit() {
@@ -112,6 +123,7 @@ export class ContinuingExistingRequestsComponent
     const returnVal = this.rearrangeStaInOrderFashion(this
       .listOfStagesForLater as schoolCreditStage);
     this.continue(returnVal, this.parentDetails);
+    
   }
 
   async submitContactPhone(form: FormGroup) {
@@ -241,7 +253,7 @@ export class ContinuingExistingRequestsComponent
     this.chatservice.confirmParentPIN(formToSubmit as any).subscribe(
       async val => {
         const { stages } = val;
-        const returnVal = this.rearrangeStaInOrderFashion(stages);
+      
         // console.log(stages, returnVal);
         this.listOfStagesForLater = { ...stages };
         this.checking("stop");
@@ -272,10 +284,8 @@ export class ContinuingExistingRequestsComponent
           guardian: val.data.guardian
         };
         this.guardianID = val.data.guardian;
+       
         this.store.dispatch(new generalActions.addParents(infoToStore));
-        this.store.dispatch(new generalActions.updateParentWidgetCardStage(stages.widget_card));
-        this.store.dispatch(new generalActions.updateParentWidgetDataStage(stages.widget_data));
-        this.store.dispatch(new generalActions.updateParentWidgetCashflowStage(stages.widget_cashflow))
         if(stages.phone_verified == 0){
           try {
             await this.chatservice.dispatchOTP({ phone });
@@ -285,6 +295,12 @@ export class ContinuingExistingRequestsComponent
         }
         const childData = val.data.children;
         childData.length > 0 ? this.handleDataInsideChildren(childData) : null;
+        const res = await this.chatservice.fetchWidgetStages('15000');
+        const offers = await this.chatservice.getLoanOffers(val['creditclan_request_id']);
+        console.log(offers);
+        this.store.dispatch(new generalActions.updateParentOffers(res['offer']));
+        const newStages = this.updateWidgets(res['widgets_to_show'] as Array<string>, stages);
+        const returnVal = this.rearrangeStaInOrderFashion(newStages);
         this.continue(returnVal, val.data.guardian_data);
       },
       (err: HttpErrorResponse) => {
@@ -295,24 +311,73 @@ export class ContinuingExistingRequestsComponent
     );
   }
 
-  rearrangeStaInOrderFashion(stages: schoolCreditStage): string {
+  updateWidgets(arr: Array<string>, stages: schoolCreditStage): Array<string> {
+    let tobeDeleted = [], tobeReIntegrated = [];
+    Object.keys(stages).forEach((element, index, array) => {
+      const found = arr.indexOf(element);
+      if(found == -1 && element.startsWith('widget')){
+        tobeDeleted.push(element);
+      }
+      if(found >= 0 && element.startsWith('widget')){
+        tobeReIntegrated.push({[element] : stages[element]});
+      }
+      if(found == -1 && !element.startsWith('widget')){
+        tobeReIntegrated.push({[element] : stages[element]});
+      }
+    })
+    tobeReIntegrated.forEach(element => {
+        if(Object.keys(element)[0] == 'widget_data'){
+          this.store.dispatch(new generalActions.updateParentWidgetDataStage(Object.values(element)[0] as any))
+        }
+        if(Object.keys(element)[0] == 'widget_cashflow'){
+          this.store.dispatch(new generalActions.updateParentWidgetCashflowStage(Object.values(element)[0] as any));
+        }
+        if(Object.keys(element)[0] == 'widget_card'){
+          this.store.dispatch(new generalActions.updateParentWidgetCardStage(Object.values(element)[0] as any));
+        }
+      })
+     
+      return tobeReIntegrated;
+
+  }
+
+  rearrangeStaInOrderFashion(stages: Partial<schoolCreditStage> | Array<any>): string {
     // "parent_creditcard_info" should be the last
-    const arrangedStages = [
-      "parent_data",
-      "email_validated",
-      "phone_verified",
-      "child_data",
-      "widget_data",
-      "widget_cashflow",
-      "widget_card",
-    ];
-    let returnVal;
-    for (let element of arrangedStages) {
-      if (stages[element] == 0) {
-        returnVal = element;
-        break;
+    let returnVal = undefined;
+    if(Array.isArray(stages)){
+      const arrangedStages = [
+        "parent_data",
+        "email_validated",
+        "phone_verified",
+        "child_data",
+        "widget_data",
+        "widget_cashflow",
+        "widget_card",
+      ];
+      for(let i = 0; i < arrangedStages.length; i++){
+          if(Object.values(stages[i])[0] == 0){
+              returnVal = Object.keys(stages[i])[0];
+              break;
+          }
+      }
+    }else{
+      const arrangedStages = [
+        "parent_data",
+        "email_validated",
+        "phone_verified",
+        "child_data",
+        "widget_data",
+        "widget_cashflow",
+        "widget_card",
+      ];
+      for (let element of arrangedStages) {
+        if (stages[element] == 0) {
+          returnVal = element;
+          break;
+        }
       }
     }
+    
     return returnVal;
   }
 

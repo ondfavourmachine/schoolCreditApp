@@ -16,6 +16,8 @@ import {
 } from "src/app/models/GiverResponse";
 import { Message } from "../../models/message";
 import { ToastrService } from "ngx-toastr";
+import { schoolCreditStage } from "src/app/models/data-models";
+import * as generalActions from "../../store/actions/general.action";
 
 @Injectable({
   providedIn: "root"
@@ -239,10 +241,42 @@ export class GeneralService {
     return options.toString().replace(/\[(.*?)\]/g, "$1");
   }
 
+  // updateWidgets(arr: Array<string>, stages: schoolCreditStage, component: any): Array<string> {
+  //   let tobeDeleted = [], tobeReIntegrated = [];
+  //   Object.keys(stages).forEach((element, index, array) => {
+  //     const found = arr.indexOf(element);
+  //     if(found == -1 && element.startsWith('widget')){
+  //       tobeDeleted.push(element);
+  //     }
+  //     if(found >= 0 && element.startsWith('widget')){
+  //       tobeReIntegrated.push({[element] : stages[element]});
+  //     }
+  //     if(found == -1 && !element.startsWith('widget')){
+  //       tobeReIntegrated.push({[element] : stages[element]});
+  //     }
+  //   })
+  //   tobeReIntegrated.forEach(element => {
+  //       if(Object.keys(element)[0] == 'widget_data'){
+  //         component.store.dispatch(new generalActions.updateParentWidgetDataStage(Object.values(element)[0] as any))
+  //       }
+  //       if(Object.keys(element)[0] == 'widget_cashflow'){
+  //         component.store.dispatch(new generalActions.updateParentWidgetCashflowStage(Object.values(element)[0] as any));
+  //       }
+  //       if(Object.keys(element)[0] == 'widget_card'){
+  //         component.store.dispatch(new generalActions.updateParentWidgetCardStage(Object.values(element)[0] as any));
+  //       }
+  //     })
+     
+  //     return tobeReIntegrated;
+
+  // }
+
   // function for modifying the look and feel of the button
   // when there is an apicall or not
 
   // communication conduit to tell a component whether to disable a button or not
+  
+  
   ctrlDisableTheButtonsOfPreviousListElement(anything) {
     this.preventDisableSubject.next(anything);
   }

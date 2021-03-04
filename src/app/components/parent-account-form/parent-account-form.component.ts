@@ -98,11 +98,11 @@ export class ParentAccountFormComponent implements OnInit, AfterViewInit, OnDest
       });
 
 
-      this.destroy[1] = this.store.select(fromStore.getParentState)
+      this.destroy[1] = this.store.select(fromStore.getCurrentParentInfo)
       .pipe(tap(val => {
         console.log(val);
-        const parent = val as any;
-          this.requestid = parent['parent_loan_request_status']['creditclan_request_id'];
+        const parent = val as Parent;
+          this.requestid = parent.loan_request.toString();
         
       }))
       .subscribe()

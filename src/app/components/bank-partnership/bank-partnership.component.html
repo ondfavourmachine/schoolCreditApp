@@ -1,5 +1,5 @@
 
-<div
+<!-- <div
   class="flex flex-column justify-center align-center h-100 text-center family-info"
   *ngIf="page == ''"
 >
@@ -28,24 +28,58 @@
     >
   </p>
 
-  <!-- <p class="para-body">
-    We will also ask a few questions to determine your credibility.
-    <strong> Is this ok? </strong>
-  </p> -->
-  <!-- (click)="page = 'preambleToForms'" -->
-  <!--  (click)="page = 'bank_statement'" -->
-  <!-- (click)="page = 'preambleToForms'" -->
-  <!--  1st preambleToForms which leads to judes widget -->
-  <!--  2nd bank_statment which leads to bnakstatement widget -->
-  <!--  3rd call for instituitions so that the parent can click accept -->
-  <!--  4th load the tokenisation widget for them to fill in their card details -->
+
   <button
    (click)="page = 'preambleToForms'"
     class="ui button primary basic mt-4"
   >
     I Accept
   </button>
+</div> -->
+
+
+<div
+  *ngIf="page == ''"
+  class="flex flex-column justify-center align-center h-100 text-center family-info"
+>
+  <h1 class="para-title">Offers</h1>
+
+  <div
+    class="ui grid justify-center "
+    style="overflow: hidden; margin: 0 auto; cursor: pointer; z-index: 30;"
+  >
+    <div
+      class="twelve wide column myborder addFlexBehavior"
+    >
+      <p class="bolded ">
+        Profile information
+        <span class=""><i class="fa fa-angle-right"></i> </span>
+      </p>
+    </div>
+
+    <div
+      style="cursor: pointer; z-index: 30;"
+      class="twelve wide column myborder addFlexBehavior"
+      
+    >
+      <p class="bolded">
+        Picture <span class=""><i class="fa fa-angle-right"></i> </span>
+      </p>
+    </div>
+
+    <div
+      style="cursor: pointer; z-index: 30;"
+      class="twelve wide column myborder addFlexBehavior"
+      
+    >
+      <p class="bolded">
+        Work information
+        <span class=""><i class="fa fa-angle-right"></i> </span>
+      </p>
+    </div>
+  </div>
 </div>
+
 
 <div
   class="flex flex-column justify-center align-center h-100 text-center family-info"
@@ -68,7 +102,7 @@
 
   <div *ngIf="spinner" class="spinner-container">
     <i class="fa fa-circle-notch fa-spin fa-3x"></i>
-  </div>
+  </div> 
 </div>
 
 <div

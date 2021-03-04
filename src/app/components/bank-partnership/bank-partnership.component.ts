@@ -18,6 +18,7 @@ import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import {
   AChild,
   CompleteParentInfomation,
+  Offers,
   Parent,
   ParentIdInfo
 } from "src/app/models/data-models";
@@ -67,6 +68,7 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
   };
   result: object & FinancialInstitution = undefined;
   loanAmount: string | number;
+  offersToShowParent: Partial<Offers> = {};
   constructor(
     private generalservice: GeneralService,
     private chatservice: ChatService,
@@ -167,13 +169,20 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
     //     : (this.page = "");
     // });
 
+    this.destroy[0] = this.store
+    .select(fromStore.getParentState)
+    .pipe(pluck("offers"))
+    .subscribe(val => this.offersToShowParent = val);
+
     window.addEventListener('message', async (e)=> {
         if(e['origin'] == 'https://bankstatementwidget.creditclan.com'){
           console.log(e);
           await this.chatservice.updateBackEndOfSuccessfulCompletionOfWidgetStage(this.parentRequestAndAccount['request_id'], '2');
-          this.page = 'card_tokenisation';
+          this.page = '';
         }
     })
+
+   
   }
 
   changeToWorkAndLoadWidget(page: string){
@@ -431,9 +440,10 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
       console.log('Request..', data);
       const loanRequest = {creditclan_request_id: data.dd, eligible: data.eligible};
       this.store.dispatch(new generalActions.updateParentLoanRequest(loanRequest));
+      debugger;
       this.page = 'preamble_to_bankdetails';
       await this.chatservice.updateCreditClanRequestId(this.parentDetails.loan_request, loanRequest.creditclan_request_id);
-      await this.chatservice.updateBackEndOfSuccessfulCompletionOfWidgetStage(data.dd, '1');
+      await this.chatservice.updateBackEndOfSuccessfulCompletionOfWidgetStage(this.parentDetails.loan_request.toString(), '1');
       this.spinner = false;
      
       

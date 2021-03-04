@@ -330,6 +330,7 @@ export class ChildInformationFormsComponent
         console.log(error);
       }
     }
+    await this.chatapi.fetchWidgetStages(this.tuitionFeesTotal);
     this.spinner = false;
     this.previousPage.emit("firstPage");
     if (this.fullpayment) {

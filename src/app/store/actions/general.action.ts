@@ -7,7 +7,8 @@ import {
   SchoolDetailsModel,
  
   SchoolBookStructure,
-  LoanRequest
+  LoanRequest,
+  Offers
 } from "src/app/models/data-models";
 
 // add Parent information
@@ -18,9 +19,14 @@ export const updateWidgetCard = "[parents] UPDATE WIDGET CARD";
 export const updateWidgetCashflow = "[parents] UPDATE WIDGET CASH FLOW";
 export const updateParentLoanStatus = "[parents] UPDATE LOAN REQUEST";
 export const updateParentAcctInformation = "[parents] UPDATE PARENT ACCOUNT";
+export const updateOffers = "[parents] UPDATE PARENT OFFERS";
 // 
 
 // action classes for parent
+export class updateParentOffers implements Action {
+  readonly type = updateOffers;
+  constructor(public payload: Array<Offers>) {}
+}
 
 export class addParents implements Action {
   readonly type = addParentInfo;
@@ -58,7 +64,7 @@ export type parentsAction =
   | addParents
   | updateParentWidgetCardStage
   | updateParentWidgetCashflowStage
-  | updateParentWidgetDataStage | updateParentLoanRequest | updateParentAcctInfo;
+  | updateParentWidgetDataStage | updateParentLoanRequest | updateParentAcctInfo | updateParentOffers;
 
 
 

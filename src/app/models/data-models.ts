@@ -102,6 +102,7 @@ export interface Bank {
 }
 
 export interface ContinuingExistingRequestResponse {
+  creditclan_request_id: any,
   data: {
     token: string;
     guardian_data: Partial<CompleteParentInfomation>;
@@ -123,6 +124,13 @@ export interface schoolCreditStage{
     widget_cashflow: 0 | 1,
     widget_data: 0 | 1
  
+}
+
+export interface Offers{
+  amount: number,
+  duration: number,
+  lender: string,
+  rate: string
 }
 
 export interface SchoolDetailsModel{

@@ -316,13 +316,18 @@ export class ChatService {
   }
 
   // get offers
-    getLoanOffers(request_id: any){
+    getLoanOffers(request_id: any): Promise<any>{
       const url = "https://mobile.creditclan.com/api/v3/schoolportal/offers";
       const headers = new HttpHeaders({
         "x-api-key": "z2BhpgFNUA99G8hZiFNv77mHDYcTlecgjybqDACv"
       });
-      return this.http.post(url, {request_id : request_id || "57487"}, {headers})
+      return this.http.post(url, {request_id : request_id || "57487"}, {headers}).toPromise()
     }
+
+  // get Widget Stages for Parent
+  fetchWidgetStages(amount="12000"): Promise<any> {
+    return  this.http.post(`${this.generalUrl}offer/stages`, {amount}).toPromise();
+  }
   
   // sendLoanRequest
   sendLoanRequest(obj: {school_id: any, guardian_id: any, loan_amount: string,
