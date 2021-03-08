@@ -183,20 +183,27 @@ export class ChildInformationFormsComponent
         : this.selectedChildren.splice(0, 1, +p.textContent)
       : "";
 
-    const toBeDestroyed: Subscription = this.store
-      .select(fromStore.getCurrentParentInfo)
-      .subscribe(val => {
-        const { guardian } = val as Parent;
-        guardianID = guardian;
-      });
+    guardianID = this.fetchGuardianId();
 
     this.chatapi
       .updateChildrenCount({
         guardian: guardianID || sessionStorage.getItem('guardian'),
         children_count: p.textContent != "3+" ? parseInt(p.textContent) : 4
       })
-      .subscribe(val => toBeDestroyed.unsubscribe());
+      .subscribe();
       // console.log(this.selectedChildren);
+  }
+
+  fetchGuardianId(): any{
+    let guardianID;
+    const toBeDestroyed: Subscription = this.store
+      .select(fromStore.getCurrentParentInfo)
+      .subscribe(val => {
+        const { guardian } = val as Parent;
+        guardianID = guardian;
+      });
+    toBeDestroyed.unsubscribe()
+    return guardianID;
   }
 
   get numberOfSelected(): boolean {
@@ -330,7 +337,14 @@ export class ChildInformationFormsComponent
         console.log(error);
       }
     }
+    // await this.chatapi.sendLoanRequest({
+    //   school_id: this.parentDetails.school_id || 1,
+    //   guardian_id: this.parentDetails.guardian,
+    //   loan_amount: this.tuitionFeesTotal as string,
+    //   child_data: arrayOfChildId
+    // });
     await this.chatapi.fetchWidgetStages(this.tuitionFeesTotal);
+    
     this.spinner = false;
     this.previousPage.emit("firstPage");
     if (this.fullpayment) {
@@ -431,6 +445,18 @@ export class ChildInformationFormsComponent
     console.log(event);
     this.generalservice.handleSmartViewLoading({component: 'child-information-forms', info: 'childForms'});
     this.moveToNextChildOrNot(event);
+  }
+
+  parentWantsToAddMoreChildren(){
+    const newNumberOfChildren = this.mapOfChildrensInfo.size;
+    const guardianID = this.fetchGuardianId();
+    this.viewToshow = 'selectChildren';
+    this.chatapi
+      .updateChildrenCount({
+        guardian: guardianID || sessionStorage.getItem('guardian'),
+        children_count: newNumberOfChildren
+      })
+      .subscribe();
   }
 
   ngOnDestroy() {

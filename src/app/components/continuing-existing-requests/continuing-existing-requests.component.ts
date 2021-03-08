@@ -295,11 +295,12 @@ export class ContinuingExistingRequestsComponent
         }
         const childData = val.data.children;
         childData.length > 0 ? this.handleDataInsideChildren(childData) : null;
-        const res = await this.chatservice.fetchWidgetStages('15000');
+        const res = await this.chatservice.fetchWidgetStages(this.loanAmountByParent.toString());
         const offers = await this.chatservice.getLoanOffers(val['creditclan_request_id']);
         console.log(offers);
         this.store.dispatch(new generalActions.updateParentOffers(res['offer']));
         const newStages = this.updateWidgets(res['widgets_to_show'] as Array<string>, stages);
+        debugger
         const returnVal = this.rearrangeStaInOrderFashion(newStages);
         this.continue(returnVal, val.data.guardian_data);
       },
