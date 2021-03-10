@@ -23,7 +23,7 @@ export class Message {
   ];
 
   static welcomeMessagesForGiver = [
-    "Welcome to Adama High School. The Citadel of excellence",
+    "Welcome to Adama High School.",
     "This Service helps you manage how you pay your child's fees",
     "How do you want to proceed?"
   ];
@@ -346,8 +346,6 @@ export class Message {
     if(sessionStorage.getItem('school_avatar')){
       return direction == 'left' ? sessionStorage.getItem('school_avatar') : `../../../assets/chatbotImages/avatar.png`
     }
-
-    console.log('i am here!');
   //  return  sessionStorage.getItem('school_avatar') ? sessionStorage.getItem('school_avatar') : ''
   }
 

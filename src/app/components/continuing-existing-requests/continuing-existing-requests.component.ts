@@ -245,7 +245,7 @@ export class ContinuingExistingRequestsComponent
   }
 
   submitThisUser() {
-    // debugger;
+    this.spinner = true;
     this.checking();
     this.checkWhoIsTryingToContinue.PIN = this.input;
     const formToSubmit = { ...this.checkWhoIsTryingToContinue };
@@ -297,11 +297,12 @@ export class ContinuingExistingRequestsComponent
         childData.length > 0 ? this.handleDataInsideChildren(childData) : null;
         const res = await this.chatservice.fetchWidgetStages(this.loanAmountByParent.toString());
         const offers = await this.chatservice.getLoanOffers(val['creditclan_request_id']);
-        console.log(offers);
-        this.store.dispatch(new generalActions.updateParentOffers(res['offer']));
+  
+        this.store.dispatch(new generalActions.updateParentOffers(offers['offers'][0].amount == 0 ? [] : [].concat(offers['offers'])));
         const newStages = this.updateWidgets(res['widgets_to_show'] as Array<string>, stages);
-        debugger
+        // debugger;
         const returnVal = this.rearrangeStaInOrderFashion(newStages);
+        this.spinner = false;
         this.continue(returnVal, val.data.guardian_data);
       },
       (err: HttpErrorResponse) => {

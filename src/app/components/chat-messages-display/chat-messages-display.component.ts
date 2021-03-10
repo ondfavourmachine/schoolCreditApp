@@ -18,7 +18,7 @@ import * as generalActions from "../../store/actions/general.action";
 
 // import { TitleCasePipe } from "@angular/common";
 import { Subscription } from "rxjs";
-import { delay } from "rxjs/operators";
+import { delay, first, tap } from "rxjs/operators";
 import {
   replyGiversOrReceivers,
   GiverResponse,
@@ -53,7 +53,9 @@ export class ChatMessagesDisplayComponent
   @Output("restartProcess")
   restartProcess = new EventEmitter<string>();
   @Output("actionDispatched") actionDispatched = new EventEmitter<string>();
-
+  
+  // 
+   schoolMotto: string;
   // private counter: number;
   private refNo: string;
   private receiverIsPresent: boolean = false;
@@ -229,6 +231,9 @@ export class ChatMessagesDisplayComponent
          }
         }, 1500);
       })
+      
+      this.selectMottoFromSchool();
+     
   }
 
   
@@ -585,6 +590,12 @@ export class ChatMessagesDisplayComponent
     );
   }
 
+selectMottoFromSchool(){
+    this.store.select(fromStore.getSchoolDetailsState)
+    .pipe(first(val => this.schoolMotto = val['school_Info'].motto))
+    .subscribe();
+  }
+
   removeElement(parent: HTMLElement, child: HTMLElement){
     parent.removeChild(child)
   }
@@ -899,14 +910,19 @@ export class ChatMessagesDisplayComponent
             messageToDisplay.makeAndInsertMessage(this.count);
             return;
           }
-          newString = msg.replace('Adama', this.titleCase.transform(userNameOfSchool));
-          newString = newString.split('?')[0] + ' High School. The Citadel of excellence';
           
+          newString = msg.replace('Adama', userNameOfSchool ? this.titleCase.transform(userNameOfSchool) : 'Adanma'); 
+          newString = newString.split('?')[0];
+          newString+=  this.modifyMotto();
           messageToDisplay = new Message(`${newString ? newString : 'Adama'}`, `left`, ul);
           messageToDisplay.makeAndInsertMessage(index);
         });
     
     }, 1000);
+  }
+
+  modifyMotto(): string{
+    return this.schoolMotto ? ` ${this.schoolMotto}.` : ' The Citadel of excellence.'
   }
 
   generateSuccessfulSubmissionOfRequestMsg(ul: HTMLUListElement) {

@@ -25,7 +25,7 @@ export const updateOffers = "[parents] UPDATE PARENT OFFERS";
 // action classes for parent
 export class updateParentOffers implements Action {
   readonly type = updateOffers;
-  constructor(public payload: Array<Offers>) {}
+  constructor(public payload: Array<Partial<Offers>>) {}
 }
 
 export class addParents implements Action {

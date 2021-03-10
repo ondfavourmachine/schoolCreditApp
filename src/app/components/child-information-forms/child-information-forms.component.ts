@@ -133,7 +133,7 @@ export class ChildInformationFormsComponent
     // console.log(this.fullpayment);
     this.destroy[0]= this.store.select(fromStore.getSchoolDetailsState)
     .pipe(pluck('school_books')).subscribe((val: SchoolBook[]) => {
-      console.log(val);
+      // console.log(val);
       (val as Array<any>).length > 0 ? this.numberOfSchoolBooks = val.length : this.numberOfSchoolBooks = 0;
     })
   }
@@ -448,9 +448,12 @@ export class ChildInformationFormsComponent
   }
 
   parentWantsToAddMoreChildren(){
-    const newNumberOfChildren = this.mapOfChildrensInfo.size;
+    let newNumberOfChildren = this.mapOfChildrensInfo.size;
+    newNumberOfChildren = newNumberOfChildren + 1
+    const word = this.generalservice.fetchWordForNumber(newNumberOfChildren);
+    this.mapOfChildrensInfo.set(word, { index: newNumberOfChildren });
     const guardianID = this.fetchGuardianId();
-    this.viewToshow = 'selectChildren';
+    this.viewToshow = "enterInformation";
     this.chatapi
       .updateChildrenCount({
         guardian: guardianID || sessionStorage.getItem('guardian'),
