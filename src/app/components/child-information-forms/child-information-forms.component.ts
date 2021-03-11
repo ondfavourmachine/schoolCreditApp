@@ -19,7 +19,7 @@ import * as generalActions from "../../store/actions/general.action";
 import * as fromStore from "../../store";
 import { ChildrenState } from "src/app/store/reducers/children.reducer";
 import { ChatService } from "src/app/services/ChatService/chat.service";
-import { pluck } from "rxjs/operators";
+import { pluck, tap } from "rxjs/operators";
 
 @Component({
   selector: "app-child-information-forms",
@@ -30,6 +30,7 @@ export class ChildInformationFormsComponent
   implements OnInit, AfterViewInit, OnDestroy {
   @Output("previousPage") previousPage = new EventEmitter<string>();
   @Input("back") back: any;
+  schoolID: string
   viewToshow:
     | ""
     | "selectChildren"
@@ -61,6 +62,8 @@ export class ChildInformationFormsComponent
   base64FormOfPicture: string | ArrayBuffer;
   fullpayment: boolean;
   numberOfSchoolBooks: number = 0;
+  totalCostOfSchoolBooks: number = 0;
+  parentDetails: Partial<Parent>
   constructor(
     private fb: FormBuilder,
     public mockstore: StoreService,
@@ -117,22 +120,39 @@ export class ChildInformationFormsComponent
 
     this.destroy[1] = this.store
       .select(fromStore.getCurrentParentInfo)
+      .pipe(tap(val => console.log(val)))
       .subscribe(val => {
         // console.log(val);
         const { guardian } = val as Parent;
         this.guardianID = guardian;
       });
 
-    // this.destroy[2] = this.store
-    //   .select(fromStore.getCurrentChildInfo)
+    this.destroy[2] = this.store
+      .select(fromStore.getCurrentChildInfo)
+      .subscribe(val => {
+        // console.log(val);
+      });
+
+    //  this.destroy[2] = this.store
+    //   .select(fromStore.getCurrentChildState)
     //   .subscribe(val => {
     //     console.log(val);
     //   });
 
+    this.destroy[3] = this.store
+      .select(fromStore.getCurrentParentInfo)
+      .subscribe(val => {
+        this.parentDetails = val as Parent;
+      });
+
+
+
     this.fullpayment = JSON.parse(sessionStorage.getItem("fullpayment"));
     // console.log(this.fullpayment);
-    this.destroy[0]= this.store.select(fromStore.getSchoolDetailsState)
-    .pipe(pluck('school_books')).subscribe((val: SchoolBook[]) => {
+    this.destroy[4]= this.store.select(fromStore.getSchoolDetailsState)
+    .pipe(tap(val => {
+      this.schoolID = val['school_Info'].id;
+    }),  pluck('school_books')).subscribe((val: SchoolBook[]) => {
       // console.log(val);
       (val as Array<any>).length > 0 ? this.numberOfSchoolBooks = val.length : this.numberOfSchoolBooks = 0;
     })
@@ -240,10 +260,11 @@ export class ChildInformationFormsComponent
       ...value,
       picture: this.childPicture,
       index: objectHoldingIndex.index,
-      child_book : schoolBooks ? schoolBooks : []
+      child_book : schoolBooks ? schoolBooks : [],
+      total_cost_of_books: objectHoldingIndex.total_cost_of_books
     };
     this.mapOfChildrensInfo.set(this.currentChild, value);
-
+    // console.log(this.mapOfChildrensInfo.get(this.currentChild));
     // this is necessary
     if (this.mockstore.childrenInformationSubmittedByParent.length < 1) {
       this.mockstore.childrenInformationSubmittedByParent.push(
@@ -318,11 +339,12 @@ export class ChildInformationFormsComponent
     this.store.dispatch(new generalActions.calculateFees());
 
     for (let [key, value] of this.mapOfChildrensInfo) {
+      // console.log(value);
       try {
         const res = await this.chatapi.saveChildData(
           { ...value },
           this.guardianID,
-          1
+          this.schoolID
         );
         const { child } = res;
         if (res.message == "child info saved!") {
@@ -337,14 +359,16 @@ export class ChildInformationFormsComponent
         console.log(error);
       }
     }
-    // await this.chatapi.sendLoanRequest({
-    //   school_id: this.parentDetails.school_id || 1,
-    //   guardian_id: this.parentDetails.guardian,
-    //   loan_amount: this.tuitionFeesTotal as string,
-    //   child_data: arrayOfChildId
-    // });
-    await this.chatapi.fetchWidgetStages(this.tuitionFeesTotal);
     
+    this.notifyBackendOfLoanRequest();
+    // debugger;
+    await this.chatapi.fetchWidgetStages(this.tuitionFeesTotal);
+    let total = 0;
+    this.mapOfChildrensInfo.forEach((element, key, map) => {
+      total += element.total_cost_of_books;
+    })
+    this.totalCostOfSchoolBooks = total;
+    // console.log(this.totalCostOfSchoolBooks);
     this.spinner = false;
     this.previousPage.emit("firstPage");
     if (this.fullpayment) {
@@ -385,8 +409,8 @@ export class ChildInformationFormsComponent
     this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
       `Summary :
        You entered a total of ₦${new Intl.NumberFormat().format(
-         this.tuitionFeesTotal
-       )}.
+         this.tuitionFeesTotal + this.totalCostOfSchoolBooks
+       )} which includes cost of school fees and books.
        Number of Children: ${this.mapOfChildrensInfo.size}`,
       "left",
       "",
@@ -432,7 +456,7 @@ export class ChildInformationFormsComponent
   }
 
   showBookSelectionPage(){
-    
+   
     if(this.numberOfSchoolBooks > 0){
       this.generalservice.handleSmartViewLoading({component : 'school-books', info: 'schoolBooks'});
       this.viewToshow = 'select-books'
@@ -442,7 +466,10 @@ export class ChildInformationFormsComponent
   }
 
   childBooksHasBeenAdded(event){
-    console.log(event);
+  
+    this.mapOfChildrensInfo.get(this.currentChild).total_cost_of_books = 0;
+    this.mapOfChildrensInfo.get(this.currentChild).total_cost_of_books+= parseInt(event[0]['price']);
+    // console.log(this.mapOfChildrensInfo);
     this.generalservice.handleSmartViewLoading({component: 'child-information-forms', info: 'childForms'});
     this.moveToNextChildOrNot(event);
   }
@@ -452,7 +479,9 @@ export class ChildInformationFormsComponent
     newNumberOfChildren = newNumberOfChildren + 1
     const word = this.generalservice.fetchWordForNumber(newNumberOfChildren);
     this.mapOfChildrensInfo.set(word, { index: newNumberOfChildren });
+    this.currentChild = word;
     const guardianID = this.fetchGuardianId();
+    this.childInfoForm.reset();
     this.viewToshow = "enterInformation";
     this.chatapi
       .updateChildrenCount({
@@ -460,6 +489,28 @@ export class ChildInformationFormsComponent
         children_count: newNumberOfChildren
       })
       .subscribe();
+  }
+
+  async notifyBackendOfLoanRequest(){
+    let childArray:Array<Partial<AChild>>
+    this.destroy[5] = this.store
+      .select(fromStore.getCurrentChildState)
+      .pipe(pluck("child_info"))
+      .subscribe(val => {
+       childArray = Array.from((val as Map<string, Partial<AChild>>).values())});
+      const arrayOfChildId: {id: any, amount: string}[] = childArray.map(element => {
+        return{
+          id: element.child_id || element.id,
+          amount: element.tuition_fees
+        }
+      })
+
+      await this.chatapi.sendLoanRequest({
+      school_id: this.parentDetails.school_id || 1,
+      guardian_id: this.parentDetails.guardian,
+      loan_amount: this.tuitionFeesTotal as string,
+      child_data: arrayOfChildId
+    });
   }
 
   ngOnDestroy() {

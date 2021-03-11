@@ -103,6 +103,9 @@ export class ContinuingExistingRequestsComponent
       // this.destroy[2] = this.store
       // .select(fromStore.getParentState)
       // .subscribe(val => console.log(val))
+
+      // this.store.select(fromStore.getSchoolDetailsState)
+      // .subscribe(val => console.log(val));
   }
 
   ngAfterViewInit() {
@@ -245,7 +248,6 @@ export class ContinuingExistingRequestsComponent
   }
 
   submitThisUser() {
-    this.spinner = true;
     this.checking();
     this.checkWhoIsTryingToContinue.PIN = this.input;
     const formToSubmit = { ...this.checkWhoIsTryingToContinue };
@@ -256,7 +258,7 @@ export class ContinuingExistingRequestsComponent
       
         // console.log(stages, returnVal);
         this.listOfStagesForLater = { ...stages };
-        this.checking("stop");
+        
         const {
           full_name,
           date_of_birth,
@@ -300,9 +302,10 @@ export class ContinuingExistingRequestsComponent
   
         this.store.dispatch(new generalActions.updateParentOffers(offers['offers'][0].amount == 0 ? [] : [].concat(offers['offers'])));
         const newStages = this.updateWidgets(res['widgets_to_show'] as Array<string>, stages);
+        // console.log(res);
         // debugger;
         const returnVal = this.rearrangeStaInOrderFashion(newStages);
-        this.spinner = false;
+        this.checking("stop");
         this.continue(returnVal, val.data.guardian_data);
       },
       (err: HttpErrorResponse) => {
@@ -344,7 +347,7 @@ export class ContinuingExistingRequestsComponent
   }
 
   rearrangeStaInOrderFashion(stages: Partial<schoolCreditStage> | Array<any>): string {
-    // "parent_creditcard_info" should be the last
+    //  debugger;
     let returnVal = undefined;
     if(Array.isArray(stages)){
       const arrangedStages = [

@@ -210,7 +210,7 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
         `You asked to register a child. This will lead to loosing all previous entries.
          Are you sure you want to restart?`,
         `left`,
-        "Yes restart now,I want to begin a new request, Continue existing request",
+        "Yes restart now,make a new request, Continue existing request",
         "restart,newrequest,continuingrequest"
       );
       setTimeout(() => {

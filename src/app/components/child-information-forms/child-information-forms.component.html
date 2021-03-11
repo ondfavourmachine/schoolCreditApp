@@ -249,5 +249,8 @@
 
 <div *ngIf="viewToshow == 'select-books'">
   <app-school-books
+   
    (selectionComplete)="childBooksHasBeenAdded($event)"></app-school-books>
 </div>
+
+<!-- [currentChild]="currentChildForWhichBookIsBeingSelected"  -->

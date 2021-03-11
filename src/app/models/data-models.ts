@@ -80,6 +80,7 @@ export interface AChild {
   id?: any;
   child_id: null | string | number;
   child_book: Array<SchoolBook>;
+  total_cost_of_books: number;
 }
 
 
