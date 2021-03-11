@@ -299,7 +299,7 @@ export class ContinuingExistingRequestsComponent
         childData.length > 0 ? this.handleDataInsideChildren(childData) : null;
         const res = await this.chatservice.fetchWidgetStages(this.loanAmountByParent.toString());
         const offers = await this.chatservice.getLoanOffers(val['creditclan_request_id']);
-  
+        this.store.dispatch(new generalActions.updateParentLoanRequest({creditclan_request_id : val['creditclan_request_id'], eligible: true}));
         this.store.dispatch(new generalActions.updateParentOffers(offers['offers'][0].amount == 0 ? [] : [].concat(offers['offers'])));
         const newStages = this.updateWidgets(res['widgets_to_show'] as Array<string>, stages);
         // console.log(res);

@@ -197,7 +197,7 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
           `You asked to restart the process. This will lead to loosing all previous entries.
            Are you sure you want to restart?`,
           `left`,
-          "Yes restart now,I want to begin a new request, Continue existing request",
+          "Yes restart now, make new request, Continue existing request",
           "restart,newrequest,continuingrequest"
         );
         setTimeout(() => {

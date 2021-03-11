@@ -98,11 +98,11 @@ export class ParentAccountFormComponent implements OnInit, AfterViewInit, OnDest
       });
 
 
-      this.destroy[1] = this.store.select(fromStore.getCurrentParentInfo)
+      this.destroy[1] = this.store.select(fromStore.getParentState)
       .pipe(tap(val => {
-        console.log(val);
-        const parent = val as Parent;
-          this.requestid = parent.loan_request.toString();
+      //  console.log(val);
+        const parent = val as any;
+          this.requestid = parent['parent_loan_request_status']['creditclan_request_id'];
         
       }))
       .subscribe()
@@ -129,7 +129,7 @@ export class ParentAccountFormComponent implements OnInit, AfterViewInit, OnDest
       iframe.height = "600";
       iframe.width = (modalBody.offsetWidth - 5).toString();
       iframe.onload = () => {this.spinner = false;}
-      (document.getElementById('insertionDiv') as HTMLDivElement).insertAdjacentElement('afterbegin', iframe);
+      (document.getElementById('attach_card') as HTMLDivElement).insertAdjacentElement('afterbegin', iframe);
   
       window.addEventListener('resize', this.resizeIframe)
     }catch(e){

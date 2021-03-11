@@ -321,7 +321,7 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
     const modalBody = document.querySelector('.modal-body') as HTMLElement
     this.spinner = true;
     this.page = 'iframe_container';
-    console.log(this.parentRequestAndAccount);
+    // console.log(this.parentRequestAndAccount);
     const res = await this.chatservice.getIframeSrcForCardTokenization(this.parentRequestAndAccount['request_id']);
     const {url} = res;
     try{ 
