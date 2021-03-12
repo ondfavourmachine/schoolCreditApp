@@ -1,21 +1,16 @@
 
-<!-- <div
+ <div
   class="flex flex-column justify-center align-center h-100 text-center family-info"
-  *ngIf="page == ''"
+  *ngIf="page == 'offers'"
+  style="height: 500px;"
 >
   <h1 class="para-title">
-    Congrats
-    <strong
-      ><a href="" style="text-decoration: underline">
-        {{ result?.lender_name }}
-      </a></strong
-    >
-    will like to fund this transaction.
+    Here are the offers we found for you:
   </h1>
-  <h5 class="" style="margin: 10px 0; font-weight: 500;">
+  <!-- <h5 class="" style="margin: 10px 0; font-weight: 500;">
     Offer information:
-  </h5>
-  <p class="para-body">
+  </h5> -->
+  <!-- <p class="para-body">
     <span class="block-element"
       >Amount: <strong>{{ result?.loan_amount | currency: "NGN" }}</strong> per
       month,
@@ -26,41 +21,40 @@
     <span class="block-element mt-3">
       this is an offer in principle and subject to final review</span
     >
-  </p>
+  </p> -->
 
-
-  <button
-   (click)="page = 'preambleToForms'"
-    class="ui button primary basic mt-4"
-  >
-    I Accept
-  </button>
-</div> -->
-
-
-<div
-  *ngIf="page == ''"
-  class="flex flex-column justify-center align-center h-100 text-center family-info"
->
-  <h1 class="para-title">Offers</h1>
 
   <div
     class="ui grid justify-center "
     style="overflow: hidden; margin: 0 auto; cursor: pointer; z-index: 30;"
   >
     <div
-      class="twelve wide column myborder addFlexBehavior"
+      *ngFor="let offer of offersToShowParent; index as i"
+      class="twelve wide column myborder mt-3 addFlexBehavior"
+      [class.selectedOffer]="i == selectedOffer"
+      (click)="selectOffers(i)"
     >
-      <p class="bolded ">
-        Profile information
-        <span class=""><i class="fa fa-angle-right"></i> </span>
+      <p class="bolded">
+        <span class="housing"> Financial Institution: <span class="f_institution">  {{ offer?.lender }} </span> </span>
+        <span class="housing">  Loan approved: <span class="loan_amount"> ₦{{ offer?.amount }} </span>  </span>
+        <span class="housing">  Duration: <span class="duration">{{offer?.duration}}</span>  </span>
+        <span class="housing"> Rate:  <span class="rate">{{ offer?.rate }}</span>  </span>
+        
       </p>
+     
+      
+
     </div>
 
-    <div
+    <br>
+    <button [disabled]="selectedOffer == undefined" (click)="page = 'card_tokenisation'"  class="ui button primary basic">
+      Continue
+    </button>
+
+    <!-- <div
       style="cursor: pointer; z-index: 30;"
       class="twelve wide column myborder addFlexBehavior"
-      
+     
     >
       <p class="bolded">
         Picture <span class=""><i class="fa fa-angle-right"></i> </span>
@@ -70,15 +64,25 @@
     <div
       style="cursor: pointer; z-index: 30;"
       class="twelve wide column myborder addFlexBehavior"
-      
+     
     >
       <p class="bolded">
         Work information
         <span class=""><i class="fa fa-angle-right"></i> </span>
       </p>
-    </div>
+    </div> -->
   </div>
-</div>
+
+  <!-- <button
+   (click)="page = 'preambleToForms'"
+    class="ui button primary basic mt-4"
+  >
+    I Accept
+  </button> -->
+</div> 
+
+
+
 
 
 <div
@@ -110,7 +114,7 @@
   *ngIf="page == 'card_tokenisation'"
 >
   <h1 class="para-title">
-    Thank you for submitting your statement for analysis. We would like to tokenize your card to enable smooth payment 
+    Thank you for submitting your statement for analysis and selecting an offer. We would like to tokenize your card to enable smooth payment 
   </h1>
 
   <div class="twelve wide column">

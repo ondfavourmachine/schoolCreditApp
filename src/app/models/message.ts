@@ -382,17 +382,23 @@ export class Message {
         this.giverDispatchEvents(
           "customGiverEventFromMsgClass",
           "giver",
-          "parent-account-form"
+          "bank-partnership",
+          "",
+          (): string => {
+            const startFrom: string = "preamble_to_bankdetails";
+            return startFrom;
+          }
         );
         break;
       case "providedebitcard":
         this.giverDispatchEvents(
           "customGiverEventFromMsgClass",
           "giver",
-          "parent-account-form",
+          "bank-partnership",
           "",
-          () => {
-            return "attach-card";
+          (): string => {
+            const startFrom: string = "offers";
+            return startFrom;
           }
         );
         break;

@@ -250,45 +250,7 @@ export class AppComponent
 
   manageClosureOfModal(val: string) {
     let chatbotResponse: replyGiversOrReceivers;
-   
     switch (val) {
-    
-      // case "parents-information":
-      //   this.generalservice.nextChatbotReplyToGiver = undefined;
-      //   this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
-      //   chatbotResponse = new replyGiversOrReceivers(
-      //     `The information you provided is still incomplete. Please when you are ready let's continue`,
-      //     "left",
-      //     "Register me",
-      //     `continue,full_pay`,
-      //     "prevent"
-      //   );
-      //   this.generalservice.responseDisplayNotifier(chatbotResponse);
-      //   break;
-      // case "child-information-forms":
-      //   this.generalservice.nextChatbotReplyToGiver = undefined;
-      //   this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
-      //   chatbotResponse = new replyGiversOrReceivers(
-      //     "We need your child's information to help process your request. When you ready let's continue",
-      //     "left",
-      //     "Ok Let's continue",
-      //     "enterchildinfo",
-      //     "prevent"
-      //   );
-      //   this.generalservice.responseDisplayNotifier(chatbotResponse);
-      //   break;
-      // case "bank-partnership":
-      //   this.generalservice.nextChatbotReplyToGiver = undefined;
-      //   this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
-      //   chatbotResponse = new replyGiversOrReceivers(
-      //     "There are financial institutions waiting to finance this credit. Whenever you are ready let's go",
-      //     "left",
-      //     "Ok I'm ready, No let's forget it",
-      //     "connectme, notinterested",
-      //     "prevent"
-      //   );
-      //   this.generalservice.responseDisplayNotifier(chatbotResponse);
-      //   break;
       case "bank-partnership":
         this.generalservice.nextChatbotReplyToGiver = undefined;
         this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
@@ -300,7 +262,7 @@ export class AppComponent
             undefined,
             { classes: ["truncated_loan_process"] }
         );
-     
+        this.store.dispatch(new generalActions.checkLoanProcess('failed'));
         this.generalservice.responseDisplayNotifier(chatbotResponse);
         
       break;

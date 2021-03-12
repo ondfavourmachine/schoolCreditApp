@@ -39,6 +39,38 @@
   }
 }
 
+
+.addFlexBehavior {
+  display: flex !important;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 0.5rem !important;
+  cursor: pointer;
+}
+
+.addFlexBehavior p {
+  margin-bottom: 0 !important;
+}
+
+.addFlexBehavior .f_institution, .addFlexBehavior .duration, .addFlexBehavior .rate, .addFlexBehavior .loan_amount{
+  font-weight: bolder;
+  margin-left: 10px;
+}
+
+.housing{
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.selectedOffer{
+  border: 2px solid #495057;
+  transition: border 250ms ease;
+}
+
+
+
+
 @keyframes bottom-sand-g {
   0% {
   }

@@ -42,7 +42,7 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
   @Output("previousPage") previousPage = new EventEmitter<string>();
   @Input("previous") previous: any;
   page:
-    | ""
+    | "offers"
     | "bvn"
     | "valid-id"
     | "bank-details" | "preamble_to_bankdetails"
@@ -68,7 +68,8 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
   };
   result: object & FinancialInstitution = undefined;
   loanAmount: string | number;
-  offersToShowParent: Partial<Offers> = {};
+  offersToShowParent: Array<Partial<Offers>> = [];
+  selectedOffer: any;
   constructor(
     private generalservice: GeneralService,
     private chatservice: ChatService,
@@ -78,23 +79,25 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
   ) {}
 
   ngOnChanges() {
-    // this.destroy[1] = this.generalservice.smartView$.subscribe(val => {
-    //   if (val) {
-    //     if (
-    //       (this.elem.nativeElement.tagName as string)
-    //         .trim()
-    //         .substring(4)
-    //         .toLowerCase()
-    //         .includes(val.component)
-    //     ) {
-    //       this.smartView = { ...val };
-    //       this.page = this.smartView.info;
-    //     }
-    //   } else {
-    //     this.page = "preambleToForms";
-    //     // this.page = 'checking'
-    //   }
-    // });
+    this.destroy[1] = this.generalservice.smartView$.subscribe(val => {
+      if (val) {
+        if (
+          (this.elem.nativeElement.tagName as string)
+            .trim()
+            .substring(4)
+            .toLowerCase()
+            .includes(val.component)
+        ) {
+          // card_tokenisation
+         
+          this.smartView = { ...val };
+          this.page = this.smartView.info;
+        }
+      } else {
+        this.page = "preambleToForms";
+        // this.page = 'checking'
+      }
+    });
   }
 
   async ngOnInit() {
@@ -172,19 +175,23 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
     this.destroy[0] = this.store
     .select(fromStore.getParentState)
     .pipe(pluck("offers"))
-    .subscribe(val => this.offersToShowParent = val);
+    .subscribe((val: Array<Partial<Offers>>) => {
+      this.offersToShowParent = val;
+    });
 
     window.addEventListener('message', async (e)=> {
         if(e['origin'] == 'https://bankstatementwidget.creditclan.com'){
-          console.log(e);
-          await this.chatservice.updateBackEndOfSuccessfulCompletionOfWidgetStage(this.parentRequestAndAccount['request_id'], '2');
-          this.page = '';
+          await this.chatservice.updateBackEndOfSuccessfulCompletionOfWidgetStage(this.parentDetails.loan_request.toString(), '2');
+          this.page = 'offers';
         }
     })
 
    
   }
-
+  
+  selectOffers(index: string){
+    this.selectedOffer = index;
+  }
   changeToWorkAndLoadWidget(page: string){
     const a =  (document.querySelector('.hiddenWidget') as HTMLElement);
     this.spinner = true;
@@ -440,7 +447,7 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
       console.log('Request..', data);
       const loanRequest = {creditclan_request_id: data.dd, eligible: data.eligible};
       this.store.dispatch(new generalActions.updateParentLoanRequest(loanRequest));
-      debugger;
+      // debugger;
       this.page = 'preamble_to_bankdetails';
       await this.chatservice.updateCreditClanRequestId(this.parentDetails.loan_request, loanRequest.creditclan_request_id);
       await this.chatservice.updateBackEndOfSuccessfulCompletionOfWidgetStage(this.parentDetails.loan_request.toString(), '1');
