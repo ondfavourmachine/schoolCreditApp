@@ -120,7 +120,7 @@ export class ChildInformationFormsComponent
 
     this.destroy[1] = this.store
       .select(fromStore.getCurrentParentInfo)
-      .pipe(tap(val => console.log(val)))
+      // .pipe(tap(val => console.log(val)))
       .subscribe(val => {
         // console.log(val);
         const { guardian } = val as Parent;
@@ -331,6 +331,7 @@ export class ChildInformationFormsComponent
     }
     this.viewToshow = "enterInformation";
     this.childInfoForm.reset();
+    this.base64FormOfPicture = '';
   }
 
   async doneAddingChildren() {
@@ -471,6 +472,7 @@ export class ChildInformationFormsComponent
     this.mapOfChildrensInfo.get(this.currentChild).total_cost_of_books+= parseInt(event[0]['price']);
     // console.log(this.mapOfChildrensInfo);
     this.generalservice.handleSmartViewLoading({component: 'child-information-forms', info: 'childForms'});
+   
     this.moveToNextChildOrNot(event);
   }
 
@@ -482,6 +484,7 @@ export class ChildInformationFormsComponent
     this.currentChild = word;
     const guardianID = this.fetchGuardianId();
     this.childInfoForm.reset();
+    this.base64FormOfPicture = '';
     this.viewToshow = "enterInformation";
     this.chatapi
       .updateChildrenCount({
@@ -505,12 +508,14 @@ export class ChildInformationFormsComponent
         }
       })
 
-      await this.chatapi.sendLoanRequest({
+      const res = await this.chatapi.sendLoanRequest({
       school_id: this.parentDetails.school_id || 1,
       guardian_id: this.parentDetails.guardian,
       loan_amount: this.tuitionFeesTotal as string,
       child_data: arrayOfChildId
     });
+    const updatedParents: Partial<Parent> = {...this.parentDetails, loan_request: res.request}
+    this.store.dispatch(new generalActions.addParents(updatedParents));
   }
 
   ngOnDestroy() {

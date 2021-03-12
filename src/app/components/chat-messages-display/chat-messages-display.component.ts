@@ -882,7 +882,7 @@ selectMottoFromSchool(){
     }
   }
 
-  generateWelcomeMsgForReceiverOrGiver(
+   generateWelcomeMsgForReceiverOrGiver(
     ul: HTMLUListElement,
     giverOrReceiver?: string,
     schoolDetails?: Partial<SchoolDetailsModel>

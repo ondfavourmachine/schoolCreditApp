@@ -238,7 +238,7 @@ export class VerifyParentDataComponent
             this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
               `How would you like to pay?`,
               "left",
-              "Instalmental payments, Full Payment",
+              "Installmental payments, Full Payment",
               `installmental,fullpayment`,
               "prevent"
             );

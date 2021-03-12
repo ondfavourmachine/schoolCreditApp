@@ -346,7 +346,7 @@ export class Message {
     if(sessionStorage.getItem('school_avatar')){
       return direction == 'left' ? sessionStorage.getItem('school_avatar') : `../../../assets/chatbotImages/avatar.png`
     }
-  //  return  sessionStorage.getItem('school_avatar') ? sessionStorage.getItem('school_avatar') : ''
+     return  `../../../assets/chatbotImages/avatar.png`;
   }
 
   handleButtonClick(event: MouseEvent) {
@@ -504,7 +504,7 @@ export class Message {
           ),
           new GiverResponse(
             new replyGiversOrReceivers(
-              "I want to make installmental payment",
+              "I want to make installmental payments",
               "right"
             )
           )
