@@ -274,8 +274,8 @@ export class ChatService {
       .toPromise();
   }
 
-  submitParentWithoutPin(obj: {token:any,pin:any,confirm_pin: any, email: string}){
-        return this.http.patch<GenericResponse>(`${this.generalUrl}email/verify`, obj)
+  submitParentWithoutPin(obj: {token:any,pin:any,confirm_pin: any, email: string}):Observable<{guardian: any, message: any, status: any}>{
+        return this.http.patch<any>(`${this.generalUrl}email/verify`, obj)
   }
 
   // check if email is unique

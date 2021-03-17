@@ -15,8 +15,8 @@
 
         <div class="small_drop_down">
           <div class="ellipsis"> 
-              <i class="fas fa-ellipsis-v"></i>
-              <span class="sub_menu"> 
+              <i (click)="showDropdown = !showDropdown" class="fas fa-ellipsis-v"></i>
+              <span *ngIf="showDropdown" class="sub_menu"> 
                 <a (click)="cancelAllSelection()" ><i class="fa fa-times-circle"></i> clear selection</a>  
                 <a (click)="calculateTotalCostOfBooks()" ><i class="fa fa-plus-circle"></i> Add selected </a>  
               </span>

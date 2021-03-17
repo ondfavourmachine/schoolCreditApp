@@ -29,11 +29,11 @@
 
 .sub_menu{
     position: absolute;
-    opacity: 0;
+    opacity: 1;
     right: -5px;
     -webkit-transition: opacity 100ms ease-in;
     transition: opacity 100ms ease-in;
-    bottom: 5px;
+    bottom: 20px;
     z-index: 45;
     background: white;
     width: 140px;
@@ -73,9 +73,9 @@
     margin-bottom: 3px;
 }
 
-.ellipsis:hover .sub_menu{
+/* .ellipsis:hover .sub_menu{
     opacity: 1;
-}
+} */
 
 
 

@@ -23,6 +23,7 @@ import { SchoolBook } from "src/app/models/data-models";
     totalCostOfBooks: number;
     noBookFromSchool;
     searchTerm: string;
+    showDropdown: boolean = false;
     view : 'book-selection' | 'cost' | '' = 'book-selection'
     constructor(private store: Store) {
         this.previousPage.emit("firstPage");

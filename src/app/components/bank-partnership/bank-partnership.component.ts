@@ -390,17 +390,19 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
       // const merchant = this._auth.merchant;
       const data = {
         loan:  {amount: totalFees, tenor: 3 },
-        picture: this.parentDetails.picture,
-        personal: {
-          user_id: this.parentDetails.guardian,
-          full_name: this.parentDetails.full_name,
-          email: this.parentDetails.email,
-          phone: this.parentDetails.phone,
-          date_of_birth: this.parentDetails.date_of_birth,
-          gender: this.parentDetails.gender,
-          marital_status: '',
-          nationality: '',  // 
-          state_of_origin: this.parentDetails.state // pass the id of state you collected
+        profile: {
+          picture: this.parentDetails.picture,
+          personal: {
+            user_id: this.parentDetails.guardian,
+            full_name: this.parentDetails.full_name,
+            email: this.parentDetails.email,
+            phone: this.parentDetails.phone,
+            date_of_birth: this.parentDetails.date_of_birth,
+            gender: this.parentDetails.gender,
+            marital_status: '',
+            nationality: '',  // 
+            state_of_origin: this.parentDetails.state // pass the id of state you collected
+          }
         },
         address:{
           street_address: this.parentDetails.address,
@@ -444,7 +446,7 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
     });
     cc.on('request', async (data) => {
       //  if the request was created successfully
-      console.log('Request..', data);
+      // console.log('Request..', data);
       const loanRequest = {creditclan_request_id: data.dd, eligible: data.eligible};
       this.store.dispatch(new generalActions.updateParentLoanRequest(loanRequest));
       // debugger;

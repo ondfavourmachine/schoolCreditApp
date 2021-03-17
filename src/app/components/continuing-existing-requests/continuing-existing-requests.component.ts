@@ -121,8 +121,8 @@ export class ContinuingExistingRequestsComponent
       phone_OTP: form.value.OTP_for_phone,
       guardian: this.guardianID as string
     });
- 
     this.spinner = false;
+    this.listOfStagesForLater.phone_verified = 1;
     const returnVal = this.rearrangeStaInOrderFashion(this
       .listOfStagesForLater as schoolCreditStage);
     this.continue(returnVal, this.parentDetails);
@@ -150,6 +150,33 @@ export class ContinuingExistingRequestsComponent
 
     this.chatservice.submitParentWithoutPin(obj).subscribe(
       val => {
+        const {
+          full_name,
+          date_of_birth,
+          phone,
+          picture,
+          email,
+          address,
+          gender,
+          lga,
+          state,
+          type,
+          id
+        } = val.guardian;
+        const infoToStore: Partial<Parent> = {
+          full_name,
+          date_of_birth,
+          phone,
+          picture,
+          email,
+          address,
+          state,
+          type,
+          lga,
+          gender,
+          guardian: val.guardian.id  
+        };
+        this.store.dispatch(new generalActions.addParents(infoToStore));
         this.view = "phone_verify_second";
         this.spinner = false;
       },
