@@ -482,6 +482,13 @@ export class Message {
           "school-books"
         );
        break;
+      case 'makefullpayment':
+        this.giverDispatchEvents(
+          "customGiverEventFromMsgClass",
+          "giver",
+          "make-full-payment"
+        );
+      break;
       case "fullpayment":
         this.giverResponsesEvent(
           "customGiverResponse",

@@ -148,7 +148,6 @@ export class ChildInformationFormsComponent
 
 
     this.fullpayment = JSON.parse(sessionStorage.getItem("fullpayment"));
-    // console.log(this.fullpayment);
     this.destroy[4]= this.store.select(fromStore.getSchoolDetailsState)
     .pipe(tap(val => {
       this.schoolID = val['school_Info'].id;
@@ -384,8 +383,8 @@ export class ChildInformationFormsComponent
       this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
         `Summary :
          You entered a total of ₦${new Intl.NumberFormat().format(
-           this.tuitionFeesTotal
-         )}.
+           this.tuitionFeesTotal + this.totalCostOfSchoolBooks
+         )} which includes cost of school fees and books.
          Number of Children: ${this.mapOfChildrensInfo.size}`,
         "left",
         "",
@@ -393,9 +392,28 @@ export class ChildInformationFormsComponent
       );
       this.generalservice.responseDisplayNotifier(responseFromParent);
       this.generalservice.handleFlowController("");
-      this.generalservice.handleFlowController("make-full-payment");
+      // this.generalservice.handleFlowController("make-full-payment");
       this.fullpayment = false;
       sessionStorage.removeItem("fullpayment");
+      setTimeout(() => {
+        const chatbotResponse = new replyGiversOrReceivers(
+          `Are you ready to make payment now?`,
+          "left",
+          "Yes I am, I'll do it later",
+          `makefullpayment, notinterested`,
+          "allow"
+        );
+        this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
+              `Are you ready to be connected to a financial institution?`,
+              "left",
+              "Yes, No Later",
+              `connectme, notinterested`,
+              "allow"
+            );
+        this.generalservice.responseDisplayNotifier(chatbotResponse);
+        this.viewToshow = "";
+        this.previousPage.emit("firstPage");
+      }, 800);
       return;
     }
     this.generalservice.handleFlowController("");
@@ -420,8 +438,8 @@ export class ChildInformationFormsComponent
 
     this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
     this.generalservice.responseDisplayNotifier(responseFromParent);
-    let saveToStorage = Array.from(this.mapOfChildrensInfo.entries());
-    this.generalservice.setStage("child-info", saveToStorage);
+    // let saveToStorage = Array.from(this.mapOfChildrensInfo.entries());
+    // this.generalservice.setStage("child-info", saveToStorage);
     setTimeout(() => {
       this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
         `Are you ready to be connected to a financial institution?`,

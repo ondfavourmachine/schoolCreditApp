@@ -37,15 +37,13 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
     /start/gi,
     /go/gi, 
     /begin/gi, 
+    /register/gi,
     /register child/gi,
     /continue previous/gi,
     /register account details/gi,
     /register account/gi,
     /hi/gi,
     /help/gi,
-    // /give/gi,
-    // /giver/gi,
-    // /receiver/gi,
     /help my family/gi,
     /done/gi,
     /sent/gi,
@@ -69,11 +67,6 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
     allRemovedQuestions: [],
     questionsAndAnswersToSend: {}
   };
-  // private removedQuestions: Array<string> = []
-  private ASKFORDOB = false;
-  private readyToAnswerQuestions: boolean;
-  public questionaireButton: boolean = false;
-  public start: string = undefined;
   public userHasStartedQuestions = false;
   successFulBvn: SuccessfulBVN = {
     data: { name: "", date_of_birth: "" },
@@ -91,14 +84,6 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit() {}
 
   ngAfterViewInit() {
-    // this.PreventMemoryLeaks.InputToNumber = this.generalservice.disableInput$.subscribe(
-    //   val => {
-    //     if (val == "disable Input") {
-    //       (this.inputFromUser
-    //         .nativeElement as HTMLInputElement).disabled = true;
-    //     }
-    //   }
-    // );
   }
 
   processAndRespondToUserInput(actualText: string, value: string) {
@@ -169,6 +154,17 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
         }, 400);
         break;
       case 'register':
+      newresponse = new replyGiversOrReceivers(`${value}`, "right");
+      this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
+        `Please click any of the buttons below to begin your registration`,
+        `left`,
+        "New registration, i have previously registered",
+        "newrequest,continuingrequest"
+      );
+      setTimeout(() => {
+        this.generalservice.responseDisplayNotifier(newresponse);
+      }, 400); 
+      break;
       case "register child":
       newresponse = new replyGiversOrReceivers(`${value}`, "right");
       this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
@@ -224,10 +220,10 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  crossCheckUserInputWithRegexes(str) {
+  crossCheckUserInputWithRegexes(str: string) {
     let actualText: string, response: boolean;
     for (const regex of this.arrayOfRegexes) {
-      if (regex.test(str)) {
+      if (regex.source.trim().toLowerCase() == str.trim().toLowerCase() || regex.test(str)) {
         response = true;
         actualText = regex.source;
         break;
@@ -263,17 +259,7 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  caseUserNotInterestedInAnsweringQuestions(input: HTMLInputElement) {
-    this.questionaireButton = input.value.toLowerCase() == "y" ? true : false;
-    if (input.value.toLowerCase() == "n") {
-      setTimeout(() => {
-        this.newSendMessagesToDisplay({
-          message: `Ok, see you next time.`,
-          direction: "left"
-        });
-      }, 500);
-    }
-  }
+  
 
   public sendMessagesAfterClickingTheButton(event: MouseEvent) {
     if (this.inputSetToNumber) {
@@ -299,6 +285,6 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy() {
     // this.PreventMemoryLeaks.timeHasElapsed.unsubscribe();
     // this.PreventMemoryLeaks.InputToNumber.unsubscribe();
-    // this.questionaireButton = false;
+  
   }
 }

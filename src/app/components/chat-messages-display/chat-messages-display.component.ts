@@ -486,12 +486,14 @@ export class ChatMessagesDisplayComponent
                    <br />
                    <br />
                    <span class="command">To restart the whole process: enter <strong>'restart'</strong> </span>
+                   <hr /> 
+                   <span class="command">To start a new registration: enter: 
+                   <strong>'start'</strong>,<strong>'restart'</strong>, <strong>'register'</strong>, <strong>'begin'</strong>, <strong>'go'</strong> </span>
                    <hr />
                    <span class="command">To continue from previous stage: enter <strong>'continue previous'</strong></span>
                    <hr />
                    <span class="command">To register a child or children: enter <strong>'register child'</strong></span>
-                   <hr />
-                   <span class="command">To enter your account details: enter <strong>'register account details'</strong></span>
+                 
                  </div>
                   `;
                 textWrapper.innerHTML = "";
@@ -913,7 +915,7 @@ selectMottoFromSchool(){
           
           newString = msg.replace('Adama', userNameOfSchool ? this.titleCase.transform(userNameOfSchool) : 'Adanma'); 
           newString = newString.split('?')[0];
-          newString+=  this.modifyMotto();
+          newString+=  this.modifyMotto(index);
           messageToDisplay = new Message(`${newString ? newString : 'Adama'}`, `left`, ul);
           messageToDisplay.makeAndInsertMessage(index);
         });
@@ -921,8 +923,16 @@ selectMottoFromSchool(){
     }, 1000);
   }
 
-  modifyMotto(): string{
-    return this.schoolMotto ? ` ${this.schoolMotto}.` : ' The Citadel of excellence.'
+  
+  modifyMotto(number: number): string{
+    if(number == 0 && this.schoolMotto){
+      return this.schoolMotto;
+    }
+    else if(!this.schoolMotto) return ' The Citadel of excellence';
+    else{
+      return '';
+    }
+    
   }
 
   generateSuccessfulSubmissionOfRequestMsg(ul: HTMLUListElement) {

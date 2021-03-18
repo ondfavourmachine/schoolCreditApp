@@ -31,7 +31,7 @@ export class VerifyParentDataComponent
   contactChange: "phone" | "email" = "phone";
   showModal: string = "none";
   view: "" | "verification" | "email" | "activate-email" | "four-digit-pin" =
-    "";
+    "email";
   pageViews: string[] = [
     "",
     "verification",
