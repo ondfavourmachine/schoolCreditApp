@@ -166,7 +166,6 @@ export class VerifyParentDataComponent
       this.previousPage.emit("");
       if (obj) obj.element.textContent = obj.text;
     } catch (error) {
-      // console.log(error);
       if (obj) obj.element.textContent = obj.text;
       this.generalservice.warningNotification(
         ` ${error.error.message}`

@@ -386,7 +386,6 @@ export class ContinuingExistingRequestsComponent
       const arrangedStages = [
         "parent_data",
         "email_validated",
-        "phone_verified",
         "child_data",
         "widget_data",
         "widget_cashflow",
@@ -402,7 +401,6 @@ export class ContinuingExistingRequestsComponent
       const arrangedStages = [
         "parent_data",
         "email_validated",
-        "phone_verified",
         "child_data",
         "widget_data",
         "widget_cashflow",
@@ -547,9 +545,9 @@ export class ContinuingExistingRequestsComponent
         }, 800);
         break;
       
-      case "phone_verified":
-        this.spinner = false;
-        this.view = "phone_verify_second";
+      // case "phone_verified":
+      //   this.spinner = false;
+      //   this.view = "phone_verify_second";
 
         break;
       case "widget_card":
