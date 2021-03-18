@@ -182,10 +182,10 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
       case "continue a request":
       newresponse = new replyGiversOrReceivers(`${value}`, "right");
       this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
-        `To continue an exiting request please click the buttons below.`,
+        `To continue an exiting request please click the button below.`,
         `left`,
-        "Yes restart now, Continue existing request",
-        "restart,continuingrequest"
+        "Continue existing request",
+        "continuingrequest"
       );
       setTimeout(() => {
         this.generalservice.responseDisplayNotifier(newresponse);
