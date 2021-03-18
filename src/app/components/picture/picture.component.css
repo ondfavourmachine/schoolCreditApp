@@ -3,6 +3,13 @@
   margin: 0 auto;
 }
 
+.picture__container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
 .modified-button {
   margin-top: 2rem;
 }
@@ -17,6 +24,38 @@
   width: fit-content !important;
   padding: 0.8ch 1rem !important;
   cursor: pointer !important;
+}
+
+.img__house{
+  height: 150px;
+  width: 150px;
+  border: 1px solid rgba(0,0,0,.15);
+  border-radius: 50%;
+  position: relative;
+  /* overflow: hidden; */
+}
+
+.img__house img{
+   max-width: 100%;
+}
+
+.add__picture{
+  position: absolute;
+  height: 40px;
+  width: 40px;
+  display: -webkit-box;
+  display: flex;
+  z-index: 999;
+  -webkit-box-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  align-items: center;
+  top: 109px;
+  right: 9px;
+  border-radius: 50%;
+  backdrop-filter: blur(3px);
+  border: 1px solid rgba(0,0,0,.15);
+  box-shadow: 0 1px 4px 1px rgba(0,0,0,.085);
 }
 
 

@@ -1,10 +1,16 @@
-<div>
-  <img
+<div class="picture__container"> 
+   <div class="img__house">
+    <img
     (click)="addPicture()"
     title="click to add a picture"
     class=" circular medium ui image modified-img"
-    src="/assets/images/image-placeholder-1.svg"
+    src="/assets/images/no-product.svg"
   />
+    <span (click)="addPicture()"
+     class="add__picture">
+      <img style="max-width: 80%;" src="/assets/images/camera.svg" alt="">
+     </span>
+   </div>
   <input
     (change)="fileToBeCropped($event)"
     type="file"

@@ -137,8 +137,8 @@ export class ParentsInformationComponent
   emailIsNotUnique: boolean = false;
   emailForm: FormGroup;
   address: string = "";
-  state: string = "1";
-  localGovtArea: string = "1";
+  state: string = "25";
+  localGovtArea: string = "25";
   destroy: Subscription[] = [];
   lgaData: any = {};
   checkingUniqueness: 'checking' | 'not-unique' | 'unique' | 'done' | '' = 'done';
@@ -151,6 +151,7 @@ export class ParentsInformationComponent
   ) {
     this.NigerianStates = sandBoxData().data.states;
     this.lgaData = { ...LgaData() };
+ 
     this.selectLgaInState(this.localGovtArea);
     // this is necessary for the addEventListener
     this.manageGoingBackAndForth = this.manageGoingBackAndForth.bind(this);
@@ -228,6 +229,7 @@ export class ParentsInformationComponent
   }
 
   selectLgaInState(value: string) {
+    
     const selectedLga = this.lgaData[value || this.localGovtArea];
     this.stateLgas = selectedLga.data;
     // console.log(selectedLga);

@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from "@angular/core";
+import { Component, OnInit, Output, EventEmitter, Input } from "@angular/core";
 import { Parent } from "src/app/models/data-models";
 import * as generalActions from "../../store/actions/general.action";
 import * as fromStore from "../../store";
@@ -17,6 +17,7 @@ import { GeneralService } from "src/app/services/generalService/general.service"
 export class PictureComponent implements OnInit {
   @Output() changeUpTheView = new EventEmitter<string>();
   @Output() startSpinner = new EventEmitter<boolean>();
+  @Input('fromWhere') fromWhere: string;
   showModal: string;
   imageChangedEvent: any = null;
   rawFile: File;
