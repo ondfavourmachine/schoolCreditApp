@@ -286,6 +286,8 @@
           (blur)="checkingUniqueness = 'done'"
           formControlName="phone"
           type="tel"
+          minlength="0"
+          maxlength="11"
           pattern="[0-9]{11}"
           placeholder="Eg: 09093345678"
         />
@@ -363,17 +365,24 @@
             ></i> 
         </small>
       </div>
-       <small *ngIf="emailField?.errors?.emailExists" class="email_exists">  
+       <small *ngIf="emailIsNotUnique" class="email_exists">  
          This email has already been taken
        </small>
     </div>
 
     <div class="text-center mt-4">
+      <!-- <button
+          type="button"
+          class="ui primary button fluid"
+        >
+      Validate
+    </button> -->
       <button
-        (click)="submitEmail(emailForm)"
+        (click)="submitEmail(emailForm, $event)"
         type="button"
+        style="min-height: 39px;"
         [disabled]="!emailForm.valid"
-        class="ui primary button fluid"
+        class="ui primary button fluid buttonWithSpinner"
       >
         Continue
       </button>

@@ -40,7 +40,10 @@ interface LGA extends State {}
 const validateEmailIsUnique = (apiservice: ChatService, regex: RegExp, 
   obj: ParentsInformationComponent): AsyncValidatorFn => (control: AbstractControl): Promise<{emailExists: boolean}> | Observable<{emailExists: boolean}> | null => {
   obj.checkingUniqueness = 'checking';
-  if(!control || control.value.length < 2 || !regex.test(control.value)) { obj.checkingUniqueness = 'done'; return of(null)};
+  if(!control && control.value.length < 2 && !regex.test(control.value)) { 
+    obj.checkingUniqueness = 'done'; 
+    return of(null)
+  };
      return apiservice.checkEmailUniqueness({email: control.value})
       .pipe(map(val => {
         if(val.message.includes('The email has already been taken')){
@@ -68,6 +71,7 @@ const validatePhoneIsUnique =
        obj.checkingUniqueness = 'done'; 
        return of(null);
       };
+    
      return apiservice.checkPhoneUniqueness({phone: control.value})
       .pipe(map(val => {
         if(val.message.includes('The phone has already been taken')){
@@ -130,7 +134,7 @@ export class ParentsInformationComponent
   NigerianStates: State[] = [];
   phoneForm: FormGroup;
   phoneVerificationForm: FormGroup;
-
+  emailIsNotUnique: boolean = false;
   emailForm: FormGroup;
   address: string = "";
   state: string = "1";
@@ -183,12 +187,13 @@ export class ParentsInformationComponent
     this.emailForm = this.fb.group({
       // email: ["", [Validators.required, Validators.email], 
       // [validateEmailIsUnique(this.chatapi, this.generalservice.emailRegex, this)]],
-
-      email: ['', {
-        validators: [Validators.required, Validators.email],
-        asyncValidators: [validateEmailIsUnique(this.chatapi, this.generalservice.emailRegex, this)],
-        updateOn: 'blur'
-      }]
+  //    updateOn: 'blur'
+  // ['', {
+  //   validators: [Validators.required],
+  //   asyncValidators: [validateEmailIsUnique(this.chatapi, this.generalservice.emailRegex, this)],
+  
+  // }]
+      email: ['', [Validators.required, Validators.pattern(this.generalservice.emailRegex)]]
     });
   }
 
@@ -289,19 +294,21 @@ export class ParentsInformationComponent
   
 
 
-  async submitEmail(form: FormGroup) {
-    this.spinner = true;
+  async submitEmail(form: FormGroup, event) {
     let guardian;
-    //  i need to write selectors to stop doing this
-    const disconnect: Subscription = this.store
+    const button = event.target as HTMLButtonElement;
+    button.innerText = '';
+    button.classList.add('spin');
+    this.chatapi.checkEmailUniqueness({email: form.value.email}).subscribe(val => {
+      this.emailIsNotUnique = false;
+      this.checkingUniqueness = 'unique';
+      button.classList.remove('spin');
+      button.innerText = "Continue";
+      // since checking for uniqueness is done, then continue.
+      setTimeout(() => {
+        const disconnect: Subscription = this.store
       .pipe(pluck("manageParent", "parent_info", "guardian"))
       .subscribe(val => (guardian = val));
-
-    // try {
-    //   await this.chatapi.updateEmail({
-    //     email: form.value.email,
-    //     guardian
-    //   });
     const refreshedState: Partial<Parent> = { email: form.value.email };
     this.store.dispatch(new generalActions.addParents(refreshedState));
     this.view = "address";
@@ -309,10 +316,17 @@ export class ParentsInformationComponent
     this.spinner = false;
     this.checkingUniqueness = 'done';
     disconnect.unsubscribe();
-    // this.changeToAnotherView();
-    // } catch (error) {
-    //   this.spinner = false;
-    // }
+      }, 1000);
+     
+    }, err => {
+      this.checkingUniqueness = "not-unique";
+      this.emailIsNotUnique = true;
+      button.classList.remove('spin');
+      button.innerText = 'Continue';
+    })
+    // // this.spinner = true;
+    
+  
   }
 
   change() {

@@ -34,6 +34,9 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
   private arrayOfRegexes: Array<RegExp> = [
     /hello/gi,
     /restart/gi,
+    /start/gi,
+    /go/gi, 
+    /begin/gi, 
     /register child/gi,
     /continue previous/gi,
     /register account details/gi,
@@ -101,6 +104,7 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
   processAndRespondToUserInput(actualText: string, value: string) {
     (this.inputFromUser.nativeElement as HTMLInputElement).value = "";
     const typeOfUser = this.router.url;
+    let newresponse: replyGiversOrReceivers;
     switch (actualText) {
       case "help":
         this.generalservice.nextChatbotReplyToGiver = undefined;
@@ -118,62 +122,23 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
           );
         }, 300);
         break;
-      case "hi":
-      case "hello":
-        const reply = actualText == "hi" ? "Hello" : "Hi";
-        if (typeOfUser.includes("giver")) {
-          const response = new replyGiversOrReceivers(`${value}`, "right");
-          this.generalservice.nextChatbotReplyToGiver = null;
-          this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
-            `${reply}, It's nice to meet you. I know you're here to donate to a family or families in need. Please click one of the buttons to begin`,
-            `left`,
-            "",
-            "",
-            undefined,
-            { classes: ["helper"] }
-          );
-          setTimeout(() => {
-            this.generalservice.responseDisplayNotifier(response);
-          }, 700);
-        }
-        break;
-      case "done":
-      case "completed":
-      case "sent":
-      case "finished giving":
-      case "donated":
-      case "donated money":
-        if (
-          !this.generalservice.justFinishedGiving &&
-          typeOfUser.includes("giver")
-        ) {
-          const response = new replyGiversOrReceivers(`${value}`, "right");
-          this.generalservice.nextChatbotReplyToGiver = null;
-          this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
-            `You have made an invalid entry! I am sure you intend to provide some financial assistance to a family or some families in need. Please click any of the buttons to continue`,
-            `left`,
-            "I want to be identified,Stay anonymous",
-            "identify,anonymous"
-          );
-          setTimeout(() => {
-            this.generalservice.responseDisplayNotifier(response);
-          }, 700);
-        } else {
-          if (!typeOfUser.includes("giver")) return;
-
-          const response = new replyGiversOrReceivers(`${value}`, "right");
-          this.generalservice.nextChatbotReplyToGiver = null;
-          this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
-            `It is great that you provided help in this trying times!`,
-            "left",
-            "Give more money",
-            "giveMoney"
-          );
-          setTimeout(() => {
-            this.generalservice.responseDisplayNotifier(response);
-          }, 700);
-        }
-        break;
+        case "hi":
+        case "hello":
+        case "start":
+        case "begin":
+        const chatresponse = actualText.toLowerCase() == 'hi' ? 'Hello' : 'Hi' ;
+        newresponse = new replyGiversOrReceivers(`${value}`, "right");
+        this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
+          `${chatresponse}, welcome to this payment service. click any of the buttons below to begin`,
+          `left`,
+          "make a new request, Continue existing request",
+          "newrequest,continuingrequest"
+        );
+        setTimeout(() => {
+          this.generalservice.responseDisplayNotifier(newresponse);
+        }, 400);
+      break;
+      
       case "school":
       case "give":
         if (typeOfUser.includes("school")) {
@@ -190,9 +155,8 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
           }, 700);
         }
         break;
-      case "restart":
+       case "restart":
         const response = new replyGiversOrReceivers(`${value}`, "right");
-        // this.generalservice.nextChatbotReplyToGiver = null;
         this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
           `You asked to restart the process. This will lead to loosing all previous entries.
            Are you sure you want to restart?`,
@@ -204,26 +168,35 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
           this.generalservice.responseDisplayNotifier(response);
         }, 400);
         break;
+      case 'register':
       case "register child":
-      const responseToSender = new replyGiversOrReceivers(`${value}`, "right");
+      newresponse = new replyGiversOrReceivers(`${value}`, "right");
       this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
-        `You asked to register a child. This will lead to loosing all previous entries.
-         Are you sure you want to restart?`,
+        `You asked to register a child. Please click any of the buttons below to begin`,
         `left`,
         "Yes restart now,make a new request, Continue existing request",
         "restart,newrequest,continuingrequest"
       );
       setTimeout(() => {
-        this.generalservice.responseDisplayNotifier(responseToSender);
+        this.generalservice.responseDisplayNotifier(newresponse);
+      }, 400);
+
+      break;
+      case "continue a request":
+      newresponse = new replyGiversOrReceivers(`${value}`, "right");
+      this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
+        `To continue an exiting request please click the buttons below.`,
+        `left`,
+        "Yes restart now, Continue existing request",
+        "restart,continuingrequest"
+      );
+      setTimeout(() => {
+        this.generalservice.responseDisplayNotifier(newresponse);
       }, 400);
       break;
-      case "register account details":
-      case "register account":
-      break;
       default:
-        if (typeOfUser.includes("school")) {
           this.generalservice.nextChatbotReplyToGiver = undefined;
-          const response = new replyGiversOrReceivers(`${value}`, "right");
+          const response2 = new replyGiversOrReceivers(`${value}`, "right");
           this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
             `Your entry is invalid! Here are a list of words that could help you quickly navigate the system.
              `,
@@ -234,9 +207,9 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
             { classes: ["bot_helper_message"] }
           );
           setTimeout(() => {
-            this.generalservice.responseDisplayNotifier(response);
+            this.generalservice.responseDisplayNotifier(response2);
           }, 700);
-        }
+      
     }
   }
 

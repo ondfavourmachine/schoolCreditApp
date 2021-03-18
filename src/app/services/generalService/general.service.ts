@@ -27,7 +27,8 @@ export class GeneralService {
   public apiUrl =
     "https://covidreliefbackend.covidrelief.com.ng/covidd/public/index.php/api/";
   public totalLengthOfQuestions: number = 0;
-  public emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+  public emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    //  /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
   public counter: number = 0;
   public allQuestions: Array<QuestionsToAsk> = [];
   public displayedQuestions: Array<DisplayQuestion> = [];
