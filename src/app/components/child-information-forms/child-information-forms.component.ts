@@ -412,7 +412,7 @@ export class ChildInformationFormsComponent
           "left",
           "Yes I am, I'll do it later",
           `makefullpayment, notinterested`,
-          "allow"
+           undefined
           );
         this.generalservice.responseDisplayNotifier(chatbotResponse);
         this.viewToshow = "";
