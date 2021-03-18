@@ -574,8 +574,9 @@ export class Message {
         this.giverDispatchEvents(
           "customGiverEventFromMsgClass",
           "giver",
-          "parents-information"
+          "child-information-forms"
         );
+        //  "parents-information"
         break;
       // responses by the giver starts here
       case "newrequest":

@@ -108,6 +108,7 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
         }, 300);
         break;
         case "hi":
+        case "go":
         case "hello":
         case "start":
         case "begin":
