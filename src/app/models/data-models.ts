@@ -136,10 +136,12 @@ export interface Offers{
 
 export interface SchoolDetailsModel{
   address: string
-  created_at: string
+  created_at: string,
 email: string
 id: number
-licensed: number
+licensed: number,
+bank_code: number,
+classes: Array<SchoolClass>
 name: string
 nursery: number
 payment_link: null | string
@@ -149,6 +151,11 @@ primary: string
 secondary: string
 students_range: string
 username: string
+}
+
+export interface SchoolClass{
+  id: string,
+  name: string
 }
 
 export interface SchoolBookStructure {

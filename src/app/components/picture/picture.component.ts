@@ -17,7 +17,8 @@ import { GeneralService } from "src/app/services/generalService/general.service"
 export class PictureComponent implements OnInit {
   @Output() changeUpTheView = new EventEmitter<string>();
   @Output() startSpinner = new EventEmitter<boolean>();
-  @Input('fromWhere') fromWhere: string;
+  @Output() childPicture = new EventEmitter<File>();
+  @Input('fromWhere') fromWhere: any;
   showModal: string;
   imageChangedEvent: any = null;
   rawFile: File;
@@ -70,6 +71,10 @@ export class PictureComponent implements OnInit {
     const updateParentInfo: Partial<Parent> = {
       picture: event
     };
+    console.log(this.fromWhere);
+    if(this.fromWhere == 'child-information-form'){
+      this.childPicture.emit(this.rawFile);
+    }
     this.store.dispatch(new generalActions.addParents(updateParentInfo));
     let reader: FileReader;
     if (FileReader) {

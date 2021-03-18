@@ -196,6 +196,7 @@ export class ParentsInformationComponent
   // }]
       email: ['', [Validators.required, Validators.pattern(this.generalservice.emailRegex)]]
     });
+    
   }
 
  

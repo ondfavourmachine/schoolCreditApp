@@ -11,7 +11,7 @@ import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { StoreService } from "src/app/services/mockstore/store.service";
 import { GeneralService } from "src/app/services/generalService/general.service";
 import { replyGiversOrReceivers } from "src/app/models/GiverResponse";
-import { AChild, Parent, SchoolBook } from "src/app/models/data-models";
+import { AChild, Parent, SchoolBook, SchoolClass } from "src/app/models/data-models";
 import { Subscription } from "rxjs";
 import { Store } from "@ngrx/store";
 // import { pluck } from "rxjs/operators";
@@ -64,6 +64,7 @@ export class ChildInformationFormsComponent
   numberOfSchoolBooks: number = 0;
   totalCostOfSchoolBooks: number = 0;
   parentDetails: Partial<Parent>
+  schoolClasses: SchoolClass[] = [];
   constructor(
     private fb: FormBuilder,
     public mockstore: StoreService,
@@ -155,6 +156,10 @@ export class ChildInformationFormsComponent
       // console.log(val);
       (val as Array<any>).length > 0 ? this.numberOfSchoolBooks = val.length : this.numberOfSchoolBooks = 0;
     })
+
+    this.destroy[6] = this.store.select(fromStore.getSchoolDetailsState)
+    .pipe(pluck('school_Info', 'classes'))
+    .subscribe((val: Array<SchoolClass>) => this.schoolClasses = val);
   }
 
   ngAfterViewInit() {
@@ -168,10 +173,6 @@ export class ChildInformationFormsComponent
   }
 
   async loadChildImage(event: Event) {
-    // const updateChildInfo: Partial<AChild> = {
-    //   picture: event.target["files"][0]
-    // };
-    // this.store.dispatch(new generalActions.addAChild(updateChildInfo));
     this.childPicture = event.target["files"][0];
     let reader: FileReader;
     if (FileReader) {
@@ -184,6 +185,10 @@ export class ChildInformationFormsComponent
       };
       reader.readAsDataURL(event.target["files"][0]);
     }
+  }
+
+  saveChildPictureFromPictureComp(event: File){
+    this.childPicture = event;
   }
 
  
@@ -325,7 +330,6 @@ export class ChildInformationFormsComponent
   onToNextChild(value: string) {
     if (value.trim().toLowerCase() == "next") {
       this.viewToshow = "summary";
-      // console.log(this.mapOfChildrensInfo);
       return;
     }
     this.viewToshow = "enterInformation";

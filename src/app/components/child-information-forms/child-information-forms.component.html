@@ -125,8 +125,8 @@
               Your name is required!</small>
           </div> -->
       </div>
-      <div class="field">
-        <!-- -->
+      <!-- <div class="field">
+      
 
         <div class="field">
           <label>Class</label>
@@ -137,6 +137,24 @@
             placeholder="Class of child eg: JSS 1"
           />
         </div>
+      </div> -->
+
+      <div class="field">
+        <label>Class</label>
+
+        <select
+          style="height: auto;"
+          class="ui fluid search dropdown"
+          formControlName="class"
+        >
+          <option value="" selected>Select class...</option>
+          <option
+            [value]="class.id"
+            *ngFor="let class of schoolClasses; index as i"
+          >
+            {{ class.name }}
+          </option>
+        </select>
       </div>
 
       <div class="field positioned-relative">
@@ -179,7 +197,7 @@
     Click the image to add child's picture
   </h1>
 
-  <img
+  <!-- <img
     (click)="addChildPictrue()"
     title="click to add a picture"
     class="circular medium ui image modified-img"
@@ -192,9 +210,13 @@
     name="img"
     accept="image/*"
     hidden
-  />
-  <!--  (click)="moveToNextChildOrNot()" --> 
-  <button
+  /> -->
+  <app-picture
+    [fromWhere]="'child-information-form'"
+    (childPicture)="saveChildPictureFromPictureComp($event)"
+    (changeUpTheView)="showBookSelectionPage()"
+  ></app-picture>
+  <!-- <button
     (click)="showBookSelectionPage()"
     type="submit"
     class="ui primary button fluid modified-button"
@@ -203,7 +225,7 @@
   </button>
   <div *ngIf="spinner" class="spinner-container">
     <i class="fa fa-circle-notch fa-spin fa-3x"></i>
-  </div>
+  </div> -->
 </div>
 
 <div class=" h-100 text-center family-info" *ngIf="viewToshow == 'modifyOrNot'">
