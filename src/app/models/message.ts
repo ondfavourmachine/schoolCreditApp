@@ -483,6 +483,9 @@ export class Message {
         );
        break;
       case 'makefullpayment':
+        new GiverResponse(
+          new replyGiversOrReceivers("I want to make full payment", "right")
+        )
         this.giverDispatchEvents(
           "customGiverEventFromMsgClass",
           "giver",

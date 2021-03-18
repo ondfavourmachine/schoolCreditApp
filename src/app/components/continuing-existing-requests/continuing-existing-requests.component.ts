@@ -116,16 +116,20 @@ export class ContinuingExistingRequestsComponent
 
   async submitOTPFromPhone(form) {
     this.spinner = true;
-    // const {phone} = this.contactPhoneForm.value;
-    const res = await this.chatservice.verifyOTP({
-      phone_OTP: form.value.OTP_for_phone,
-      guardian: this.guardianID as string
-    });
-    this.spinner = false;
-    this.listOfStagesForLater.phone_verified = 1;
-    const returnVal = this.rearrangeStaInOrderFashion(this
-      .listOfStagesForLater as schoolCreditStage);
-    this.continue(returnVal, this.parentDetails);
+    try {
+      const res = await this.chatservice.verifyOTP({
+        phone_OTP: form.value.OTP_for_phone,
+        guardian: this.guardianID as string
+      });
+      this.spinner = false;
+      this.listOfStagesForLater.phone_verified = 1;
+      const returnVal = this.rearrangeStaInOrderFashion(this
+        .listOfStagesForLater as schoolCreditStage);
+        this.continue(returnVal, this.parentDetails);
+    } catch (error) {
+      console.log(error);
+    }
+    
     
   }
 

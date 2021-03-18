@@ -360,9 +360,10 @@ export class ChildInformationFormsComponent
       }
     }
     
-    this.notifyBackendOfLoanRequest();
-    // debugger;
-    await this.chatapi.fetchWidgetStages(this.tuitionFeesTotal);
+    if (!this.fullpayment){
+      this.notifyBackendOfLoanRequest();
+      await this.chatapi.fetchWidgetStages(this.tuitionFeesTotal);
+    }
     let total = 0;
     this.mapOfChildrensInfo.forEach((element, key, map) => {
       total += element.total_cost_of_books;
@@ -396,20 +397,23 @@ export class ChildInformationFormsComponent
       this.fullpayment = false;
       sessionStorage.removeItem("fullpayment");
       setTimeout(() => {
+
+        
+        // const chatbotResponse = new replyGiversOrReceivers(
+        //   `Are you ready to be connected to a financial institution?`,
+        //   "left",
+        //   "Yes, No Later",
+        //   `connectme, notinterested`,
+        //   "allow"
+        // );
+        this.generalservice.nextChatbotReplyToGiver = undefined;
         const chatbotResponse = new replyGiversOrReceivers(
           `Are you ready to make payment now?`,
           "left",
           "Yes I am, I'll do it later",
           `makefullpayment, notinterested`,
           "allow"
-        );
-        this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
-              `Are you ready to be connected to a financial institution?`,
-              "left",
-              "Yes, No Later",
-              `connectme, notinterested`,
-              "allow"
-            );
+          );
         this.generalservice.responseDisplayNotifier(chatbotResponse);
         this.viewToshow = "";
         this.previousPage.emit("firstPage");
