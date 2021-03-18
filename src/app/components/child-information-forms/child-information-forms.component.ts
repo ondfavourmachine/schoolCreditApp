@@ -5,7 +5,9 @@ import {
   EventEmitter,
   Output,
   Input,
-  AfterViewInit
+  AfterViewInit,
+  ViewChild,
+  ElementRef
 } from "@angular/core";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { StoreService } from "src/app/services/mockstore/store.service";
@@ -30,6 +32,7 @@ export class ChildInformationFormsComponent
   implements OnInit, AfterViewInit, OnDestroy {
   @Output("previousPage") previousPage = new EventEmitter<string>();
   @Input("back") back: any;
+  @ViewChild('inputForTuition') inputForTuition: ElementRef
   schoolID: string
   viewToshow:
     | ""
@@ -542,6 +545,12 @@ export class ChildInformationFormsComponent
     });
     const updatedParents: Partial<Parent> = {...this.parentDetails, loan_request: res.request}
     this.store.dispatch(new generalActions.addParents(updatedParents));
+  }
+
+  makeReadable(value: string){
+    const correctedValue = value.split(',').join('');
+    const newValue = new Intl.NumberFormat().format(Number(correctedValue));
+    (this.inputForTuition.nativeElement as HTMLInputElement).value = newValue;
   }
 
   ngOnDestroy() {

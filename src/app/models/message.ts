@@ -574,7 +574,7 @@ export class Message {
         this.giverDispatchEvents(
           "customGiverEventFromMsgClass",
           "giver",
-          "child-information-forms"
+          "parents-information"
         );
         //  "parents-information"
         break;

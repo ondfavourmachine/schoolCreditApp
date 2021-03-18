@@ -164,14 +164,16 @@
           formControlName="tuition_fees"
           name="tuition"
           type="number"
+          #inputForTuition
+          (blur)="makeReadable($event.target.value)"
           placeholder="Enter tuition fees"
         />
-        <small
+        <!-- <small
           *ngIf="childInfoForm.get('tuition_fees').value"
           class="positioned-absolute currency"
         >
           &#8358;
-        </small>
+        </small> -->
         <!-- <div *ngIf="phone.touched && phone.invalid" class="ng-invalid ng-touched">
             <small style="color: #f10b0b9d;" *ngIf="phoneIsRequired()">
               Your phone number is required!</small>
