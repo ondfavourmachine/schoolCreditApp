@@ -40,6 +40,7 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
     /register/gi,
     /register child/gi,
     /continue previous/gi,
+    /continue request/gi,
     /register account details/gi,
     /register account/gi,
     /hi/gi,
@@ -179,7 +180,8 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
       }, 400);
 
       break;
-      case "continue a request":
+      case 'continue request':
+      case "continue previous":
       newresponse = new replyGiversOrReceivers(`${value}`, "right");
       this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
         `To continue an exiting request please click the button below.`,
