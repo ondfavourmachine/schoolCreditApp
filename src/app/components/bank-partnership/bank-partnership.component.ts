@@ -180,8 +180,12 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
 
     window.addEventListener('message', async (e)=> {
         if(e['origin'] == 'https://bankstatementwidget.creditclan.com'){
-          await this.chatservice.updateBackEndOfSuccessfulCompletionOfWidgetStage(this.parentDetails.loan_request.toString(), '2');
-          this.page = 'offers';
+           try{
+            await this.chatservice.updateBackEndOfSuccessfulCompletionOfWidgetStage(this.parentDetails.loan_request.toString(), '2');
+            this.page = 'offers';
+           }catch(e){
+             this.page = 'offers';
+           }
         }
     })
 
