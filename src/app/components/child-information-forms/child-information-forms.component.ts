@@ -288,6 +288,8 @@ export class ChildInformationFormsComponent
 
   moveToNextChildOrNot(schoolBooks?: Array<SchoolBook>) {
     this.spinner = true;
+    let recalibrated = this.childInfoForm.value.tuition_fees.split(',').join('');
+    this.childInfoForm.value.tuition_fees = recalibrated;
     let value: Partial<AChild> = { ...this.childInfoForm.value };
     const objectHoldingIndex = this.mapOfChildrensInfo.get(this.currentChild);
     value = {
@@ -298,8 +300,6 @@ export class ChildInformationFormsComponent
       total_cost_of_books: objectHoldingIndex.total_cost_of_books
     };
     this.mapOfChildrensInfo.set(this.currentChild, value);
-    // console.log(this.mapOfChildrensInfo.get(this.currentChild));
-    // this is necessary
     if (this.mockstore.childrenInformationSubmittedByParent.length < 1) {
       this.mockstore.childrenInformationSubmittedByParent.push(
         this.mapOfChildrensInfo.get(this.currentChild)
@@ -442,7 +442,7 @@ export class ChildInformationFormsComponent
     this.mapOfChildrensInfo.forEach((element, key, map) => {
       total += element.total_cost_of_books;
     })
-    this.totalCostOfSchoolBooks = total;
+    this.totalCostOfSchoolBooks = isNaN(total) ? 0 : total;
     // console.log(this.totalCostOfSchoolBooks);
     this.spinner = false;
     this.previousPage.emit("firstPage");
@@ -456,7 +456,7 @@ export class ChildInformationFormsComponent
       }!`,
       "right"
     );
-    console.log(this.tuitionFeesTotal);
+    // console.log(this.tuitionFeesTotal);
     this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
       `Summary :
        You entered a total of ₦${new Intl.NumberFormat().format(
@@ -470,8 +470,6 @@ export class ChildInformationFormsComponent
 
     this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
     this.generalservice.responseDisplayNotifier(responseFromParent);
-    // let saveToStorage = Array.from(this.mapOfChildrensInfo.entries());
-    // this.generalservice.setStage("child-info", saveToStorage);
     setTimeout(() => {
       this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
         `Are you ready to be connected to a financial institution?`,

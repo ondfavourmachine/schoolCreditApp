@@ -477,4 +477,19 @@ export class GeneralService {
     });
     return returnVal;
   }
+
+  fileToDataurl(File: File | string): Promise<any> | string{
+    let returnString;
+    if(typeof File == 'string') return File;
+   return new Promise((resolve, reject)=> {
+    if (FileReader) {
+      let reader = new FileReader();
+      reader.onload = anevent => {
+        returnString = `${anevent.target["result"]}`; 
+        resolve(returnString);
+      };
+      reader.readAsDataURL(File);
+    }
+   }) 
+  }
 }

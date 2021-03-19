@@ -117,7 +117,6 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
 
     this.destroy[1] = this.store.select(fromStore.getParentState)
     .pipe(map(val => {
-      console.log(val);
       const parent = val as any;
       return {
         request_id: parent['parent_loan_request_status']['creditclan_request_id'],
@@ -374,7 +373,7 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
-   launchWidget() {
+   async launchWidget() {
     this.spinner = true;
     let totalFees: number = 0;
     const disconnect = this.store
@@ -383,15 +382,15 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
         const { total_tuition_fees } = val as ChildrenState;
         totalFees += total_tuition_fees;
       });
+
+    const pictureForWidget = await this.generalservice.fileToDataurl(this.parentDetails.picture as File);
     cc.open();
-     // listen for ready event window 
     cc.on('ready', () => {
       console.log('Ready..');
-      // const merchant = this._auth.merchant;
       const data = {
         loan:  {amount: totalFees, tenor: 3 },
         profile: {
-          picture: this.parentDetails.picture,
+          picture: pictureForWidget,
           personal: {
             user_id: this.parentDetails.guardian,
             full_name: this.parentDetails.full_name,
@@ -429,7 +428,7 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
     });
     cc.on('request', async (data) => {
       //  if the request was created successfully
-      // console.log('Request..', data);
+   
       const loanRequest = {creditclan_request_id: data.dd, eligible: data.eligible};
       this.store.dispatch(new generalActions.updateParentLoanRequest(loanRequest));
       // debugger;

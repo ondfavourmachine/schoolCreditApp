@@ -120,10 +120,7 @@
       <div class="field">
         <label>Name</label>
         <input formControlName="name" type="text" placeholder="Fullname" />
-        <!-- <div *ngIf="name.touched && name.invalid" class="ng-invalid ng-touched">
-            <small style="color: #f10b0b9d;" *ngIf="nameIsRequired()">
-              Your name is required!</small>
-          </div> -->
+      
       </div>
       <!-- <div class="field">
       
@@ -164,7 +161,7 @@
           name="tuition"
           type="tel"
           #inputForTuition
-          (blur)="makeReadable($event.target.value)"
+          (change)="makeReadable($event.target.value)"
           placeholder="Enter tuition fees"
         />
         <!-- <small

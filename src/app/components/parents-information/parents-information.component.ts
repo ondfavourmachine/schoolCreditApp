@@ -417,7 +417,7 @@ export class ParentsInformationComponent
   }
 
   submitAddressForm() {
-    // console.log(this.address);
+    
     const refreshedState: Partial<Parent> = { address: this.address, state: this.state, lga: this.localGovtArea };
     this.store.dispatch(new generalActions.addParents(refreshedState));
     this.view = "picture";

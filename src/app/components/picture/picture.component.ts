@@ -71,7 +71,7 @@ export class PictureComponent implements OnInit {
     const updateParentInfo: Partial<Parent> = {
       picture: event
     };
-    console.log(this.fromWhere);
+
     if(this.fromWhere == 'child-information-form'){
       this.childPicture.emit(this.rawFile);
     }
