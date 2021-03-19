@@ -344,7 +344,7 @@ export class ChatService {
 
   // fetch list of banks
   fetchBankNames(): Bank[] {
-    let allBanks = JSON.parse(sessionStorage.getItem("allBanks")).data;
+    let allBanks = JSON.parse(sessionStorage.getItem("allBanks"));
     if (sessionStorage.getItem("allBanks")) {
       return allBanks["data"] as Array<Bank>;
     }
