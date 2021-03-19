@@ -70,7 +70,7 @@ export class ParentAccountFormComponent implements OnInit, AfterViewInit, OnDest
         this.page = "";
       }
     });
-    this.banks = this.chatservice.fetchBankNames();
+    this.banks = JSON.parse(sessionStorage.getItem('allBanks')).data;
     this.bankAccountForm = this.fb.group({
       bank_code: ["", Validators.required],
       account_number: ["", Validators.required],
