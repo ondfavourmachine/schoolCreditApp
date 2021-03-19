@@ -1,6 +1,11 @@
 import { Component, OnInit } from "@angular/core";
 import { GeneralService } from "src/app/services/generalService/general.service";
 import { replyGiversOrReceivers } from "src/app/models/GiverResponse";
+import { Subscription } from "rxjs";
+import { pluck } from "rxjs/operators";
+import * as fromStore from "../../store";
+import { Store } from "@ngrx/store";
+import { Bank, SchoolDetailsModel } from "src/app/models/data-models";
 
 @Component({
   selector: "app-make-full-payment",
@@ -8,9 +13,22 @@ import { replyGiversOrReceivers } from "src/app/models/GiverResponse";
   styleUrls: ["./make-full-payment.component.css"]
 })
 export class MakeFullPaymentComponent implements OnInit {
-  constructor(private generalservice: GeneralService) {}
+  destroyAnything: Subscription[] = [];
+  schoolDetails:SchoolDetailsModel;
+  bankName: Bank;
+  constructor(
+    private generalservice: GeneralService,
+    private store: Store) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.destroyAnything[0]= this.store.select(fromStore.getSchoolDetailsState) 
+    .pipe(pluck('school_Info'))
+    .subscribe((val: SchoolDetailsModel) => this.schoolDetails = val)
+    
+    const banks: Array<Bank> = JSON.parse(sessionStorage.getItem('allBanks')).data;
+    this.bankName = banks.find(element => element.bank_code == this.schoolDetails.bank_code)
+    
+  }
 
   doneSendingMoney() {
     const responseFromParent = new replyGiversOrReceivers(
@@ -47,5 +65,9 @@ export class MakeFullPaymentComponent implements OnInit {
       this.generalservice.responseDisplayNotifier(chatbotResponse);
       sessionStorage.removeItem('savedChats');
     }, 800);
+  }
+
+  cancel(){
+    this.generalservice.handleFlowController("");
   }
 }

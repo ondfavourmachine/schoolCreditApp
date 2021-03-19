@@ -456,6 +456,7 @@ export class ChildInformationFormsComponent
       }!`,
       "right"
     );
+    console.log(this.tuitionFeesTotal);
     this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
       `Summary :
        You entered a total of ₦${new Intl.NumberFormat().format(

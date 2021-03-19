@@ -9,18 +9,18 @@
       <li>
         <span>Account name:</span>
         <span>
-          Adanma High School
+         {{ schoolDetails?.account_name }}
         </span>
       </li>
       <li>
         <span>Bank:</span>
-        <span>United Bank Of Africa </span>
+        <span>  {{ bankName?.name }} </span>
       </li>
       <li>
         <span>Account number:</span>
-        <span>0216254840</span>
+        <span> {{ schoolDetails?.account_number  }} </span>
       </li>
-      <li>
+      <!-- <li>
         <span>
           <form class="ui form mt-2">
             <div class="field">
@@ -33,12 +33,12 @@
             </div>
           </form>
         </span>
-      </li>
+      </li> -->
     </ul>
 
     <button (click)="doneSendingMoney()" class="ui button primary basic mt-2">
-      Done
+      Transfer
     </button>
-    <a class="mt-3 link"><span class="mr-2">←</span>Back</a>
+    <a (click)="cancel()" class="mt-3 link"><span  class="mr-2">←</span>Back</a>
   </div>
 </div>

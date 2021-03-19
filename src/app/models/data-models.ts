@@ -137,11 +137,13 @@ export interface Offers{
 
 export interface SchoolDetailsModel{
   address: string
-  created_at: string,
+  account_name: string
+account_number: string
+created_at: string,
 email: string
 id: number
 licensed: number,
-bank_code: number,
+bank_code: string,
 classes: Array<SchoolClass>
 name: string
 nursery: number

@@ -6,6 +6,7 @@ import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { Parent } from "src/app/models/data-models";
 import { Subscription } from "rxjs";
 import { pluck } from "rxjs/operators";
+
 import { GeneralService } from "src/app/services/generalService/general.service";
 
 
@@ -40,6 +41,7 @@ export class ProfileFormComponent implements OnInit, OnDestroy {
     this.destroy[1] = this.generalservice.reset$.subscribe(
       (val: string) => {
         if (val.length < 1) return;
+        this.store.dispatch(new generalActions.addParents({full_name: '', date_of_birth: '', gender: ''}));
         this.parentProfileForm.reset();
         this.parentInfo = undefined;
       }
