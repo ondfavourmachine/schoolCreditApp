@@ -106,10 +106,10 @@ export function reducer(
     }
 
     case generalActions.updateOffers: {
-      return {
-        ...state,
-        offers:  [...state.offers, ...action.payload ]
-      };
+      const store = { ...state };
+      store.offers = [];
+      store.offers = [...action.payload];
+      return store;
     }
 
     
