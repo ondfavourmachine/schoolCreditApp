@@ -328,18 +328,21 @@ export class ContinuingExistingRequestsComponent
         }
         const childData = val.data.children;
         childData.length > 0 ? this.handleDataInsideChildren(childData) : null;
-        const res = await this.chatservice.fetchWidgetStages(this.loanAmountByParent.toString());
-        const offers = await this.chatservice.getLoanOffers(val['creditclan_request_id']);
-        this.chatservice.fetchBankNames();
-        this.store.dispatch(new generalActions.updateParentLoanRequest({creditclan_request_id : val['creditclan_request_id'], eligible: true}));
-        this.store.dispatch(new generalActions.updateParentOffers(offers['offers'][0].amount == 0 ? [] : [].concat(offers['offers'])));
-        const newStages = this.updateWidgets(res['widgets_to_show'] as Array<string>, stages);
-        // console.log(res);
-        // debugger;
-        const returnVal = this.rearrangeStaInOrderFashion(newStages);
-        this.checking("stop");
-        
-        this.continue(returnVal, val.data.guardian_data);
+        if(val.payment_type == 2){
+            this.handleParentThatWantsToMakeFullPayment(val.data.children);
+          return;
+        }
+        if(!val.payment_type || val.payment_type == 1){
+          const res = await this.chatservice.fetchWidgetStages(this.loanAmountByParent.toString());
+          const offers = await this.chatservice.getLoanOffers(val['creditclan_request_id']);
+          this.chatservice.fetchBankNames();
+          this.store.dispatch(new generalActions.updateParentLoanRequest({creditclan_request_id : val['creditclan_request_id'], eligible: true}));
+          this.store.dispatch(new generalActions.updateParentOffers(offers['offers'][0].amount == 0 ? [] : [].concat(offers['offers'])));
+          const newStages = this.updateWidgets(res['widgets_to_show'] as Array<string>, stages);
+          const returnVal = this.rearrangeStaInOrderFashion(newStages);
+          this.checking("stop");
+          this.continue(returnVal, val.data.guardian_data);
+        }
       },
       (err: HttpErrorResponse) => {
         this.generalservice.errorNotification(`${err.error.message}!`);
@@ -426,6 +429,41 @@ export class ContinuingExistingRequestsComponent
     // console.log(this.mapOfChildrensInfo);
     this.store.dispatch(new generalActions.addAChild(this.mapOfChildrensInfo));
     this.store.dispatch(new generalActions.calculateFees());
+  }
+
+  handleParentThatWantsToMakeFullPayment(array: Partial<AChild>[]){
+    const totalTuition = array.reduce((acc, thisChild, index, arr)=> {
+      let tuition = thisChild.tuition_fees.split('.')[0]
+      acc += parseInt(tuition);
+      return acc;
+    }, 0)
+    this.generalservice.nextChatbotReplyToGiver = undefined;
+    this.response = new replyGiversOrReceivers(
+      `I see you previously provided your children's info and you indicated you want to make full payment.`,
+      "left",
+      "",
+      ``
+    );
+    this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
+    this.generalservice.handleFlowController("");
+    this.generalservice.responseDisplayNotifier(this.response);
+    setTimeout(() => {
+      this.generalservice.nextChatbotReplyToReceiver = undefined;
+      const chatbotResponse = new replyGiversOrReceivers(
+        `The total payment to be made is ${new Intl.NumberFormat('en-GB',{ style: 'currency', currency: 'NGN' }).format(totalTuition)}. Are you ready to be make payment?`,
+        "left",
+        "Yes, No Later",
+        `makefullpayment, notnow`,
+        "prevent"
+      );
+      // const chatbotResponse = new replyGiversOrReceivers(
+      //   `To fund this request, We have partnered with banks on your behalf`,
+      //   "left",
+      //   "",
+      //   ``
+      // );
+      this.generalservice.responseDisplayNotifier(chatbotResponse);
+    }, 800);
   }
 
   continue(stage: string, data: Partial<Parent>) {

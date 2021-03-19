@@ -570,24 +570,9 @@ export class ChatMessagesDisplayComponent
     this.observableToTrash[4] = this.generalservice.reset$.subscribe(
       (val: string) => {
         if (val.length < 1) return;
-        // const currentRoute = this.route.url;
         sessionStorage.removeItem('savedChats');
         ul.innerHTML = "";
         this.generateWelcomeMsgForReceiverOrGiver(ul);
-        // debugger;
-        // if (currentRoute.includes("giver")) {
-        //   this.route.navigateByUrl("/", { skipLocationChange: true }).then(() => {
-        //     this.route.navigate([currentRoute]);
-        //   });
-        // } else {
-        //   this.route
-        //     .navigateByUrl("/giver", { skipLocationChange: true })
-        //     .then(() => {
-        //       this.route.navigate([currentRoute]);
-        //     });
-        // }
-
-        // this.ngOnInit();
       }
     );
   }

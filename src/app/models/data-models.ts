@@ -110,6 +110,7 @@ export interface ContinuingExistingRequestResponse {
     guardian: number;
     children: Array<Partial<AChild>>;
   };
+  payment_type: null | 1 | 2
   loan_request: null | number,
   stages: schoolCreditStage
   status: boolean;

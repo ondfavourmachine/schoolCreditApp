@@ -6,6 +6,7 @@ import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { Parent } from "src/app/models/data-models";
 import { Subscription } from "rxjs";
 import { pluck } from "rxjs/operators";
+import { GeneralService } from "src/app/services/generalService/general.service";
 
 
 @Component({
@@ -20,7 +21,8 @@ export class ProfileFormComponent implements OnInit, OnDestroy {
   parentProfileForm: FormGroup;
   constructor(
     private store: Store<fromStore.AllState>,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private generalservice: GeneralService
   ) {}
 
   ngOnInit(): void {
@@ -34,6 +36,14 @@ export class ProfileFormComponent implements OnInit, OnDestroy {
       date_of_birth: [this.parentInfo && this.parentInfo.date_of_birth ? this.parentInfo.date_of_birth : '', Validators.required],
       gender: [this.parentInfo && this.parentInfo.gender ? this.parentInfo.gender : '', Validators.required]
     });
+
+    this.destroy[1] = this.generalservice.reset$.subscribe(
+      (val: string) => {
+        if (val.length < 1) return;
+        this.parentProfileForm.reset();
+        this.parentInfo = undefined;
+      }
+    )
   }
 
   get dob() {

@@ -59,8 +59,7 @@ const validateEmailIsUnique = (apiservice: ChatService, regex: RegExp,
         return of({emailExists: true})
       }))
 
-  //  return off(null)
-  // return httpClient.post<any>('url', {email: control.value}).pipe(map(val: any[]) => val.length == 1 ? {emailExists: true}: null)
+  
 }
 
 
@@ -157,9 +156,7 @@ export class ParentsInformationComponent
     this.manageGoingBackAndForth = this.manageGoingBackAndForth.bind(this);
   }
 
-  ngOnChanges() {
-    // console.log(this.previous);
-  }
+  ngOnChanges() {}
 
   ngAfterViewInit() {
     document
@@ -174,28 +171,30 @@ export class ParentsInformationComponent
        this.parent = val as Parent;
      });
     
-    // this.destroy[2] =
-  //   [validatePhoneIsUnique(this.httpclient, /\d{11}/)]
     this.phoneForm = this.fb.group({
       phone: ["", [Validators.required], 
       [validatePhoneIsUnique(this.chatapi, /\d{11}/gi, this)] ]
-      // phone: ['', {}]
+    
     });
-    // this.phoneVerificationForm = this.fb.group({
-    //   OTP: ["", Validators.required]
-    // });
+   
 
     this.emailForm = this.fb.group({
-      // email: ["", [Validators.required, Validators.email], 
-      // [validateEmailIsUnique(this.chatapi, this.generalservice.emailRegex, this)]],
-  //    updateOn: 'blur'
-  // ['', {
-  //   validators: [Validators.required],
-  //   asyncValidators: [validateEmailIsUnique(this.chatapi, this.generalservice.emailRegex, this)],
-  
-  // }]
       email: ['', [Validators.required, Validators.pattern(this.generalservice.emailRegex)]]
     });
+
+    this.destroy[1] = this.generalservice.reset$.subscribe(
+      (val: string) => {
+        if (val.length < 1) return;
+        this.emailForm.reset();
+        this.address = ''
+        this.phoneForm.reset();
+        this.checkingUniqueness = 'done';
+        this.state = "25";
+        this.localGovtArea = "25";
+        this.view = '';
+        this.previousPage.emit("firstPage");
+      }
+    )
     
   }
 

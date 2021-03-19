@@ -163,6 +163,33 @@ export class ChildInformationFormsComponent
     this.destroy[6] = this.store.select(fromStore.getSchoolDetailsState)
     .pipe(pluck('school_Info', 'classes'))
     .subscribe((val: Array<SchoolClass>) => this.schoolClasses = val);
+
+  //  reset everything in this component;
+    this.destroy[7] = this.generalservice.reset$.subscribe(
+      (val: string) => {
+        if (val.length < 1) return;
+        this.childInfoForm.reset();
+        this.fullpayment = false;
+        sessionStorage.removeItem("fullpayment");
+        this.viewToshow = '';
+        this.previousPage.emit("firstPage");
+        this.selected = "";
+        this.selectedChildren = [];
+        this.mapOfChildrensInfo = new Map();
+        this.currentChild = undefined;
+        this.tuitionFeesTotal = undefined;
+        this.guardianID = undefined;
+        this.childPicture = undefined;
+        this.base64FormOfPicture = undefined;
+        this.iterator = undefined;
+        this.numberOfSchoolBooks = 0;
+        this.totalCostOfSchoolBooks = 0;
+        this.parentDetails = undefined;
+        this.schoolClasses = [];
+        this.generalservice.nextChatbotReplyToGiver = undefined;
+        this.generalservice.nextChatbotReplyToReceiver = undefined;
+      }
+    )
   }
 
   ngAfterViewInit() {
@@ -366,20 +393,9 @@ export class ChildInformationFormsComponent
         console.log(error);
       }
     }
-    
-    if (!this.fullpayment){
-      this.notifyBackendOfLoanRequest();
-      await this.chatapi.fetchWidgetStages(this.tuitionFeesTotal);
-    }
-    let total = 0;
-    this.mapOfChildrensInfo.forEach((element, key, map) => {
-      total += element.total_cost_of_books;
-    })
-    this.totalCostOfSchoolBooks = total;
-    // console.log(this.totalCostOfSchoolBooks);
-    this.spinner = false;
-    this.previousPage.emit("firstPage");
+
     if (this.fullpayment) {
+      await this.chatapi.registerParentForFullPayment({guardian_id: this.parentDetails.guardian, payment_type: 2})
       const responseFromParent = new replyGiversOrReceivers(
         `I have provided my ${
           this.mapOfChildrensInfo.size == 1
@@ -404,15 +420,6 @@ export class ChildInformationFormsComponent
       this.fullpayment = false;
       sessionStorage.removeItem("fullpayment");
       setTimeout(() => {
-
-        
-        // const chatbotResponse = new replyGiversOrReceivers(
-        //   `Are you ready to be connected to a financial institution?`,
-        //   "left",
-        //   "Yes, No Later",
-        //   `connectme, notinterested`,
-        //   "allow"
-        // );
         this.generalservice.nextChatbotReplyToGiver = undefined;
         const chatbotResponse = new replyGiversOrReceivers(
           `Are you ready to make payment now?`,
@@ -425,8 +432,21 @@ export class ChildInformationFormsComponent
         this.viewToshow = "";
         this.previousPage.emit("firstPage");
       }, 800);
+      this.spinner = false;
       return;
     }
+
+      this.notifyBackendOfLoanRequest();
+      await this.chatapi.fetchWidgetStages(this.tuitionFeesTotal);
+    let total = 0;
+    this.mapOfChildrensInfo.forEach((element, key, map) => {
+      total += element.total_cost_of_books;
+    })
+    this.totalCostOfSchoolBooks = total;
+    // console.log(this.totalCostOfSchoolBooks);
+    this.spinner = false;
+    this.previousPage.emit("firstPage");
+    
     this.generalservice.handleFlowController("");
     const responseFromParent = new replyGiversOrReceivers(
       `I have provided my ${
@@ -470,7 +490,7 @@ export class ChildInformationFormsComponent
             "left",
             "Yes, No Later",
             `connectme, notinterested`,
-            "allow"
+            "prevent"
           );
       // const chatbotResponse = new replyGiversOrReceivers(
       //   `The school mandates that you add books required by your child or children`,
@@ -496,7 +516,7 @@ export class ChildInformationFormsComponent
   }
 
   childBooksHasBeenAdded(event){
-  
+    debugger;
     this.mapOfChildrensInfo.get(this.currentChild).total_cost_of_books = 0;
     this.mapOfChildrensInfo.get(this.currentChild).total_cost_of_books+= parseInt(event[0]['price']);
     // console.log(this.mapOfChildrensInfo);

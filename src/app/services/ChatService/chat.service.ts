@@ -274,7 +274,8 @@ export class ChatService {
       .toPromise();
   }
 
-  submitParentWithoutPin(obj: {token:any,pin:any,confirm_pin: any, email: string}):Observable<{guardian: any, message: any, status: any}>{
+  submitParentWithoutPin(obj: {token:any,pin:any,confirm_pin: any, email: string}):Observable<{
+    guardian: any, message: any, status: any}>{
         return this.http.patch<any>(`${this.generalUrl}email/verify`, obj)
   }
 
@@ -306,6 +307,11 @@ export class ChatService {
   }
 
   // get school Books
+
+  // register parent that wants to make full payment
+  registerParentForFullPayment(obj: {guardian_id: any, payment_type: any}){
+    return this.http.post(`${this.generalUrl}payment/type`, obj).toPromise()
+  }
 
   getAllBooksFromSchool(schoolId, page_num = 1): 
     Observable<{

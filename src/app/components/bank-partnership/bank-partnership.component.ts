@@ -418,27 +418,10 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
       };
       const forms = [
         'location',
-        'personal',
-        'bvn',
-        'address',
-        'picture',
-        'employment', //
-        'education',
-        'nok',
-        'frequently_called_numbers',
         'identity',
-        'attachment',
-        // 'categories',
-        // 'bank',
-        // 'company_profile',
-        // 'products_pictures',
-        // 'sales_summary',
-        // 'physical_store',
-        // 'business_address',
-        // 'operating_expenses',
-        // 'business_income',
-        'expense',
-        // 'attachment_business',
+        'profile',
+        'employment',
+        'frequently_called_numbers',
       ];
       cc.start(data, forms);
       this.spinner = false;
