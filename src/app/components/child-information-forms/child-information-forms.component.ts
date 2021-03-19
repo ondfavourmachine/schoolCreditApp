@@ -438,6 +438,7 @@ export class ChildInformationFormsComponent
 
       this.notifyBackendOfLoanRequest();
       await this.chatapi.fetchWidgetStages(this.tuitionFeesTotal);
+      
     let total = 0;
     this.mapOfChildrensInfo.forEach((element, key, map) => {
       total += element.total_cost_of_books;

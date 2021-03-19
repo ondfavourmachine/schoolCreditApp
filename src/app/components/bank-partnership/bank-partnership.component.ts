@@ -435,6 +435,8 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
       this.page = 'preamble_to_bankdetails';
       await this.chatservice.updateCreditClanRequestId(this.parentDetails.loan_request, loanRequest.creditclan_request_id);
       await this.chatservice.updateBackEndOfSuccessfulCompletionOfWidgetStage(this.parentDetails.loan_request.toString(), '1');
+      const offers = await this.chatservice.getLoanOffers(loanRequest['creditclan_request_id']);
+      this.store.dispatch(new generalActions.updateParentOffers(offers['offers'][0].amount == 0 ? [] : [].concat(offers['offers'])));
       this.spinner = false;
      
       
