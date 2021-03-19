@@ -578,7 +578,23 @@ export class Message {
         );
         //  "parents-information"
         break;
-      // responses by the giver starts here
+      case "paymenttypetoinstallments":
+        
+       break;
+      case 'changepaymenttype':
+        this.giverResponsesEvent(
+          "customGiverResponse",
+          new replyGiversOrReceivers(
+            "You indicated that you want to make payments in installments. This action is not reversible?",
+            "left",
+            "Yes i am sure,no i will make fullpayment ",
+            "paymenttypetoinstallments,full_pay"
+          ),
+          new GiverResponse(
+            new replyGiversOrReceivers(`It's a new request`, "right")
+          )
+        );
+       break; 
       case "newrequest":
         // Pay in full
         this.giverResponsesEvent(

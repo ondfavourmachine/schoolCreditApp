@@ -452,8 +452,8 @@ export class ContinuingExistingRequestsComponent
       const chatbotResponse = new replyGiversOrReceivers(
         `The total payment to be made is ${new Intl.NumberFormat('en-GB',{ style: 'currency', currency: 'NGN' }).format(totalTuition)}. Are you ready to be make payment?`,
         "left",
-        "Yes, No Later",
-        `makefullpayment, notnow`,
+        "Yes, No Later, i want to make installmental payments",
+        `makefullpayment,notnow,changepaymenttype`,
         "prevent"
       );
       // const chatbotResponse = new replyGiversOrReceivers(

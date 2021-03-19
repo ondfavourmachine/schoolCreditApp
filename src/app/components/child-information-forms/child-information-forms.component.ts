@@ -424,8 +424,8 @@ export class ChildInformationFormsComponent
         const chatbotResponse = new replyGiversOrReceivers(
           `Are you ready to make payment now?`,
           "left",
-          "Yes I am, I'll do it later",
-          `makefullpayment, notinterested`,
+          "Yes I am, I'll do it later, i want to make installmental payments",
+          `makefullpayment,notinterested,changepaymenttype`,
            undefined
           );
         this.generalservice.responseDisplayNotifier(chatbotResponse);
