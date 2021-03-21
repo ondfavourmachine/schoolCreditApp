@@ -71,11 +71,13 @@ export class PictureComponent implements OnInit {
     const updateParentInfo: Partial<Parent> = {
       picture: event
     };
-
+    console.log(this.fromWhere);
     if(this.fromWhere == 'child-information-form'){
+
       this.childPicture.emit(this.rawFile);
+    }else{
+      this.store.dispatch(new generalActions.addParents(updateParentInfo));
     }
-    this.store.dispatch(new generalActions.addParents(updateParentInfo));
     let reader: FileReader;
     if (FileReader) {
       reader = new FileReader();

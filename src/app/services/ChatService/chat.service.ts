@@ -302,8 +302,8 @@ export class ChatService {
   
 
   // getschoolDetails
-  fetchSchoolDetails(nameOfSchool: string): Observable<{data: {school: SchoolDetailsModel}, message: string, status: boolean}>{
-    return this.http.get<any>(`${this.generalUrl}user/${nameOfSchool}`)
+  fetchSchoolDetails(nameOfSchool: string): Promise<{data: {school: SchoolDetailsModel}, message: string, status: boolean}>{
+    return this.http.get<any>(`${this.generalUrl}user/${nameOfSchool}`).toPromise();
   }
 
   // get school Books
@@ -338,7 +338,6 @@ export class ChatService {
   // sendLoanRequest
   sendLoanRequest(obj: {school_id: any, guardian_id: any, loan_amount: string,
         child_data: {id: string, amount: string}[]}): Promise<{message: string; request: number; status:boolean}>{
-    // child_data: {id: string, amount: string}[]
     return this.http.post<any>(`${this.generalUrl}loan/request`, obj).toPromise()
   }
 

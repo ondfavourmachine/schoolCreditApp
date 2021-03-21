@@ -13,13 +13,6 @@ const routes: Routes = [
     loadChildren: () =>
       import("./modules/chatbot/chatbot.module").then(m => m.ChatbotModule)
   },
-
-  // {
-  //   path: "receiver",
-  //   loadChildren: () =>
-  //     import("./modules/receiver/receiver.module").then(m => m.ReceiverModule)
-  // },
-
   {
     path: "school",
     loadChildren: () =>

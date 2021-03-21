@@ -19,7 +19,7 @@ import { Subscription } from "rxjs";
 import { Store } from "@ngrx/store";
 import * as fromStore from "../../store";
 import * as generalActions from "../../store/actions/general.action";
-import { map, tap } from "rxjs/operators";
+import { delay, map, tap } from "rxjs/operators";
 
 
 @Component({
@@ -43,32 +43,26 @@ export class ChatBotComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     private changeDetection: ChangeDetectorRef
   ) {}
 
-    ngOnChanges(changes: SimpleChanges){
+   async ngOnChanges(changes: SimpleChanges){
       // console.log(changes);
       if(changes.schoolName.currentValue){
         this.store.dispatch(new generalActions.schoolDetailsIsLoading());
-        this.chatservice.fetchSchoolDetails(changes.schoolName.currentValue) 
-      .subscribe(val => {
-          const {school} = val.data;
-          this.store.dispatch(new generalActions.loadSchoolDetails(school));
-          this.store.dispatch(new generalActions.addParents({school_id: school.id}));
-          this.store.dispatch(new generalActions.schoolDetailsIsLoaded());
-      }, err =>{
-        console.log(err);
-        this.store.dispatch(new generalActions.schoolDetailsFailedToLoad());
-      })
+        try {
+           const res = await this.chatservice.fetchSchoolDetails(changes.schoolName.currentValue);
+           const {school} = res.data;
+           this.store.dispatch(new generalActions.loadSchoolDetails(school));
+           this.store.dispatch(new generalActions.addParents({school_id: school.id}));
+           this.store.dispatch(new generalActions.schoolDetailsIsLoaded());
+        } catch (error) {
+           this.store.dispatch(new generalActions.schoolDetailsFailedToLoad())
+        }
+       
+          
       }
      
     }
 
   ngOnInit() {
-    // this.router.events.subscribe(evt => {
-    //   if (evt instanceof NavigationEnd) {
-    //     console.log('i am here!');
-    //     this.ngOnInit();
-    //     this.ngAfterViewInit();
-    //   }
-    // });
     this.destroyAnything[0] = this.generalservice.startAskingAndChangeQuestions$.subscribe(
       val => {
         // do something here
@@ -79,7 +73,7 @@ export class ChatBotComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     // this.store.select(fromStore.getSchoolDetailsState).subscribe(val => console.log(val))
 
     this.destroyAnything[1]= this.store.select(fromStore.getSchoolDetailsState)
-    .pipe(tap(val => {
+    .pipe(delay(1000),tap(val => {
       if(val["school_Info"].hasOwnProperty('id') && !sessionStorage.getItem('school_avatar')){
         sessionStorage.setItem('school_avatar', val["school_Info"].picture);
       }
@@ -89,9 +83,7 @@ export class ChatBotComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     .subscribe((val) => this.fetchSchoolBooks(val.school_id, val.schoolInfoLoadState))
 
     this.changeDetection.detectChanges();
-
-   
-    
+    this.chatservice.fetchBankNames();
   }
 
   ngAfterViewInit() {

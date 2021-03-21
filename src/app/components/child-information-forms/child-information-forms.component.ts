@@ -13,7 +13,7 @@ import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { StoreService } from "src/app/services/mockstore/store.service";
 import { GeneralService } from "src/app/services/generalService/general.service";
 import { replyGiversOrReceivers } from "src/app/models/GiverResponse";
-import { AChild, Parent, SchoolBook, SchoolClass } from "src/app/models/data-models";
+import { AChild, Parent, SchoolBook, SchoolBookStructure, SchoolClass } from "src/app/models/data-models";
 import { Subscription } from "rxjs";
 import { Store } from "@ngrx/store";
 // import { pluck } from "rxjs/operators";
@@ -394,6 +394,15 @@ export class ChildInformationFormsComponent
       }
     }
 
+    let total = 0;
+    this.mapOfChildrensInfo.forEach((element, key, map) => {
+      total += element.total_cost_of_books;
+    })
+    this.totalCostOfSchoolBooks = isNaN(total) ? 0 : total;
+    console.log(this.tuitionFeesTotal);
+    console.log(this.totalCostOfSchoolBooks);
+    console.log(this.totalCostOfSchoolBooks + this.tuitionFeesTotal);
+
     if (this.fullpayment) {
       await this.chatapi.registerParentForFullPayment({guardian_id: this.parentDetails.guardian, payment_type: 2})
       const responseFromParent = new replyGiversOrReceivers(
@@ -438,13 +447,6 @@ export class ChildInformationFormsComponent
 
       this.notifyBackendOfLoanRequest();
       await this.chatapi.fetchWidgetStages(this.tuitionFeesTotal);
-      
-    let total = 0;
-    this.mapOfChildrensInfo.forEach((element, key, map) => {
-      total += element.total_cost_of_books;
-    })
-    this.totalCostOfSchoolBooks = isNaN(total) ? 0 : total;
-    // console.log(this.totalCostOfSchoolBooks);
     this.spinner = false;
     this.previousPage.emit("firstPage");
     
@@ -492,13 +494,6 @@ export class ChildInformationFormsComponent
             `connectme, notinterested`,
             "prevent"
           );
-      // const chatbotResponse = new replyGiversOrReceivers(
-      //   `The school mandates that you add books required by your child or children`,
-      //   'left',
-      //   `Select Books`,
-      //   `addbooks`,
-      //   `allow`
-      // )
       this.generalservice.responseDisplayNotifier(chatbotResponse);
       this.viewToshow = "";
       this.previousPage.emit("firstPage");
@@ -515,13 +510,18 @@ export class ChildInformationFormsComponent
     this.previousPage.emit("upload-image");
   }
 
-  childBooksHasBeenAdded(event){
-    debugger;
+  childBooksHasBeenAdded(event: Array<SchoolBook>){
+    // debugger;
     this.mapOfChildrensInfo.get(this.currentChild).total_cost_of_books = 0;
-    this.mapOfChildrensInfo.get(this.currentChild).total_cost_of_books+= parseInt(event[0]['price']);
-    // console.log(this.mapOfChildrensInfo);
+    let total = 0;
+    total = event.reduce((acc, book, index, arr)=> {
+      let tuition = book.price.split('.')[0]
+      acc += parseInt(tuition);
+      return acc;
+    }, total)
+    console.log(total);
+    this.mapOfChildrensInfo.get(this.currentChild).total_cost_of_books+= total;
     this.generalservice.handleSmartViewLoading({component: 'child-information-forms', info: 'childForms'});
-   
     this.moveToNextChildOrNot(event);
   }
 
