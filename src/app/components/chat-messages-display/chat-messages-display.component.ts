@@ -28,7 +28,7 @@ import { Router } from "@angular/router";
 import { Store } from "@ngrx/store";
 import * as fromStore from "../../store";
 import { pluck } from "rxjs/operators";
-import { SchoolDetailsModel } from "src/app/models/data-models";
+import { Parent, SchoolDetailsModel } from "src/app/models/data-models";
 import { TitleCasePipe } from "@angular/common";
 
 
@@ -208,7 +208,6 @@ export class ChatMessagesDisplayComponent
         // console.log(val);
         setTimeout(() => {
          if(val == 'failed'){
-            // get the pulsing spinner
           const pulsingLoader = document.querySelectorAll('.truncated_loan_process');
           // console.log(pulsingLoader);
           // get its parent div
@@ -498,7 +497,7 @@ export class ChatMessagesDisplayComponent
                   `;
                 textWrapper.innerHTML = "";
                 textWrapper.insertAdjacentHTML("afterbegin", html);
-              }
+                }
 
                if(textWrapper.classList.contains('processing_tokenized_card')){
                 const html = `
@@ -533,6 +532,25 @@ export class ChatMessagesDisplayComponent
                   `;
                   textWrapper.innerHTML = "";
                 textWrapper.insertAdjacentHTML("afterbegin", html);
+               }
+                
+               if(textWrapper.classList.contains('changing_to_installmental')){
+                const html = `
+                <div class="mutation-inserted__text processing_div" style="height: 22px;">
+                    <div class="row">
+                    <div class="col-3">
+                    <div  data-title=".dot-pulse">
+                      <div class="stage" style="display: flex;justify-content: center;align-items: center; height: 20px;">
+                        <div class="dot-pulse"></div>
+                      </div>
+                    </div>
+                  </div>
+                    </div>
+                 </div>
+                  `;
+                  textWrapper.innerHTML = "";
+                textWrapper.insertAdjacentHTML("afterbegin", html);
+                this.manageChangeToInstallmentalPayments()
                }
               
               else if (textWrapper.classList.contains("helper")) {
@@ -1029,6 +1047,58 @@ selectMottoFromSchool(){
       }
       return stageToStartFrom;
     }
+  }
+
+  manageChangeToInstallmentalPayments(){
+    let parent: Parent;
+    const disconnect =  this.store
+    .select(fromStore.getCurrentParentInfo)
+    .subscribe(val => {
+      parent = val as Parent;
+    });
+    this.chatservice.registerParentForFullPayment({guardian_id: parent.guardian, payment_type : 1})
+    .then(
+      val => {
+        // send for loan request using child data;
+        // send for offers
+        // get widget stages
+        // update the store
+        const pulsingLoader = document.querySelectorAll('.changing_to_installmental');
+        const parentElement: HTMLElement = pulsingLoader[pulsingLoader.length - 1].closest('div.chat-box__wrapper');
+        this.removeElement(this.messagePlaceHolder.nativeElement, parentElement);
+        this.removeProcessingFromSavedChats('we change your request to installmental');
+        this.generalservice.nextChatbotReplyToGiver = undefined;
+        this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
+        const chatbotResponse = new replyGiversOrReceivers(
+          `You can now pay in installments. This is a credit request and a financial institution would like to power your request. 
+           Would you like to be connected to one?`,
+            `left`,
+            "Yes,No", 
+            `connectme, notinterested`,
+             "prevent"
+        );
+        this.generalservice.responseDisplayNotifier(chatbotResponse);
+        disconnect.unsubscribe();
+      }
+    ).catch(
+      err => {
+        const pulsingLoader = document.querySelectorAll('.changing_to_installmental');
+        const parentElement: HTMLElement = pulsingLoader[pulsingLoader.length - 1].closest('div.chat-box__wrapper');
+        this.removeElement(this.messagePlaceHolder.nativeElement, parentElement);
+        this.removeProcessingFromSavedChats('we change your request to installmental');
+        this.generalservice.nextChatbotReplyToGiver = undefined;
+        this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
+        const chatbotResponse = new replyGiversOrReceivers(
+          `Sorry we couldn't process your request at this time?`,
+            `left`,
+            "paymenttypetoinstallments,forget about it", 
+            `connectme, notinterested`,
+             "prevent"
+        );
+        this.generalservice.responseDisplayNotifier(chatbotResponse);
+
+      }
+    )
   }
 
   ngOnDestroy() {

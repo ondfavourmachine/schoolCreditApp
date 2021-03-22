@@ -399,9 +399,9 @@ export class ChildInformationFormsComponent
       total += element.total_cost_of_books;
     })
     this.totalCostOfSchoolBooks = isNaN(total) ? 0 : total;
-    console.log(this.tuitionFeesTotal);
-    console.log(this.totalCostOfSchoolBooks);
-    console.log(this.totalCostOfSchoolBooks + this.tuitionFeesTotal);
+    // console.log(this.tuitionFeesTotal);
+    // console.log(this.totalCostOfSchoolBooks);
+    // console.log(this.totalCostOfSchoolBooks + this.tuitionFeesTotal);
 
     if (this.fullpayment) {
       await this.chatapi.registerParentForFullPayment({guardian_id: this.parentDetails.guardian, payment_type: 2})

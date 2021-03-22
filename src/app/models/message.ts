@@ -579,7 +579,20 @@ export class Message {
         //  "parents-information"
         break;
       case "paymenttypetoinstallments":
-        
+        this.giverResponsesEvent(
+          "customGiverResponse",
+          new replyGiversOrReceivers(
+            `Please wait while we change your request to installmental....`,
+            `left`,
+            "anything,nothing", 
+            "anything,nothing",
+            undefined,
+            { classes: ["changing_to_installmental"] }
+          ),
+          new GiverResponse(
+            new replyGiversOrReceivers(`Yes i am sure`, "right")
+          )
+        );
        break;
       case 'changepaymenttype':
         this.giverResponsesEvent(
@@ -591,7 +604,7 @@ export class Message {
             "paymenttypetoinstallments,full_pay"
           ),
           new GiverResponse(
-            new replyGiversOrReceivers(`It's a new request`, "right")
+            new replyGiversOrReceivers(`I want to change my request to installmental payments`, "right")
           )
         );
        break; 

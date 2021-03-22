@@ -1393,7 +1393,7 @@ textarea {
   width: 40px;
   background: #999;
   border: 5px solid #999;
-  height: 40px;
+  max-height: 40px;
 }
 
 .z-index-2 {
