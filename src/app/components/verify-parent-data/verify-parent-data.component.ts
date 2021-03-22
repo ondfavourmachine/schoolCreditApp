@@ -32,6 +32,7 @@ export class VerifyParentDataComponent
   showModal: string = "none";
   view: "" | "verification" | "email" | "activate-email" | "four-digit-pin" =
     "email";
+    // email
   pageViews: string[] = [
     "",
     "verification",
@@ -40,6 +41,8 @@ export class VerifyParentDataComponent
     "activate-email",
     "four-digit-pin"
   ];
+  arrayOfInputs: string[] = ['first', 'second', 'third', 'fourth', 'fifth', "sixth" ];
+  arrayOfvalues: string[] = [];
   phoneVerificationForm: FormGroup;
   PINForm: FormGroup;
   emailVerificationForm: FormGroup;
@@ -81,8 +84,24 @@ export class VerifyParentDataComponent
     // document
     //   .getElementById("backspace")
     //   .addEventListener("click", this.manageGoingBackAndForth);
+   
   }
-
+  
+  changeFocus(elem: string, value){
+     try {
+       let num = this.arrayOfInputs.indexOf(elem);
+       num += 1;
+       let nextelem = this.arrayOfInputs[num];
+       document.getElementById(nextelem).focus();
+       console.log(num);
+       this.arrayOfvalues.push(value);  
+     } catch (error) {
+         this.arrayOfvalues.push(value);  
+        const stringOfActivationPIN = this.arrayOfvalues.join('');
+        this.confirmEmailCode(stringOfActivationPIN);
+        
+     }
+  }
   get type(): string {
     return this.contactChange == "phone" ? "tel" : "email";
   }
@@ -260,22 +279,70 @@ export class VerifyParentDataComponent
       );
   }
 
-  confirmEmailCode(form: FormGroup) {
-    this.spinner = true;
-    
-    this.chatapi.verifyParentEmailActivationCode({token: form.value.email_activation, guardian: this.parentDetails.guardian})
-    .subscribe(val => {
+  confirmEmailCode(code: string) {
+    this.spinner = true;  
+    // form.value.email_activation
+    this.chatapi.verifyParentEmailActivationCode({token: code, guardian: this.parentDetails.guardian})
+    .subscribe((val) => {
     const refreshedState: Partial<Parent> = { email_verified: 1 };
     this.store.dispatch(new generalActions.addParents(refreshedState));
-    this.spinner = false;
-    this.view = "four-digit-pin";
-    this.previousPage.emit("activate-email");
+    // this.view = "four-digit-pin";
+    // this.previousPage.emit("activate-email");
+    // await this.sendOTPToEmail();
+    const responseFromParent = new replyGiversOrReceivers(
+      `I have verified my email and phone number`,
+      "right"
+    );
+    this.generalservice.nextChatbotReplyToGiver = undefined;
+    this.generalservice.responseDisplayNotifier(responseFromParent);
+    this.generalservice.ctrlDisableTheButtonsOfPreviousListElement(
+      "allow"
+    );
+    // this.spinner = false;
+    // this.previousPage.emit("firstPage");
+    setTimeout(() => {
+      this.generalservice.handleFlowController("");
+      this.spinner = false;
+      this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
+        `How would you like to pay?`,
+        "left",
+        "Installmental payments, Full Payment",
+        `installmental,fullpayment`,
+        "prevent"
+      );
+      this.spinner = false;
+      // disconnect.unsubscribe();
+      const chatbotResponse = new replyGiversOrReceivers(
+        `Thank you for taking time to verify your details, ${this
+          .parentDetails.full_name || "John Bosco"}`,
+        "left",
+        "",
+        ``
+      );
+      this.generalservice.responseDisplayNotifier(chatbotResponse);
+      this.previousPage.emit('firstPage');
+       this.spinner = false;
+    }, 600);
+    // this.previousPage.emit('firstPage');
+    // this.spinner = false;
     }, (err:HttpErrorResponse)=> {
       this.generalservice.warningNotification(err.error.message);
       this.spinner = false;
     })
     
   }
+ async sendOTPToEmail(){
+    try {
+      const res = await (this.chatapi.sendEmailOTP(
+        { email: this.parentDetails.email },
+        "promise"
+      ) as Promise<any>);
+      console.log(res);
+    } catch (error) {
+      
+    }
+  }
+  
 
   resendCode(event: Event, contactType: "phone" | "email") {
     const element = event.target as HTMLAnchorElement;
@@ -286,12 +353,15 @@ export class VerifyParentDataComponent
       : "";
   }
 
-  sendActivationCodeToEmail(email: string) {
+  sendActivationCodeToEmail(email = 'ondfavourmachine+9@gmail.com') {
     this.spinner = true;
     (this.chatapi.sendEmailOTP({email}, 'observable') as Observable<any>)
     .subscribe(val => {
       this.generalservice.successNotification("Activation code sent!");
-      this.view = "activate-email";
+      this.view = "four-digit-pin";
+      setTimeout(() => {
+        document.getElementById(this.arrayOfInputs[0]).focus();
+      }, 800);
       this.spinner = false;
     }, err=> {
       console.log(err);

@@ -71,6 +71,7 @@ export class AppComponent
     this.observableAggregator.flowControl = this.generalservice.flowCtrl$.subscribe(
       val => {
         // String(val)
+        // verify-parent-data
         this.generalservice.flowControlHolder = String(val);
         if (String(val).length < 1) {
           this.switchOfModal();

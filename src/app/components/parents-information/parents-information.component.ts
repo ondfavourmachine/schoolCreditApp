@@ -318,7 +318,7 @@ export class ParentsInformationComponent
     this.spinner = false;
     this.checkingUniqueness = 'done';
     disconnect.unsubscribe();
-      }, 1000);
+      }, 100);
      
     }, err => {
       this.checkingUniqueness = "not-unique";

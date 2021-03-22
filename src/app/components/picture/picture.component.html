@@ -4,7 +4,7 @@
     (click)="addPicture()"
     title="click to add a picture"
     class=" circular medium ui image modified-img"
-    src="/assets/images/no-product.svg"
+    [src]="fileFromStore ? fileFromStore : '/assets/images/no-product.svg'"
   />
     <span (click)="addPicture()"
      class="add__picture">
@@ -22,8 +22,9 @@
   <button
     (click)="uploadImage()"
     type="button"
-    [disabled]="!modifiedFile"
+    id="uploadButton"
     class="ui primary button fluid modified-button"
+    disabled
   >
     Upload and continue
   </button>

@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, Input } from "@angular/core";
+import { Component, OnInit, Output, EventEmitter, Input, AfterViewInit } from "@angular/core";
 import { Parent } from "src/app/models/data-models";
 import * as generalActions from "../../store/actions/general.action";
 import * as fromStore from "../../store";
@@ -14,7 +14,7 @@ import { GeneralService } from "src/app/services/generalService/general.service"
   templateUrl: "./picture.component.html",
   styleUrls: ["./picture.component.css"]
 })
-export class PictureComponent implements OnInit {
+export class PictureComponent implements OnInit, AfterViewInit {
   @Output() changeUpTheView = new EventEmitter<string>();
   @Output() startSpinner = new EventEmitter<boolean>();
   @Output() childPicture = new EventEmitter<File>();
@@ -24,6 +24,7 @@ export class PictureComponent implements OnInit {
   rawFile: File;
   modifiedFile: File;
   croppedImage: any;
+  fileFromStore: string;
   constructor(
     private store: Store<fromStore.AllState>,
     private chatapi: ChatService,
@@ -32,7 +33,31 @@ export class PictureComponent implements OnInit {
 
   ngOnInit(): void {
     this.modifiedFile = undefined;
+    console.log('i am here!')
   }
+
+  ngAfterViewInit(){
+    this.store.select(fromStore.getCurrentParentInfo)
+     .pipe(pluck('picture'))
+    .subscribe(val =>{
+      if(!val) return;
+      let reader: FileReader;
+      if (FileReader) {
+        reader = new FileReader();
+        reader.onload = anevent => {
+         this.fileFromStore = `${anevent.target["result"]}`;
+        };
+        reader.readAsDataURL(val as File);
+        try{
+          (document.getElementById('uploadButton') as HTMLButtonElement).disabled = false;
+        }catch(error){
+          // (document.getElementById('uploadButton') as HTMLButtonElement).disabled = false;
+        }
+      }
+    })
+  }
+
+  
 
   addPicture() {
     document.getElementById("picture-upload").click();
@@ -71,7 +96,7 @@ export class PictureComponent implements OnInit {
     const updateParentInfo: Partial<Parent> = {
       picture: event
     };
-    console.log(this.fromWhere);
+    
     if(this.fromWhere == 'child-information-form'){
 
       this.childPicture.emit(this.rawFile);
@@ -88,6 +113,7 @@ export class PictureComponent implements OnInit {
       };
       reader.readAsDataURL(event);
     }
+    (document.getElementById('uploadButton') as HTMLButtonElement).disabled = false;
   }
 
   async uploadImage() {

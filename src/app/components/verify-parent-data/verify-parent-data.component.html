@@ -85,7 +85,7 @@
   </div>
 </div>
 
-<div class=" h-100 text-center family-info" *ngIf="view == 'activate-email'">
+<!-- <div class=" h-100 text-center family-info" *ngIf="view == 'activate-email'">
   <h1 class="para-title text-center">
     Please enter activation code sent to your email
     <small class="ml-2"
@@ -122,24 +122,34 @@
       <i class="fa fa-circle-notch fa-spin fa-3x"></i>
     </div>
   </form>
-</div>
+</div> -->
 
 
 <div class=" h-100 text-center family-info" *ngIf="view == 'four-digit-pin'">
   <h1 class="para-title">
-    Select a 4 digit pin for future identification
+    Enter Activation PIN sent to your email
   </h1>
 
   <form [formGroup]="PINForm" class="w-100" style="position: relative">
     <div class="ui form">
-      <div class="field">
-        <label>PIN</label>
-        <input formControlName="pin" type="tel" minlength="0"
-         maxlength="4" placeholder="Eg: 1230045566" />
+      <div  class="field">
+        <ng-container *ngFor="let input of arrayOfInputs; index as i">
+          <input class="input__pin" 
+            style="border: 1px solid #777 !important; 
+             border-radius: 5px !important; height: 45px;
+             padding: 0 5px !important; 
+             text-align: center !important; 
+             font-weight: bold !important;"
+             type="tel" minlength="0"
+             (input)="changeFocus(input, $event.target.value)"
+             [id]="input"
+             maxlength="1" placeholder="" />
+        </ng-container>
+       
       </div>
     </div>
 
-    <div class="text-center mt-4">
+    <!-- <div class="text-center mt-4">
       <button
         (click)="saveParentInfo(PINForm)"
         type="button"
@@ -147,7 +157,7 @@
       >
         Save and continue
       </button>
-    </div>
+    </div> -->
   </form>
 
   <div *ngIf="spinner" class="spinner-container">

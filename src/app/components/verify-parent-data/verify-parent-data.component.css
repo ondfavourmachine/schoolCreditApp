@@ -11,3 +11,15 @@
   color: red;
   margin-top: 10px;
 }
+
+
+.input__pin{
+  width: 35px !important; 
+  
+  margin-right: 10px !important;
+}
+
+.input__pin:focus{
+  outline: 1px solid #bcbdbd !important;
+  outline-offset: -4px !important;
+}

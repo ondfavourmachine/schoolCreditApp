@@ -219,32 +219,35 @@ export class ContinuingExistingRequestsComponent
     const { phoneOrEmail } = this.confirmPhoneOrEmailForm.value;
     if (this.generalservice.emailRegex.test(phoneOrEmail)) {
       this.checkWhoIsTryingToContinue.email = phoneOrEmail;
-      this.chatservice
-        .checkIfParentHasPreviouslySavedPIN({
-          email: this.checkWhoIsTryingToContinue.email
-        })
-        .subscribe(
-          val => {
-            this.spinner = false;
-            this.view = "four-digit-pin";
-            this.previousPage.emit("");
-          },
-          async (err: HttpErrorResponse) => {
-            // this.generalservice.errorNotification(err.error.message);
-            try {
-              const res = await (this.chatservice.sendEmailOTP(
-                { email: this.checkWhoIsTryingToContinue.email },
-                "promise"
-              ) as Promise<any>);
-              this.generalservice.successNotification(res.message);
-              this.view = "pin_not_set";
-              this.spinner = false;
-            } catch (error) {
-              this.generalservice.errorNotification(error.error.message);
-              this.spinner = false;
-            }
-          }
-        );
+      this.spinner = false;
+      this.view = "four-digit-pin";
+      this.previousPage.emit("");
+      // this.chatservice
+      //   .checkIfParentHasPreviouslySavedPIN({
+      //     email: this.checkWhoIsTryingToContinue.email
+      //   })
+      //   .subscribe(
+      //     val => {
+      //       this.spinner = false;
+      //       this.view = "four-digit-pin";
+      //       this.previousPage.emit("");
+      //     },
+      //     async (err: HttpErrorResponse) => {
+      //       // this.generalservice.errorNotification(err.error.message);
+      //       try {
+      //         const res = await (this.chatservice.sendEmailOTP(
+      //           { email: this.checkWhoIsTryingToContinue.email },
+      //           "promise"
+      //         ) as Promise<any>);
+      //         this.generalservice.successNotification(res.message);
+      //         this.view = "pin_not_set";
+      //         this.spinner = false;
+      //       } catch (error) {
+      //         this.generalservice.errorNotification(error.error.message);
+      //         this.spinner = false;
+      //       }
+      //     }
+      //   );
       return;
     }
     this.checkWhoIsTryingToContinue.phone = phoneOrEmail;
@@ -272,7 +275,7 @@ export class ContinuingExistingRequestsComponent
       this.input = this.input.substring(0, this.input.length - 1);
       return;
     }
-    if (this.input.length < 4) {
+    if (this.input.length < 6) {
       const key = element.textContent.trim();
       this.input += key;
     }
@@ -282,12 +285,9 @@ export class ContinuingExistingRequestsComponent
     this.checking();
     this.checkWhoIsTryingToContinue.PIN = this.input;
     const formToSubmit = { ...this.checkWhoIsTryingToContinue };
-    // console.log(formToSubmit);
     this.chatservice.confirmParentPIN(formToSubmit as any).subscribe(
       async val => {
         const { stages } = val;
-      
-        // console.log(stages, returnVal);
         this.listOfStagesForLater = { ...stages };
         
         const {
