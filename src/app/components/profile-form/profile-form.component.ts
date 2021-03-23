@@ -66,6 +66,7 @@ export class ProfileFormComponent implements OnInit, OnDestroy {
   }
 
   runDateAnalysis(value: string){
+    console.log(value);
    let startDate  = value;
     if (startDate.length != 10 || startDate.indexOf("-") < 0) {
         // console.log('Check date format');
