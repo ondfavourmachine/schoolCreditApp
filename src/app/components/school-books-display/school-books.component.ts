@@ -41,10 +41,15 @@ import { SchoolBook } from "src/app/models/data-models";
         const input = event.target as HTMLInputElement;
         if(input.checked){
         this.booksSelected.add(input.id);
+        const div = input.parentElement as HTMLDivElement;
+        div.classList.add('selectedBookMarker');
         return;
         }
-
+      
         this.booksSelected.delete(input.id);
+        
+        const div = input.parentElement as HTMLDivElement;
+        div.classList.remove('selectedBookMarker');
     }
 
     selectAllBooks(event){
@@ -81,6 +86,17 @@ import { SchoolBook } from "src/app/models/data-models";
     //  console.log(totalCostsOfBooks)
      this.totalCostOfBooks = totalCostsOfBooks
       this.view = 'cost';
+    }
+
+    clickSelectAll(elem: string){
+        document.getElementById(elem).click();
+    }
+
+    clickThisInput(elem: string, event: Event){
+        const target = event.target as HTMLDivElement
+        document.getElementById(elem).click();
+        const isthere = this.booksSelected.has(elem.toString());
+        isthere ? target.textContent = 'unselect': target.textContent = 'select';
     }
 
     completeBookSelection(){

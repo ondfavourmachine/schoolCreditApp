@@ -5,17 +5,19 @@
 
     <div class="selection_controls" [class.show]="booksSelected.size > 0">
         <div class="all_container">
-            <input (click)="selectAllBooks($event)" id="selectAll" type="checkbox">
-            <label for="selectAll">select all</label>
+            <input id="inputForSelectAllBooks" style="display: none;" (click)="selectAllBooks($event)" id="selectAll" type="checkbox">
+           <span (click)="clickSelectAll('inputForSelectAllBooks')" class="small__button"> select all</span>
+           <span (click)="calculateTotalCostOfBooks()" class="small__button">proceed</span>
         </div>
 
-        <div class="selected_number">
+        <!-- <div class="selected_number">
             {{ booksSelected.size }} {{ booksSelected.size == 1 ? 'book': 'books' }} selected
-        </div>
+        </div> -->
 
         <div class="small_drop_down">
           <div class="ellipsis"> 
-              <i (click)="showDropdown = !showDropdown" class="fas fa-ellipsis-v"></i>
+              <!-- <i (click)="showDropdown = !showDropdown" class="fas fa-ellipsis-v"></i> -->
+              <span (click)="showDropdown = !showDropdown" class="more__button"> more </span>
               <span *ngIf="showDropdown" class="sub_menu"> 
                 <a (click)="cancelAllSelection()" ><i class="fa fa-times-circle"></i> clear selection</a>  
                 <a (click)="calculateTotalCostOfBooks()" ><i class="fa fa-plus-circle"></i> Add selected </a>  
@@ -30,28 +32,37 @@
       style="overflow-y: auto; margin: 0 auto; height: 100%;">
       <div
         *ngFor="let book of booksToDisplay | filter:searchTerm; index as i"
-        style=" max-height: 250px; padding-left: .2rem; padding-right: .2rem; position: relative;"
-        class="six wide column myborder positioned-relative"
+        style=" max-height: 300px; padding-left: .2rem; padding-right: .2rem; position: relative;"
+        class="twelve wide column myborder positioned-relative"
       >
-       <input (click)="addThisBookToSelected($event)" [id]="book?.id" type="checkbox" class="selectionInput">
-        <img
-          [src]="book?.picture"
-          alt=""
-          style="max-width: 115px; max-height: 115px; object-fit: cover;"
-        />
-        <p
-          class="nameOfBook mb-3"
+       <input style="display: none;" (click)="addThisBookToSelected($event)" 
+         [id]="book?.id" type="checkbox" class="selectionInput">
+
+       <div class="full__width">
+            <img
+            [src]="book?.picture"
+            alt=""
+          />
+       </div>
+        
+        <div class="description__house mt-2">
+          <p
+          class="nameOfBook "
           style=""
         >
          {{ book?.name }}
-        <br>
+      </p>
         <p class="bolded price">
             {{ book?.price | currency:'NGN' }}
         </p>
-        <i
-          *ngIf="selected == 'Voters ID'"
-          class="fa fa-check positioned-absolute"
-        ></i>
+        </div>
+        <div style="display: flex; justify-content: center;">
+         
+          <span (click)="clickThisInput(book?.id, $event)" 
+           class="small__button select">
+            select
+          </span>
+        </div>
       </div>
   
       <!-- <div
@@ -117,18 +128,17 @@
       </div> -->
     </div>
 
-    <div [style.display]="booksToDisplay.length > 4 ? 'flex':'none'" class="floating_search_bar">
-      <input type="text" [(ngModel)]="searchTerm" name="searchTerm" placeholder="Search through books...">
+    <div style="display: none;"  class="floating_search_bar">
+       <!-- [style.display]="booksToDisplay.length > 4 ? 'flex':'none'" -->
+      <!-- <input type="text" [(ngModel)]="searchTerm" name="searchTerm" placeholder="Search through books..."> -->
 
-      <div class="floating_button_parent">
+      <!-- <div class="floating_button_parent">
       
         <span class="floating_button_search" >
           <i class="fa fa-search"></i>
         </span>
-        <!-- <span class="floating_button_cancel" >
-          <i class="fa fa-times"></i>
-        </span> -->
-      </div>
+     
+      </div> -->
     </div>
 
    

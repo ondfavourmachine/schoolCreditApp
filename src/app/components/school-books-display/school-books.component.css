@@ -17,6 +17,8 @@
     transition: opacity 100ms ease-in;
 }
 
+
+
 .selection_controls.show{
     opacity: 1;
 }
@@ -82,14 +84,62 @@
 .all_container{
     display: flex;
     flex-direction: row;
-   
+    flex-grow: 1;
     width: 90px;
-    justify-content: space-evenly;
+    justify-content: flex-start;
+    align-items: center;
+}
+.small__button{
+    padding: 5px;
+    border: 1px solid #2185d0;
+    margin-left: 2px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.small__button:last-child{
+    margin-left: 13px;
+    color: white;
+    background: #2185d0;
+}
+
+.selectedBookMarker{
+    border: 1px solid #28d !important;
+}
+
+
+
+@media (max-width: 480px){
+    .selection_controls{
+        padding: unset;
+        padding: 2px 0.3rem;
+        margin-bottom: 5px;
+    }
+}
+
+
+
+.description__house{
+    width: 100%;
+    padding: 3px;
+    display: flex;
+    justify-content: space-between;
     align-items: center;
 }
 
+.ellipsis{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 33px;
+    border: 1px solid #2185d0;
+    border-radius: 5px;
+    margin-left: 3px;
+    padding: 3px;
+}
+
 .nameOfBook{
-    line-height: 1rem !important;
+    /* line-height: 1rem !important; */
+          margin-bottom: 0px !important;
           white-space: nowrap !important; 
           overflow: hidden !important;
           text-overflow: ellipsis !important;
@@ -190,6 +240,22 @@
 .floating_button_parent.show{
     transform: translateY(0px);
 }
+
+.myborder img{
+    max-width: unset !important;
+}
+
+.full__width{
+    height: auto;
+}
+
+
+.full__width img{
+    width: 80%;
+    height: 60%;
+    object-fit: cover;
+}
+
 
 
 

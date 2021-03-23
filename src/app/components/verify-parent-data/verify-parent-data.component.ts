@@ -331,6 +331,7 @@ export class VerifyParentDataComponent
         (document.getElementById(elem) as HTMLInputElement).value = '';
       })
       this.generalservice.warningNotification(err.error.message);
+      document.getElementById(this.arrayOfInputs[0]).focus();
       this.spinner = false;
     })
     

@@ -343,11 +343,10 @@ export class Message {
   }
 
   getSchoolPicture(direction: string){
-
-    if(!sessionStorage.getItem('school_avatar') && sessionStorage.getItem('school_avatar') != 'null'){
-      return direction == 'left' ? sessionStorage.getItem('school_avatar') : `../../../assets/chatbotImages/avatar.png`
+    if( sessionStorage.getItem('school_avatar') == 'null' || !sessionStorage.getItem('school_avatar')){
+      return direction == 'left' ? `../../../assets/chatbotImages/avatar.png` : ` `
     }
-     return  `../../../assets/chatbotImages/avatar.png`;
+     return  sessionStorage.getItem('school_avatar');
   }
 
   handleButtonClick(event: MouseEvent) {

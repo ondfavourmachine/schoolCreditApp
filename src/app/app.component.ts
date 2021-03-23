@@ -72,7 +72,7 @@ export class AppComponent
       val => {
         // String(val)
         // verify-parent-data
-        this.generalservice.flowControlHolder = String(val);
+        this.generalservice.flowControlHolder = "child-information-forms";
         if (String(val).length < 1) {
           this.switchOfModal();
           return;
