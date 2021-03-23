@@ -145,7 +145,7 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
           amount: element.tuition_fees
         }
       })
-      debugger;
+      // debugger;
       if(this.parentDetails.loan_request == null){
         try {
           const res = await this.chatservice.sendLoanRequest({

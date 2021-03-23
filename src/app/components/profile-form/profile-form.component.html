@@ -20,11 +20,9 @@
         <label>Date Of Birth</label>
         <input
           formControlName="date_of_birth"
-          onfocus="this.type = 'date'"
-          onblur="this.type='text'"
+          type="date"
           (change)="runDateAnalysis($event.target.value)"
           name="class"
-          type="text"
           placeholder="Eg: yyyy-mm-dd"
         />
       </div>
