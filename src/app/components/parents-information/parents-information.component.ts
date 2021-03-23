@@ -397,6 +397,8 @@ export class ParentsInformationComponent
           );
           this.spinner = false;
           this.previousPage.emit("firstPage");
+          // this is removed so that there wont be errors!!
+          sessionStorage.removeItem('parentPicture')
           setTimeout(() => {
             this.generalservice.handleFlowController("");
             this.spinner = false;

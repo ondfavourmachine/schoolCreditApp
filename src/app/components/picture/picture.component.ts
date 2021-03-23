@@ -36,24 +36,35 @@ export class PictureComponent implements OnInit, AfterViewInit {
     console.log('i am here!')
   }
 
-  ngAfterViewInit(){
-    this.store.select(fromStore.getCurrentParentInfo)
-     .pipe(pluck('picture'))
-    .subscribe(val =>{
-      if(!val) return;
-      let reader: FileReader;
-      if (FileReader) {
-        reader = new FileReader();
-        reader.onload = anevent => {
-         this.fileFromStore = `${anevent.target["result"]}`;
-        };
-        reader.readAsDataURL(val as File);
-        try{
-          (document.getElementById('uploadButton') as HTMLButtonElement).disabled = false;
-        }catch(error){
-          // (document.getElementById('uploadButton') as HTMLButtonElement).disabled = false;
-        }
-      }
+ async ngAfterViewInit(){
+    // this.store.select(fromStore.getCurrentParentInfo)
+    //  .pipe(pluck('picture'))
+    // .subscribe(val =>{
+    //   if(!val) return;
+    //   let reader: FileReader;
+    //   if (FileReader) {
+    //     reader = new FileReader();
+    //     reader.onload = anevent => {
+    //      this.fileFromStore = `${anevent.target["result"]}`;
+    //     };
+    //     reader.readAsDataURL(val as File);
+    //     try{
+    //       (document.getElementById('uploadButton') as HTMLButtonElement).disabled = false;
+    //     }catch(error){
+    //       // (document.getElementById('uploadButton') as HTMLButtonElement).disabled = false;
+    //     }
+    //   }
+    // })
+    this.tryToPrefillPicture();
+  }
+
+
+ 
+
+  getPictureFromSessionStorage(name: string){
+    return new Promise((resolve, reject) => {
+      const picture = sessionStorage.getItem(name);
+      resolve(picture);
     })
   }
 
@@ -98,7 +109,6 @@ export class PictureComponent implements OnInit, AfterViewInit {
     };
     
     if(this.fromWhere == 'child-information-form'){
-
       this.childPicture.emit(this.rawFile);
     }else{
       this.store.dispatch(new generalActions.addParents(updateParentInfo));
@@ -110,6 +120,13 @@ export class PictureComponent implements OnInit, AfterViewInit {
         (document.querySelector(
           ".modified-img"
         ) as HTMLImageElement).src = `${anevent.target["result"]}`;
+        this.fileFromStore = `${anevent.target["result"]}`;
+        if(this.fromWhere == 'child-information-form'){
+          sessionStorage.setItem('childPicture', this.fileFromStore);
+        }else{
+          sessionStorage.setItem('parentPicture', this.fileFromStore);
+        }
+        
       };
       reader.readAsDataURL(event);
     }
@@ -120,6 +137,7 @@ export class PictureComponent implements OnInit, AfterViewInit {
     if (this.modifiedFile) {
       this.startSpinner.emit(true);
       this.changeUpTheView.emit("done");
+     
       // let guardID;
       // let pictureFromStore: string | File;
       // const disconnect: Subscription = this.store
@@ -145,5 +163,26 @@ export class PictureComponent implements OnInit, AfterViewInit {
       // }
     }
     // console.log("nothing to upload!");
+  }
+
+
+  async  tryToPrefillPicture(){
+    if(this.fromWhere == 'child-information-form'){ 
+      const res = await this.getPictureFromSessionStorage('parentPicture');
+      res == 'null' ? this.fileFromStore = null : this.fileFromStore = res as string;
+      try{
+        (document.getElementById('uploadButton') as HTMLButtonElement).disabled = false;
+       }catch(error){
+       (document.getElementById('uploadButton') as HTMLButtonElement).disabled = false;
+      }
+    }else{
+      const res = await this.getPictureFromSessionStorage('parentPicture');
+      res == 'null' ? this.fileFromStore = null : this.fileFromStore = res as string;
+      try{
+        (document.getElementById('uploadButton') as HTMLButtonElement).disabled = false;
+       }catch(error){
+       (document.getElementById('uploadButton') as HTMLButtonElement).disabled = false;
+      }
+    }
   }
 }
