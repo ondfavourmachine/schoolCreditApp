@@ -516,6 +516,29 @@ export class ContinuingExistingRequestsComponent
           this.generalservice.responseDisplayNotifier(chatbotResponse);
         }, 800);
         break;
+      case "email_validated":
+        this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
+        this.generalservice.handleFlowController("");
+       
+        this.response = new replyGiversOrReceivers(
+          `I see that you have previously provided your details`,
+          "left",
+          "",
+          `allow`,
+        );
+        this.generalservice.responseDisplayNotifier(this.response);
+        setTimeout(() => {
+          this.generalservice.nextChatbotReplyToGiver = undefined;
+          const nextresponse = new replyGiversOrReceivers(
+            `Please, take a minute to verify the information you provided`,
+              "left",
+              `Ok let's verify it now, No later`,
+              `verifynow,verifylater`,
+              "prevent"
+          );
+          this.generalservice.responseDisplayNotifier(nextresponse);
+        }, 500);
+        break;
       case "parent_data":
         this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
         this.generalservice.handleFlowController("");
