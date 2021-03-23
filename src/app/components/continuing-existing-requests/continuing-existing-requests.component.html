@@ -1,7 +1,7 @@
 <div class="parent">
   <div *ngIf="overlay" class="this-overlay"></div>
   <div *ngIf="view == ''" class="h-100 text-center family-info">
-    <h1 class="para-title">Please enter phone or email you registered with</h1>
+    <h1 class="para-title">Please enter email you registered with</h1>
 
     <form
       [formGroup]="confirmPhoneOrEmailForm"
@@ -89,7 +89,7 @@
 
   <div *ngIf="view == 'four-digit-pin'" class="h-100 text-center family-info">
     <h1 class="para-title">
-      Enter PIN 
+      Enter PIN sent to your email
       <!-- Enter 4 digit PIN for
       {{ checkWhoIsTryingToContinue.email || checkWhoIsTryingToContinue.phone }} -->
     </h1>

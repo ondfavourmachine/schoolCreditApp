@@ -145,7 +145,18 @@
              [id]="input"
              maxlength="1" placeholder="" />
         </ng-container>
-       
+        
+
+        <div class="text-center mt-4">
+          <button (click)="iWantToChangeNumber('email', 'lauchModal')"  class="ui button primary basic mr-2">
+            Change email
+          </button>
+      
+          <button (click)="sendActivationCodeToEmail(parentDetails?.email)" class="ui button primary basic mt-4">
+
+            Resend pin
+          </button>
+        </div>
       </div>
     </div>
 
@@ -195,11 +206,11 @@
         >
           <div class="ui form">
             <div class="field">
-              <label>Phone</label>
+              <label>Email</label>
               <input
                 formControlName="emailOrPhone"
                 [type]="type"
-                placeholder="Eg: 1we6679"
+                placeholder="Eg: johndoe@abc.com"
                 [pattern]="contactChange == 'phone' ? '[0-9]{11}' : ''"
               />
               <small

@@ -343,7 +343,8 @@ export class Message {
   }
 
   getSchoolPicture(direction: string){
-    if(sessionStorage.getItem('school_avatar')){
+
+    if(!sessionStorage.getItem('school_avatar') && sessionStorage.getItem('school_avatar') != 'null'){
       return direction == 'left' ? sessionStorage.getItem('school_avatar') : `../../../assets/chatbotImages/avatar.png`
     }
      return  `../../../assets/chatbotImages/avatar.png`;

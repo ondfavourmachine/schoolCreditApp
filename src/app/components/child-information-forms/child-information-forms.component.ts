@@ -188,6 +188,7 @@ export class ChildInformationFormsComponent
         this.schoolClasses = [];
         this.generalservice.nextChatbotReplyToGiver = undefined;
         this.generalservice.nextChatbotReplyToReceiver = undefined;
+        sessionStorage.removeItem('school_avatar');
       }
     )
   }

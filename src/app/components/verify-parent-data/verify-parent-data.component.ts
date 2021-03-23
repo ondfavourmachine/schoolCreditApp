@@ -326,6 +326,10 @@ export class VerifyParentDataComponent
     // this.previousPage.emit('firstPage');
     // this.spinner = false;
     }, (err:HttpErrorResponse)=> {
+      this.arrayOfvalues = [];
+      this.arrayOfInputs.forEach(elem => {
+        (document.getElementById(elem) as HTMLInputElement).value = '';
+      })
       this.generalservice.warningNotification(err.error.message);
       this.spinner = false;
     })
@@ -353,7 +357,7 @@ export class VerifyParentDataComponent
       : "";
   }
 
-  sendActivationCodeToEmail(email = 'ondfavourmachine+9@gmail.com') {
+  sendActivationCodeToEmail(email: string) {
     this.spinner = true;
     (this.chatapi.sendEmailOTP({email}, 'observable') as Observable<any>)
     .subscribe(val => {

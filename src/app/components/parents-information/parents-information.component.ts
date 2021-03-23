@@ -172,7 +172,7 @@ export class ParentsInformationComponent
      });
     
     this.phoneForm = this.fb.group({
-      phone: ["", [Validators.required], 
+      phone: ["", [Validators.required, Validators.pattern(/[0-9]|\./)], 
       [validatePhoneIsUnique(this.chatapi, /\d{11}/gi, this)] ]
     
     });
@@ -193,12 +193,22 @@ export class ParentsInformationComponent
         this.localGovtArea = "25";
         this.view = '';
         this.previousPage.emit("firstPage");
+        sessionStorage.removeItem('school_avatar');
       }
     )
     
   }
 
- 
+  
+  numberOnly(event): boolean {
+    const charCode = (event.which) ? event.which : event.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+      return false;
+    }
+    return true;
+
+  }
+
   get phone(): AbstractControl {
     return this.phoneForm.get("phone");
   }
@@ -244,7 +254,9 @@ export class ParentsInformationComponent
     this.spinner = false;
     this.previousPage.emit("phone");
     this.checkingUniqueness = 'done';
+    
   }
+
 
   changeThisToProfile(event: Event) {
     const pa =

@@ -287,7 +287,9 @@
           (blur)="checkingUniqueness = 'done'"
           formControlName="phone"
           type="tel"
-          minlength="0"
+          id="phoneNumberField"
+          minlength="1"
+          (keypress)="numberOnly($event)"
           maxlength="11"
           pattern="[0-9]{11}"
           placeholder="Eg: 09093345678"
@@ -312,7 +314,7 @@
           class="warning"
           [style.display]="phone.touched && !phone.valid && !phoneField?.errors?.phoneExists ? 'block' : 'none'"
         >
-          Please enter your Nigerian phone number
+          Please enter a valid phone number
         </small>
         <small style="margin-top: 2px;" *ngIf="phoneField?.errors?.phoneExists" class="email_exists">  
           This phone number has already been taken 

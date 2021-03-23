@@ -20,7 +20,7 @@ import { Store } from "@ngrx/store";
 import * as fromStore from "../../store";
 import * as generalActions from "../../store/actions/general.action";
 import { pluck } from "rxjs/operators";
-import { Subscription } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 
 
 interface checkWhoIsContinuing {
@@ -219,35 +219,15 @@ export class ContinuingExistingRequestsComponent
     const { phoneOrEmail } = this.confirmPhoneOrEmailForm.value;
     if (this.generalservice.emailRegex.test(phoneOrEmail)) {
       this.checkWhoIsTryingToContinue.email = phoneOrEmail;
-      this.spinner = false;
-      this.view = "four-digit-pin";
-      this.previousPage.emit("");
-      // this.chatservice
-      //   .checkIfParentHasPreviouslySavedPIN({
-      //     email: this.checkWhoIsTryingToContinue.email
-      //   })
-      //   .subscribe(
-      //     val => {
-      //       this.spinner = false;
-      //       this.view = "four-digit-pin";
-      //       this.previousPage.emit("");
-      //     },
-      //     async (err: HttpErrorResponse) => {
-      //       // this.generalservice.errorNotification(err.error.message);
-      //       try {
-      //         const res = await (this.chatservice.sendEmailOTP(
-      //           { email: this.checkWhoIsTryingToContinue.email },
-      //           "promise"
-      //         ) as Promise<any>);
-      //         this.generalservice.successNotification(res.message);
-      //         this.view = "pin_not_set";
-      //         this.spinner = false;
-      //       } catch (error) {
-      //         this.generalservice.errorNotification(error.error.message);
-      //         this.spinner = false;
-      //       }
-      //     }
-      //   );
+      (this.chatservice.sendEmailOTP({email: phoneOrEmail}, 'observable') as Observable<any>)
+      .subscribe(val => {
+        this.spinner = false;
+        this.view = "four-digit-pin";
+        this.previousPage.emit("");
+        this.generalservice.successNotification('An OTP has been sent to your email');
+      }, err => {
+        this.generalservice.errorNotification(`We couldn't send an OTP. Please try again later.`)
+      })
       return;
     }
     this.checkWhoIsTryingToContinue.phone = phoneOrEmail;

@@ -931,7 +931,7 @@ selectMottoFromSchool(){
     if(number == 0 && this.schoolMotto){
       return ` ${this.schoolMotto}`;
     }
-    else if(!this.schoolMotto) return ' The Citadel of excellence';
+    else if(!this.schoolMotto) return '';
     else{
       return '';
     }
