@@ -40,7 +40,7 @@ export class ChildInformationFormsComponent
     | "enterInformation"
     | "modifyOrNot"
     | "summary"
-    | "upload-image" | 'select-books' = "select-books";
+    | "upload-image" | 'select-books' = "";
   pageViews: string[] = [
     "",
     "selectChildren",
