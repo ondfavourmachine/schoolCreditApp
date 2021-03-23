@@ -93,7 +93,7 @@ export class VerifyParentDataComponent
        num += 1;
        let nextelem = this.arrayOfInputs[num];
        document.getElementById(nextelem).focus();
-       console.log(num);
+      //  console.log(num);
        this.arrayOfvalues.push(value);  
      } catch (error) {
          this.arrayOfvalues.push(value);  

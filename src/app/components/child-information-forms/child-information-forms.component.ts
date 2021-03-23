@@ -520,7 +520,7 @@ export class ChildInformationFormsComponent
       acc += parseInt(tuition);
       return acc;
     }, total)
-    console.log(total);
+    // console.log(total);
     this.mapOfChildrensInfo.get(this.currentChild).total_cost_of_books+= total;
     this.generalservice.handleSmartViewLoading({component: 'child-information-forms', info: 'childForms'});
     this.moveToNextChildOrNot(event);

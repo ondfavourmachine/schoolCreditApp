@@ -22,6 +22,7 @@
           formControlName="date_of_birth"
           onfocus="this.type = 'date'"
           onblur="this.type='text'"
+          (change)="runDateAnalysis($event.target.value)"
           name="class"
           type="text"
           placeholder="Eg: Month/Day/Year"
@@ -33,6 +34,12 @@
       >
         Please enter your date of birth
       </small>
+      <small
+      class="dob_warning"
+      [style.display]="parentIsTooYoung ? 'block' : 'none'"
+      >
+      You must be more than 18 years.
+    </small>
     </div>
     <div class="inline fields">
       <label for="fruit">Gender:</label>
