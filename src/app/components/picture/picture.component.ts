@@ -16,6 +16,7 @@ import { GeneralService } from "src/app/services/generalService/general.service"
 })
 export class PictureComponent implements OnInit, AfterViewInit {
   @Output() changeUpTheView = new EventEmitter<string>();
+  @Output() updateLastPage = new EventEmitter<string>();
   @Output() startSpinner = new EventEmitter<boolean>();
   @Output() childPicture = new EventEmitter<File>();
   @Input('fromWhere') fromWhere: any;
@@ -34,6 +35,7 @@ export class PictureComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.modifiedFile = undefined;
     console.log('i am here!')
+    this.updateLastPage.emit('address');
   }
 
  async ngAfterViewInit(){

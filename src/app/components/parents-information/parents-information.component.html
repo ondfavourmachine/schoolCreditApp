@@ -95,6 +95,7 @@
      [fromWhere]=" "
     (startSpinner)="spinner = $event"
     (changeUpTheView)="change()"
+    (updateLastPage)="previousPage.emit('address')"
   ></app-picture>
   <div *ngIf="spinner" class="spinner-container">
     <i class="fa fa-circle-notch fa-spin fa-3x"></i>

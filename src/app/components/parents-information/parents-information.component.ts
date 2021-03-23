@@ -222,6 +222,7 @@ export class ParentsInformationComponent
   }
 
   manageGoingBackAndForth() {
+
     if (this.view == this.previous) {
       const num = this.pageViews.indexOf(this.previous);
       const ans = this.pageViews[num - 1];
