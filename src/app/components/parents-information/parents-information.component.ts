@@ -404,7 +404,7 @@ export class ParentsInformationComponent
             this.generalservice.handleFlowController("");
             this.spinner = false;
             this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
-              `Please ${parentInfo.full_name}, take a few minutes to verify the information you provided`,
+              `Please ${parentInfo.full_name}, take a few seconds to verify the information you provided`,
               "left",
               `Ok let's verify it now, No later`,
               `verifynow,verifylater`,

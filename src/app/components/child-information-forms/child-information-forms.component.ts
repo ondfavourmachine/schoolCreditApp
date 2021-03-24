@@ -465,7 +465,7 @@ export class ChildInformationFormsComponent
       `Summary :
        You entered a total of ₦${new Intl.NumberFormat().format(
          this.tuitionFeesTotal + this.totalCostOfSchoolBooks
-       )} which includes cost of school fees and books.
+       )} which includes cost of school fees ${this.totalCostOfSchoolBooks > 0 ? ' and books': ''}.
        Number of Children: ${this.mapOfChildrensInfo.size}`,
       "left",
       "",
