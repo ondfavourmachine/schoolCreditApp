@@ -561,7 +561,11 @@ export class Message {
             )
           )
         );
-        sessionStorage.setItem('repaymentFrequency', c);
+        let rf;
+        if(c == 'daily') rf = '1';
+        if(c == 'weekly') rf = '2';
+        if(c == 'monthly') rf = '3';
+        sessionStorage.setItem('repaymentFrequency', rf);
         break;
       case "edit":
         this.giverDispatchEvents(
