@@ -30,13 +30,13 @@
   >
     <div
       *ngFor="let offer of offersToShowParent; index as i"
-      class="twelve wide column myborder mt-3 addFlexBehavior"
+      class="twelve wide column myborder mt-1 addFlexBehavior"
       [class.selectedOffer]="i == selectedOffer"
       (click)="selectOffers(i)"
     >
       <p class="bolded">
-        <span class="housing"> Financial Institution: <span class="f_institution">  {{ offer?.lender }} </span> </span>
-        <span class="housing">  Loan approved: <span class="loan_amount"> ₦{{ offer?.amount }} </span>  </span>
+        <span class="housing"> Institution: <span class="f_institution">  {{ offer?.lender }} </span> </span>
+        <span class="housing">  Loan: <span class="loan_amount"> ₦{{ offer?.amount }} </span>  </span>
         <span class="housing">  Duration: <span class="duration">{{offer?.duration}}</span>  </span>
         <span class="housing"> Rate:  <span class="rate">{{ offer?.rate }}</span>  </span>
         
@@ -146,6 +146,34 @@
 
     <button disabled class="ui button primary basic">
       Statement
+    </button>
+  </div>
+  <div *ngIf="spinner" class="spinner-container">
+    <i class="fa fa-circle-notch fa-spin fa-3x"></i>
+  </div> 
+</div>
+
+
+<div
+  class="flex flex-column justify-center align-center h-100 text-center family-info"
+  *ngIf="page == 'sorry-page'"
+>
+  <h1 class="para-title sorry__title">
+    <span >
+      <img  src="../../../assets/images/broken_link.svg" alt="">
+    </span>
+     <p>
+      Sorry, we encountered some errors trying to connect to our servers!.
+     </p>
+  </h1>
+
+  <div class="twelve wide column mt-3">
+    <button (click)="insertIframeToDom()" class="ui button primary basic mr-3">
+     Try again
+    </button>
+
+    <button class="ui button primary basic">
+      cancel
     </button>
   </div>
   <div *ngIf="spinner" class="spinner-container">

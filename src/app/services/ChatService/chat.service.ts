@@ -33,6 +33,8 @@ interface Questions {
   status: boolean;
 }
 
+type repaymentFrequency = "1" | "2" | "3" | string;
+
 interface GenericResponse {
   message: string;
   status: boolean;
@@ -336,8 +338,8 @@ export class ChatService {
   }
   
   // sendLoanRequest
-  sendLoanRequest(obj: {school_id: any, guardian_id: any, loan_amount: string,
-        child_data: {id: string, amount: string}[]}): Promise<{message: string; request: number; status:boolean}>{
+  sendLoanRequest(obj: {school_id: any,  guardian_id: any, loan_amount: string,
+        child_data: {id: string, amount: string}[], repayment_frequency: repaymentFrequency,}): Promise<{message: string; request: number; status:boolean}>{
     return this.http.post<any>(`${this.generalUrl}loan/request`, obj).toPromise()
   }
 

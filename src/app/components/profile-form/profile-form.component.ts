@@ -9,6 +9,22 @@ import { pluck } from "rxjs/operators";
 
 import { GeneralService } from "src/app/services/generalService/general.service";
 
+// const validateAge = (thisComponent: ProfileFormComponent): AsyncValidatorFn => (control: AbstractControl): Promise<{emailExists: boolean}> | Observable<{emailExists: boolean}> | null => {
+//   obj.checkingUniqueness = 'checking';
+//   if(!control && control.value.length < 2 && !regex.test(control.value)) { 
+//     obj.checkingUniqueness = 'done'; 
+//     return of(null)
+//   };
+//      return new Promise((resolve, reject) => {
+//        const age = thisComponent.runDateAnalysis(control.value)
+//        age < 18 ? resolve(null) : resolve({ parentIstooYoung: true })
+//      })
+      
+
+  
+// }
+
+
 
 @Component({
   selector: "app-profile-form",
@@ -32,10 +48,14 @@ export class ProfileFormComponent implements OnInit, OnDestroy {
     this.destroy[0] = this.store
       .select(fromStore.getParentState)
       .pipe(pluck('parent_info'))
-      .subscribe(val => this.parentInfo = {...val as Parent});
+      .subscribe(val => {
+        this.parentInfo = {...val as Parent};
+      });
 
     this.parentProfileForm = this.fb.group({
-      full_name: [this.parentInfo && this.parentInfo.full_name ? this.parentInfo.full_name : '' , Validators.required],
+      // full_name: [this.parentInfo && this.parentInfo.full_name ? this.parentInfo.full_name : '' , Validators.required],
+      first_name: [this.parentInfo && this.parentInfo.first_name ? this.parentInfo.first_name : '' , Validators.required],
+      last_name: [this.parentInfo && this.parentInfo.last_name ? this.parentInfo.last_name : '' , Validators.required],
       date_of_birth: [this.parentInfo && this.parentInfo.date_of_birth ? this.parentInfo.date_of_birth : '', Validators.required],
       gender: [this.parentInfo && this.parentInfo.gender ? this.parentInfo.gender : '', Validators.required]
     });
@@ -43,7 +63,7 @@ export class ProfileFormComponent implements OnInit, OnDestroy {
     this.destroy[1] = this.generalservice.reset$.subscribe(
       (val: string) => {
         if (val.length < 1) return;
-        this.store.dispatch(new generalActions.addParents({full_name: '', date_of_birth: '', gender: ''}));
+        this.store.dispatch(new generalActions.addParents({first_name: '',last_name: '', date_of_birth: '', gender: ''}));
         this.parentProfileForm.reset();
         this.parentInfo = undefined;
       }
@@ -55,17 +75,16 @@ export class ProfileFormComponent implements OnInit, OnDestroy {
   }
 
   submitForm(form: FormGroup) {
-    if(this.myAge > 18){
+
       this.parentIsTooYoung = false;
       let parentDetails: Partial<Parent> = form.value;
+      parentDetails.full_name = `${parentDetails.first_name} ${parentDetails.last_name}`;
       this.store.dispatch(new generalActions.addParents(parentDetails));
+      // console.log(parentDetails);
       this.changeUpTheViewThree.emit("phone");
-    }else{
-      this.parentIsTooYoung = true;
-    }
   }
 
-  runDateAnalysis(value: string){
+  runDateAnalysis(value: string): number{
    let startDate  = value;
     if (startDate.length != 10 || startDate.indexOf("-") < 0) {
         // console.log('Check date format');
@@ -78,8 +97,8 @@ export class ProfileFormComponent implements OnInit, OnDestroy {
     let now = nowDate.getFullYear();
     let mine = birth.getFullYear();
     this.myAge = now - mine -1;   
+    this.myAge < 18 ? this.parentIsTooYoung = true : this.parentIsTooYoung = false;
 }
-
   ngOnDestroy(){
 
   }

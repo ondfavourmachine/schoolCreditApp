@@ -359,11 +359,10 @@ export class VerifyParentDataComponent
   }
 
   sendActivationCodeToEmail(email: string) {
-    this.spinner = true;
+    this.view = "four-digit-pin";
     (this.chatapi.sendEmailOTP({email}, 'observable') as Observable<any>)
     .subscribe(val => {
-      this.generalservice.successNotification("Activation code sent!");
-      this.view = "four-digit-pin";
+      this.generalservice.successNotification("Activation code sent!"); 
       setTimeout(() => {
         document.getElementById(this.arrayOfInputs[0]).focus();
       }, 800);

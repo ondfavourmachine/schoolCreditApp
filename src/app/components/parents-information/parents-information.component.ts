@@ -137,7 +137,7 @@ export class ParentsInformationComponent
   emailForm: FormGroup;
   address: string = "";
   state: string = "25";
-  localGovtArea: string = "25";
+  localGovtArea: string = "";
   destroy: Subscription[] = [];
   lgaData: any = {};
   checkingUniqueness: 'checking' | 'not-unique' | 'unique' | 'done' | '' = 'done';
@@ -240,7 +240,7 @@ export class ParentsInformationComponent
   }
 
   selectLgaInState(value: string) {
-    
+    if(!value || value.length < 1) return;
     const selectedLga = this.lgaData[value || this.localGovtArea];
     this.stateLgas = selectedLga.data;
     // console.log(selectedLga);
@@ -404,7 +404,7 @@ export class ParentsInformationComponent
             this.generalservice.handleFlowController("");
             this.spinner = false;
             this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
-              `Please ${parentInfo.full_name}, take a minute to verify the information you provided`,
+              `Please ${parentInfo.full_name}, take a few minutes to verify the information you provided`,
               "left",
               `Ok let's verify it now, No later`,
               `verifynow,verifylater`,

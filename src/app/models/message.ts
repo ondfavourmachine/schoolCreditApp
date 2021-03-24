@@ -23,7 +23,7 @@ export class Message {
   ];
 
   static welcomeMessagesForGiver = [
-    "Welcome to Adama High School.",
+    "Welcome to payment portal of Adama High School.",
     "This Service helps you manage how you pay your child's fees",
     "How do you want to proceed?"
   ];
@@ -353,7 +353,7 @@ export class Message {
    
     let button = event.srcElement as HTMLButtonElement;
     let c = button.dataset["button"].toString().toLowerCase();
-    c = c.split("-")[1];
+    c = c.split("-")[1].trim();
     if (!isNaN(Number(c))) {
       // this.handleUpload(button.dataset["button"]);
       this.handleUpload("");
@@ -508,7 +508,43 @@ export class Message {
         );
         sessionStorage.setItem("fullpayment", "true");
         break;
+        // this.giverResponsesEvent(
+        //   "customGiverResponse",
+        //   new replyGiversOrReceivers(
+        //     "We would like to collect your child's information.",
+        //     "left",
+        //     "Start",
+        //     "enterchildinfo",
+        //     "allow"
+        //   ),
+        //   new GiverResponse(
+        //     new replyGiversOrReceivers(
+        //       "I want to make installmental payments",
+        //       "right"
+        //     )
+        //   )
+        // );
       case "installmental":
+        this.giverResponsesEvent(
+          "customGiverResponse",
+          new replyGiversOrReceivers(
+            "Whats your repayment frequency cycle preference:",
+            "left",
+            "Daily,Weekly,Monthly",
+            "daily,weekly,monthly",
+            "allow"
+          ),
+          new GiverResponse(
+            new replyGiversOrReceivers(
+              "I want to make installmental payments",
+              "right"
+            )
+          )
+        );
+        break;
+      case "daily":
+      case "weekly":
+      case "monthly":
         this.giverResponsesEvent(
           "customGiverResponse",
           new replyGiversOrReceivers(
@@ -520,11 +556,12 @@ export class Message {
           ),
           new GiverResponse(
             new replyGiversOrReceivers(
-              "I want to make installmental payments",
+              `I will like to make my payments ${c}`,
               "right"
             )
           )
         );
+        sessionStorage.setItem('repaymentFrequency', c);
         break;
       case "edit":
         this.giverDispatchEvents(

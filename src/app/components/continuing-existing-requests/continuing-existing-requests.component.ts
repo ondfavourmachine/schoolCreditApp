@@ -226,7 +226,9 @@ export class ContinuingExistingRequestsComponent
         this.previousPage.emit("");
         this.generalservice.successNotification('An OTP has been sent to your email');
       }, err => {
-        this.generalservice.errorNotification(`We couldn't send an OTP. Please try again later.`)
+        this.spinner = false;
+        this.confirmPhoneOrEmailForm.reset();
+        this.generalservice.errorNotification(`We couldn't send an OTP. Make sure that the email entered is registerd on this service.`)
       })
       return;
     }
@@ -327,6 +329,7 @@ export class ContinuingExistingRequestsComponent
       (err: HttpErrorResponse) => {
         this.generalservice.errorNotification(`${err.error.message}!`);
         this.checking("stop");
+
         console.log(err);
       }
     );

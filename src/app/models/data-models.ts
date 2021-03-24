@@ -1,5 +1,7 @@
 export interface ParentRegistration {
   full_name?: string;
+  first_name?: string;
+  last_name?: string;
   date_of_birth?: string;
   gender?: string;
   address?: string;
@@ -22,7 +24,9 @@ export interface Parent extends ParentRegistration {
 
 }
 
-export interface LoanRequest{creditclan_request_id:null | number, eligible: boolean}
+export interface LoanRequest{
+  creditclan_request_id:null | number, eligible: boolean
+}
 
 export interface ParentWorkInfo {
   employer: string;

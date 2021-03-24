@@ -557,12 +557,13 @@ export class ChildInformationFormsComponent
           amount: element.tuition_fees
         }
       })
-
+      const rf = sessionStorage.getItem('repaymentFrequency');
       const res = await this.chatapi.sendLoanRequest({
       school_id: this.parentDetails.school_id || 1,
       guardian_id: this.parentDetails.guardian,
       loan_amount: this.tuitionFeesTotal as string,
-      child_data: arrayOfChildId
+      child_data: arrayOfChildId,
+      repayment_frequency : rf == 'null' ? '3' : rf
     });
     const updatedParents: Partial<Parent> = {...this.parentDetails, loan_request: res.request}
     this.store.dispatch(new generalActions.addParents(updatedParents));

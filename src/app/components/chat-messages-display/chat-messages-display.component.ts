@@ -929,7 +929,7 @@ selectMottoFromSchool(){
   
   modifyMotto(number: number): string{
     if(number == 0 && this.schoolMotto){
-      return ` ${this.schoolMotto}`;
+      return ``;
     }
     else if(!this.schoolMotto) return '';
     else{

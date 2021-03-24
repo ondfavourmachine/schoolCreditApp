@@ -51,7 +51,7 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
     | "result"
     | "work-form"
     | "address-info" | 'bank_statement' | 'iframe_container' | "card_tokenisation"
-    | "preambleToForms" | 'pre_bankstatement' = "preambleToForms";
+    | "preambleToForms" | 'pre_bankstatement' | 'sorry-page' = "preambleToForms";
   text: string = "Sending Loan request....";
   pageViews: string[] = ["work-form"];
   selected: string;
@@ -147,12 +147,14 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
       })
       // debugger;
       if(this.parentDetails.loan_request == null){
+         const rf = sessionStorage.getItem('repaymentFrequency');
         try {
           const res = await this.chatservice.sendLoanRequest({
             school_id: this.parentDetails.school_id || 1,
             guardian_id: this.parentDetails.guardian,
             loan_amount: this.loanAmount as string,
-            child_data: arrayOfChildId
+            child_data: arrayOfChildId,
+            repayment_frequency : rf == 'null' ? '3' : rf
           });
           const { message } = res;
           if (message == "request created!")
@@ -329,26 +331,37 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
 
   // this will be removed Later
   async insertIframeToDom(){
+    debugger;
     const modalBody = document.querySelector('.modal-body') as HTMLElement
     this.spinner = true;
     this.page = 'iframe_container';
     // console.log(this.parentRequestAndAccount);
-    const res = await this.chatservice.getIframeSrcForCardTokenization(this.parentRequestAndAccount['request_id']);
-    const {url} = res;
+    
     try{ 
-      const iframe = document.createElement('iframe');
-      iframe.setAttribute('sandbox', 'allow-same-origin allow-scripts allow-popups');
-      iframe.src = `${url}`
-      iframe.setAttribute('frameborder', '0');
-      iframe.id = 'iframe_for_payment'
-      iframe.height = "600";
-      iframe.width = (modalBody.offsetWidth - 5).toString();
-      iframe.onload = () => {this.spinner = false;}
-      (document.getElementById('divforIframe') as HTMLDivElement).insertAdjacentElement('afterbegin', iframe);
+      const res = await this.chatservice.getIframeSrcForCardTokenization(this.parentRequestAndAccount['request_id']);
+      console.log(res);
+      if((res as Object).hasOwnProperty('url')){
+        const {url} = res;
+        const iframe = document.createElement('iframe');
+        iframe.setAttribute('sandbox', 'allow-same-origin allow-scripts allow-popups');
+        iframe.src = `${url}`
+        iframe.setAttribute('frameborder', '0');
+        iframe.id = 'iframe_for_payment'
+        iframe.height = "600";
+        iframe.width = (modalBody.offsetWidth - 5).toString();
+        iframe.onload = () => {this.spinner = false;}
+        (document.getElementById('divforIframe') as HTMLDivElement).insertAdjacentElement('afterbegin', iframe);
+      }
+      else{
+        throw res.message;
+      }
+     
   
       // window.addEventListener('resize', this.resizeIframe)
     }catch(e){
         console.log(e);
+        this.page = 'sorry-page';
+        this.spinner = false;
     }
   }
 
