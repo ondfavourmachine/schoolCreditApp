@@ -4,14 +4,22 @@
   *ngIf="page == 'offers'"
   style="height: 500px;"
 >
-  <h1 class="para-title mt-3 mb-2">
-   We found {{ offersToShowParent.length }} for you:
+  
+
+  <h1 class="para-title sorry__title">
+    <span >
+      <img  src="../../../assets/images/winners.svg" alt="">
+    </span>
+     <p>
+      Congrats, We found {{ offersToShowParent.length }} for you
+     </p>
   </h1>
  
   <div class="text-center mt-4 buttons__parent">
     <button
       type="button"
       class="ui primary button Continue"
+      (click)="changeToWorkAndLoadWidget('work-form')"
     >
       Continue application
     </button>
@@ -60,7 +68,7 @@
 
   <div class="twelve wide column">
     <button (click)="switchToFakeSearchingPage()" class="ui button primary basic mr-3 mb-3">
-      Ok, i am ready
+      Okay
     </button>
 
     <!-- <button disabled class="ui button primary basic">
