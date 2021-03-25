@@ -339,7 +339,7 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
     
     try{ 
       const res = await this.chatservice.getIframeSrcForCardTokenization(this.parentRequestAndAccount['request_id']);
-      console.log(res);
+      // console.log(res);
       if((res as Object).hasOwnProperty('url')){
         const {url} = res;
         const iframe = document.createElement('iframe');
@@ -471,8 +471,11 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
     (document.querySelector('.fakeButton') as HTMLElement).click();
   }
 
-  showResponseToCompleteBSAnalysis(){
-
+  switchToFakeSearchingPage(){
+    this.page = 'checking';
+    setTimeout(() => {
+      this.page = 'offers';
+    }, 3000);
   }
 
   changeUpView(event: any){

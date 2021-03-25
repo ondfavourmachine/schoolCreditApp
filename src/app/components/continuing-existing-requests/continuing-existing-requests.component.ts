@@ -48,6 +48,7 @@ export class ContinuingExistingRequestsComponent
     | "phone_verify_first" = "";
   arrayOfNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 11];
   input: string = "";
+  otpSent: boolean = false;
   response: replyGiversOrReceivers = undefined;
   mapOfChildrensInfo: Map<string, Partial<AChild>> = new Map();
   nextStage: string;
@@ -215,20 +216,21 @@ export class ContinuingExistingRequestsComponent
   }
 
   collectEntry(): void {
-    this.spinner = true;
+    this.view = "four-digit-pin";
     const { phoneOrEmail } = this.confirmPhoneOrEmailForm.value;
     if (this.generalservice.emailRegex.test(phoneOrEmail)) {
       this.checkWhoIsTryingToContinue.email = phoneOrEmail;
       (this.chatservice.sendEmailOTP({email: phoneOrEmail}, 'observable') as Observable<any>)
       .subscribe(val => {
         this.spinner = false;
-        this.view = "four-digit-pin";
         this.previousPage.emit("");
         this.generalservice.successNotification('An OTP has been sent to your email');
+        this.otpSent = true;
       }, err => {
         this.spinner = false;
         this.confirmPhoneOrEmailForm.reset();
-        this.generalservice.errorNotification(`We couldn't send an OTP. Make sure that the email entered is registerd on this service.`)
+        this.generalservice.errorNotification(`We couldn't send an OTP. Make sure that the email entered is registerd on this service.`);
+        this.otpSent = true;
       })
       return;
     }
@@ -236,6 +238,61 @@ export class ContinuingExistingRequestsComponent
     this.view = "four-digit-pin";
     this.spinner = false;
     this.previousPage.emit("");
+  }
+
+  resendOTP(event: Event){
+    const btn = event.target as HTMLButtonElement;
+    let previousText = btn.textContent;
+    btn.textContent = `Resending...`;
+    (this.chatservice.sendEmailOTP({email: this.confirmPhoneOrEmailForm.value}, 'observable') as Observable<any>)
+      .subscribe(val => {
+        btn.textContent = previousText;
+        this.previousPage.emit("");
+        this.generalservice.successNotification('OTP Resent.');
+        this.otpSent = true;
+      }, err => {
+         btn.textContent = previousText;
+        this.confirmPhoneOrEmailForm.reset();
+        this.generalservice.errorNotification(`We couldn't send an OTP. Make sure that the email entered is registerd on this service.`)
+        this.otpSent = true;
+      })
+
+  }
+
+  allowPastingButPreventInputFromKeyboard(event){
+      var clipboardKeys = {
+        winInsert : 45,
+        winDelete : 46,
+        SelectAll : 97,
+        macCopy : 99,
+        macPaste : 118,
+        macCut : 120,
+        redo : 121,	
+        undo : 122
+      }
+      // Simulate readonly but allow all clipboard, undo and redo action keys
+      let charCode = event.which;
+    
+      if (
+        event.ctrlKey && charCode == clipboardKeys.redo ||	
+        event.ctrlKey && charCode == clipboardKeys.undo ||		 
+        event.ctrlKey && charCode == clipboardKeys.macCut ||		
+        event.ctrlKey && charCode == clipboardKeys.macPaste ||	
+        event.ctrlKey && charCode == clipboardKeys.macCopy ||	
+        event.shiftKey && event.keyCode == clipboardKeys.winInsert ||	
+        event.shiftKey && event.keyCode == clipboardKeys.winDelete ||	
+        event.ctrlKey && event.keyCode == clipboardKeys.winInsert  ||	
+        event.ctrlKey && charCode == clipboardKeys.SelectAll		
+        ){ return 0; }
+      
+      var theEvent = event || window.event;
+      var key = theEvent.keyCode || theEvent.which;
+      key = String.fromCharCode(key);
+      var regex = /[]|\./;
+      if(!regex.test(key)) {
+        theEvent.returnValue = false;
+        theEvent.preventDefault();
+      }
   }
 
   checking(command?: "stop"): void {
@@ -564,36 +621,31 @@ export class ContinuingExistingRequestsComponent
           this.generalservice.responseDisplayNotifier(nextresponse);
         }, 500);
         break;
-      case "widget_cashflow":
-        this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
-        this.generalservice.handleFlowController("");
-        this.generalservice.nextChatbotReplyToGiver = undefined;
-        const responseFromParent = new replyGiversOrReceivers(
-          `Thanks for this information. A financial institution is preparing your final offer.`,
-          "left",
-          "",
-          "prevent"
-        );
-        this.generalservice.responseDisplayNotifier(responseFromParent);
-        this.spinner = false;
-        setTimeout(() => {
-          this.generalservice.nextChatbotReplyToGiver = undefined;
-          const chatbotResponse = new replyGiversOrReceivers(
-            `They will also like to know which account will we be debiting you from?`,
-            "left",
-            "Add Account",
-            `addaccount`,
-            "prevent"
-          );
-          this.generalservice.responseDisplayNotifier(chatbotResponse);
-        }, 800);
-        break;
-      
-      // case "phone_verified":
+      // case "widget_cashflow":
+      //   this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
+      //   this.generalservice.handleFlowController("");
+      //   this.generalservice.nextChatbotReplyToGiver = undefined;
+      //   const responseFromParent = new replyGiversOrReceivers(
+      //     `Thanks for this information. A financial institution is preparing your final offer.`,
+      //     "left",
+      //     "",
+      //     "prevent"
+      //   );
+      //   this.generalservice.responseDisplayNotifier(responseFromParent);
       //   this.spinner = false;
-      //   this.view = "phone_verify_second";
-
-        break;
+      //   setTimeout(() => {
+      //     this.generalservice.nextChatbotReplyToGiver = undefined;
+      //     const chatbotResponse = new replyGiversOrReceivers(
+      //       `They will also like to know which account will we be debiting you from?`,
+      //       "left",
+      //       "Add Account",
+      //       `addaccount`,
+      //       "prevent"
+      //     );
+      //     this.generalservice.responseDisplayNotifier(chatbotResponse);
+      //   }, 800);
+      //   break;
+      case "widget_cashflow":
       case "widget_card":
         this.response = new replyGiversOrReceivers(
           `Thank you for providing your details,${data.full_name}. However we would like to get your card details. 

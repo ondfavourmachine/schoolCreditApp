@@ -4,27 +4,20 @@
   *ngIf="page == 'offers'"
   style="height: 500px;"
 >
-  <h1 class="para-title">
-    Here are the offers we found for you:
+  <h1 class="para-title mt-3 mb-2">
+   We found {{ offersToShowParent.length }} for you:
   </h1>
-  <!-- <h5 class="" style="margin: 10px 0; font-weight: 500;">
-    Offer information:
-  </h5> -->
-  <!-- <p class="para-body">
-    <span class="block-element"
-      >Amount: <strong>{{ result?.loan_amount | currency: "NGN" }}</strong> per
-      month,
-    </span>
-    <span class="block-element"
-      >Duration: For <strong>{{ result?.duration }} months</strong>.</span
+ 
+  <div class="text-center mt-4 buttons__parent">
+    <button
+      type="button"
+      class="ui primary button Continue"
     >
-    <span class="block-element mt-3">
-      this is an offer in principle and subject to final review</span
-    >
-  </p> -->
+      Continue application
+    </button>
+  </div>
 
-
-  <div
+  <!-- <div
     class="ui grid justify-center "
     style="overflow: hidden; margin: 0 auto; cursor: pointer; z-index: 30;"
   >
@@ -50,35 +43,7 @@
     <button [disabled]="selectedOffer == undefined" (click)="page = 'card_tokenisation'"  class="ui button primary basic">
       Continue
     </button>
-
-    <!-- <div
-      style="cursor: pointer; z-index: 30;"
-      class="twelve wide column myborder addFlexBehavior"
-     
-    >
-      <p class="bolded">
-        Picture <span class=""><i class="fa fa-angle-right"></i> </span>
-      </p>
-    </div>
-
-    <div
-      style="cursor: pointer; z-index: 30;"
-      class="twelve wide column myborder addFlexBehavior"
-     
-    >
-      <p class="bolded">
-        Work information
-        <span class=""><i class="fa fa-angle-right"></i> </span>
-      </p>
-    </div> -->
-  </div>
-
-  <!-- <button
-   (click)="page = 'preambleToForms'"
-    class="ui button primary basic mt-4"
-  >
-    I Accept
-  </button> -->
+  </div> -->
 </div> 
 
 
@@ -90,18 +55,17 @@
   *ngIf="page == 'preambleToForms'"
 >
   <h1 class="para-title">
-    To help your loan application, We require a some information
-    from you.
+    Give us a few seconds let us get offers for you.
   </h1>
 
   <div class="twelve wide column">
-    <button (click)="changeToWorkAndLoadWidget('work-form')" class="ui button primary basic mr-3 mb-3">
+    <button (click)="switchToFakeSearchingPage()" class="ui button primary basic mr-3 mb-3">
       Ok, i am ready
     </button>
 
-    <button disabled class="ui button primary basic">
+    <!-- <button disabled class="ui button primary basic">
       let's do this later.
-    </button>
+    </button> -->
   </div>
 
   <div *ngIf="spinner" class="spinner-container">
@@ -408,10 +372,10 @@
 
 <div
   class=" h-100 text-center family-info"
-  *ngIf="page == 'checking' && !result"
+  *ngIf="page == 'checking'"
 >
   <h1 class="para-title">
-    {{ text }}
+    Searching for offers for you...
   </h1>
   <p class="para-body mt-3">
     <svg
@@ -475,10 +439,12 @@
     </svg>
   </p>
 
-      <!-- <p class="para-title" style="text-align: center;">
-        Searching for a financial institution for you...
+    <!-- <p class="para-title" style="text-align: center;">
+        Searching for offers for you...
       </p> -->
 </div>
+
+  <!-- (click)="changeToWorkAndLoadWidget('work-form')"  -->
 
 <div
   class="flex flex-column justify-center align-center h-100 text-center family-info"

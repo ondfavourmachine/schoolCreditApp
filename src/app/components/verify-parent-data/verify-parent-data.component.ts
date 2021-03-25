@@ -342,7 +342,7 @@ export class VerifyParentDataComponent
         { email: this.parentDetails.email },
         "promise"
       ) as Promise<any>);
-      console.log(res);
+      // console.log(res);
     } catch (error) {
       
     }

@@ -57,7 +57,7 @@ export class PictureComponent implements OnInit, OnDestroy, AfterViewInit {
      })
 
     this.modifiedFile = undefined;
-    console.log('i am here!')
+    // console.log('i am here!')
     this.updateLastPage.emit('address');
   }
 
@@ -162,7 +162,8 @@ export class PictureComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.modifiedFile || this.pictureForUseWhenParentIsTryingToEdit) {
       this.startSpinner.emit(true);
       this.changeUpTheView.emit("done");
-
+      // sessionStorage.removeItem('childPicture');
+      // sessionStorage.removeItem('parentPicture');
      
       // let guardID;
       // let pictureFromStore: string | File;
@@ -188,19 +189,23 @@ export class PictureComponent implements OnInit, OnDestroy, AfterViewInit {
       //   console.log(error);
       // }
     }
+   
     // console.log("nothing to upload!");
   }
 
 
   async  tryToPrefillPicture(){
     if(this.fromWhere == 'child-information-form'){ 
-      const res = await this.getPictureFromSessionStorage('parentPicture');
+      const res = await this.getPictureFromSessionStorage('childPicture');
       res == 'null' ? this.fileFromStore = null : this.fileFromStore = res as string;
       try{
         (document.getElementById('uploadButton') as HTMLButtonElement).disabled = false;
        }catch(error){
        (document.getElementById('uploadButton') as HTMLButtonElement).disabled = false;
       }
+
+      this.modifiedFile = await this.generalservice.dataUrlToFile(res as string, 'image_1');
+
     }else{
       const res = await this.getPictureFromSessionStorage('parentPicture');
       res == 'null' ? this.fileFromStore = null : this.fileFromStore = res as string;
@@ -209,6 +214,7 @@ export class PictureComponent implements OnInit, OnDestroy, AfterViewInit {
        }catch(error){
        (document.getElementById('uploadButton') as HTMLButtonElement).disabled = false;
       }
+      this.modifiedFile = await this.generalservice.dataUrlToFile(res as string, 'image_1')
     }
   }
 

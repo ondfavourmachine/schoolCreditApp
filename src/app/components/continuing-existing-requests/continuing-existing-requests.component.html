@@ -89,7 +89,7 @@
 
   <div *ngIf="view == 'four-digit-pin'" class="h-100 text-center family-info">
     <h1 class="para-title">
-      Enter PIN sent to your email
+      Enter OTP sent to {{ confirmPhoneOrEmailForm?.value?.phoneOrEmail }}
       <!-- Enter 4 digit PIN for
       {{ checkWhoIsTryingToContinue.email || checkWhoIsTryingToContinue.phone }} -->
     </h1>
@@ -99,7 +99,6 @@
         <div class="field">
           <!-- <label>PIN</label> -->
           <input
-            disabled
             [(ngModel)]="input"
             style="text-align: center; opacity: 1;
             font-weight: bold;"
@@ -107,11 +106,12 @@
             maxlength="6"
             name="input"
             type="text"
+            (keypress)="allowPastingButPreventInputFromKeyboard($event)"
             placeholder="Eg: 1we6679"
           />
         </div>
       </div>
-
+   <!-- 959595599 -->
       <!-- <div class="text-center mt-4">
         <button
           (click)="view = 'four-digit-pin'"
@@ -149,13 +149,22 @@
         </div>
       </div>
 
-      <div class="text-center mt-4">
-        <!-- (click)="continue()" -->
+      <div [style.width]="otpSent ? '100%': ''" class="text-center mt-4 buttons__parent">
+        <button
+        *ngIf="otpSent"
+        type="button"
+        (click)="resendOTP($event)"
+        class="ui primary button fluid mr-3"
+      >
+        Resend OTP
+      </button>
+        
         <button
           [disabled]="input.length < 3"
           type="button"
           (click)="submitThisUser()"
-          class="ui primary button fluid"
+          class="ui primary button"
+          [class.fluid]="otpSent"
         >
           Submit
         </button>
@@ -236,7 +245,7 @@
   </div>
 
   <span class="checking">
-    Checking {{ checkWhoIsTryingToContinue.email ? "email" : "phone" }}
+    Confirming ...
     <i style="margin-left: 7px" class="fa fa-circle-notch fa-spin"></i>
   </span>
 </div>

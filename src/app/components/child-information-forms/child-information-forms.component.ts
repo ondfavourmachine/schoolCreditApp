@@ -190,6 +190,7 @@ export class ChildInformationFormsComponent
         this.generalservice.nextChatbotReplyToGiver = undefined;
         this.generalservice.nextChatbotReplyToReceiver = undefined;
         sessionStorage.removeItem('school_avatar');
+        sessionStorage.removeItem('childPicture');
       }
     )
   }
@@ -297,54 +298,55 @@ export class ChildInformationFormsComponent
     const objectHoldingIndex = this.mapOfChildrensInfo.get(this.currentChild);
     value = {
       ...value,
+      full_name: `${value.first_name} ${value.last_name}`,
       picture: this.childPicture,
       index: objectHoldingIndex.index,
       child_book : schoolBooks ? schoolBooks : [],
       total_cost_of_books: objectHoldingIndex.total_cost_of_books
     };
     console.log(value);
-    // this.mapOfChildrensInfo.set(this.currentChild, value);
-    // if (this.mockstore.childrenInformationSubmittedByParent.length < 1) {
-    //   this.mockstore.childrenInformationSubmittedByParent.push(
-    //     this.mapOfChildrensInfo.get(this.currentChild)
-    //   );
-    // } else {
-    //   const index = value.index;
-    //   const foundIndex = this.mockstore.childrenInformationSubmittedByParent.findIndex(
-    //     element => element.index == index
-    //   );
-    //   foundIndex == -1
-    //     ? this.mockstore.childrenInformationSubmittedByParent.push(
-    //         this.mapOfChildrensInfo.get(this.currentChild)
-    //       )
-    //     : this.mockstore.childrenInformationSubmittedByParent.splice(
-    //         foundIndex,
-    //         1,
-    //         this.mapOfChildrensInfo.get(this.currentChild)
-    //       );
-    // }
+    this.mapOfChildrensInfo.set(this.currentChild, value);
+    if (this.mockstore.childrenInformationSubmittedByParent.length < 1) {
+      this.mockstore.childrenInformationSubmittedByParent.push(
+        this.mapOfChildrensInfo.get(this.currentChild)
+      );
+    } else {
+      const index = value.index;
+      const foundIndex = this.mockstore.childrenInformationSubmittedByParent.findIndex(
+        element => element.index == index
+      );
+      foundIndex == -1
+        ? this.mockstore.childrenInformationSubmittedByParent.push(
+            this.mapOfChildrensInfo.get(this.currentChild)
+          )
+        : this.mockstore.childrenInformationSubmittedByParent.splice(
+            foundIndex,
+            1,
+            this.mapOfChildrensInfo.get(this.currentChild)
+          );
+    }
 
-    // this.previous = this.currentChild;
-    // this.currentChild = this.iterator.next().value;
-    // // this.iterator.next.value might be null sometimes so we do this:
-    // if (!this.currentChild) {
-    //   const thisindex = this.mapOfChildrensInfo.get(this.previous).index + 1;
-    //   //  this condition should only run if thisindex is less than or equal to the size of the map
-    //   if (thisindex <= this.mapOfChildrensInfo.size) {
-    //     for (let entry of this.mapOfChildrensInfo.entries()) {
-    //       entry[1].index == thisindex ? (this.currentChild = entry[0]) : "";
-    //     }
-    //   }
-    //   // else {
-    //   //   console.log("i am here");
-    //   //   console.log(this.mapOfChildrensInfo);
-    //   // }
-    // }
-    // setTimeout(() => {
-    //   this.viewToshow = "modifyOrNot";
-    //   this.spinner = false;
-    //   this.previousPage.emit("");
-    // }, 200);
+    this.previous = this.currentChild;
+    this.currentChild = this.iterator.next().value;
+    // this.iterator.next.value might be null sometimes so we do this:
+    if (!this.currentChild) {
+      const thisindex = this.mapOfChildrensInfo.get(this.previous).index + 1;
+      //  this condition should only run if thisindex is less than or equal to the size of the map
+      if (thisindex <= this.mapOfChildrensInfo.size) {
+        for (let entry of this.mapOfChildrensInfo.entries()) {
+          entry[1].index == thisindex ? (this.currentChild = entry[0]) : "";
+        }
+      }
+      // else {
+      //   console.log("i am here");
+      //   console.log(this.mapOfChildrensInfo);
+      // }
+    }
+    setTimeout(() => {
+      this.viewToshow = "modifyOrNot";
+      this.spinner = false;
+      this.previousPage.emit("");
+    }, 200);
   }
 
   get nameOfRecentlyAddedChild(): string {
@@ -377,11 +379,13 @@ export class ChildInformationFormsComponent
     this.store.dispatch(new generalActions.calculateFees());
 
     for (let [key, value] of this.mapOfChildrensInfo) {
-      // console.log(value);
+      let formToSubmit = Object.assign({}, value);
+      delete formToSubmit.first_name;
+      delete formToSubmit.last_name
       try {
         const res = await this.chatapi.saveChildData(
-          { ...value },
-          this.guardianID,
+          formToSubmit,
+          this.guardianID || sessionStorage.getItem('guardian'),
           this.schoolID
         );
         const { child } = res;
@@ -505,7 +509,7 @@ export class ChildInformationFormsComponent
   }
 
   showBookSelectionPage(){
-   
+
     if(this.numberOfSchoolBooks > 0){
       this.generalservice.handleSmartViewLoading({component : 'school-books', info: 'schoolBooks'});
       this.viewToshow = 'select-books'

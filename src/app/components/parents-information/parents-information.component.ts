@@ -80,7 +80,7 @@ const validatePhoneIsUnique =
         obj.checkingUniqueness = 'unique';
         return  null
       }), catchError(err =>  {
-        console.log(err);
+        // console.log(err);
         obj.checkingUniqueness = 'not-unique';
         return of({phoneExists: true})
       }))
@@ -181,7 +181,7 @@ export class ParentsInformationComponent
      this.destroy[1] = this.store
      .select(fromStore.getCurrentParentInfo)
      .subscribe(val => {
-       console.log(val);
+      //  console.log(val);
        this.parent = val as Parent;
      });
     
@@ -465,14 +465,14 @@ export class ParentsInformationComponent
             }, 600);
           },
           (err: HttpErrorResponse) => {
-            console.log(err);
+            // console.log(err);
             const { message } = err.error;
             this.spinner = false;
             this.generalservice.errorNotification(message);
           }
         );
         }else{
-      console.log('i am here');
+      // console.log('i am here');
       let form = new FormData();
       for(let elem in parentInfo){
         form.append(elem, `${parentInfo[elem]}`)

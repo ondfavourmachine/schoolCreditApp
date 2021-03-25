@@ -266,7 +266,7 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public sendMessagesAfterClickingTheButton(event: MouseEvent) {
     if (this.inputSetToNumber) {
-      console.log(event.srcElement);
+      // console.log(event.srcElement);
     }
   }
 
