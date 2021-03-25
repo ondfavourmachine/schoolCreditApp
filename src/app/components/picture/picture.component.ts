@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, Input, AfterViewInit } from "@angular/core";
+import { Component, OnInit, Output, EventEmitter, Input, AfterViewInit, OnDestroy } from "@angular/core";
 import { Parent } from "src/app/models/data-models";
 import * as generalActions from "../../store/actions/general.action";
 import * as fromStore from "../../store";
@@ -6,7 +6,7 @@ import { ImageCroppedEvent } from "ngx-image-cropper";
 import { Store } from "@ngrx/store";
 import { ChatService } from "src/app/services/ChatService/chat.service";
 import { Subscription } from "rxjs";
-import { pluck } from "rxjs/operators";
+import { pluck, tap } from "rxjs/operators";
 import { GeneralService } from "src/app/services/generalService/general.service";
 
 @Component({
@@ -14,7 +14,7 @@ import { GeneralService } from "src/app/services/generalService/general.service"
   templateUrl: "./picture.component.html",
   styleUrls: ["./picture.component.css"]
 })
-export class PictureComponent implements OnInit, AfterViewInit {
+export class PictureComponent implements OnInit, OnDestroy, AfterViewInit {
   @Output() changeUpTheView = new EventEmitter<string>();
   @Output() updateLastPage = new EventEmitter<string>();
   @Output() startSpinner = new EventEmitter<boolean>();
@@ -26,6 +26,9 @@ export class PictureComponent implements OnInit, AfterViewInit {
   modifiedFile: File;
   croppedImage: any;
   fileFromStore: string;
+  destroy: Subscription[] =[];
+  pictureForUseWhenParentIsTryingToEdit: File | string;
+ 
   constructor(
     private store: Store<fromStore.AllState>,
     private chatapi: ChatService,
@@ -33,6 +36,26 @@ export class PictureComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
+    
+    this.destroy[0] = this.store
+     .select(fromStore.getParentState)
+     .pipe(tap(val => {
+       if((val['parent_info'] as Object).hasOwnProperty('picture')){
+        this.pictureForUseWhenParentIsTryingToEdit = val['parent_info']['picture'];
+       }
+     }), pluck ('editMode'))
+     .subscribe(val => {
+       if(!val) return;
+       let reader;
+       if (FileReader) {
+        reader = new FileReader();
+        reader.onload = anevent => {
+          this.fileFromStore = `${anevent.target["result"]}`;  
+        };
+        reader.readAsDataURL(this.pictureForUseWhenParentIsTryingToEdit);
+      }
+     })
+
     this.modifiedFile = undefined;
     console.log('i am here!')
     this.updateLastPage.emit('address');
@@ -136,9 +159,10 @@ export class PictureComponent implements OnInit, AfterViewInit {
   }
 
   async uploadImage() {
-    if (this.modifiedFile) {
+    if (this.modifiedFile || this.pictureForUseWhenParentIsTryingToEdit) {
       this.startSpinner.emit(true);
       this.changeUpTheView.emit("done");
+
      
       // let guardID;
       // let pictureFromStore: string | File;
@@ -186,5 +210,10 @@ export class PictureComponent implements OnInit, AfterViewInit {
        (document.getElementById('uploadButton') as HTMLButtonElement).disabled = false;
       }
     }
+  }
+
+  ngOnDestroy(){
+    this.destroy.forEach(elem => elem.unsubscribe());
+    this.pictureForUseWhenParentIsTryingToEdit = undefined;
   }
 }

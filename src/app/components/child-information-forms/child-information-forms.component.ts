@@ -110,7 +110,8 @@ export class ChildInformationFormsComponent
   ngOnInit(): void {
     this.previousPage.emit('firstPage');
     this.childInfoForm = this.fb.group({
-      name: ["", Validators.required],
+      first_name: ["", Validators.required],
+      last_name: ['', Validators.required],
       class: ["", Validators.required],
       tuition_fees: ["", Validators.required]
     });
@@ -239,7 +240,7 @@ export class ChildInformationFormsComponent
       : "";
 
     guardianID = this.fetchGuardianId();
-
+    
     this.chatapi
       .updateChildrenCount({
         guardian: guardianID || sessionStorage.getItem('guardian'),
@@ -247,6 +248,7 @@ export class ChildInformationFormsComponent
       })
       .subscribe();
       // console.log(this.selectedChildren);
+      this.startEnteringChildInfo();
   }
 
   fetchGuardianId(): any{
@@ -300,48 +302,49 @@ export class ChildInformationFormsComponent
       child_book : schoolBooks ? schoolBooks : [],
       total_cost_of_books: objectHoldingIndex.total_cost_of_books
     };
-    this.mapOfChildrensInfo.set(this.currentChild, value);
-    if (this.mockstore.childrenInformationSubmittedByParent.length < 1) {
-      this.mockstore.childrenInformationSubmittedByParent.push(
-        this.mapOfChildrensInfo.get(this.currentChild)
-      );
-    } else {
-      const index = value.index;
-      const foundIndex = this.mockstore.childrenInformationSubmittedByParent.findIndex(
-        element => element.index == index
-      );
-      foundIndex == -1
-        ? this.mockstore.childrenInformationSubmittedByParent.push(
-            this.mapOfChildrensInfo.get(this.currentChild)
-          )
-        : this.mockstore.childrenInformationSubmittedByParent.splice(
-            foundIndex,
-            1,
-            this.mapOfChildrensInfo.get(this.currentChild)
-          );
-    }
+    console.log(value);
+    // this.mapOfChildrensInfo.set(this.currentChild, value);
+    // if (this.mockstore.childrenInformationSubmittedByParent.length < 1) {
+    //   this.mockstore.childrenInformationSubmittedByParent.push(
+    //     this.mapOfChildrensInfo.get(this.currentChild)
+    //   );
+    // } else {
+    //   const index = value.index;
+    //   const foundIndex = this.mockstore.childrenInformationSubmittedByParent.findIndex(
+    //     element => element.index == index
+    //   );
+    //   foundIndex == -1
+    //     ? this.mockstore.childrenInformationSubmittedByParent.push(
+    //         this.mapOfChildrensInfo.get(this.currentChild)
+    //       )
+    //     : this.mockstore.childrenInformationSubmittedByParent.splice(
+    //         foundIndex,
+    //         1,
+    //         this.mapOfChildrensInfo.get(this.currentChild)
+    //       );
+    // }
 
-    this.previous = this.currentChild;
-    this.currentChild = this.iterator.next().value;
-    // this.iterator.next.value might be null sometimes so we do this:
-    if (!this.currentChild) {
-      const thisindex = this.mapOfChildrensInfo.get(this.previous).index + 1;
-      //  this condition should only run if thisindex is less than or equal to the size of the map
-      if (thisindex <= this.mapOfChildrensInfo.size) {
-        for (let entry of this.mapOfChildrensInfo.entries()) {
-          entry[1].index == thisindex ? (this.currentChild = entry[0]) : "";
-        }
-      }
-      // else {
-      //   console.log("i am here");
-      //   console.log(this.mapOfChildrensInfo);
-      // }
-    }
-    setTimeout(() => {
-      this.viewToshow = "modifyOrNot";
-      this.spinner = false;
-      this.previousPage.emit("");
-    }, 500);
+    // this.previous = this.currentChild;
+    // this.currentChild = this.iterator.next().value;
+    // // this.iterator.next.value might be null sometimes so we do this:
+    // if (!this.currentChild) {
+    //   const thisindex = this.mapOfChildrensInfo.get(this.previous).index + 1;
+    //   //  this condition should only run if thisindex is less than or equal to the size of the map
+    //   if (thisindex <= this.mapOfChildrensInfo.size) {
+    //     for (let entry of this.mapOfChildrensInfo.entries()) {
+    //       entry[1].index == thisindex ? (this.currentChild = entry[0]) : "";
+    //     }
+    //   }
+    //   // else {
+    //   //   console.log("i am here");
+    //   //   console.log(this.mapOfChildrensInfo);
+    //   // }
+    // }
+    // setTimeout(() => {
+    //   this.viewToshow = "modifyOrNot";
+    //   this.spinner = false;
+    //   this.previousPage.emit("");
+    // }, 200);
   }
 
   get nameOfRecentlyAddedChild(): string {

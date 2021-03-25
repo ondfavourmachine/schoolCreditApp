@@ -94,13 +94,13 @@
     </div>
   </div>
 
-  <button
+  <!-- <button
     [disabled]="numberOfSelected"
     (click)="startEnteringChildInfo()"
     class="ui button primary basic mt-4"
   >
     Continue
-  </button>
+  </button> -->
 </div>
 
 <div
@@ -118,8 +118,14 @@
   <form [formGroup]="childInfoForm" class="w-100">
     <div class="ui form">
       <div class="field">
-        <label>Name</label>
-        <input formControlName="name" type="text" placeholder="Fullname" />
+        <label>First Name</label>
+        <input formControlName="first_name" type="text" placeholder="Fullname" />
+      
+      </div>
+
+      <div class="field">
+        <label>Last Name</label>
+        <input formControlName="last_name" type="text" placeholder="Fullname" />
       
       </div>
       <!-- <div class="field">

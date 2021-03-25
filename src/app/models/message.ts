@@ -542,6 +542,24 @@ export class Message {
           )
         );
         break;
+      case "continuetoverification":
+        this.giverResponsesEvent(
+          "customGiverResponse",
+          new replyGiversOrReceivers(
+            `Please, take a few seconds to verify the information you provided`,
+              "left",
+              `Ok let's verify it now, No later`,
+              `verifynow,verifylater`,
+              "prevent"
+          ),
+          // new GiverResponse(
+          //   new replyGiversOrReceivers(
+          //     "I want to verify my informa",
+          //     "right"
+          //   )
+          // )
+        );
+      break;
       case "daily":
       case "weekly":
       case "monthly":
@@ -567,11 +585,13 @@ export class Message {
         if(c == 'monthly') rf = '3';
         sessionStorage.setItem('repaymentFrequency', rf);
         break;
-      case "edit":
+      case "editparentinfo":
         this.giverDispatchEvents(
           "customGiverEventFromMsgClass",
           "giver",
-          "edit-parent-info"
+          "parents-information",
+          ``,
+          () => 'parent-is-editing'
         );
         // sessionStorage.setItem("anonymous", "2");
         break;

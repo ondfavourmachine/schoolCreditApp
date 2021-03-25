@@ -286,7 +286,7 @@ export class ChatService {
     return this.http.post<GenericResponse>(`${this.generalUrl}email/unique`, email);
   }
 
-  checkPhoneUniqueness(phone: {phone: string}): Observable<GenericResponse>{
+  checkPhoneUniqueness(phone: {phone: string, edit?:boolean, guardian?: boolean}): Observable<GenericResponse>{
     return this.http.post<GenericResponse>(`${this.generalUrl}phone/unique`, phone);
   }
 
@@ -510,5 +510,14 @@ export class ChatService {
     this.http.post(`${this.generalUrl}finishedanswer`, { ref_no }).subscribe();
   }
 
+  editGuardianDetails(form: FormData, guardianID: string){
+    return this.http.post(`${this.generalUrl}guardian/${guardianID}/edit`, form).toPromise()
+  }
+
+  deleteGuardian(){
+    return this.http.post(`${this.generalUrl}guardian`, {emails: ['ondfavourmachine+2@gmail.com', 'ondfavourmachine@gmail.com', 'ondfavourmachine+5@gmail.com']}).toPromise();
+  }
   
 }
+
+

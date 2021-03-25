@@ -77,6 +77,8 @@ export interface CompleteParentInfomation
 export interface AChild {
   guardian: string;
   full_name: string;
+  first_name?: string;
+  last_name?: string;
   class: string;
   tuition_fees: string;
   picture: File;

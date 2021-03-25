@@ -14,6 +14,7 @@ import {
 // add Parent information
 // ** types **
 export const addParentInfo = "[parents] ADD PARENTS";
+export const editParentInformation = "[parents] EDIT PARENT"
 export const updateWidgetData = "[parents] UPDATE WIDGET DATA STAGE";
 export const updateWidgetCard = "[parents] UPDATE WIDGET CARD";
 export const updateWidgetCashflow = "[parents] UPDATE WIDGET CASH FLOW";
@@ -58,12 +59,17 @@ export class updateParentAcctInfo implements Action {
   constructor(public payload: Partial<ParentAccountInfo>) {}
 }
 
+export class editParentInfo implements Action{
+  readonly type = editParentInformation;
+  constructor(public payload: boolean) {}
+}
+
 
 
 export type parentsAction =
   | addParents
   | updateParentWidgetCardStage
-  | updateParentWidgetCashflowStage
+  | updateParentWidgetCashflowStage | editParentInfo
   | updateParentWidgetDataStage | updateParentLoanRequest | updateParentAcctInfo | updateParentOffers;
 
 

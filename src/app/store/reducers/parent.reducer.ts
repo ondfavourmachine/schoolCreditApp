@@ -16,6 +16,7 @@ export interface ParentState {
   offers: Array<Partial<Offers>>,
   parent_loan_request_status: Partial<LoanRequest>,
   parent_account_info: Partial<ParentAccountInfo>;
+  editMode: boolean
 }
 
 // Application state
@@ -26,7 +27,8 @@ export const initialState: ParentState = {
   // widget_card: 0,
   offers: [],
   parent_loan_request_status: {creditclan_request_id: null, eligible: false},
-  parent_account_info: {}
+  parent_account_info: {},
+  editMode: false
 };
 
 export function reducer(
@@ -111,7 +113,12 @@ export function reducer(
       store.offers = [...action.payload];
       return store;
     }
-
+    case generalActions.editParentInformation: {
+      return {
+        ...state,
+        editMode : action.payload
+      }
+    }
     
   }
 

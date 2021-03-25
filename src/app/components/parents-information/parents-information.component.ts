@@ -37,30 +37,30 @@ interface State {
 
 interface LGA extends State {}
 
-const validateEmailIsUnique = (apiservice: ChatService, regex: RegExp, 
-  obj: ParentsInformationComponent): AsyncValidatorFn => (control: AbstractControl): Promise<{emailExists: boolean}> | Observable<{emailExists: boolean}> | null => {
-  obj.checkingUniqueness = 'checking';
-  if(!control && control.value.length < 2 && !regex.test(control.value)) { 
-    obj.checkingUniqueness = 'done'; 
-    return of(null)
-  };
-     return apiservice.checkEmailUniqueness({email: control.value})
-      .pipe(map(val => {
-        if(val.message.includes('The email has already been taken')){
-          obj.checkingUniqueness = 'not-unique';
-          return { emailExists: true};
-        }
-        obj.checkingUniqueness = 'unique'
-        return null
-      }),
-      catchError(err =>  {
-        console.log(err);
-        obj.checkingUniqueness = 'not-unique';
-        return of({emailExists: true})
-      }))
+// const validateEmailIsUnique = (apiservice: ChatService, regex: RegExp, 
+//   obj: ParentsInformationComponent): AsyncValidatorFn => (control: AbstractControl): Promise<{emailExists: boolean}> | Observable<{emailExists: boolean}> | null => {
+//   obj.checkingUniqueness = 'checking';
+//   if(!control && control.value.length < 2 && !regex.test(control.value)) { 
+//     obj.checkingUniqueness = 'done'; 
+//     return of(null)
+//   };
+//      return apiservice.checkEmailUniqueness({email: control.value})
+//       .pipe(map(val => {
+//         if(val.message.includes('The email has already been taken')){
+//           obj.checkingUniqueness = 'not-unique';
+//           return { emailExists: true};
+//         }
+//         obj.checkingUniqueness = 'unique'
+//         return null
+//       }),
+//       catchError(err =>  {
+//         console.log(err);
+//         obj.checkingUniqueness = 'not-unique';
+//         return of({emailExists: true})
+//       }))
 
   
-}
+// }
 
 
 const validatePhoneIsUnique = 
@@ -71,13 +71,13 @@ const validatePhoneIsUnique =
        return of(null);
       };
     
-     return apiservice.checkPhoneUniqueness({phone: control.value})
+     return apiservice.checkPhoneUniqueness({phone: control.value, [obj.editMode ? 'edit': '']: obj.editMode ? true: '', [obj.editMode ? 'guardian': '']: obj.editMode ? obj.parent.guardian: '' })
       .pipe(map(val => {
         if(val.message.includes('The phone has already been taken')){
           obj.checkingUniqueness = 'not-unique';
           return { phoneExists: true};
         }
-        obj.checkingUniqueness = 'unique'
+        obj.checkingUniqueness = 'unique';
         return  null
       }), catchError(err =>  {
         console.log(err);
@@ -141,6 +141,7 @@ export class ParentsInformationComponent
   destroy: Subscription[] = [];
   lgaData: any = {};
   checkingUniqueness: 'checking' | 'not-unique' | 'unique' | 'done' | '' = 'done';
+  editMode: boolean = false;
   constructor(
     private generalservice: GeneralService,
     private store: Store<fromStore.AllState>,
@@ -156,33 +157,46 @@ export class ParentsInformationComponent
     this.manageGoingBackAndForth = this.manageGoingBackAndForth.bind(this);
   }
 
-  ngOnChanges() {}
+  ngOnChanges() {
+    this.destroy[0] = this.store
+    .select(fromStore.getParentState)
+    .pipe(pluck('editMode'))
+    .subscribe(val => {
+      if(!val) return;
+      this.editMode = true;
+    });
+
+    
+  }
 
   ngAfterViewInit() {
     document
       .getElementById("backspace")
       .addEventListener("click", this.manageGoingBackAndForth);
+
+     
   }
 
   ngOnInit(): void {
-     this.destroy[0] = this.store
+     this.destroy[1] = this.store
      .select(fromStore.getCurrentParentInfo)
      .subscribe(val => {
+       console.log(val);
        this.parent = val as Parent;
      });
     
     this.phoneForm = this.fb.group({
-      phone: ["", [Validators.required, Validators.pattern(/[0-9]|\./)], 
+      phone: [this.parent && this.parent.phone && this.editMode  ? this.parent.phone : '', [Validators.required, Validators.pattern(/[0-9]|\./)], 
       [validatePhoneIsUnique(this.chatapi, /\d{11}/gi, this)] ]
     
     });
    
 
     this.emailForm = this.fb.group({
-      email: ['', [Validators.required, Validators.pattern(this.generalservice.emailRegex)]]
+      email: [this.parent && this.parent.email && this.editMode  ? this.parent.email : '', [Validators.required, Validators.pattern(this.generalservice.emailRegex)]]
     });
 
-    this.destroy[1] = this.generalservice.reset$.subscribe(
+    this.destroy[2] = this.generalservice.reset$.subscribe(
       (val: string) => {
         if (val.length < 1) return;
         this.emailForm.reset();
@@ -196,6 +210,16 @@ export class ParentsInformationComponent
         sessionStorage.removeItem('school_avatar');
       }
     )
+
+    setTimeout(() => {
+      if(this.editMode){
+        this.state = this.parent.state || '25';
+        this.address = this.parent.address;  
+        this.selectLgaInState(this.state);
+        this.localGovtArea = this.parent.lga;
+      }
+    }, 500);
+
     
   }
 
@@ -314,7 +338,7 @@ export class ParentsInformationComponent
     const button = event.target as HTMLButtonElement;
     button.innerText = '';
     button.classList.add('spin');
-    this.chatapi.checkEmailUniqueness({email: form.value.email}).subscribe(val => {
+    this.chatapi.checkEmailUniqueness({email: form.value.email, [this.editMode ? 'edit': '']: this.editMode ? true: '', [this.editMode ? 'guardian': '']: this.editMode ? this.parent.guardian: ''}).subscribe(val => {
       this.emailIsNotUnique = false;
       this.checkingUniqueness = 'unique';
       button.classList.remove('spin');
@@ -334,101 +358,167 @@ export class ParentsInformationComponent
       }, 100);
      
     }, err => {
-      this.checkingUniqueness = "not-unique";
-      this.emailIsNotUnique = true;
-      button.classList.remove('spin');
-      button.innerText = 'Continue';
+      if(!this.editMode){
+        this.checkingUniqueness = "not-unique";
+        this.emailIsNotUnique = true;
+        button.classList.remove('spin');
+        button.innerText = 'Continue';
+      }else{
+        this.checkingUniqueness = "unique";
+        this.emailIsNotUnique = false;
+        button.classList.remove('spin');
+        button.innerText = 'Continue';
+        this.view = "address";
+        this.previousPage.emit("email");
+        this.spinner = false;
+         this.checkingUniqueness = 'done'
+      }
+      
     })
     // // this.spinner = true;
     
   
   }
 
-  change() {
-    this.spinner = true;
-    let parentInfo: Parent;
-    const disconnect: Subscription = this.store
-      .pipe(pluck("manageParent", "parent_info"))
-      .subscribe((val: Parent) => {
-        parentInfo = val;
-      });
-    this.previousPage.emit("lga");
-    const {
-      full_name,
-      type,
-      date_of_birth,
-      email,
-      phone,
-      lga,
-      picture,
-      gender,
-      address,
-      state,
-    } = parentInfo;
-    this.chatapi
-      .registerParent({
+  async change() {
+    
+      this.spinner = true;
+      let parentInfo: Parent;
+      const disconnect: Subscription = this.store
+        .pipe(pluck("manageParent", "parent_info"))
+        .subscribe((val: Parent) => {
+          parentInfo = val;
+        });
+      this.previousPage.emit("lga");
+     
+      const {
         full_name,
         type,
-        email,
         date_of_birth,
+        email,
         phone,
-        gender,
         lga,
+        picture,
+        gender,
         address,
         state,
-        school_id: this.parent.school_id || 1
-      })
-      .subscribe(
-        async val => {
-          await this.chatapi.uploadParentPicture({
-            picture: picture as File,
-            guardian: val.guardian
-          });
-          const refreshedState: Partial<Parent> = { guardian: val.guardian };
-          this.store.dispatch(new generalActions.addParents(refreshedState));
-          sessionStorage.setItem('guardian', val.guardian);
-          const responseFromParent = new replyGiversOrReceivers(
-            `I have provided my details`,
-            "right"
-          );
-          this.generalservice.nextChatbotReplyToGiver = undefined;
-          this.generalservice.responseDisplayNotifier(responseFromParent);
-          this.generalservice.ctrlDisableTheButtonsOfPreviousListElement(
-            "allow"
-          );
-          this.spinner = false;
-          this.previousPage.emit("firstPage");
-          // this is removed so that there wont be errors!!
-          sessionStorage.removeItem('parentPicture')
-          setTimeout(() => {
-            this.generalservice.handleFlowController("");
-            this.spinner = false;
-            this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
-              `Please ${parentInfo.full_name}, take a few seconds to verify the information you provided`,
-              "left",
-              `Ok let's verify it now, No later`,
-              `verifynow,verifylater`,
-              "prevent"
+      } = parentInfo;
+      if(!this.editMode){
+      this.chatapi
+        .registerParent({
+          full_name,
+          type,
+          email,
+          date_of_birth,
+          phone,
+          gender,
+          lga,
+          address,
+          state,
+          school_id: this.parent.school_id || 1
+        })
+        .subscribe(
+          async val => {
+            await this.chatapi.uploadParentPicture({
+              picture: picture as File,
+              guardian: val.guardian
+            });
+            const refreshedState: Partial<Parent> = { guardian: val.guardian };
+            this.store.dispatch(new generalActions.addParents(refreshedState));
+            sessionStorage.setItem('guardian', val.guardian);
+            const responseFromParent = new replyGiversOrReceivers(
+              `I have provided my details`,
+              "right"
+            );
+            this.generalservice.nextChatbotReplyToGiver = undefined;
+            this.generalservice.responseDisplayNotifier(responseFromParent);
+            this.generalservice.ctrlDisableTheButtonsOfPreviousListElement(
+              "allow"
             );
             this.spinner = false;
-            disconnect.unsubscribe();
-            const chatbotResponse = new replyGiversOrReceivers(
-              `Thank you for registering, ${parentInfo.full_name ||
-                "John Bosco"}`,
-              "left",
-              "",
-              ``
-            );
-            this.generalservice.responseDisplayNotifier(chatbotResponse);
-          }, 600);
-        },
-        (err: HttpErrorResponse) => {
-          console.log(err);
-          const { message } = err.error;
-          this.spinner = false;
-          this.generalservice.errorNotification(message);
-        }
+            this.previousPage.emit("firstPage");
+            // this is removed so that there wont be errors!!
+            sessionStorage.removeItem('parentPicture')
+            setTimeout(() => {
+              this.generalservice.handleFlowController("");
+              this.spinner = false;
+              // this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
+              //   // `Please ${parentInfo.full_name}, take a few seconds to verify the information you provided`,
+              //   // "left",
+              //   // `Ok let's verify it now, No later`,
+              //   // `verifynow,verifylater`,
+              //   // "prevent"
+              // );
+              this.spinner = false;
+              disconnect.unsubscribe();
+              const chatbotResponse = new replyGiversOrReceivers(
+                `Thank you for registering, ${parentInfo.full_name ||
+                  "John Bosco"}, would you like to edit the information you provided?`,
+                "left",
+                "Yes, No continue",
+                "editparentinfo,continuetoverification",
+                'prevent'
+              );
+              this.generalservice.responseDisplayNotifier(chatbotResponse);
+              this.store.dispatch(new generalActions.editParentInfo(false));
+              this.editMode = false;
+            }, 600);
+          },
+          (err: HttpErrorResponse) => {
+            console.log(err);
+            const { message } = err.error;
+            this.spinner = false;
+            this.generalservice.errorNotification(message);
+          }
+        );
+        }else{
+      console.log('i am here');
+      let form = new FormData();
+      for(let elem in parentInfo){
+        form.append(elem, `${parentInfo[elem]}`)
+      }
+     try {
+      const res = await this.chatapi.editGuardianDetails(form, this.parent.guardian)
+      this.spinner = false;
+      // const refreshedState: Partial<Parent> = { guardian: res.guardian };
+      // this.store.dispatch(new generalActions.addParents(refreshedState));
+      // sessionStorage.setItem('guardian', val.guardian);
+      const responseFromParent = new replyGiversOrReceivers(
+        `I have edited my details`,
+        "right"
       );
+      this.generalservice.nextChatbotReplyToGiver = undefined;
+      this.generalservice.responseDisplayNotifier(responseFromParent);
+      this.generalservice.ctrlDisableTheButtonsOfPreviousListElement(
+        "allow"
+      );
+      setTimeout(() => {
+        this.generalservice.handleFlowController("");
+        this.spinner = false;
+        this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
+          `Please ${parentInfo.full_name}, take a few seconds to verify the information you provided`,
+          "left",
+          `Ok let's verify it now, No later`,
+          `verifynow,verifylater`,
+          "prevent"
+        );
+        this.spinner = false;
+        disconnect.unsubscribe();
+        const chatbotResponse = new replyGiversOrReceivers(
+          `Thank you , ${parentInfo.full_name ||
+            "John Bosco"}`,
+          "left",
+        );
+        this.generalservice.responseDisplayNotifier(chatbotResponse);
+        this.store.dispatch(new generalActions.editParentInfo(false));
+        this.editMode = false;
+      }, 300);
+     } catch (error) {
+       this.generalservice.errorNotification('Sorry, an error occured. Please try again');
+       this.spinner = false;
+     }
+    }
+   
   }
 
   submitAddressForm() {
@@ -446,5 +536,6 @@ export class ParentsInformationComponent
     document
       .getElementById("backspace")
       .removeEventListener("click", this.manageGoingBackAndForth);
+    this.editMode = false;
   }
 }

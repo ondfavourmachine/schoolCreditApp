@@ -369,6 +369,14 @@ export class ChatMessagesDisplayComponent
       }
 
       if (String(componentToLoad).toLowerCase() == "parents-information") {
+        if(callBack) {
+          const res = callBack();
+          if(res.trim() == 'parent-is-editing'){
+            this.store.dispatch(new generalActions.editParentInfo(true))
+          }
+          this.generalservice.handleFlowController(String(componentToLoad));
+          return;
+        }
         this.generalservice.handleFlowController(String(componentToLoad));
       }
       if (String(componentToLoad).toLowerCase() == "parent-account-form") {
@@ -591,6 +599,7 @@ export class ChatMessagesDisplayComponent
         sessionStorage.removeItem('savedChats');
         ul.innerHTML = "";
         this.generateWelcomeMsgForReceiverOrGiver(ul);
+        this.store.dispatch(new generalActions.editParentInfo(false))
       }
     );
   }

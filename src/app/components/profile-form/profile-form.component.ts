@@ -75,12 +75,11 @@ export class ProfileFormComponent implements OnInit, OnDestroy {
   }
 
   submitForm(form: FormGroup) {
-
+      let parentDetails: Partial<Parent> = {...form.value};
       this.parentIsTooYoung = false;
-      let parentDetails: Partial<Parent> = form.value;
-      parentDetails.full_name = `${parentDetails.first_name} ${parentDetails.last_name}`;
+      console.log(parentDetails);
+      parentDetails.full_name = `${parentDetails.first_name.trim()} ${parentDetails.last_name.trim()}`;
       this.store.dispatch(new generalActions.addParents(parentDetails));
-      // console.log(parentDetails);
       this.changeUpTheViewThree.emit("phone");
   }
 
