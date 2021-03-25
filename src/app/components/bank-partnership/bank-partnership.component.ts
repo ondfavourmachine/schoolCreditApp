@@ -415,17 +415,18 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
             email: this.parentDetails.email,
             phone: this.parentDetails.phone,
             date_of_birth: this.parentDetails.date_of_birth,
-            gender: this.parentDetails.gender,
+            gender: this.parentDetails.gender == '1' ? '0' : '1',
             marital_status: '',
             nationality: '',  // 
             state_of_origin: this.parentDetails.state // pass the id of state you collected
+          },
+          address:{
+            street_address: this.parentDetails.address,
+            state: this.parentDetails.state,
+            lga: this.parentDetails.lga,
           }
         },
-        address:{
-          street_address: this.parentDetails.address,
-          state: this.parentDetails.state,
-          lga: this.parentDetails.lga,
-        }
+       
         // bank: {
         //   bank_id: merchant.bank_id,
         //   bank_code: merchant.bank_code,

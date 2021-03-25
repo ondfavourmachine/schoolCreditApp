@@ -23,7 +23,7 @@ export class Message {
   ];
 
   static welcomeMessagesForGiver = [
-    "Welcome to payment portal of Adama High School.",
+    "Welcome to the payment portal of Adama High School.",
     "This Service helps you manage how you pay your child's fees",
     "How do you want to proceed?"
   ];
