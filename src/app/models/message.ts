@@ -669,15 +669,27 @@ export class Message {
           )
         );
        break; 
+      case "leave":
+        this.giverResponsesEvent(
+          "customGiverResponse",
+          new replyGiversOrReceivers(
+            `Ok when you are ready just type: "start" in the input box to continue`,
+            "left",
+          ),
+          new GiverResponse(
+            new replyGiversOrReceivers(`Lets do this later`, "right")
+          )
+        );
+      break;
       case "newrequest":
         // Pay in full
         this.giverResponsesEvent(
           "customGiverResponse",
           new replyGiversOrReceivers(
-            "We would like to quickly register you for this school fees payment service?",
+            "We would like to quickly register you for this school fees payment service. Would you like to continue?",
             "left",
-            "Continue",
-            "continue,full_pay"
+            "yes,No",
+            "continue,leave"
           ),
           new GiverResponse(
             new replyGiversOrReceivers(`It's a new request`, "right")
