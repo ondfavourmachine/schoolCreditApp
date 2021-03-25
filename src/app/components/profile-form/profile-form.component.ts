@@ -84,18 +84,18 @@ export class ProfileFormComponent implements OnInit, OnDestroy {
   }
 
   runDateAnalysis(value: string): number{
-   let startDate  = value;
+   let startDate = value;
     if (startDate.length != 10 || startDate.indexOf("-") < 0) {
         // console.log('Check date format');
         return null;
     }
     // get Age
+    console.log(startDate);
     let nowDate = new Date();
-    let birth = new Date(startDate);
-
-    let now = nowDate.getFullYear();
-    let mine = birth.getFullYear();
-    this.myAge = now - mine -1;   
+    let birth = new Date(startDate).getTime();
+    let now = nowDate.getTime();
+    const age = now - birth;
+    this.myAge = age / 31536000000;
     this.myAge < 18 ? this.parentIsTooYoung = true : this.parentIsTooYoung = false;
 }
   ngOnDestroy(){
