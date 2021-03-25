@@ -89,8 +89,6 @@ export class ProfileFormComponent implements OnInit, OnDestroy {
         // console.log('Check date format');
         return null;
     }
-    // get Age
-    console.log(startDate);
     let nowDate = new Date();
     let birth = new Date(startDate).getTime();
     let now = nowDate.getTime();
