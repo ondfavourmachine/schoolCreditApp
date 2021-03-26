@@ -331,7 +331,6 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
 
   // this will be removed Later
   async insertIframeToDom(){
-    debugger;
     const modalBody = document.querySelector('.modal-body') as HTMLElement
     this.spinner = true;
     this.page = 'iframe_container';
@@ -449,11 +448,13 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
       //  if the request was created successfully
    
       const loanRequest = {creditclan_request_id: data.dd, eligible: data.eligible};
+      console.log(loanRequest);
       this.store.dispatch(new generalActions.updateParentLoanRequest(loanRequest));
       // debugger;
-      this.page = 'preamble_to_bankdetails';
+      this.page = "card_tokenisation";
       await this.chatservice.updateCreditClanRequestId(this.parentDetails.loan_request, loanRequest.creditclan_request_id);
       await this.chatservice.updateBackEndOfSuccessfulCompletionOfWidgetStage(this.parentDetails.loan_request.toString(), '1');
+      await this.chatservice.updateBackEndOfSuccessfulCompletionOfWidgetStage(this.parentDetails.loan_request.toString(), '2');
       const offers = await this.chatservice.getLoanOffers(loanRequest['creditclan_request_id']);
       this.store.dispatch(new generalActions.updateParentOffers(offers['offers'][0].amount == 0 ? [] : [].concat(offers['offers'])));
       this.spinner = false;

@@ -128,6 +128,7 @@ export class ChildInformationFormsComponent
       .subscribe(val => {
         const { guardian } = val as Parent;
         this.guardianID = guardian;
+        sessionStorage.setItem('guardian', this.guardianID)
       });
 
     this.destroy[2] = this.store

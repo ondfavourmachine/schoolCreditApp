@@ -356,7 +356,7 @@ export class ContinuingExistingRequestsComponent
           guardian: val.data.guardian
         };
         this.guardianID = val.data.guardian;
-       
+        sessionStorage.setItem('guardian', this.guardianID.toString());
         this.store.dispatch(new generalActions.addParents(infoToStore));
         if(stages.phone_verified == 0){
           try {
