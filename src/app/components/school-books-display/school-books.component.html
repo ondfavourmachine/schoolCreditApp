@@ -1,13 +1,20 @@
 
 <div class=" text-center family-info" *ngIf="view == 'book-selection'" 
-  style="position:relative; height: 90vh; overflow: hidden;">
+  style="position:relative; height: 100vh; overflow: hidden;">
     <h1 class="para-title">Please select books for your child</h1>
 
-    <div class="selection_controls" [class.show]="booksSelected.size > 0">
+    <!-- [class.show]="booksSelected.size > 0"  -->
+    <div class="selection_controls show" >
         <div class="all_container">
-            <input id="inputForSelectAllBooks" style="display: none;" (click)="selectAllBooks($event)" id="selectAll" type="checkbox">
-           <span (click)="clickSelectAll('inputForSelectAllBooks')" class="small__button"> select all</span>
-           <span (click)="calculateTotalCostOfBooks()" class="small__button">proceed</span>
+          <input id="inputForSelectAllBooks" style="display: none;" (click)="selectAllBooks($event)" type="checkbox">
+           <!-- <span style="display: none;" (click)="clickSelectAll('inputForSelectAllBooks')" class="small__button"> select all</span>
+           <span style="display: none;" (click)="calculateTotalCostOfBooks()" class="small__button">proceed</span> -->
+
+
+          <div   class="floating_search_bar">
+        
+           <input type="text" [(ngModel)]="searchTerm" name="searchTerm" placeholder="Search through books...">
+         </div>
         </div>
 
         <!-- <div class="selected_number">
@@ -20,7 +27,9 @@
               <span (click)="showDropdown = !showDropdown" class="more__button"> more </span>
               <span *ngIf="showDropdown" class="sub_menu"> 
                 <a (click)="cancelAllSelection()" ><i class="fa fa-times-circle"></i> clear selection</a>  
-                <a (click)="calculateTotalCostOfBooks()" ><i class="fa fa-plus-circle"></i> Add selected </a>  
+                <a (click)="calculateTotalCostOfBooks()" ><i class="fa fa-plus-circle"></i> Add selected </a> 
+                <a (click)="clickSelectAll('inputForSelectAllBooks', $event)" ><i class="fa fa-plus-circle"></i> Select all </a> 
+                <a (click)="calculateTotalCostOfBooks()" ><i class="fa fa-arrow-right"></i> Proceed </a> 
               </span>
         </div>
             
@@ -29,23 +38,42 @@
   
     <div [class.justify-center]="booksToDisplay.length > 2" class="ui grid " 
          [style.paddingLeft]="booksToDisplay.length > 1 && booksToDisplay.length < 3  ? '6px' : '0'"
-      style="overflow-y: auto; margin: 0 auto; height: 100%;">
+      style="overflow-y: auto; margin: 0 auto; height: auto;">
       <div
         *ngFor="let book of booksToDisplay | filter:searchTerm; index as i"
-        style=" max-height: 300px; padding-left: .2rem; padding-right: .2rem; position: relative;"
-        class="twelve wide column myborder positioned-relative"
+        style="padding: 2px .2rem; position: relative;"
+        class="seven wide column myborder positioned-relative"
       >
        <input style="display: none;" (click)="addThisBookToSelected($event)" 
          [id]="book?.id" type="checkbox" class="selectionInput">
 
-       <div class="full__width">
+       <div  class="full__width">
             <img
             [src]="book?.picture"
             alt=""
           />
+
+          <div class="other__contents">
+            <p
+                class="nameOfBook "
+                style=""
+              >
+              {{ book?.name }}
+            </p>
+            <p class="bolded price">
+              {{ book?.price | currency:'NGN' }}
+          </p>
+          <div class="select__parent">
+         
+            <span (click)="clickThisInput(book?.id, $event)" 
+             class="small__button select">
+              select
+            </span>
+          </div>
+          </div>
        </div>
         
-        <div class="description__house mt-2">
+        <!-- <div class="description__house mt-2">
           <p
           class="nameOfBook "
           style=""
@@ -62,87 +90,24 @@
            class="small__button select">
             select
           </span>
-        </div>
+        </div> -->
       </div>
   
-      <!-- <div
-      
-        class="six wide column myborder positioned-relative"
-      >
-        <img
-          src="../../../assets/images/svgs/name.svg"
-          style="max-width: 50px;"
-          alt=""
-        />
-        <p
-          class="bolded"
-          style="line-height: 1rem; font-weight: bold; text-align: center;"
-        >
-          National ID
-        </p>
-        <i
-          *ngIf="selected == 'National ID'"
-          class="fa fa-check positioned-absolute"
-        ></i>
-      </div>
-  
-      <div
-        class="seven wide column myborder positioned-relative"
-      >
-        <img
-          src="../../../assets/images/svgs/name.svg"
-          style="max-width: 50px;"
-          alt=""
-        />
-        <p
-          style="line-height: 1rem; font-weight: bold; text-align: center;"
-          class="bolded"
-        >
-          International Passport
-        </p>
-        <i
-          *ngIf="selected == 'International Passport'"
-          class="fa fa-check positioned-absolute"
-        ></i>
-      </div>
-  
-      <div
     
-        class="six wide column myborder positioned-relative"
-      >
-        <img
-          src="../../../assets/images/svgs/name.svg"
-          alt=""
-          style="max-width: 50px;"
-        />
-        <p
-          class="bolded"
-          style="line-height: 1rem; font-weight: bold; text-align: center;"
-        >
-          Drivers licence
-        </p>
-        <i
-          *ngIf="selected == 'Drivers licence'"
-          class="fa fa-check positioned-absolute"
-        ></i>
-      </div> -->
     </div>
 
-    <div style="display: none;"  class="floating_search_bar">
-       <!-- [style.display]="booksToDisplay.length > 4 ? 'flex':'none'" -->
-      <!-- <input type="text" [(ngModel)]="searchTerm" name="searchTerm" placeholder="Search through books..."> -->
+  
 
-      <!-- <div class="floating_button_parent">
+   
+</div>
+
+   <!-- <div class="floating_button_parent">
       
         <span class="floating_button_search" >
           <i class="fa fa-search"></i>
         </span>
      
       </div> -->
-    </div>
-
-   
-</div>
 
 
 

@@ -58,11 +58,15 @@ import { SchoolBook } from "src/app/models/data-models";
             selectionInputs.forEach(element => {
                 element.checked = true;
                 this.booksSelected.add(element.id);
+                const div = element.parentElement as HTMLDivElement;
+               div.classList.add('selectedBookMarker');
             })
         }else{
             selectionInputs.forEach(element => {
                 element.checked = false;
                 this.booksSelected.delete(element.id);
+                const div = element.parentElement as HTMLDivElement;
+                div.classList.remove('selectedBookMarker');
             })
         }
         
@@ -88,8 +92,15 @@ import { SchoolBook } from "src/app/models/data-models";
       this.view = 'cost';
     }
 
-    clickSelectAll(elem: string){
+    clickSelectAll(elem: string, event: Event){
+
         document.getElementById(elem).click();
+        const anchorTag = event.target as HTMLAnchorElement;
+        if(this.booksSelected.size == this.booksToDisplay.length){
+          anchorTag.innerHTML = `<i class="fa fa-plus-circle"></i> Unselect all`;
+        }else{
+            anchorTag.innerHTML = `<i class="fa fa-plus-circle"></i> Select all`;
+        }
     }
 
     clickThisInput(elem: string, event: Event){
