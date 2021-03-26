@@ -79,7 +79,7 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
   ) {}
 
   ngOnChanges() {
-    this.destroy[1] = this.generalservice.smartView$.subscribe(val => {
+    this.destroy[0] = this.generalservice.smartView$.subscribe(val => {
       if (val) {
         if (
           (this.elem.nativeElement.tagName as string)
@@ -109,13 +109,13 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
       ID_number: ["", Validators.required]
     });
 
-    this.destroy[0] = this.store
+    this.destroy[1] = this.store
       .select(fromStore.getCurrentParentInfo)
       .subscribe(val => {
         this.parentDetails = val as Parent;
       });
 
-    this.destroy[1] = this.store.select(fromStore.getParentState)
+    this.destroy[2] = this.store.select(fromStore.getParentState)
     .pipe(map(val => {
       const parent = val as any;
       return {
@@ -129,7 +129,7 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
       }
     )
     let childArray:Array<Partial<AChild>>
-    this.destroy[2] = this.store
+    this.destroy[3] = this.store
       .select(fromStore.getCurrentChildState)
       .pipe(pluck("child_info"))
       .subscribe(val => {
@@ -174,13 +174,19 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
     //     : (this.page = "");
     // });
 
-    this.destroy[0] = this.store
+    this.destroy[4] = this.store
     .select(fromStore.getParentState)
     .pipe(pluck("offers"))
     .subscribe((val: Array<Partial<Offers>>) => {
       this.offersToShowParent = val;
     });
 
+    this.destroy[5] = this.generalservice.reset$.subscribe(
+      (val: string) => {
+        if (val.length < 1) return;
+          this.page = 'preambleToForms';
+      }
+    );
     window.addEventListener('message', async (e)=> {
         if(e['origin'] == 'https://bankstatementwidget.creditclan.com'){
            try{
@@ -446,11 +452,10 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
     });
     cc.on('request', async (data) => {
       //  if the request was created successfully
-   
-      const loanRequest = {creditclan_request_id: data.dd, eligible: data.eligible};
+      // console.log(data);
+      const loanRequest = {creditclan_request_id: data.request_id, eligible: true};
       console.log(loanRequest);
       this.store.dispatch(new generalActions.updateParentLoanRequest(loanRequest));
-      // debugger;
       this.page = "card_tokenisation";
       await this.chatservice.updateCreditClanRequestId(this.parentDetails.loan_request, loanRequest.creditclan_request_id);
       await this.chatservice.updateBackEndOfSuccessfulCompletionOfWidgetStage(this.parentDetails.loan_request.toString(), '1');

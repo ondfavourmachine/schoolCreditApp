@@ -3,6 +3,7 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnDestroy,
   OnInit,
   Output
 } from "@angular/core";
@@ -21,6 +22,7 @@ import * as fromStore from "../../store";
 import * as generalActions from "../../store/actions/general.action";
 import { pluck } from "rxjs/operators";
 import { Observable, Subscription } from "rxjs";
+import { ChildrenState } from "src/app/store/reducers/children.reducer";
 
 
 interface checkWhoIsContinuing {
@@ -35,7 +37,7 @@ interface checkWhoIsContinuing {
   styleUrls: ["./continuing-existing-requests.component.css"]
 })
 export class ContinuingExistingRequestsComponent
-  implements OnInit, AfterViewInit {
+  implements OnInit, AfterViewInit, OnDestroy {
   @Output("previousPage") previousPage = new EventEmitter<string>();
   @Input("previous") previous: any;
   pageViews: string[] = ["", "four-digit-pin"];
@@ -63,7 +65,7 @@ export class ContinuingExistingRequestsComponent
   phoneOTPForm: FormGroup;
   destroy: Subscription[] = [];
   parentDetails: Partial<Parent>;
-  loanAmountByParent: number;
+  loanAmountByParent: number = 0;
   constructor(
     public generalservice: GeneralService,
     private fb: FormBuilder,
@@ -96,10 +98,20 @@ export class ContinuingExistingRequestsComponent
       .pipe(pluck("parent_info"))
       .subscribe(val => (this.parentDetails = val as Partial<Parent>));
 
-      this.destroy[1] = this.store
+      this.destroy[1] = this.generalservice.reset$.subscribe(
+        (val: string) => {
+          console.log(val);
+          if (val.length < 1) return;
+            this.view = '';
+        }
+      );
+
+      this.destroy[2] = this.store
       .select(fromStore.getCurrentChildState)
-      .pipe(pluck('total_tuition_fees'))
-      .subscribe(val => this.loanAmountByParent = val as number);
+      .subscribe((val: any) => {
+        const { total_tuition_fees } = val as ChildrenState;
+        this.loanAmountByParent += total_tuition_fees;
+      });
 
       // this.destroy[2] = this.store
       // .select(fromStore.getParentState)
@@ -372,6 +384,7 @@ export class ContinuingExistingRequestsComponent
           return;
         }
         if(!val.payment_type || val.payment_type == 1){
+          // console.log(this.loanAmountByParent);
           const res = await this.chatservice.fetchWidgetStages(this.loanAmountByParent.toString());
           const offers = await this.chatservice.getLoanOffers(val['creditclan_request_id']);
           this.chatservice.fetchBankNames();
@@ -670,5 +683,9 @@ export class ContinuingExistingRequestsComponent
         }, 800);
         break;
     }
+  }
+
+  ngOnDestroy(){
+    this.destroy.forEach(elem => elem.unsubscribe())
   }
 }
