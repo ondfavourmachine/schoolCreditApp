@@ -515,7 +515,9 @@ export class ChatService {
   }
 
   deleteGuardian(){
-    return this.http.post(`${this.generalUrl}guardian`, {emails: ['ondfavourmachine+2@gmail.com', 'ondfavourmachine@gmail.com', 'ondfavourmachine+5@gmail.com']}).toPromise();
+    return this.http.post(`${this.generalUrl}guardian`, {emails: ['ondfavourmachine+2@gmail.com', 
+    'ondfavourmachine+12@gmail.com', 'ondfavourmachine+13@gmail.com', 
+    'ondfavourmachine@gmail.com', "ondfavourmachine+10@gmail.com", 'ondfavourmachine+5@gmail.com']}).toPromise();
   }
   
 }

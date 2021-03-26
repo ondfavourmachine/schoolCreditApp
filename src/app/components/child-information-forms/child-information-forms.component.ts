@@ -125,18 +125,14 @@ export class ChildInformationFormsComponent
 
     this.destroy[1] = this.store
       .select(fromStore.getCurrentParentInfo)
-      // .pipe(tap(val => console.log(val)))
       .subscribe(val => {
-        // console.log(val);
         const { guardian } = val as Parent;
         this.guardianID = guardian;
       });
 
     this.destroy[2] = this.store
       .select(fromStore.getCurrentChildInfo)
-      .subscribe(val => {
-        // console.log(val);
-      });
+      .subscribe();
 
     //  this.destroy[2] = this.store
     //   .select(fromStore.getCurrentChildState)
