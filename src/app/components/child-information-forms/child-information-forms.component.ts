@@ -304,7 +304,7 @@ export class ChildInformationFormsComponent
       child_book : schoolBooks ? schoolBooks : [],
       total_cost_of_books: objectHoldingIndex.total_cost_of_books
     };
-    console.log(value);
+    // console.log(value);
     this.mapOfChildrensInfo.set(this.currentChild, value);
     if (this.mockstore.childrenInformationSubmittedByParent.length < 1) {
       this.mockstore.childrenInformationSubmittedByParent.push(
@@ -351,7 +351,7 @@ export class ChildInformationFormsComponent
 
   get nameOfRecentlyAddedChild(): string {
     let len = this.mockstore.childrenInformationSubmittedByParent.length - 1;
-    return this.mockstore.childrenInformationSubmittedByParent[len].name;
+    return this.mockstore.childrenInformationSubmittedByParent[len].full_name;
   }
 
   modifyPreviouslyEnteredChildInfo() {
