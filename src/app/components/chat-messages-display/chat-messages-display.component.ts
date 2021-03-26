@@ -905,7 +905,7 @@ selectMottoFromSchool(){
     setTimeout(() => {
         const msgs = Message.welcomeMessagesForGiver;
         let newString = '';
-        const userNameOfSchool = this.route.url.split('/').length > 2 ?  this.route.url.split('/').slice(-1)[0] : undefined
+        let userNameOfSchool = this.route.url.split('/').length > 2 ?  this.route.url.split('/').slice(-1)[0] : undefined
         let messageToDisplay: Message;
         this.count = 0;
         
@@ -924,7 +924,9 @@ selectMottoFromSchool(){
             messageToDisplay.makeAndInsertMessage(this.count);
             return;
           }
-          
+          //  /[&\/\\#,+()$~%.'":*?<>{}]/g
+          const arr = userNameOfSchool.split('%20');
+          userNameOfSchool = arr.join(' ');
           newString = msg.replace('Adama', userNameOfSchool ? this.titleCase.transform(userNameOfSchool) : 'Adanma'); 
           newString = newString.split('?')[0];
           newString+=  this.modifyMotto(index);
