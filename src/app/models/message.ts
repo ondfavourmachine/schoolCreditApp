@@ -552,12 +552,12 @@ export class Message {
               `verifynow,verifylater`,
               "prevent"
           ),
-          // new GiverResponse(
-          //   new replyGiversOrReceivers(
-          //     "I want to verify my informa",
-          //     "right"
-          //   )
-          // )
+          new GiverResponse(
+            new replyGiversOrReceivers(
+              "I don't want to edit my information. It is okay.",
+              "right"
+            )
+          )
         );
       break;
       case "daily":
