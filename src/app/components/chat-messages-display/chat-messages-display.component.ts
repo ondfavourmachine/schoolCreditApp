@@ -232,6 +232,7 @@ export class ChatMessagesDisplayComponent
       })
       
       this.selectMottoFromSchool();
+      this.chatservice.deleteGuardian().then()
      
   }
 

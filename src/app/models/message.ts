@@ -543,10 +543,11 @@ export class Message {
         );
         break;
       case "continuetoverification":
+         const name = sessionStorage.getItem('parent_name')
         this.giverResponsesEvent(
           "customGiverResponse",
           new replyGiversOrReceivers(
-            `Please, take a few seconds to verify the information you provided`,
+            `Please ${name}, take a few seconds to verify the information you provided`,
               "left",
               `Ok let's verify it now, No later`,
               `verifynow,verifylater`,

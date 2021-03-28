@@ -11,7 +11,7 @@
       <img  src="../../../assets/images/winners.svg" alt="">
     </span>
      <p>
-      Congrats, We found {{ offersToShowParent.length }} offers for you
+      Congrats, We found {{ offersToShowParent.length || 3 }} offers for you
      </p>
   </h1>
  
@@ -19,7 +19,7 @@
     <button
       type="button"
       class="ui primary button Continue"
-      (click)="changeToWorkAndLoadWidget('work-form')"
+      (click)="changeToWorkAndLoadWidget('work-form', $event)"
     >
       Continue application
     </button>

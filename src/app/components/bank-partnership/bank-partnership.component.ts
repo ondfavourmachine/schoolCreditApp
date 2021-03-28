@@ -204,10 +204,12 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
   selectOffers(index: string){
     this.selectedOffer = index;
   }
-  changeToWorkAndLoadWidget(page: string){
+  changeToWorkAndLoadWidget(page: string, event){
+    const button = event.target as HTMLButtonElement;
+    button.innerHTML = `<i class="fa fa-circle-notch fa-spin"></i>  Continue application`;
     const a =  (document.querySelector('.hiddenWidget') as HTMLElement);
     this.spinner = true;
-    this.launchWidget()
+    this.launchWidget(button)
   }
 
   selectThis(event) {
@@ -396,7 +398,7 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
-   async launchWidget() {
+   async launchWidget(button: HTMLButtonElement) {
     this.spinner = true;
     let totalFees: number = 0;
     const disconnect = this.store
@@ -449,6 +451,7 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
       cc.start(data, forms);
       this.spinner = false;
       disconnect.unsubscribe();
+      button.innerHTML = 'continue application';
     });
     cc.on('request', async (data) => {
       //  if the request was created successfully

@@ -449,6 +449,7 @@ export class ParentsInformationComponent
               //   // `verifynow,verifylater`,
               //   // "prevent"
               // );
+              sessionStorage.setItem('parent_name', `${parentInfo.full_name}`)
               this.spinner = false;
               disconnect.unsubscribe();
               const chatbotResponse = new replyGiversOrReceivers(
