@@ -207,6 +207,7 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
   changeToWorkAndLoadWidget(page: string, event){
     const button = event.target as HTMLButtonElement;
     button.innerHTML = `<i class="fa fa-circle-notch fa-spin"></i>  Continue application`;
+    button.disabled = true;
     const a =  (document.querySelector('.hiddenWidget') as HTMLElement);
     this.spinner = true;
     this.launchWidget(button)
@@ -452,6 +453,7 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
       this.spinner = false;
       disconnect.unsubscribe();
       button.innerHTML = 'continue application';
+      button.disabled = false;
     });
     cc.on('request', async (data) => {
       //  if the request was created successfully

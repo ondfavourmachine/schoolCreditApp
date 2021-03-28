@@ -388,8 +388,12 @@ export class ContinuingExistingRequestsComponent
           const res = await this.chatservice.fetchWidgetStages(this.loanAmountByParent.toString());
           const offers = await this.chatservice.getLoanOffers(val['creditclan_request_id']);
           this.chatservice.fetchBankNames();
-          this.store.dispatch(new generalActions.updateParentLoanRequest({creditclan_request_id : val['creditclan_request_id'], eligible: true}));
-          this.store.dispatch(new generalActions.updateParentOffers(offers['offers'][0].amount == 0 ? [] : [].concat(offers['offers'])));
+          try {
+            this.store.dispatch(new generalActions.updateParentLoanRequest({creditclan_request_id : val['creditclan_request_id'], eligible: true}));
+            this.store.dispatch(new generalActions.updateParentOffers(offers['offers'][0].amount == 0 ? [] : [].concat(offers['offers']))); 
+          } catch (error) { // do nothing 
+          }
+         
           const newStages = this.updateWidgets(res['widgets_to_show'] as Array<string>, stages);
           const returnVal = this.rearrangeStaInOrderFashion(newStages);
           this.checking("stop");
