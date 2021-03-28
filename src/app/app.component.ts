@@ -55,7 +55,7 @@ export class AppComponent
   }
 
   setPageToGoBackTo(event) {
-    // console.log(event);
+    //  console.log(event);
     this.goBack = event;
   }
 
@@ -72,7 +72,7 @@ export class AppComponent
       val => {
         // String(val)
         // verify-parent-data
-        this.generalservice.flowControlHolder = String(val);
+        this.generalservice.flowControlHolder =  String(val);
         if (String(val).length < 1) {
           this.switchOfModal();
           return;

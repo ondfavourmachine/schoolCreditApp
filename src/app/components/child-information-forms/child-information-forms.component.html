@@ -201,35 +201,21 @@
     Click the image to add child's picture
   </h1>
 
-  <!-- <img
-    (click)="addChildPictrue()"
-    title="click to add a picture"
-    class="circular medium ui image modified-img"
-    [src]="base64FormOfPicture ? base64FormOfPicture : '/assets/images/no-product.svg'"
-  />
-  <input
-    (change)="loadChildImage($event)"
-    type="file"
-    id="picture-upload"
-    name="img"
-    accept="image/*"
-    hidden
-  /> -->
   <app-picture
     [fromWhere]="'child-information-form'"
     (childPicture)="saveChildPictureFromPictureComp($event)"
     (changeUpTheView)="showBookSelectionPage()"
   ></app-picture>
-  <!-- <button
-    (click)="showBookSelectionPage()"
-    type="submit"
-    class="ui primary button fluid modified-button"
-  >
-    Upload and continue
-  </button>
-  <div *ngIf="spinner" class="spinner-container">
-    <i class="fa fa-circle-notch fa-spin fa-3x"></i>
-  </div> -->
+ 
+</div>
+
+<div style="margin-top: 30px;" *ngIf="viewToshow == 'select-books'">
+  <app-school-books
+   (goback)="goToBooksPage($event)"
+   (previousPageInSchool)="schoolBookPages = $event"
+   [nextOrPrev]="schoolBookPages"
+   
+   (selectionComplete)="childBooksHasBeenAdded($event)"></app-school-books>
 </div>
 
 <div class=" h-100 text-center family-info" *ngIf="viewToshow == 'modifyOrNot'">
@@ -273,10 +259,6 @@
   </div>
 </div>
 
-<div style="margin-top: 30px;" *ngIf="viewToshow == 'select-books'">
-  <app-school-books
-   
-   (selectionComplete)="childBooksHasBeenAdded($event)"></app-school-books>
-</div>
+
 
 <!-- [currentChild]="currentChildForWhichBookIsBeingSelected"  -->

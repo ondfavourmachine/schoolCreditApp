@@ -68,6 +68,7 @@ export class ChildInformationFormsComponent
   totalCostOfSchoolBooks: number = 0;
   parentDetails: Partial<Parent>
   schoolClasses: SchoolClass[] = [];
+  schoolBookPages: any;
   constructor(
     private fb: FormBuilder,
     public mockstore: StoreService,
@@ -79,6 +80,10 @@ export class ChildInformationFormsComponent
   }
 
   manageGoingBackAndForth() {
+ 
+    if(typeof this.schoolBookPages == 'object' && this.schoolBookPages.hasOwnProperty('pageToShow')){
+     return;
+    }
     if (this.viewToshow == this.back) { 
       const num = this.pageViews.indexOf(this.back);
       const ans = this.pageViews[num - 1];
@@ -91,6 +96,7 @@ export class ChildInformationFormsComponent
       // ans == "" ?  : "";
       let secondNum = this.pageViews.indexOf(ans);
       this.back = this.pageViews[secondNum - 1];
+      this.back == 'upload-image' ? this.schoolBookPages = undefined : '';
       return;
     }
     if (this.back == "") {
@@ -101,6 +107,7 @@ export class ChildInformationFormsComponent
       this.mapOfChildrensInfo = new Map();
       
     } else {
+      this.back == 'upload-image' ? this.schoolBookPages = undefined : '';
       this.generalservice.handleSmartViewLoading({component: 'child-information-forms', info: 'childForms'})
       this.viewToshow = this.back;
       
@@ -292,7 +299,7 @@ export class ChildInformationFormsComponent
     let recalibrated = this.childInfoForm.value.tuition_fees.split(',').join('');
     this.childInfoForm.value.tuition_fees = recalibrated;
     let value: Partial<AChild> = { ...this.childInfoForm.value };
-    const objectHoldingIndex = this.mapOfChildrensInfo.get(this.currentChild);
+    const objectHoldingIndex = this.mapOfChildrensInfo.get(this.currentChild ? this.currentChild : this.previous);
     value = {
       ...value,
       full_name: `${value.first_name} ${value.last_name}`,
@@ -334,16 +341,12 @@ export class ChildInformationFormsComponent
           entry[1].index == thisindex ? (this.currentChild = entry[0]) : "";
         }
       }
-      // else {
-      //   console.log("i am here");
-      //   console.log(this.mapOfChildrensInfo);
-      // }
     }
     setTimeout(() => {
       this.viewToshow = "modifyOrNot";
       this.spinner = false;
-      this.previousPage.emit("");
-    }, 200);
+      this.previousPage.emit("select-books");
+    }, 0);
   }
 
   get nameOfRecentlyAddedChild(): string {
@@ -506,7 +509,6 @@ export class ChildInformationFormsComponent
   }
 
   showBookSelectionPage(){
-
     if(this.numberOfSchoolBooks > 0){
       this.generalservice.handleSmartViewLoading({component : 'school-books', info: 'schoolBooks'});
       this.viewToshow = 'select-books'
@@ -516,8 +518,7 @@ export class ChildInformationFormsComponent
   }
 
   childBooksHasBeenAdded(event: Array<SchoolBook>){
-    // debugger;
-    this.mapOfChildrensInfo.get(this.currentChild).total_cost_of_books = 0;
+    this.mapOfChildrensInfo.get(this.currentChild ? this.currentChild: this.previous).total_cost_of_books = 0;
     let total = 0;
     total = event.reduce((acc, book, index, arr)=> {
       let tuition = book.price.split('.')[0]
@@ -525,7 +526,7 @@ export class ChildInformationFormsComponent
       return acc;
     }, total)
     // console.log(total);
-    this.mapOfChildrensInfo.get(this.currentChild).total_cost_of_books+= total;
+    this.mapOfChildrensInfo.get(this.currentChild ? this.currentChild : this.previous).total_cost_of_books+= total;
     this.generalservice.handleSmartViewLoading({component: 'child-information-forms', info: 'childForms'});
     this.moveToNextChildOrNot(event);
   }
@@ -573,11 +574,17 @@ export class ChildInformationFormsComponent
     this.store.dispatch(new generalActions.addParents(updatedParents));
   }
 
+  goToBooksPage(event){
+    this.previousPage.emit(event);
+  }
+
   makeReadable(value: string){
     const correctedValue = value.split(',').join('');
     const newValue = new Intl.NumberFormat().format(Number(correctedValue));
     (this.inputForTuition.nativeElement as HTMLInputElement).value = newValue;
   }
+
+
 
   ngOnDestroy() {
     this.destroy.forEach(element => element.unsubscribe());
@@ -586,5 +593,7 @@ export class ChildInformationFormsComponent
     document
       .getElementById("backspace")
       .removeEventListener("click", this.manageGoingBackAndForth);
+      sessionStorage.removeItem('childPicture');
+      sessionStorage.removeItem('parentPicture');
   }
 }

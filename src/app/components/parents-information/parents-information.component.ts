@@ -536,6 +536,7 @@ export class ParentsInformationComponent
     document
       .getElementById("backspace")
       .removeEventListener("click", this.manageGoingBackAndForth);
+    this.store.dispatch(new generalActions.editParentInfo(false));
     this.editMode = false;
   }
 }

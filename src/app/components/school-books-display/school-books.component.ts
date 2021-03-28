@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output,  } from "@angular/core";
+import {AfterViewInit, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output,  } from "@angular/core";
 import { Subscription } from "rxjs";
 import { Store } from "@ngrx/store";
 import * as fromStore from "../../store";
@@ -6,16 +6,18 @@ import * as generalActions from "../../store/actions/general.action";
 import { pluck } from "rxjs/operators";
 import { SchoolBook } from "src/app/models/data-models";
   
-  
+ type schoolbookviews = 'book-selection' | 'cost' | ''; 
   
   @Component({
     selector: "app-school-books",
     templateUrl: "./school-books.component.html",
     styleUrls: ["./school-books.component.css"]
   })
-  export class SchoolBooksComponent implements OnInit  {
-    @Output("previousPage") previousPage = new EventEmitter<string>();
+  export class SchoolBooksComponent implements OnChanges, OnInit, AfterViewInit, OnDestroy {
+    @Output("previousPageInSchool") previousPageInSchool = new EventEmitter<{}>();
     @Output("selectionComplete") selectionComplete = new EventEmitter<SchoolBook[]>();
+    @Output('goback') goback = new EventEmitter<string>();
+    @Input() nextOrPrev: Object = {};
     destroy: Subscription[] = [];
     selected: string = '';
     booksToDisplay: SchoolBook[] = [];
@@ -24,9 +26,18 @@ import { SchoolBook } from "src/app/models/data-models";
     noBookFromSchool;
     searchTerm: string;
     showDropdown: boolean = false;
-    view : 'book-selection' | 'cost' | '' = 'book-selection'
+    previous: string & schoolbookviews = '';
+    view: schoolbookviews = 'book-selection'
+    pageViews: schoolbookviews[] = [
+      'book-selection',
+      'cost'
+      ];
     constructor(private store: Store) {
-        this.previousPage.emit("firstPage");
+        this.manageGoingBackAndForth = this.manageGoingBackAndForth.bind(this);
+    }
+
+    ngOnChanges(){
+        // console.log(this.nextOrPrev);
     }
 
     ngOnInit(){
@@ -34,7 +45,26 @@ import { SchoolBook } from "src/app/models/data-models";
         .pipe(pluck('school_books')).subscribe((val: SchoolBook[]) => {
             this.booksToDisplay = [...val];
         })
+      this.goback.emit('upload-image');
     }
+
+    ngAfterViewInit(){
+        document
+        .getElementById("backspace")
+        .addEventListener("click", this.manageGoingBackAndForth);
+    }
+
+    manageGoingBackAndForth() {
+        // this works because this component first catches the event, modifies the bookselected
+        // while the event continues
+        if(this.booksSelected.size > 0){
+            this.booksSelected.clear();
+            this.previousPageInSchool.emit('');
+        }
+        if(this.nextOrPrev) {
+            this.view =  this.nextOrPrev['pageToShow'];
+        }
+      }
 
 
     addThisBookToSelected(event: Event){
@@ -83,13 +113,15 @@ import { SchoolBook } from "src/app/models/data-models";
 
     calculateTotalCostOfBooks(){
     let totalCostsOfBooks = 0;
+    if(this.booksSelected.size == 0) return;
      this.booksSelected.forEach((id) => {
          const foundBook = this.booksToDisplay.find(elem => elem.id == id);
          if(foundBook) totalCostsOfBooks += parseInt(foundBook.price)
      })
-    //  console.log(totalCostsOfBooks)
-     this.totalCostOfBooks = totalCostsOfBooks
-      this.view = 'cost';
+     this.totalCostOfBooks = totalCostsOfBooks;
+     this.previous = 'book-selection';
+     this.previousPageInSchool.emit({pageToShow : this.previous});
+     this.view = 'cost';
     }
 
     clickSelectAll(elem: string, event: Event){
@@ -111,11 +143,20 @@ import { SchoolBook } from "src/app/models/data-models";
     }
 
     completeBookSelection(){
-        const books: SchoolBook[] = []
+        const books: SchoolBook[] = [];
         this.booksSelected.forEach((id) => {
             const foundBook = this.booksToDisplay.find(elem => elem.id == id);
            books.push(foundBook);
         })
+        this.previousPageInSchool.emit('');
+        this.goback.emit('select-books');
+       
         this.selectionComplete.emit(books);
+    }
+
+    ngOnDestroy(){
+        document
+        .getElementById("backspace")
+        .removeEventListener("click", this.manageGoingBackAndForth);
     }
   }

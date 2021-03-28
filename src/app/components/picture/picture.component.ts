@@ -59,6 +59,7 @@ export class PictureComponent implements OnInit, OnDestroy, AfterViewInit {
     this.modifiedFile = undefined;
     // console.log('i am here!')
     this.updateLastPage.emit('address');
+    
   }
 
  async ngAfterViewInit(){

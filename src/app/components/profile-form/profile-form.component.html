@@ -29,20 +29,19 @@
         <input
           formControlName="date_of_birth"
           type="date"
-          (change)="runDateAnalysis($event.target.value)"
           name="class"
           placeholder="Eg: yyyy-mm-dd"
         />
       </div>
       <small
-        class="dob_warning"
+        class="dob_warning mb-3"
         [style.display]="dob.touched && !dob.valid ? 'block' : 'none'"
       >
         Please enter your date of birth
       </small>
       <small
       class="dob_warning"
-      [style.display]="parentIsTooYoung ? 'block' : 'none'"
+      [style.display]="dob?.errors?.parentIsTooYoung ? 'block' : 'none'"
       >
       You must be more than 18 years.
     </small>

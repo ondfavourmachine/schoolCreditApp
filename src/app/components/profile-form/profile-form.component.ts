@@ -2,27 +2,36 @@ import { Component, OnInit, Output, EventEmitter, OnDestroy } from "@angular/cor
 import { Store } from "@ngrx/store";
 import * as fromStore from "../../store";
 import * as generalActions from "../../store/actions/general.action";
-import { FormGroup, FormBuilder, Validators } from "@angular/forms";
+import { FormGroup, FormBuilder, Validators, ValidatorFn, AbstractControl, ValidationErrors } from "@angular/forms";
 import { Parent } from "src/app/models/data-models";
 import { Subscription } from "rxjs";
 import { pluck } from "rxjs/operators";
 
 import { GeneralService } from "src/app/services/generalService/general.service";
 
-// const validateAge = (thisComponent: ProfileFormComponent): AsyncValidatorFn => (control: AbstractControl): Promise<{emailExists: boolean}> | Observable<{emailExists: boolean}> | null => {
-//   obj.checkingUniqueness = 'checking';
-//   if(!control && control.value.length < 2 && !regex.test(control.value)) { 
-//     obj.checkingUniqueness = 'done'; 
-//     return of(null)
-//   };
-//      return new Promise((resolve, reject) => {
-//        const age = thisComponent.runDateAnalysis(control.value)
-//        age < 18 ? resolve(null) : resolve({ parentIstooYoung: true })
-//      })
-      
 
-  
-// }
+export function validateParentAge(obj: ProfileFormComponent): ValidatorFn {
+  return (control:AbstractControl) : ValidationErrors | null => {
+
+      const value = control.value;
+
+      if (!value) {
+          return null;
+      }
+
+      const age = obj.runDateAnalysis(control.value)
+
+      // const hasUpperCase = /[A-Z]+/.test(value);
+
+      // const hasLowerCase = /[a-z]+/.test(value);
+
+      // const hasNumeric = /[0-9]+/.test(value);
+
+      // const passwordValid = hasUpperCase && hasLowerCase && hasNumeric;
+
+      return age < 18 ? { parentIsTooYoung : true }: null;
+  }
+}
 
 
 
@@ -56,7 +65,7 @@ export class ProfileFormComponent implements OnInit, OnDestroy {
       // full_name: [this.parentInfo && this.parentInfo.full_name ? this.parentInfo.full_name : '' , Validators.required],
       first_name: [this.parentInfo && this.parentInfo.first_name ? this.parentInfo.first_name : '' , Validators.required],
       last_name: [this.parentInfo && this.parentInfo.last_name ? this.parentInfo.last_name : '' , Validators.required],
-      date_of_birth: [this.parentInfo && this.parentInfo.date_of_birth ? this.parentInfo.date_of_birth : '', Validators.required],
+      date_of_birth: [this.parentInfo && this.parentInfo.date_of_birth ? this.parentInfo.date_of_birth : '', [Validators.required, validateParentAge(this)]],
       gender: [this.parentInfo && this.parentInfo.gender ? this.parentInfo.gender : '', Validators.required]
     });
 
@@ -93,8 +102,10 @@ export class ProfileFormComponent implements OnInit, OnDestroy {
     let birth = new Date(startDate).getTime();
     let now = nowDate.getTime();
     const age = now - birth;
-    this.myAge = age / 31536000000;
-    this.myAge < 18 ? this.parentIsTooYoung = true : this.parentIsTooYoung = false;
+    let myAge = age / 31536000000;
+    return myAge
+    // this.myAge < 18 ? this.parentIsTooYoung = true : this.parentIsTooYoung = false;
+    // this.myAge < 18 ? this.parentProfileForm.get('date_of_birth').disable() : this.parentProfileForm.get('date_of_birth').enable()
 }
   ngOnDestroy(){
 

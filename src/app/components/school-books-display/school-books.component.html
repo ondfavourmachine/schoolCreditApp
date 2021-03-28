@@ -22,15 +22,16 @@
         </div> -->
 
         <div class="small_drop_down">
-          <div class="ellipsis"> 
-              <!-- <i (click)="showDropdown = !showDropdown" class="fas fa-ellipsis-v"></i> -->
-              <span (click)="showDropdown = !showDropdown" class="more__button"> more </span>
-              <span *ngIf="showDropdown" class="sub_menu"> 
+          <div [style.opacity]="booksSelected.size > 0 ? '1':'0.35'" 
+               [style.pointerEvents]="booksSelected.size > 0 ? 'auto': 'none'"
+              class="ellipsis"> 
+              <span (click)="calculateTotalCostOfBooks()" class="more__button"> proceed </span>
+              <!-- <span *ngIf="showDropdown" class="sub_menu"> 
                 <a (click)="cancelAllSelection()" ><i class="fa fa-times-circle"></i> clear selection</a>  
                 <a (click)="calculateTotalCostOfBooks()" ><i class="fa fa-plus-circle"></i> Add selected </a> 
                 <a (click)="clickSelectAll('inputForSelectAllBooks', $event)" ><i class="fa fa-plus-circle"></i> Select all </a> 
                 <a (click)="calculateTotalCostOfBooks()" ><i class="fa fa-arrow-right"></i> Proceed </a> 
-              </span>
+              </span> -->
         </div>
             
         </div>
@@ -73,24 +74,6 @@
           </div>
        </div>
         
-        <!-- <div class="description__house mt-2">
-          <p
-          class="nameOfBook "
-          style=""
-        >
-         {{ book?.name }}
-      </p>
-        <p class="bolded price">
-            {{ book?.price | currency:'NGN' }}
-        </p>
-        </div>
-        <div style="display: flex; justify-content: center;">
-         
-          <span (click)="clickThisInput(book?.id, $event)" 
-           class="small__button select">
-            select
-          </span>
-        </div> -->
       </div>
   
     
@@ -101,13 +84,6 @@
    
 </div>
 
-   <!-- <div class="floating_button_parent">
-      
-        <span class="floating_button_search" >
-          <i class="fa fa-search"></i>
-        </span>
-     
-      </div> -->
 
 
 
@@ -126,12 +102,12 @@
     Add these books for my child
   </button>
 
-  <button
+  <!-- <button
  
     class="ui button primary basic mt-1"
   >
     These books are not necessary
-  </button>
+  </button> -->
     </div>
   
   
