@@ -35,7 +35,7 @@
       </div>
       <small
         class="dob_warning mb-3"
-        [style.display]="dob.touched && !dob.valid ? 'block' : 'none'"
+        [style.display]="dob.touched && !dob.valid && !dob?.errors?.parentIsTooYoung  ? 'block' : 'none'"
       >
         Please enter your date of birth
       </small>
