@@ -361,6 +361,10 @@ export class ChatMessagesDisplayComponent
         this.generalservice.handleFlowController(String(componentToLoad));
       }
 
+      if(String(componentToLoad).toLowerCase() == 'edit-child-information'){
+        this.generalservice.handleFlowController(String(componentToLoad));
+      }
+
       if (String(componentToLoad).toLowerCase() == "edit-parent-info") {
         this.generalservice.handleFlowController(String(componentToLoad));
         // this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");

@@ -542,6 +542,14 @@ export class Message {
           )
         );
         break;
+
+      case 'editchildinfo':
+        this.giverDispatchEvents(
+          "customGiverEventFromMsgClass",
+          "giver",
+          "edit-child-information",
+          ``,
+        );
       case "continuetoverification":
          const name = sessionStorage.getItem('parent_name')
         this.giverResponsesEvent(

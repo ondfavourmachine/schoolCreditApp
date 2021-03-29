@@ -437,13 +437,19 @@ export class ChildInformationFormsComponent
       this.fullpayment = false;
       sessionStorage.removeItem("fullpayment");
       setTimeout(() => {
-        this.generalservice.nextChatbotReplyToGiver = undefined;
+        this.generalservice.nextChatbotReplyToGiver = undefined; 
+        // `Are you ready to make payment now?`,
+        // "left",
+        // "Yes I am, I'll do it later, i want to make installmental payments",
+        // `makefullpayment,notinterested,changepaymenttype`,
+        //  undefined
         const chatbotResponse = new replyGiversOrReceivers(
-          `Are you ready to make payment now?`,
+          `Thank you for entering your child details, ${this.parentDetails.full_name ||
+            "John Bosco"}, would you like to edit the information you provided?`,
           "left",
-          "Yes I am, I'll do it later, i want to make installmental payments",
-          `makefullpayment,notinterested,changepaymenttype`,
-           undefined
+          "Yes, No continue",
+          "editchildinfo,continuetofinancial",
+          undefined
           );
         this.generalservice.responseDisplayNotifier(chatbotResponse);
         this.viewToshow = "";

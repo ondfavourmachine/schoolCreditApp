@@ -52,6 +52,7 @@ import { VerifyParentDataComponent } from './components/verify-parent-data/verif
 // import { reducer } from "./store/reducers/parent.reducer";
 import { SchoolBooksComponent } from "./components/school-books-display/school-books.component";
 import { FilterPipe } from "./pipes/filter.pipe";
+import { EditChildComponent } from './edit-child/edit-child.component';
 
 registerLocaleData(en);
 
@@ -87,7 +88,8 @@ registerLocaleData(en);
     ParentAccountFormComponent,
     MakeFullPaymentComponent,
     FilterPipe,
-    VerifyParentDataComponent
+    VerifyParentDataComponent,
+    EditChildComponent
   ],
   imports: [
     BrowserModule,

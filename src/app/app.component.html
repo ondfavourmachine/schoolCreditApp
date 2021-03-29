@@ -100,6 +100,15 @@
             (previousPage)="setPageToGoBackTo($event)"
           ></app-child-information-forms>
         </div>
+        <!-- edit child -->
+        <div
+        style="overflow-y: auto;"
+        *ngSwitchCase="'edit-child-information'"
+         >
+        <app-edit-child>  
+        </app-edit-child>
+      </div>
+        <!--  -->
         <div *ngSwitchCase="'foundBeneficiary'">
           <app-found-beneficiary></app-found-beneficiary>
         </div>
