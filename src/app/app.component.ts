@@ -72,6 +72,7 @@ export class AppComponent
       val => {
         // String(val)
         // verify-parent-data
+        // sessionStorage.getItem('editChild') ? 'edit-child-information' : 'child-information-forms';
         this.generalservice.flowControlHolder =  String(val);
         if (String(val).length < 1) {
           this.switchOfModal();

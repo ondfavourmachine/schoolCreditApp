@@ -550,6 +550,25 @@ export class Message {
           "edit-child-information",
           ``,
         );
+      break;
+      case 'continuetofinancialinstitution':
+        this.giverResponsesEvent(
+          "customGiverResponse",
+          new replyGiversOrReceivers(
+            `Are you ready to be connected to a financial institution?`,
+            "left",
+            "Yes, No Later",
+            `connectme, notinterested`,
+            "allow"
+          ),
+          new GiverResponse(
+            new replyGiversOrReceivers(
+              "No details are correct.",
+              "right"
+            )
+          )
+        );
+      break;
       case "continuetoverification":
          const name = sessionStorage.getItem('parent_name')
         this.giverResponsesEvent(

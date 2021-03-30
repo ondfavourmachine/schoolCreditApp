@@ -72,7 +72,7 @@ export class ChildInformationFormsComponent
   constructor(
     private fb: FormBuilder,
     public mockstore: StoreService,
-    private generalservice: GeneralService,
+    public generalservice: GeneralService,
     private store: Store<fromStore.AllState>,
     private chatapi: ChatService
   ) {
@@ -140,7 +140,7 @@ export class ChildInformationFormsComponent
 
     this.destroy[2] = this.store
       .select(fromStore.getCurrentChildInfo)
-      .subscribe();
+      .subscribe(val => console.log(val));
 
     //  this.destroy[2] = this.store
     //   .select(fromStore.getCurrentChildState)
@@ -377,7 +377,10 @@ export class ChildInformationFormsComponent
     this.spinner = true;
     this.store.dispatch(new generalActions.addAChild(this.mapOfChildrensInfo));
     this.store.dispatch(new generalActions.calculateFees());
-
+    // this will be removed later
+    const stringToStore = JSON.stringify(this.mapOfChildrensInfo, this.replacer);
+    sessionStorage.setItem('listOfChildren', stringToStore);
+    // dont forget to remove the above code!
     for (let [key, value] of this.mapOfChildrensInfo) {
       let formToSubmit = Object.assign({}, value);
       delete formToSubmit.first_name;
@@ -445,7 +448,7 @@ export class ChildInformationFormsComponent
         //  undefined
         const chatbotResponse = new replyGiversOrReceivers(
           `Thank you for entering your child details, ${this.parentDetails.full_name ||
-            "John Bosco"}, would you like to edit the information you provided?`,
+            "John Bosco"}, would you like to edit the information of your  you provided?`,
           "left",
           "Yes, No continue",
           "editchildinfo,continuetofinancial",
@@ -484,30 +487,37 @@ export class ChildInformationFormsComponent
       "",
       ``
     );
-
+        sessionStorage.setItem('editChild', 'true');  
     this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
     this.generalservice.responseDisplayNotifier(responseFromParent);
     setTimeout(() => {
-      this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
-        `Are you ready to be connected to a financial institution?`,
-        "left",
-        "Yes, No Later",
-        `connectme, notinterested`,
-        "allow"
-      );
+      // this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
+      //   `Are you ready to be connected to a financial institution?`,
+      //   "left",
+      //   "Yes, No Later",
+      //   `connectme, notinterested`,
+      //   "allow"
+      // );
+      this.generalservice.nextChatbotReplyToGiver = undefined;
       const chatbotResponse = new replyGiversOrReceivers(
-        `To fund this request, We have partnered with banks on your behalf`,
+        `Thank you ${this.parentDetails.full_name || 'John Bosco'}. 
+          Would like to edit or modify ${
+            this.mapOfChildrensInfo.size == 1
+              ? "your child's information"
+              : "your children's information"
+          } that you just provided?`,
         "left",
-        "",
-        ``
+        "Yes please, No details are correct",
+        `editchildinfo,continuetofinancialinstitution`,
+        'prevent'
       );
-      this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
-            `Are you ready to be connected to a financial institution?`,
-            "left",
-            "Yes, No Later",
-            `connectme, notinterested`,
-            "prevent"
-          );
+      // this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
+      //       `Are you ready to be connected to a financial institution?`,
+      //       "left",
+      //       "Yes, No Later",
+      //       `connectme, notinterested`,
+      //       "prevent"
+      //     );
       this.generalservice.responseDisplayNotifier(chatbotResponse);
       this.viewToshow = "";
       this.previousPage.emit("firstPage");
@@ -584,11 +594,20 @@ export class ChildInformationFormsComponent
     this.previousPage.emit(event);
   }
 
-  makeReadable(value: string){
-    const correctedValue = value.split(',').join('');
-    const newValue = new Intl.NumberFormat().format(Number(correctedValue));
-    (this.inputForTuition.nativeElement as HTMLInputElement).value = newValue;
+
+  replacer(key, value) {
+    if(value instanceof Map) {
+      return {
+        dataType: 'Map',
+        value: Array.from(value.entries()), // or with spread: value: [...value]
+      };
+    } else {
+      return value;
+    }
   }
+  
+
+  
 
 
 

@@ -1,0 +1,122 @@
+
+
+
+ <div
+        class="flex flex-column  h-100 text-center family-info"
+        *ngIf="view == ''"
+        style="height: 500px;"
+  >
+ 
+
+ <h1 class="para-title ">
+     Edit your child's information
+ </h1>
+
+ <div
+   class="ui grid "
+   style="overflow: hidden; margin:0 10px ; cursor: pointer"
+ >
+   <div
+    *ngFor="let child of listOfChildrenParsed | keyvalue; index as i"
+     (click)="gotoNextPage('edit-profile-info', child.key)"
+     style="width: 100%"
+     class=" myborder mt-1"
+   >
+     <p  class="bolded child-name" style="padding: 10px">
+        {{ child.value?.full_name }}:  <span (click)="gotoNextPage('edit-profile-info', child.key)" class=""> Edit </span>
+     </p>
+   </div>
+
+   <div class="text-center mt-4" style="width: 100%; display: flex; justify-content: center;">
+    <button
+      (click)="userIsDoneEditing()"
+      type="button"
+      class="ui primary button fluid"
+    >
+      I am done editing
+    </button>
+  </div>
+
+ </div>
+</div> 
+
+<div
+class=" h-100 text-center family-info"
+ *ngIf="view == 'edit-profile-info'"
+>
+<h1 class="para-title">
+   Enter Biodun Information
+</h1>
+
+<form [formGroup]="childInfoForm" class="w-100">
+  <div class="ui form">
+    <div class="field">
+      <label>First Name</label>
+      <input formControlName="first_name" type="text" placeholder="Fullname" />
+    
+    </div>
+
+    <div class="field">
+      <label>Last Name</label>
+      <input formControlName="last_name" type="text" placeholder="Last Name" />
+    
+    </div>
+  
+
+    <div class="field">
+      <label>Class</label>
+
+      <select
+        style="height: auto;"
+        class="ui fluid search dropdown"
+        formControlName="class"
+      >
+        <option value="" selected>Select class...</option>
+        <option
+          [value]="class.id"
+          *ngFor="let class of listOfClassesInSchool; index as i"
+        >
+          {{ class.name }}
+        </option>
+      </select>
+    </div>
+
+    <div class="field positioned-relative">
+      <label>Tuition fees </label>
+      <input
+        formControlName="tuition_fees"
+        name="tuition"
+        type="tel"
+        #inputTuition
+        (change)="generalservice.makeReadable($event.target.value, inputTuition)"
+        placeholder="Enter tuition fees"
+      />
+      
+    </div>
+  </div>
+
+  <div class="text-center mt-4">
+    <button
+      (click)="view = 'edit-picture'"
+      type="submit"
+      class="ui primary button fluid"
+     
+    >
+      Continue
+    </button>
+  </div>
+</form>
+</div>
+
+
+<div *ngIf="view == 'edit-picture'" style="position: relative">
+  <h1 class="para-title text-center mb-3">
+    Click the image to edit child's picture
+  </h1>
+
+  <app-picture
+    [pictureForUseWhenChildIsTryingToEdit]="pictureOfChildInEdit"
+    (childPicture)="catchPictureEdited($event)"
+  ></app-picture>
+ 
+</div>

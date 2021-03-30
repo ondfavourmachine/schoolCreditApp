@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { ElementRef, Injectable } from "@angular/core";
 import { Subject, BehaviorSubject, TimeoutError } from "rxjs";
 import {
   QuestionsToAsk,
@@ -453,6 +453,13 @@ export class GeneralService {
     const res: Response = await fetch(dataUrl);
     const blob: Blob = await res.blob();
     return new File([blob], fileName, { type: "image/jpeg" });
+  }
+
+  makeReadable(value: string, element: HTMLElement){
+    
+    const correctedValue = value.split(',').join('');
+    const newValue = new Intl.NumberFormat().format(Number(correctedValue));
+    (element as HTMLInputElement).value = newValue;
   }
 
   fetchWordForNumber(num: number): string {

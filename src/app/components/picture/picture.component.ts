@@ -20,6 +20,7 @@ export class PictureComponent implements OnInit, OnDestroy, AfterViewInit {
   @Output() startSpinner = new EventEmitter<boolean>();
   @Output() childPicture = new EventEmitter<File>();
   @Input('fromWhere') fromWhere: any;
+  @Input('pictureForUseWhenChildIsTryingToEdit') pictureForUseWhenChildIsTryingToEdit: string | File | ArrayBuffer;
   showModal: string;
   imageChangedEvent: any = null;
   rawFile: File;
@@ -55,9 +56,10 @@ export class PictureComponent implements OnInit, OnDestroy, AfterViewInit {
         reader.readAsDataURL(this.pictureForUseWhenParentIsTryingToEdit);
       }
      })
-
+     if(this.pictureForUseWhenChildIsTryingToEdit){
+        this.handleChildIstryingToEdit(this.pictureForUseWhenChildIsTryingToEdit as File)
+     }
     this.modifiedFile = undefined;
-    // console.log('i am here!')
     this.updateLastPage.emit('address');
     
   }
@@ -163,36 +165,12 @@ export class PictureComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.modifiedFile || this.pictureForUseWhenParentIsTryingToEdit) {
       this.startSpinner.emit(true);
       this.changeUpTheView.emit("done");
-      // sessionStorage.removeItem('childPicture');
-      // sessionStorage.removeItem('parentPicture');
-     
-      // let guardID;
-      // let pictureFromStore: string | File;
-      // const disconnect: Subscription = this.store
-      //   .pipe(pluck("manageParent", "parent_info"))
-      //   .subscribe((val: Parent) => {
-      //     const { picture, guardian } = val;
-      //     guardID = guardian;
-      //     pictureFromStore = picture;
-      //   });
-      // try {
-      //   const res = await this.chatapi.uploadParentPicture({
-      //     picture: pictureFromStore as File,
-      //     guardian: guardID
-      //   });
-      //   this.changeUpTheView.emit("four-digit-pin");
-      //   disconnect.unsubscribe();
-      // } catch (error) {
-      //   this.startSpinner.emit(false);
-      //   this.generalservice.errorNotification(
-      //     "We could not upload the given picture. Please try again or try another picture!"
-      //   );
-      //   console.log(error);
-      // }
     }
-   
+    if(this.pictureForUseWhenChildIsTryingToEdit instanceof File){
+      this.childPicture.emit(this.rawFile || this.pictureForUseWhenChildIsTryingToEdit);
+    }
     // console.log("nothing to upload!");
-  }
+  } 
 
 
   async  tryToPrefillPicture(){
@@ -216,6 +194,17 @@ export class PictureComponent implements OnInit, OnDestroy, AfterViewInit {
        (document.getElementById('uploadButton') as HTMLButtonElement).disabled = false;
       }
       this.modifiedFile = await this.generalservice.dataUrlToFile(res as string, 'image_1')
+    }
+  }
+
+  handleChildIstryingToEdit(picture: File){
+    let reader;
+    if (FileReader) {
+      reader = new FileReader();
+      reader.onload = anevent => {
+        this.fileFromStore = `${anevent.target["result"]}`;  
+      };
+      reader.readAsDataURL(this.pictureForUseWhenChildIsTryingToEdit);
     }
   }
 

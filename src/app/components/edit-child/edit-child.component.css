@@ -1,0 +1,26 @@
+
+
+.child-name{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    color: rgba(0,0,0,.87);
+    font-weight: bold;
+  
+   
+}
+
+.child-name span {
+  
+    border-radius: 5px;
+    padding: 2px 5px;
+    background-color: rgba(0,0,0,.87);
+    color: white;
+    font-size: 14px !important;
+    transition: all 0.3s ease-in;   
+}
+
+.child-name span:hover{
+    background-color: rgba(0,0,0,.67);
+    
+}

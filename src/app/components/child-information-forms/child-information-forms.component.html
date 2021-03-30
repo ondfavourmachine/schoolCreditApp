@@ -103,98 +103,98 @@
   </button> -->
 </div>
 
-<div
-  class=" h-100 text-center family-info"
-  *ngIf="viewToshow == 'enterInformation'"
->
-  <h1 class="para-title">
-    {{
-      mapOfChildrensInfo.size == 1
-        ? "Enter child's Information"
-        : "Enter " + currentChild + " child's information"
-    }}
-  </h1>
+  <div
+    class=" h-100 text-center family-info"
+    *ngIf="viewToshow == 'enterInformation'"
+  >
+    <h1 class="para-title">
+      {{
+        mapOfChildrensInfo.size == 1
+          ? "Enter child's Information"
+          : "Enter " + currentChild + " child's information"
+      }}
+    </h1>
 
-  <form [formGroup]="childInfoForm" class="w-100">
-    <div class="ui form">
-      <div class="field">
-        <label>First Name</label>
-        <input formControlName="first_name" type="text" placeholder="Fullname" />
-      
-      </div>
+    <form [formGroup]="childInfoForm" class="w-100">
+      <div class="ui form">
+        <div class="field">
+          <label>First Name</label>
+          <input formControlName="first_name" type="text" placeholder="Fullname" />
+        
+        </div>
 
-      <div class="field">
-        <label>Last Name</label>
-        <input formControlName="last_name" type="text" placeholder="Last Name" />
-      
-      </div>
-      <!-- <div class="field">
-      
+        <div class="field">
+          <label>Last Name</label>
+          <input formControlName="last_name" type="text" placeholder="Last Name" />
+        
+        </div>
+        <!-- <div class="field">
+        
+
+          <div class="field">
+            <label>Class</label>
+            <input
+              name="class"
+              formControlName="class"
+              type="text"
+              placeholder="Class of child eg: JSS 1"
+            />
+          </div>
+        </div> -->
 
         <div class="field">
           <label>Class</label>
-          <input
-            name="class"
+
+          <select
+            style="height: auto;"
+            class="ui fluid search dropdown"
             formControlName="class"
-            type="text"
-            placeholder="Class of child eg: JSS 1"
-          />
-        </div>
-      </div> -->
-
-      <div class="field">
-        <label>Class</label>
-
-        <select
-          style="height: auto;"
-          class="ui fluid search dropdown"
-          formControlName="class"
-        >
-          <option value="" selected>Select class...</option>
-          <option
-            [value]="class.id"
-            *ngFor="let class of schoolClasses; index as i"
           >
-            {{ class.name }}
-          </option>
-        </select>
-      </div>
+            <option value="" selected>Select class...</option>
+            <option
+              [value]="class.id"
+              *ngFor="let class of schoolClasses; index as i"
+            >
+              {{ class.name }}
+            </option>
+          </select>
+        </div>
 
-      <div class="field positioned-relative">
-        <label>Tuition fees </label>
-        <input
-          formControlName="tuition_fees"
-          name="tuition"
-          type="tel"
-          #inputForTuition
-          (change)="makeReadable($event.target.value)"
-          placeholder="Enter tuition fees"
-        />
-        <!-- <small
-          *ngIf="childInfoForm.get('tuition_fees').value"
-          class="positioned-absolute currency"
-        >
-          &#8358;
-        </small> -->
-        <!-- <div *ngIf="phone.touched && phone.invalid" class="ng-invalid ng-touched">
-            <small style="color: #f10b0b9d;" *ngIf="phoneIsRequired()">
-              Your phone number is required!</small>
-          </div> -->
+        <div class="field positioned-relative">
+          <label>Tuition fees </label>
+          <input
+            formControlName="tuition_fees"
+            name="tuition"
+            type="tel"
+            #inputForTuition
+            (change)="generalservice.makeReadable($event.target.value, inputForTuition)"
+            placeholder="Enter tuition fees"
+          />
+          <!-- <small
+            *ngIf="childInfoForm.get('tuition_fees').value"
+            class="positioned-absolute currency"
+          >
+            &#8358;
+          </small> -->
+          <!-- <div *ngIf="phone.touched && phone.invalid" class="ng-invalid ng-touched">
+              <small style="color: #f10b0b9d;" *ngIf="phoneIsRequired()">
+                Your phone number is required!</small>
+            </div> -->
+        </div>
       </div>
-    </div>
-    <!-- {{ iterator.next().done }} {{ iterator.next() }} -->
-    <div class="text-center mt-4">
-      <button
-        [disabled]="!childInfoForm.valid"
-        type="submit"
-        class="ui primary button fluid"
-        (click)="viewToshow = 'upload-image'; previousPage.emit('enterInformation')"
-      >
-        Continue
-      </button>
-    </div>
-  </form>
-</div>
+      <!-- {{ iterator.next().done }} {{ iterator.next() }} -->
+      <div class="text-center mt-4">
+        <button
+          [disabled]="!childInfoForm.valid"
+          type="submit"
+          class="ui primary button fluid"
+          (click)="viewToshow = 'upload-image'; previousPage.emit('enterInformation')"
+        >
+          Continue
+        </button>
+      </div>
+    </form>
+  </div>
 
 <div *ngIf="viewToshow == 'upload-image'" style="position: relative">
   <h1 class="para-title text-center mb-3">

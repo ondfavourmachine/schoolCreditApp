@@ -53,6 +53,8 @@ export class ChatBotComponent implements OnInit, OnChanges, AfterViewInit, OnDes
            this.store.dispatch(new generalActions.loadSchoolDetails(school));
            this.store.dispatch(new generalActions.addParents({school_id: school.id}));
            this.store.dispatch(new generalActions.schoolDetailsIsLoaded());
+          //  will remove this later
+           sessionStorage.setItem('school_classes', JSON.stringify(school.classes));
         } catch (error) {
            this.store.dispatch(new generalActions.schoolDetailsFailedToLoad())
         }
@@ -75,7 +77,7 @@ export class ChatBotComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     this.destroyAnything[1]= this.store.select(fromStore.getSchoolDetailsState)
     .pipe(delay(1000),tap(val => {
       if(val["school_Info"].hasOwnProperty('id') && !sessionStorage.getItem('school_avatar')){
-        sessionStorage.setItem('school_avatar', val["school_Info"].picture);
+        sessionStorage.setItem('school_avatar', val["school_Info"].picture); 
       }
     }), map((val) => {
       return {schoolInfoLoadState : val['school_Info_Load_state'], school_id: val['school_Info']['id'], }
@@ -106,6 +108,7 @@ export class ChatBotComponent implements OnInit, OnChanges, AfterViewInit, OnDes
          .subscribe(val => { 
            this.store.dispatch(new generalActions.schoolDetailsLoadingIsCompleted());
            this.store.dispatch(new generalActions.updateSchoolBooks(val.data));
+           
          }, err => {
            this.generalservice.errorNotification('Could not load books associated with school!')
            console.log(err);
