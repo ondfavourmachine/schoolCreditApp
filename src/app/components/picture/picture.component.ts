@@ -137,7 +137,8 @@ export class PictureComponent implements OnInit, OnDestroy, AfterViewInit {
     };
     
     if(this.fromWhere == 'child-information-form'){
-      this.childPicture.emit(this.rawFile);
+      // console.log(this.rawFile);
+      this.childPicture.emit(this.modifiedFile);
     }else{
       this.store.dispatch(new generalActions.addParents(updateParentInfo));
     }
