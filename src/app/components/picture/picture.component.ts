@@ -140,8 +140,8 @@ export class PictureComponent implements OnInit, OnDestroy, AfterViewInit {
       this.childPicture.emit(this.modifiedFile);
     }
     else if(this.pictureForUseWhenChildIsTryingToEdit){
-      this.childPicture.emit(this.modifiedFile);
-        return;
+      // this.childPicture.emit(this.modifiedFile);
+      //   return;
     }
     else{
       this.store.dispatch(new generalActions.addParents(updateParentInfo));
