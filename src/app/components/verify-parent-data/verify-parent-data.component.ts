@@ -160,9 +160,9 @@ export class VerifyParentDataComponent
       this.closeModal();
     } catch (e) {
       console.log(e);
-      this.generalservice.warningNotification("Error occured!");
+      this.generalservice.warningNotification(e.error.message);
       this.spinner = false;
-      this.closeModal();
+      // this.closeModal();
     }
   }
 
