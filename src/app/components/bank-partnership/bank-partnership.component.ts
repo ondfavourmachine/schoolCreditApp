@@ -418,7 +418,7 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
         profile: {
           picture: pictureForWidget,
           personal: {
-            user_id: this.parentDetails.guardian,
+            // user_id: this.parentDetails.guardian,
             full_name: this.parentDetails.full_name,
             email: this.parentDetails.email,
             phone: this.parentDetails.phone,
