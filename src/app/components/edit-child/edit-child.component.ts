@@ -27,7 +27,7 @@ export class EditChildComponent implements OnInit, OnDestroy {
   listOfChildrenParsed: Map<string, Partial<AChild>> = new Map();
   childTobeEdited: Partial<AChild>;
   listOfClassesInSchool: SchoolClass[]= [];
-  userHasMadeLoanRequest: boolean = false;
+  
   parent: Parent;
   currentChildInEdit: string;
   tuitionFeesTotal: number;
@@ -129,29 +129,20 @@ export class EditChildComponent implements OnInit, OnDestroy {
   handleParentEditedChildInfo(event: File | string | ArrayBuffer){
     let obj = {...this.listOfChildrenParsed.get(this.currentChildInEdit)};
     obj.picture = event as File;
-    Object.assign(this.listOfChildrenParsed.get(this.currentChildInEdit), {});
     for(let elem in this.childInfoForm.value){
       obj[elem] = this.childInfoForm.value[elem];
     }
 
     obj.full_name = `${obj.first_name} ${obj.last_name}`;
-    let obj2 = Object.assign(this.listOfChildrenParsed.get(this.currentChildInEdit), obj);
-    this.listOfChildrenParsed.set(this.currentChildInEdit, obj2);
+    this.listOfChildrenParsed.set(this.currentChildInEdit, obj);
     const childEdited = this.listOfChildrenParsed.get(this.currentChildInEdit);
-    console.log(childEdited);
-    
-    // this.store.dispatch(
-    //   new generalActions.modifyIndividualChild({
-    //     name: this.currentChildInEdit,
-    //     dataToChange: childEdited
-    //   })
-    // );
+    // console.log(childEdited);
 
     this.view = '';
     setTimeout(() => {
       this.generalservice.successNotification('Child info has been edited successfully!')
     }, 500);
-    this.submitEditedChildToServerAndStore();
+    
   }
 
   async submitEditedChildToServerAndStore(){
@@ -178,10 +169,11 @@ export class EditChildComponent implements OnInit, OnDestroy {
   }
 
  async  makeLoanRequestAndGetLoanOffers(){
-   this.userHasMadeLoanRequest = true;
+  
     for (let [key, value] of this.listOfChildrenParsed) {
       try {
-        await this.chatservice.modifyChildData(value.child_id, value);
+        const obj2 = Object.assign({}, value);
+        await this.chatservice.modifyChildData(value.child_id, obj2);
       } catch (error) {
         console.log(error);
       }
@@ -214,9 +206,7 @@ export class EditChildComponent implements OnInit, OnDestroy {
 
 
   userIsDoneEditing(){
-    if(!this.userHasMadeLoanRequest){
-      this.makeLoanRequestAndGetLoanOffers();
-    }
+    this.submitEditedChildToServerAndStore();
     sessionStorage.removeItem('listOfChildren');
     sessionStorage.removeItem('editChild');
     this.generalservice.nextChatbotReplyToGiver = undefined;
