@@ -138,8 +138,12 @@ export class PictureComponent implements OnInit, OnDestroy, AfterViewInit {
     
     if(this.fromWhere == 'child-information-form'){
       this.childPicture.emit(this.modifiedFile);
-    }else{
-      if(this.pictureForUseWhenChildIsTryingToEdit) return;
+    }
+    else if(this.pictureForUseWhenChildIsTryingToEdit){
+      this.childPicture.emit(this.modifiedFile);
+        return;
+    }
+    else{
       this.store.dispatch(new generalActions.addParents(updateParentInfo));
     }
     let reader: FileReader;
@@ -212,5 +216,6 @@ export class PictureComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnDestroy(){
     this.destroy.forEach(elem => elem.unsubscribe());
     this.pictureForUseWhenParentIsTryingToEdit = undefined;
+    this.modifiedFile = undefined;
   }
 }
