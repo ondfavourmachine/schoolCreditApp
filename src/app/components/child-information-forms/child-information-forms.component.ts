@@ -462,8 +462,8 @@ export class ChildInformationFormsComponent
       return;
     }
 
-      this.notifyBackendOfLoanRequest();
-      await this.chatapi.fetchWidgetStages(this.tuitionFeesTotal);
+      // this.notifyBackendOfLoanRequest();
+    // await this.chatapi.fetchWidgetStages(this.tuitionFeesTotal);
     this.spinner = false;
     this.previousPage.emit("firstPage");
     
@@ -565,30 +565,7 @@ export class ChildInformationFormsComponent
       .subscribe();
   }
 
-  async notifyBackendOfLoanRequest(){
-    let childArray:Array<Partial<AChild>>
-    this.destroy[5] = this.store
-      .select(fromStore.getCurrentChildState)
-      .pipe(pluck("child_info"))
-      .subscribe(val => {
-       childArray = Array.from((val as Map<string, Partial<AChild>>).values())});
-      const arrayOfChildId: {id: any, amount: string}[] = childArray.map(element => {
-        return{
-          id: element.child_id || element.id,
-          amount: element.tuition_fees
-        }
-      })
-      const rf = sessionStorage.getItem('repaymentFrequency');
-      const res = await this.chatapi.sendLoanRequest({
-      school_id: this.parentDetails.school_id || 1,
-      guardian_id: this.parentDetails.guardian,
-      loan_amount: this.tuitionFeesTotal as string,
-      child_data: arrayOfChildId,
-      repayment_frequency : rf == 'null' ? '3' : rf
-    });
-    const updatedParents: Partial<Parent> = {...this.parentDetails, loan_request: res.request}
-    this.store.dispatch(new generalActions.addParents(updatedParents));
-  }
+ 
 
   goToBooksPage(event){
     this.previousPage.emit(event);

@@ -50,6 +50,22 @@ export function reducer(
         child_info: mapOfChildren
       };
     }
+
+    case generalActions.updateAChildTwo: {
+      const keyInMapOfChild = action.payload.name;
+      const partOfChildToReplace = action.payload.dataToChange;
+      let mapOfChildren = state.child_info;
+      let childToChange = mapOfChildren.get(keyInMapOfChild);
+      childToChange = {
+        ...childToChange,
+        ...partOfChildToReplace
+      };
+      mapOfChildren.set(keyInMapOfChild, childToChange);
+      return {
+        ...state,
+        child_info: mapOfChildren
+      };
+    }
   }
 
   return state;

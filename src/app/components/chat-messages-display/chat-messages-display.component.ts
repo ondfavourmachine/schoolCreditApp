@@ -28,8 +28,9 @@ import { Router } from "@angular/router";
 import { Store } from "@ngrx/store";
 import * as fromStore from "../../store";
 import { pluck } from "rxjs/operators";
-import { Parent, SchoolDetailsModel } from "src/app/models/data-models";
+import { AChild, Parent, SchoolDetailsModel } from "src/app/models/data-models";
 import { TitleCasePipe } from "@angular/common";
+import { ChildrenState } from "src/app/store/reducers/children.reducer";
 
 
 interface GetBvnResponse {
@@ -153,7 +154,7 @@ export class ChatMessagesDisplayComponent
         // this.respondToUsers(val);
       });
 
-      this.observableToTrash[5] = this.store
+      this.observableToTrash[4] = this.store
       .select(fromStore.getCardTokenState)
       .pipe(pluck('state_of_process'))
       .subscribe((val: string )=> {
@@ -202,7 +203,7 @@ export class ChatMessagesDisplayComponent
         }
       });
 
-      this.observableToTrash[6] = this.store.select(fromStore.getLoanApplicationState)
+      this.observableToTrash[5] = this.store.select(fromStore.getLoanApplicationState)
       .pipe(pluck('loan_application_process'))
       .subscribe((val: string) => {
         // console.log(val);
@@ -445,7 +446,13 @@ export class ChatMessagesDisplayComponent
     });
 
     ul.addEventListener("customGiverResponse", (e: CustomEvent) => {
-      const { reply, message } = e.detail;
+      const { reply, message, callBack } = e.detail;
+
+      if(callBack instanceof Function){
+        const nameOfFunctionHere = callBack()[0];
+        console.log(nameOfFunctionHere);
+          this[nameOfFunctionHere]();
+      }
 
       if (!reply) {
         this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
@@ -468,7 +475,7 @@ export class ChatMessagesDisplayComponent
       if (message == "restart") {
         const string = callBack();
         this[string[0]][string[1]](message);
-      }
+        }
     });
 
     setTimeout(() => {
@@ -598,7 +605,7 @@ export class ChatMessagesDisplayComponent
     // Start observing the target node for configured mutations
     this.obs.observe(ul, this.config);
 
-    this.observableToTrash[4] = this.generalservice.reset$.subscribe(
+    this.observableToTrash[6] = this.generalservice.reset$.subscribe(
       (val: string) => {
         if (val.length < 1) return;
         sessionStorage.removeItem('savedChats');
@@ -1116,6 +1123,51 @@ selectMottoFromSchool(){
       }
     )
   }
+
+  async notifyBackendOfLoanRequest(){
+    let childArray:Array<Partial<AChild>>, parent: Parent, tuitionFeesTotal: number;
+    // get child
+    this.observableToTrash[7] = this.store
+      .select(fromStore.getCurrentChildState)
+      .pipe(pluck("child_info"))
+      .subscribe(val => {
+       childArray = Array.from((val as Map<string, Partial<AChild>>).values())});
+      const arrayOfChildId: {id: any, amount: string}[] = childArray.map(element => {
+        return{
+          id: element.child_id || element.id,
+          amount: element.tuition_fees
+        }
+      })
+      // get parent
+      this.observableToTrash[8] =  this.store
+    .select(fromStore.getCurrentParentInfo)
+    .subscribe(val => {
+      parent = val as Parent;
+    });
+
+    // get tuition
+    this.observableToTrash[9] = this.store
+      .select(fromStore.getCurrentChildState)
+      .subscribe((val: any) => {
+        const { total_tuition_fees } = val as ChildrenState;
+        tuitionFeesTotal = total_tuition_fees;
+      });
+
+      const rf = sessionStorage.getItem('repaymentFrequency');
+      const res = await this.chatservice.sendLoanRequest({
+      school_id: parent.school_id || 1,
+      guardian_id: parent.guardian,
+      loan_amount: tuitionFeesTotal.toString(),
+      child_data: arrayOfChildId,
+      repayment_frequency : rf == 'null' ? '3' : rf
+    });
+    const updatedParents: Partial<Parent> = {...parent, loan_request: res.request}
+    this.store.dispatch(new generalActions.addParents(updatedParents));
+    await this.chatservice.fetchWidgetStages(tuitionFeesTotal.toString());
+  }
+ 
+ 
+
 
   ngOnDestroy() {
     this.observableToTrash.forEach(element => element.unsubscribe());

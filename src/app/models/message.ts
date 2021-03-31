@@ -566,7 +566,8 @@ export class Message {
               "No details are correct.",
               "right"
             )
-          )
+          ),
+          () => ['notifyBackendOfLoanRequest']
         );
       break;
       case "continuetoverification":
@@ -826,10 +827,11 @@ export class Message {
   giverResponsesEvent(
     typeOfEvent: string,
     message: replyGiversOrReceivers,
-    reply?: GiverResponse
+    reply?: GiverResponse,
+    callBack?: Function
   ) {
     const event: Event = new CustomEvent(typeOfEvent, {
-      detail: { message, typeOfEvent, reply },
+      detail: { message, typeOfEvent, reply, callBack },
       bubbles: true
     });
     this.htmlElement.dispatchEvent(event);

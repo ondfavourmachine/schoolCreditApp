@@ -80,10 +80,18 @@ export const addChildrenInfo = "[children] ADD CHILDREN";
 export const calculateChildrenTuitionFees =
   "[children] CalculateChildreenTuition";
 export const updateAChild = "[children] UPDATE CHILD INFO";
+export const updateAChildTwo = "[children] UPDATE CHILD INFO";
 
 export class addAChild implements Action {
   readonly type = addChildrenInfo;
   constructor(public payload: Map<string, Partial<AChild>>) {}
+}
+
+export class updateAllSingleChildInfo implements Action {
+  readonly type = updateAChildTwo;
+  constructor(
+    public payload: { name: string; dataToChange: Partial<AChild> }
+  ) {}
 }
 
 export class calculateFees implements Action {

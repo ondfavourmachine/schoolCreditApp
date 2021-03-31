@@ -150,6 +150,17 @@ export class ChatService {
       .toPromise();
   }
 
+
+  modifyChildData(childId, form: Partial<AChild>): Promise<ChildDataSavedResponse>{
+    const formToSubmit = new FormData();
+    delete form.first_name;
+    delete form.last_name;
+    for (let key in form) {
+      formToSubmit.append(key == "name" ? "full_name" : key, form[key]);
+    }
+    return this.http.post<ChildDataSavedResponse>(`${this.generalUrl}child/${childId}`, formToSubmit).toPromise()
+  }
+
   // ends here
 
   // check if Parent has PIN
@@ -522,6 +533,9 @@ export class ChatService {
     'ondfavourmachine+25@gmail.com', 'ondfavourmachine+3@gmail.com', 'ondfavourmachine+8@gmail.com',
     'ondfavourmachine@gmail.com', "ondfavourmachine+10@gmail.com", 'ondfavourmachine+5@gmail.com']}).toPromise();
   }
+
+
+  
   
 }
 

@@ -168,7 +168,7 @@ export class PictureComponent implements OnInit, OnDestroy, AfterViewInit {
       this.changeUpTheView.emit("done");
     }
     if(this.pictureForUseWhenChildIsTryingToEdit instanceof File){
-      this.childPicture.emit(this.rawFile || this.pictureForUseWhenChildIsTryingToEdit);
+      this.childPicture.emit(this.modifiedFile || this.pictureForUseWhenChildIsTryingToEdit);
     }
     // console.log("nothing to upload!");
   } 
