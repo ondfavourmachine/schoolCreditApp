@@ -438,7 +438,7 @@ export class ChildInformationFormsComponent
       this.generalservice.handleFlowController("");
       // this.generalservice.handleFlowController("make-full-payment");
       this.fullpayment = false;
-      sessionStorage.removeItem("fullpayment");
+     
       setTimeout(() => {
         this.generalservice.nextChatbotReplyToGiver = undefined; 
         // `Are you ready to make payment now?`,
@@ -448,11 +448,11 @@ export class ChildInformationFormsComponent
         //  undefined
         const chatbotResponse = new replyGiversOrReceivers(
           `Thank you for entering your child details, ${this.parentDetails.full_name ||
-            "John Bosco"}, would you like to edit the information of your  you provided?`,
+            "John Bosco"}, would you like to modify the information about your child?`,
           "left",
           "Yes, No continue",
-          "editchildinfo,continuetofinancial",
-          undefined
+          "editchildinfo,makefullpayment",
+          'prevent'
           );
         this.generalservice.responseDisplayNotifier(chatbotResponse);
         this.viewToshow = "";

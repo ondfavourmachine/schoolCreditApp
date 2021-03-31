@@ -491,6 +491,7 @@ export class Message {
           "giver",
           "make-full-payment"
         );
+        sessionStorage.removeItem('listOfChildren');
       break;
       case "fullpayment":
         this.giverResponsesEvent(

@@ -27,6 +27,7 @@ export class EditChildComponent implements OnInit, OnDestroy {
   listOfChildrenParsed: Map<string, Partial<AChild>> = new Map();
   childTobeEdited: Partial<AChild>;
   listOfClassesInSchool: SchoolClass[]= [];
+  userHasMadeLoanRequest: boolean = false;
   parent: Parent;
   currentChildInEdit: string;
   tuitionFeesTotal: number;
@@ -154,6 +155,30 @@ export class EditChildComponent implements OnInit, OnDestroy {
   }
 
   async submitEditedChildToServerAndStore(){
+    if(sessionStorage.getItem("fullpayment")){
+      this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
+        `Thank you. Are you ready to make payment now?`,
+        "left",
+        "Yes I am, I'll do it later, i want to make installmental payments",
+        `makefullpayment,notinterested,changepaymenttype`,
+         'prevent'
+      ); 
+        const chatbotResponse = new replyGiversOrReceivers(
+          `I have edited my child's information.`,
+          "right",
+          );
+        this.generalservice.responseDisplayNotifier(chatbotResponse);
+        this.generalservice.handleFlowController("");
+        sessionStorage.removeItem('fullpayment');
+      return;
+    }
+
+    this.makeLoanRequestAndGetLoanOffers();
+  
+  }
+
+ async  makeLoanRequestAndGetLoanOffers(){
+   this.userHasMadeLoanRequest = true;
     for (let [key, value] of this.listOfChildrenParsed) {
       try {
         await this.chatservice.modifyChildData(value.child_id, value);
@@ -189,8 +214,9 @@ export class EditChildComponent implements OnInit, OnDestroy {
 
 
   userIsDoneEditing(){
-    // console.log(this.listOfChildrenParsed);
-
+    if(!this.userHasMadeLoanRequest){
+      this.makeLoanRequestAndGetLoanOffers();
+    }
     sessionStorage.removeItem('listOfChildren');
     sessionStorage.removeItem('editChild');
     this.generalservice.nextChatbotReplyToGiver = undefined;
