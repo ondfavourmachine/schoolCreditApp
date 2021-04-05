@@ -204,7 +204,7 @@ transition: all 0.4s ease-in-out;
 
 .floating_search_bar input{
     flex-grow: 1;
-    margin: 1px 5px 1px 5px;
+    margin: 1px 10px;
     border: 1px solid rgb(17 65 101 / 0.3);
     border-radius: 20px;
     box-shadow: 0 2px 3px 1px rgb(17 65 101 / 0.1);
@@ -325,4 +325,34 @@ transition: all 0.4s ease-in-out;
     position: unset;
     z-index: 1;
     opacity: 1;
+}
+
+.floating_continue{
+    position: absolute;
+    z-index: 30;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    top: 92vh;
+    align-items: center;
+    background-color: transparent;
+    backdrop-filter: blur(1px);
+   
+}
+
+.floating_continue .more__button{
+    font-weight: bold;
+    background: rgb(10, 38, 59);
+    color: white;
+    padding: 10px 15px;
+    border-radius: 50px;
+    border: 1px solid #0a263b;
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+.noBooks_selected{
+    background: rgba(10, 38, 59, 0.3) !important;
+    border: 1px solid rgba(10, 38, 59, 0.1) !important;
+    pointer-events: none !important;
 }

@@ -21,20 +21,20 @@
             {{ booksSelected.size }} {{ booksSelected.size == 1 ? 'book': 'books' }} selected
         </div> -->
 
-        <div class="small_drop_down">
+        <!-- <div class="small_drop_down">
           <div [style.opacity]="booksSelected.size > 0 ? '1':'0.35'" 
                [style.pointerEvents]="booksSelected.size > 0 ? 'auto': 'none'"
               class="ellipsis"> 
-              <span (click)="calculateTotalCostOfBooks()" class="more__button"> proceed </span>
-              <!-- <span *ngIf="showDropdown" class="sub_menu"> 
+               <span (click)="calculateTotalCostOfBooks()" class="more__button"> proceed </span> 
+               <span *ngIf="showDropdown" class="sub_menu"> 
                 <a (click)="cancelAllSelection()" ><i class="fa fa-times-circle"></i> clear selection</a>  
                 <a (click)="calculateTotalCostOfBooks()" ><i class="fa fa-plus-circle"></i> Add selected </a> 
                 <a (click)="clickSelectAll('inputForSelectAllBooks', $event)" ><i class="fa fa-plus-circle"></i> Select all </a> 
                 <a (click)="calculateTotalCostOfBooks()" ><i class="fa fa-arrow-right"></i> Proceed </a> 
-              </span> -->
+              </span> 
         </div>
             
-        </div>
+        </div> -->
     </div>
   
     <div [class.justify-center]="booksToDisplay.length > 2" class="ui grid " 
@@ -80,7 +80,12 @@
     </div>
 
   
-
+    <div class="floating_continue">
+       <span (click)="calculateTotalCostOfBooks()" 
+         style="padding-right: 5px;"
+         [class.noBooks_selected]="booksSelected.size == 0"
+          class="more__button "> Continue  <i class="fa fa-paper-plane mr-2"></i>  </span>
+    </div>
    
 </div>
 
