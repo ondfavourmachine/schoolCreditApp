@@ -174,7 +174,7 @@ export class ChatMessagesDisplayComponent
                   const pulsingLoader = document.querySelectorAll('.processing_tokenized_card');
                   // console.log(pulsingLoader);
                   // get its parent div
-                  const parentElement: HTMLElement = pulsingLoader[pulsingLoader.length - 1].closest('div.chat-box__wrapper');
+                  const parentElement: HTMLElement = pulsingLoader[pulsingLoader.length - 1].closest('div.chat-box__wrapper') as HTMLElement;
                   // remove it now
                   this.removeElement(this.messagePlaceHolder.nativeElement, parentElement);
                   this.removeProcessingFromSavedChats();
@@ -212,7 +212,7 @@ export class ChatMessagesDisplayComponent
           const pulsingLoader = document.querySelectorAll('.truncated_loan_process');
           // console.log(pulsingLoader);
           // get its parent div
-          const parentElement: HTMLElement = pulsingLoader[pulsingLoader.length - 1].closest('div.chat-box__wrapper');
+          const parentElement: HTMLElement = pulsingLoader[pulsingLoader.length - 1].closest('div.chat-box__wrapper') as HTMLElement;
           // remove it now
           this.removeElement(this.messagePlaceHolder.nativeElement, parentElement);
           this.removeProcessingFromSavedChats('incomplete loan application');
@@ -611,6 +611,9 @@ export class ChatMessagesDisplayComponent
         sessionStorage.removeItem('savedChats');
         ul.innerHTML = "";
         this.generateWelcomeMsgForReceiverOrGiver(ul);
+        sessionStorage.removeItem('editChild');
+        sessionStorage.removeItem('listOfChildren');
+        // sessionStorage.removeItem(\)
         this.store.dispatch(new generalActions.editParentInfo(false))
       }
     );
@@ -1087,7 +1090,7 @@ selectMottoFromSchool(){
         // get widget stages
         // update the store
         const pulsingLoader = document.querySelectorAll('.changing_to_installmental');
-        const parentElement: HTMLElement = pulsingLoader[pulsingLoader.length - 1].closest('div.chat-box__wrapper');
+        const parentElement: HTMLElement = pulsingLoader[pulsingLoader.length - 1].closest('div.chat-box__wrapper') as HTMLElement;
         this.removeElement(this.messagePlaceHolder.nativeElement, parentElement);
         this.removeProcessingFromSavedChats('we change your request to installmental');
         this.generalservice.nextChatbotReplyToGiver = undefined;
@@ -1106,7 +1109,7 @@ selectMottoFromSchool(){
     ).catch(
       err => {
         const pulsingLoader = document.querySelectorAll('.changing_to_installmental');
-        const parentElement: HTMLElement = pulsingLoader[pulsingLoader.length - 1].closest('div.chat-box__wrapper');
+        const parentElement: HTMLElement = pulsingLoader[pulsingLoader.length - 1].closest('div.chat-box__wrapper') as HTMLElement;
         this.removeElement(this.messagePlaceHolder.nativeElement, parentElement);
         this.removeProcessingFromSavedChats('we change your request to installmental');
         this.generalservice.nextChatbotReplyToGiver = undefined;

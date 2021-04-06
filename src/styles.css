@@ -394,7 +394,7 @@ template {
 
 .btnSend[type="submit"] {
   /* background: #2185d0; */
-  background: #114165;
+  background: rgb(10, 38, 59, 0.85);
   position: relative;
   width: 50px;
   height: 50px;
@@ -452,7 +452,8 @@ template {
 }
 
 .chat-box__text-wrapper {
-  background: #afddff;
+  /* background: #afddff; */
+  background: rgb(10, 38, 59, 0.85);
   padding: 0.6rem 1rem;
   /* box-shadow: 0px 4px 29px rgba(0, 0, 0, 0.04), 3px 4px 9px rgba(0, 0, 0, 0.1); */
   font-size: 0.9rem;
@@ -460,7 +461,7 @@ template {
   display: inline-block;
   width: 100%;
   line-height: 1.2rem;
-  color: #333;
+  color: white;
   animation: scaleUp 300ms ease;
   transform-origin: right;
 }
@@ -491,21 +492,21 @@ template {
 .chat-box__wrapper.left .btn {
   color: #fff;
   background-color: transparent;
-  border: 1px solid #2185d0;
-  color: #2185d0;
+  border: 1px solid #0a263b;
+  color: #0a263b;
   margin-bottom: 5px;
 }
 
 .button-container .btn:first-child {
   margin-right: 10px;
-  background: #afddff;
+  background: rgb(10, 38, 59, 0.85);
   border: 0;
-  color: #333;
+  color: white;
 }
 
 .chat-box__wrapper.left .chat-box__text-wrapper {
   background-color: #fff;
-  color: #495057;
+  color: #0a263b;
   position: relative;
   margin-left: 11px;
   box-shadow: 3px 3px 19px rgba(0, 0, 0, 0.25);
@@ -552,7 +553,7 @@ template {
   height: 0;
   border-top: 10px solid transparent;
   border-bottom: 10px solid transparent;
-  border-right: 10px solid #afddff;
+  border-right: 10px solid rgb(10, 38, 59, 0.85);
   position: absolute;
   top: 0.7rem;
   right: -8px;
@@ -1405,7 +1406,7 @@ textarea {
   bottom: 8px;
   right: 8px;
   font-size: 0.6rem;
-  color: #2a9a0d;
+  color: white;
 }
 
 .font-weight-bold {
@@ -1643,7 +1644,6 @@ button.toast-close-button {
 
 /* ngx toaster css ends here */
 
-
 .fakeButton {
   position: absolute;
   top: 2%;
@@ -1666,10 +1666,7 @@ button.toast-close-button {
   cursor: pointer;
 }
 
-
-
-
- /* flashing dots */
+/* flashing dots */
 .dot-pulse {
   position: relative;
   left: -9999px;
@@ -1680,11 +1677,12 @@ button.toast-close-button {
   color: #9880ff;
   box-shadow: 9999px 0 0 -5px #9880ff;
   animation: dotPulse 1.5s infinite linear;
-  animation-delay: .25s;
+  animation-delay: 0.25s;
 }
 
-.dot-pulse::before, .dot-pulse::after {
-  content: '';
+.dot-pulse::before,
+.dot-pulse::after {
+  content: "";
   display: inline-block;
   position: absolute;
   top: 0;
@@ -1704,7 +1702,7 @@ button.toast-close-button {
 .dot-pulse::after {
   box-shadow: 10014px 0 0 -5px #9880ff;
   animation: dotPulseAfter 1.5s infinite linear;
-  animation-delay: .5s;
+  animation-delay: 0.5s;
 }
 
 @keyframes dotPulseBefore {
@@ -1747,5 +1745,3 @@ button.toast-close-button {
 }
 
 /* flashing dots ends here */
-
-

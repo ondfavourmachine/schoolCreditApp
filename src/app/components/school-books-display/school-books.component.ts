@@ -17,6 +17,7 @@ import { SchoolBook } from "src/app/models/data-models";
     @Output("previousPageInSchool") previousPageInSchool = new EventEmitter<{}>();
     @Output("selectionComplete") selectionComplete = new EventEmitter<SchoolBook[]>();
     @Output('goback') goback = new EventEmitter<string>();
+    @Output('skip') skip = new EventEmitter<string>();
     @Input() nextOrPrev: Object = {};
     destroy: Subscription[] = [];
     selected: string = '';
@@ -152,6 +153,10 @@ import { SchoolBook } from "src/app/models/data-models";
         this.goback.emit('select-books');
        
         this.selectionComplete.emit(books);
+    }
+
+    skippingThisSection(){
+        this.skip.emit('skip')
     }
 
     ngOnDestroy(){

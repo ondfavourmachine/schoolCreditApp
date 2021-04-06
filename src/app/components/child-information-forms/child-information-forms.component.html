@@ -206,7 +206,6 @@
     (childPicture)="saveChildPictureFromPictureComp($event)"
     (changeUpTheView)="showBookSelectionPage()"
   ></app-picture>
- 
 </div>
 
 <div style="margin-top: 30px;" *ngIf="viewToshow == 'select-books'">
@@ -214,7 +213,7 @@
    (goback)="goToBooksPage($event)"
    (previousPageInSchool)="schoolBookPages = $event"
    [nextOrPrev]="schoolBookPages"
-   
+   (skip)="parentSkippedBooksSelection()"
    (selectionComplete)="childBooksHasBeenAdded($event)"></app-school-books>
 </div>
 

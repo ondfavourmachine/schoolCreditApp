@@ -13,7 +13,13 @@ import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { StoreService } from "src/app/services/mockstore/store.service";
 import { GeneralService } from "src/app/services/generalService/general.service";
 import { replyGiversOrReceivers } from "src/app/models/GiverResponse";
-import { AChild, Parent, SchoolBook, SchoolBookStructure, SchoolClass } from "src/app/models/data-models";
+import {
+  AChild,
+  Parent,
+  SchoolBook,
+  SchoolBookStructure,
+  SchoolClass
+} from "src/app/models/data-models";
 import { Subscription } from "rxjs";
 import { Store } from "@ngrx/store";
 // import { pluck } from "rxjs/operators";
@@ -32,15 +38,16 @@ export class ChildInformationFormsComponent
   implements OnInit, AfterViewInit, OnDestroy {
   @Output("previousPage") previousPage = new EventEmitter<string>();
   @Input("back") back: any;
-  @ViewChild('inputForTuition') inputForTuition: ElementRef
-  schoolID: string
+  @ViewChild("inputForTuition") inputForTuition: ElementRef;
+  schoolID: string;
   viewToshow:
     | ""
     | "selectChildren"
     | "enterInformation"
     | "modifyOrNot"
     | "summary"
-    | "upload-image" | 'select-books' = "";
+    | "upload-image"
+    | "select-books" = "";
   pageViews: string[] = [
     "",
     "selectChildren",
@@ -66,7 +73,7 @@ export class ChildInformationFormsComponent
   fullpayment: boolean;
   numberOfSchoolBooks: number = 0;
   totalCostOfSchoolBooks: number = 0;
-  parentDetails: Partial<Parent>
+  parentDetails: Partial<Parent>;
   schoolClasses: SchoolClass[] = [];
   schoolBookPages: any;
   constructor(
@@ -80,45 +87,54 @@ export class ChildInformationFormsComponent
   }
 
   manageGoingBackAndForth() {
- 
-    if(typeof this.schoolBookPages == 'object' && this.schoolBookPages.hasOwnProperty('pageToShow')){
-     return;
+    if (
+      typeof this.schoolBookPages == "object" &&
+      this.schoolBookPages.hasOwnProperty("pageToShow")
+    ) {
+      return;
     }
-    if (this.viewToshow == this.back) { 
+    if (this.viewToshow == this.back) {
       const num = this.pageViews.indexOf(this.back);
       const ans = this.pageViews[num - 1];
-      this.generalservice.handleSmartViewLoading({component: 'child-information-forms', info: 'childForms'})
+      this.generalservice.handleSmartViewLoading({
+        component: "child-information-forms",
+        info: "childForms"
+      });
       this.viewToshow = ans as any;
-      if(ans == ''){
+      if (ans == "") {
         this.previousPage.emit("firstPage");
         return;
       }
       // ans == "" ?  : "";
       let secondNum = this.pageViews.indexOf(ans);
       this.back = this.pageViews[secondNum - 1];
-      this.back == 'upload-image' ? this.schoolBookPages = undefined : '';
+      this.back == "upload-image" ? (this.schoolBookPages = undefined) : "";
       return;
     }
     if (this.back == "") {
       this.viewToshow = "";
       this.previousPage.emit("firstPage");
       this.selected = undefined;
-      this.generalservice.handleSmartViewLoading({component: 'child-information-forms', info: 'childForms'})
+      this.generalservice.handleSmartViewLoading({
+        component: "child-information-forms",
+        info: "childForms"
+      });
       this.mapOfChildrensInfo = new Map();
-      
     } else {
-      this.back == 'upload-image' ? this.schoolBookPages = undefined : '';
-      this.generalservice.handleSmartViewLoading({component: 'child-information-forms', info: 'childForms'})
+      this.back == "upload-image" ? (this.schoolBookPages = undefined) : "";
+      this.generalservice.handleSmartViewLoading({
+        component: "child-information-forms",
+        info: "childForms"
+      });
       this.viewToshow = this.back;
-      
     }
   }
 
   ngOnInit(): void {
-    this.previousPage.emit('firstPage');
+    this.previousPage.emit("firstPage");
     this.childInfoForm = this.fb.group({
       first_name: ["", Validators.required],
-      last_name: ['', Validators.required],
+      last_name: ["", Validators.required],
       class: ["", Validators.required],
       tuition_fees: ["", Validators.required]
     });
@@ -135,7 +151,7 @@ export class ChildInformationFormsComponent
       .subscribe(val => {
         const { guardian } = val as Parent;
         this.guardianID = guardian;
-        sessionStorage.setItem('guardian', this.guardianID)
+        sessionStorage.setItem("guardian", this.guardianID);
       });
 
     this.destroy[2] = this.store
@@ -154,49 +170,53 @@ export class ChildInformationFormsComponent
         this.parentDetails = val as Parent;
       });
 
-
-
     this.fullpayment = JSON.parse(sessionStorage.getItem("fullpayment"));
-    this.destroy[4]= this.store.select(fromStore.getSchoolDetailsState)
-    .pipe(tap(val => {
-      this.schoolID = val['school_Info'].id;
-    }),  pluck('school_books')).subscribe((val: SchoolBook[]) => {
-      // console.log(val);
-      (val as Array<any>).length > 0 ? this.numberOfSchoolBooks = val.length : this.numberOfSchoolBooks = 0;
-    })
+    this.destroy[4] = this.store
+      .select(fromStore.getSchoolDetailsState)
+      .pipe(
+        tap(val => {
+          this.schoolID = val["school_Info"].id;
+        }),
+        pluck("school_books")
+      )
+      .subscribe((val: SchoolBook[]) => {
+        // console.log(val);
+        (val as Array<any>).length > 0
+          ? (this.numberOfSchoolBooks = val.length)
+          : (this.numberOfSchoolBooks = 0);
+      });
 
-    this.destroy[6] = this.store.select(fromStore.getSchoolDetailsState)
-    .pipe(pluck('school_Info', 'classes'))
-    .subscribe((val: Array<SchoolClass>) => this.schoolClasses = val);
+    this.destroy[6] = this.store
+      .select(fromStore.getSchoolDetailsState)
+      .pipe(pluck("school_Info", "classes"))
+      .subscribe((val: Array<SchoolClass>) => (this.schoolClasses = val));
 
-  //  reset everything in this component;
-    this.destroy[7] = this.generalservice.reset$.subscribe(
-      (val: string) => {
-        if (val.length < 1) return;
-        this.childInfoForm.reset();
-        this.fullpayment = false;
-        sessionStorage.removeItem("fullpayment");
-        this.viewToshow = '';
-        this.previousPage.emit("firstPage");
-        this.selected = "";
-        this.selectedChildren = [];
-        this.mapOfChildrensInfo = new Map();
-        this.currentChild = undefined;
-        this.tuitionFeesTotal = undefined;
-        this.guardianID = undefined;
-        this.childPicture = undefined;
-        this.base64FormOfPicture = undefined;
-        this.iterator = undefined;
-        this.numberOfSchoolBooks = 0;
-        this.totalCostOfSchoolBooks = 0;
-        this.parentDetails = undefined;
-        this.schoolClasses = [];
-        this.generalservice.nextChatbotReplyToGiver = undefined;
-        this.generalservice.nextChatbotReplyToReceiver = undefined;
-        sessionStorage.removeItem('school_avatar');
-        sessionStorage.removeItem('childPicture');
-      }
-    )
+    //  reset everything in this component;
+    this.destroy[7] = this.generalservice.reset$.subscribe((val: string) => {
+      if (val.length < 1) return;
+      this.childInfoForm.reset();
+      this.fullpayment = false;
+      sessionStorage.removeItem("fullpayment");
+      this.viewToshow = "";
+      this.previousPage.emit("firstPage");
+      this.selected = "";
+      this.selectedChildren = [];
+      this.mapOfChildrensInfo = new Map();
+      this.currentChild = undefined;
+      this.tuitionFeesTotal = undefined;
+      this.guardianID = undefined;
+      this.childPicture = undefined;
+      this.base64FormOfPicture = undefined;
+      this.iterator = undefined;
+      this.numberOfSchoolBooks = 0;
+      this.totalCostOfSchoolBooks = 0;
+      this.parentDetails = undefined;
+      this.schoolClasses = [];
+      this.generalservice.nextChatbotReplyToGiver = undefined;
+      this.generalservice.nextChatbotReplyToReceiver = undefined;
+      sessionStorage.removeItem("school_avatar");
+      sessionStorage.removeItem("childPicture");
+    });
   }
 
   ngAfterViewInit() {
@@ -218,17 +238,16 @@ export class ChildInformationFormsComponent
         (document.querySelector(
           ".modified-img"
         ) as HTMLImageElement).src = `${anevent.target["result"]}`;
-        this.base64FormOfPicture = anevent.target.result;
+        this.base64FormOfPicture = anevent.target["result"];
       };
       reader.readAsDataURL(event.target["files"][0]);
     }
   }
 
-  saveChildPictureFromPictureComp(event: File){
+  saveChildPictureFromPictureComp(event: File) {
     this.childPicture = event;
   }
 
- 
   selectThis(event: Event) {
     // debugger;
     let guardianID;
@@ -245,18 +264,18 @@ export class ChildInformationFormsComponent
       : "";
 
     guardianID = this.fetchGuardianId();
-    
+
     this.chatapi
       .updateChildrenCount({
-        guardian: guardianID || sessionStorage.getItem('guardian'),
+        guardian: guardianID || sessionStorage.getItem("guardian"),
         children_count: p.textContent != "3+" ? parseInt(p.textContent) : 4
       })
       .subscribe();
-      // console.log(this.selectedChildren);
-      this.startEnteringChildInfo();
+    // console.log(this.selectedChildren);
+    this.startEnteringChildInfo();
   }
 
-  fetchGuardianId(): any{
+  fetchGuardianId(): any {
     let guardianID;
     const toBeDestroyed: Subscription = this.store
       .select(fromStore.getCurrentParentInfo)
@@ -264,7 +283,7 @@ export class ChildInformationFormsComponent
         const { guardian } = val as Parent;
         guardianID = guardian;
       });
-    toBeDestroyed.unsubscribe()
+    toBeDestroyed.unsubscribe();
     return guardianID;
   }
 
@@ -292,23 +311,24 @@ export class ChildInformationFormsComponent
     this.previousPage.emit("selectChildren");
   }
 
- 
-
   moveToNextChildOrNot(schoolBooks?: Array<SchoolBook>) {
     this.spinner = true;
-    let recalibrated = this.childInfoForm.value.tuition_fees.split(',').join('');
+    let recalibrated = this.childInfoForm.value.tuition_fees
+      .split(",")
+      .join("");
     this.childInfoForm.value.tuition_fees = recalibrated;
     let value: Partial<AChild> = { ...this.childInfoForm.value };
-    const objectHoldingIndex = this.mapOfChildrensInfo.get(this.currentChild ? this.currentChild : this.previous);
+    const objectHoldingIndex = this.mapOfChildrensInfo.get(
+      this.currentChild ? this.currentChild : this.previous
+    );
     value = {
       ...value,
       full_name: `${value.first_name} ${value.last_name}`,
       picture: this.childPicture,
       index: objectHoldingIndex.index,
-      child_book : schoolBooks ? schoolBooks : [],
+      child_book: schoolBooks ? schoolBooks : [],
       total_cost_of_books: objectHoldingIndex.total_cost_of_books
     };
-    // console.log(value);
     this.mapOfChildrensInfo.set(this.currentChild, value);
     if (this.mockstore.childrenInformationSubmittedByParent.length < 1) {
       this.mockstore.childrenInformationSubmittedByParent.push(
@@ -370,7 +390,7 @@ export class ChildInformationFormsComponent
     }
     this.viewToshow = "enterInformation";
     this.childInfoForm.reset();
-    this.base64FormOfPicture = '';
+    this.base64FormOfPicture = "";
   }
 
   async doneAddingChildren() {
@@ -378,17 +398,20 @@ export class ChildInformationFormsComponent
     this.store.dispatch(new generalActions.addAChild(this.mapOfChildrensInfo));
     this.store.dispatch(new generalActions.calculateFees());
     // this will be removed later
-    const stringToStore = JSON.stringify(this.mapOfChildrensInfo, this.replacer);
-    sessionStorage.setItem('listOfChildren', stringToStore);
+    const stringToStore = JSON.stringify(
+      this.mapOfChildrensInfo,
+      this.replacer
+    );
+    sessionStorage.setItem("listOfChildren", stringToStore);
     // dont forget to remove the above code!
     for (let [key, value] of this.mapOfChildrensInfo) {
       let formToSubmit = Object.assign({}, value);
       delete formToSubmit.first_name;
-      delete formToSubmit.last_name
+      delete formToSubmit.last_name;
       try {
         const res = await this.chatapi.saveChildData(
           formToSubmit,
-          this.guardianID || sessionStorage.getItem('guardian'),
+          this.guardianID || sessionStorage.getItem("guardian"),
           this.schoolID
         );
         const { child } = res;
@@ -408,14 +431,17 @@ export class ChildInformationFormsComponent
     let total = 0;
     this.mapOfChildrensInfo.forEach((element, key, map) => {
       total += element.total_cost_of_books;
-    })
+    });
     this.totalCostOfSchoolBooks = isNaN(total) ? 0 : total;
     // console.log(this.tuitionFeesTotal);
     // console.log(this.totalCostOfSchoolBooks);
     // console.log(this.totalCostOfSchoolBooks + this.tuitionFeesTotal);
 
     if (this.fullpayment) {
-      await this.chatapi.registerParentForFullPayment({guardian_id: this.parentDetails.guardian, payment_type: 2})
+      await this.chatapi.registerParentForFullPayment({
+        guardian_id: this.parentDetails.guardian,
+        payment_type: 2
+      });
       const responseFromParent = new replyGiversOrReceivers(
         `I have provided my ${
           this.mapOfChildrensInfo.size == 1
@@ -438,22 +464,23 @@ export class ChildInformationFormsComponent
       this.generalservice.handleFlowController("");
       // this.generalservice.handleFlowController("make-full-payment");
       this.fullpayment = false;
-     
+
       setTimeout(() => {
-        this.generalservice.nextChatbotReplyToGiver = undefined; 
+        this.generalservice.nextChatbotReplyToGiver = undefined;
         // `Are you ready to make payment now?`,
         // "left",
         // "Yes I am, I'll do it later, i want to make installmental payments",
         // `makefullpayment,notinterested,changepaymenttype`,
         //  undefined
         const chatbotResponse = new replyGiversOrReceivers(
-          `Thank you for entering your child details, ${this.parentDetails.full_name ||
+          `Thank you for entering your child details, ${this.parentDetails
+            .full_name ||
             "John Bosco"}, would you like to modify the information about your child?`,
           "left",
           "Yes, No continue",
           "editchildinfo,makefullpayment",
-          'prevent'
-          );
+          "prevent"
+        );
         this.generalservice.responseDisplayNotifier(chatbotResponse);
         this.viewToshow = "";
         this.previousPage.emit("firstPage");
@@ -462,11 +489,11 @@ export class ChildInformationFormsComponent
       return;
     }
 
-      // this.notifyBackendOfLoanRequest();
+    // this.notifyBackendOfLoanRequest();
     // await this.chatapi.fetchWidgetStages(this.tuitionFeesTotal);
     this.spinner = false;
     this.previousPage.emit("firstPage");
-    
+
     this.generalservice.handleFlowController("");
     const responseFromParent = new replyGiversOrReceivers(
       `I have provided my ${
@@ -481,13 +508,15 @@ export class ChildInformationFormsComponent
       `Summary :
        You entered a total of ₦${new Intl.NumberFormat().format(
          this.tuitionFeesTotal + this.totalCostOfSchoolBooks
-       )} which includes cost of school fees ${this.totalCostOfSchoolBooks > 0 ? ' and books': ''}.
+       )} which includes cost of school fees ${
+        this.totalCostOfSchoolBooks > 0 ? " and books" : ""
+      }.
        Number of Children: ${this.mapOfChildrensInfo.size}`,
       "left",
       "",
       ``
     );
-        sessionStorage.setItem('editChild', 'true');  
+    sessionStorage.setItem("editChild", "true");
     this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
     this.generalservice.responseDisplayNotifier(responseFromParent);
     setTimeout(() => {
@@ -500,7 +529,7 @@ export class ChildInformationFormsComponent
       // );
       this.generalservice.nextChatbotReplyToGiver = undefined;
       const chatbotResponse = new replyGiversOrReceivers(
-        `Thank you ${this.parentDetails.full_name || 'John Bosco'}. 
+        `Thank you ${this.parentDetails.full_name || "John Bosco"}. 
           Would like to edit or modify ${
             this.mapOfChildrensInfo.size == 1
               ? "your child's information"
@@ -509,7 +538,7 @@ export class ChildInformationFormsComponent
         "left",
         "Yes please, No details are correct",
         `editchildinfo,continuetofinancialinstitution`,
-        'prevent'
+        "prevent"
       );
       // this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
       //       `Are you ready to be connected to a financial institution?`,
@@ -524,69 +553,80 @@ export class ChildInformationFormsComponent
     }, 800);
   }
 
-  showBookSelectionPage(){
-    if(this.numberOfSchoolBooks > 0){
-      this.generalservice.handleSmartViewLoading({component : 'school-books', info: 'schoolBooks'});
-      this.viewToshow = 'select-books'
+  showBookSelectionPage() {
+    if (this.numberOfSchoolBooks > 0) {
+      this.generalservice.handleSmartViewLoading({
+        component: "school-books",
+        info: "schoolBooks"
+      });
+      this.viewToshow = "select-books";
+    } else {
+      this.moveToNextChildOrNot();
     }
-    else {this.moveToNextChildOrNot()};
     this.previousPage.emit("upload-image");
   }
 
-  childBooksHasBeenAdded(event: Array<SchoolBook>){
-    this.mapOfChildrensInfo.get(this.currentChild ? this.currentChild: this.previous).total_cost_of_books = 0;
+  childBooksHasBeenAdded(event: Array<SchoolBook>) {
+    this.mapOfChildrensInfo.get(
+      this.currentChild ? this.currentChild : this.previous
+    ).total_cost_of_books = 0;
     let total = 0;
-    total = event.reduce((acc, book, index, arr)=> {
-      let tuition = book.price.split('.')[0]
+    total = event.reduce((acc, book, index, arr) => {
+      let tuition = book.price.split(".")[0];
       acc += parseInt(tuition);
       return acc;
-    }, total)
+    }, total);
     // console.log(total);
-    this.mapOfChildrensInfo.get(this.currentChild ? this.currentChild : this.previous).total_cost_of_books+= total;
-    this.generalservice.handleSmartViewLoading({component: 'child-information-forms', info: 'childForms'});
+    this.mapOfChildrensInfo.get(
+      this.currentChild ? this.currentChild : this.previous
+    ).total_cost_of_books += total;
+    this.generalservice.handleSmartViewLoading({
+      component: "child-information-forms",
+      info: "childForms"
+    });
     this.moveToNextChildOrNot(event);
   }
 
-  parentWantsToAddMoreChildren(){
+  parentWantsToAddMoreChildren() {
     let newNumberOfChildren = this.mapOfChildrensInfo.size;
-    newNumberOfChildren = newNumberOfChildren + 1
+    newNumberOfChildren = newNumberOfChildren + 1;
     const word = this.generalservice.fetchWordForNumber(newNumberOfChildren);
     this.mapOfChildrensInfo.set(word, { index: newNumberOfChildren });
     this.currentChild = word;
     const guardianID = this.fetchGuardianId();
     this.childInfoForm.reset();
-    this.base64FormOfPicture = '';
+    this.base64FormOfPicture = "";
     this.viewToshow = "enterInformation";
     this.chatapi
       .updateChildrenCount({
-        guardian: guardianID || sessionStorage.getItem('guardian'),
+        guardian: guardianID || sessionStorage.getItem("guardian"),
         children_count: newNumberOfChildren
       })
       .subscribe();
   }
 
- 
-
-  goToBooksPage(event){
+  goToBooksPage(event) {
     this.previousPage.emit(event);
   }
 
-
   replacer(key, value) {
-    if(value instanceof Map) {
+    if (value instanceof Map) {
       return {
-        dataType: 'Map',
-        value: Array.from(value.entries()), // or with spread: value: [...value]
+        dataType: "Map",
+        value: Array.from(value.entries()) // or with spread: value: [...value]
       };
     } else {
       return value;
     }
   }
-  
 
-  
-
-
+  parentSkippedBooksSelection() {
+    this.generalservice.handleSmartViewLoading({
+      component: "child-information-forms",
+      info: "childForms"
+    });
+    this.moveToNextChildOrNot();
+  }
 
   ngOnDestroy() {
     this.destroy.forEach(element => element.unsubscribe());
@@ -595,7 +635,7 @@ export class ChildInformationFormsComponent
     document
       .getElementById("backspace")
       .removeEventListener("click", this.manageGoingBackAndForth);
-      sessionStorage.removeItem('childPicture');
-      sessionStorage.removeItem('parentPicture');
+    sessionStorage.removeItem("childPicture");
+    sessionStorage.removeItem("parentPicture");
   }
 }

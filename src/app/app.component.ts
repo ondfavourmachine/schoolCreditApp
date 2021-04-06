@@ -18,7 +18,7 @@ import { Store } from "@ngrx/store";
 interface observableAggregator {
   flowControl?: Subscription;
   intermediateResponse?: Subscription;
-  smartView?: Subscription
+  smartView?: Subscription;
 }
 @Component({
   selector: "app-root",
@@ -43,16 +43,7 @@ export class AppComponent
     public generalservice: GeneralService,
     private store: Store,
     private cd: ChangeDetectorRef
-  ) {
-    // router.events.subscribe(val => {
-    //   if (val instanceof NavigationStart) {
-    //     const { url } = val;
-    //     generalservice.receiver = url.substring(1, url.length);
-    //     // this.welcomeMsgCtrl(url);
-    //     console.log(this.generalservice.receiver);
-    //   }
-    // });
-  }
+  ) {}
 
   setPageToGoBackTo(event) {
     //  console.log(event);
@@ -73,7 +64,7 @@ export class AppComponent
         // String(val)
         // verify-parent-data
         // sessionStorage.getItem('editChild') ? 'edit-child-information' : 'child-information-forms';
-        this.generalservice.flowControlHolder =  String(val);
+        this.generalservice.flowControlHolder = String(val);
         if (String(val).length < 1) {
           this.switchOfModal();
           return;
@@ -103,19 +94,20 @@ export class AppComponent
               .toLowerCase()
               .includes(val.component)
           ) {
-          
             this.changeStyles = true;
           }
 
-          if(val.info.includes('schoolBooks') || val.component == 'school-books' ){
+          if (
+            val.info.includes("schoolBooks") ||
+            val.component == "school-books"
+          ) {
             this.changeStyles = true;
-          }else{
+          } else {
             this.changeStyles = false;
           }
-        } 
-        
+        }
       }
-    )
+    );
   }
 
   ngAfterContentChecked() {
@@ -258,32 +250,33 @@ export class AppComponent
         this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
         chatbotResponse = new replyGiversOrReceivers(
           `Please wait while we process your loan application....`,
-            `left`,
-            "anything,nothing", // please these buttons are completely useless and will not be presented in the dom
-            "anything,nothing",
-            undefined,
-            { classes: ["truncated_loan_process"] }
+          `left`,
+          "anything,nothing", // please these buttons are completely useless and will not be presented in the dom
+          "anything,nothing",
+          undefined,
+          { classes: ["truncated_loan_process"] }
         );
-        this.store.dispatch(new generalActions.checkLoanProcess('failed'));
+        this.store.dispatch(new generalActions.checkLoanProcess("failed"));
         this.generalservice.responseDisplayNotifier(chatbotResponse);
-        
-      break;
+
+        break;
       case "parent-account-form":
-       
         // if( document.getElementById('divforIframe')){
         this.generalservice.nextChatbotReplyToGiver = undefined;
         this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
         chatbotResponse = new replyGiversOrReceivers(
           `Please wait while we process your card details....`,
-            `left`,
-            "anything,nothing", // please these buttons are completely useless and will not be presented in the dom
-            "anything,nothing",
-            undefined,
-            { classes: ["processing_tokenized_card"] }
+          `left`,
+          "anything,nothing", // please these buttons are completely useless and will not be presented in the dom
+          "anything,nothing",
+          undefined,
+          { classes: ["processing_tokenized_card"] }
         );
-     
+
         this.generalservice.responseDisplayNotifier(chatbotResponse);
-        this.store.dispatch(new generalActions.checkTokenizeProcess('checking'));
+        this.store.dispatch(
+          new generalActions.checkTokenizeProcess("checking")
+        );
         // }
         break;
     }

@@ -35,7 +35,9 @@
     Let's meet you
   </h1>
 
-  <app-profile-form (changeUpTheViewThree)="changeToPhone($event)"></app-profile-form>
+  <app-profile-form
+    (changeUpTheViewThree)="changeToPhone($event)"
+  ></app-profile-form>
 </div>
 
 <!-- <div
@@ -92,7 +94,7 @@
   </h1>
 
   <app-picture
-     [fromWhere]=" "
+    [fromWhere]=""
     (startSpinner)="spinner = $event"
     (changeUpTheView)="change()"
     (updateLastPage)="previousPage.emit('address')"
@@ -167,6 +169,7 @@
           <option value="" selected>Select state...</option>
           <option
             [value]="nigerianstate.id"
+            s
             *ngFor="let nigerianstate of NigerianStates; index as i"
           >
             {{ nigerianstate.value }}
@@ -179,17 +182,14 @@
         <select
           style="height: auto;"
           class="ui fluid search dropdown"
-          name="lga"
+          name="localGovtArea"s
           [(ngModel)]="localGovtArea"
         >
-          <option value="" selected>Select Local Govt Area...</option>
           <option [value]="lga.id" *ngFor="let lga of stateLgas; index as i">
             {{ lga.value }}
           </option>
         </select>
       </div>
-
-
     </div>
     <!-- (click)="view = 'state'" -->
     <div class="text-center mt-4">
@@ -295,30 +295,51 @@
           pattern="[0-9]{11}"
           placeholder="Eg: 09093345678"
         />
-   <!--  [class.checkUnique] ="checkingUniqueness == 'checking' ? 'visible': 'hidden'" -->
-        <small class="positioned-absolute checkUnique" 
-           style="top: 35px; left: 88%; border: none">  
-          <i [style.display]="checkingUniqueness == 'checking' ? 'inline-block': 'none'" 
-             class="fa fa-circle-notch fa-spin">
-            </i>
-          <i class="fas fa-check"
+        <!--  [class.checkUnique] ="checkingUniqueness == 'checking' ? 'visible': 'hidden'" -->
+        <small
+          class="positioned-absolute checkUnique"
+          style="top: 35px; left: 88%; border: none"
+        >
+          <i
+            [style.display]="
+              checkingUniqueness == 'checking' ? 'inline-block' : 'none'
+            "
+            class="fa fa-circle-notch fa-spin"
+          >
+          </i>
+          <i
+            class="fas fa-check"
             style="color: green"
-           [style.display]="checkingUniqueness == 'unique' ? 'inline-block': 'none'">
-          </i> 
-            <i class="fas fa-times"
-              style="color: red"
-            [style.display]="checkingUniqueness == 'not-unique' ? 'inline-block': 'none'"
-            ></i> 
+            [style.display]="
+              checkingUniqueness == 'unique' ? 'inline-block' : 'none'
+            "
+          >
+          </i>
+          <i
+            class="fas fa-times"
+            style="color: red"
+            [style.display]="
+              checkingUniqueness == 'not-unique' ? 'inline-block' : 'none'
+            "
+          ></i>
         </small>
 
         <small
           class="warning"
-          [style.display]="phone.touched && !phone.valid && !phoneField?.errors?.phoneExists ? 'block' : 'none'"
+          [style.display]="
+            phone.touched && !phone.valid && !phoneField?.errors?.phoneExists
+              ? 'block'
+              : 'none'
+          "
         >
           Please enter a valid phone number
         </small>
-        <small style="margin-top: 2px;" *ngIf="phoneField?.errors?.phoneExists" class="email_exists">  
-          This phone number has already been taken 
+        <small
+          style="margin-top: 2px;"
+          *ngIf="phoneField?.errors?.phoneExists"
+          class="email_exists"
+        >
+          This phone number has already been taken
         </small>
       </div>
     </div>
@@ -347,31 +368,44 @@
 
   <form [formGroup]="emailForm" class="w-100" style="position: relative">
     <div class="ui form">
-      <div class="field positioned-relative" >
+      <div class="field positioned-relative">
         <label>Email</label>
         <input
           formControlName="email"
           type="email"
           placeholder="Eg: johndoe@gmail.com"
         />
-        <small class="positioned-absolute checkUnique" 
-           style="top: 35px; left: 88%; border: none">  
-          <i [style.display]="checkingUniqueness == 'checking' ? 'inline-block': 'none'" 
-             class="fa fa-circle-notch fa-spin">
-            </i>
-          <i class="fas fa-check"
+        <small
+          class="positioned-absolute checkUnique"
+          style="top: 35px; left: 88%; border: none"
+        >
+          <i
+            [style.display]="
+              checkingUniqueness == 'checking' ? 'inline-block' : 'none'
+            "
+            class="fa fa-circle-notch fa-spin"
+          >
+          </i>
+          <i
+            class="fas fa-check"
             style="color: green"
-           [style.display]="checkingUniqueness == 'unique' ? 'inline-block': 'none'">
-          </i> 
-            <i class="fas fa-times"
-              style="color: red"
-            [style.display]="checkingUniqueness == 'not-unique' ? 'inline-block': 'none'"
-            ></i> 
+            [style.display]="
+              checkingUniqueness == 'unique' ? 'inline-block' : 'none'
+            "
+          >
+          </i>
+          <i
+            class="fas fa-times"
+            style="color: red"
+            [style.display]="
+              checkingUniqueness == 'not-unique' ? 'inline-block' : 'none'
+            "
+          ></i>
         </small>
       </div>
-       <small *ngIf="emailIsNotUnique" class="email_exists">  
-         This email has already been taken
-       </small>
+      <small *ngIf="emailIsNotUnique" class="email_exists">
+        This email has already been taken
+      </small>
     </div>
 
     <div class="text-center mt-4">

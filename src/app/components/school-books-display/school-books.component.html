@@ -81,6 +81,7 @@
 
   
     <div class="floating_continue">
+       <span  class="more__button mr-2" style="cursor: pointer;"  (click)="skippingThisSection()"> Skip </span>
        <span (click)="calculateTotalCostOfBooks()" 
          style="padding-right: 5px;"
          [class.noBooks_selected]="booksSelected.size == 0"
@@ -107,13 +108,7 @@
     Add these books for my child
   </button>
 
-  <!-- <button
- 
-    class="ui button primary basic mt-1"
-  >
-    These books are not necessary
-  </button> -->
-    </div>
+</div>
   
   
 </div>
