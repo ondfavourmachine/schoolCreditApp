@@ -153,8 +153,7 @@
             Change email
           </button>
       
-          <button (click)="sendActivationCodeToEmail(parentDetails?.email)" class="ui button primary basic mt-4">
-
+          <button (click)="sendActivationCodeToEmail(parentDetails?.email, $event)" class="ui button primary basic mt-4">
             Resend pin
           </button>
         </div>

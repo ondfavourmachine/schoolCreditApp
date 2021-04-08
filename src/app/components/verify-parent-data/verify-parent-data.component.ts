@@ -361,10 +361,17 @@ export class VerifyParentDataComponent
       : "";
   }
 
-  sendActivationCodeToEmail(email: string) {
+  sendActivationCodeToEmail(email: string, event?: Event) {
+    let previousText, button: HTMLButtonElement;
     if(!email){
       this.generalservice.warningNotification('No email found! Please restart the process');
       return;
+    }
+    if(event){
+      button = event.target as HTMLButtonElement;
+      previousText = button.textContent;
+      button.textContent = 'Resending ...';
+      button.disabled = true;
     }
     this.view = "four-digit-pin";
     (this.chatapi.sendEmailOTP({email}, 'observable') as Observable<any>)
@@ -372,6 +379,10 @@ export class VerifyParentDataComponent
       this.generalservice.successNotification("Activation code sent!"); 
       setTimeout(() => {
         document.getElementById(this.arrayOfInputs[0]).focus();
+        if(event){
+          button.textContent = previousText;
+          button.disabled = false;
+        }
       }, 800);
       this.spinner = false;
     }, err=> {
