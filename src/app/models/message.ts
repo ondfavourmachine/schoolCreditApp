@@ -571,6 +571,25 @@ export class Message {
           () => ['notifyBackendOfLoanRequest']
         );
       break;
+      case 'verifylater':
+        sessionStorage.setItem('unverified_parent', 'true')
+        this.giverResponsesEvent(
+          "customGiverResponse",
+          new replyGiversOrReceivers(
+            `How would you like to pay?`,
+            "left",
+            "Installmental payments, Full Payment",
+            `installmental,fullpayment`,
+            "prevent"
+          ),
+          new GiverResponse(
+            new replyGiversOrReceivers(
+              "I don't want to verify my information now",
+              "right"
+            )
+          )
+        );
+      break;
       case "continuetoverification":
          const name = sessionStorage.getItem('parent_name')
         this.giverResponsesEvent(
