@@ -76,7 +76,7 @@ const validatePhoneIsUnique = (
     obj.checkingUniqueness = "done";
     return of(null);
   }
-
+  console.log(obj.editMode);
   return apiservice
     .checkPhoneUniqueness({
       phone: control.value,
@@ -226,8 +226,10 @@ export class ParentsInformationComponent
       this.state = "25";
       this.localGovtArea = "25";
       this.view = "";
+      this.editMode = false;
       this.previousPage.emit("firstPage");
       sessionStorage.removeItem("school_avatar");
+      this.selectLgaInState(this.localGovtArea);
     });
 
     setTimeout(() => {

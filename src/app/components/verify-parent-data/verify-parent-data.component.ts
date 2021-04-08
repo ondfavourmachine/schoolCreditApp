@@ -155,6 +155,8 @@ export class VerifyParentDataComponent
     }
     try {
       const res = await this.chatapi.changePhoneOrEmail(formToSubmit);
+      const {parent} = res;
+      this.store.dispatch(new generalActions.addParents(parent));
       this.generalservice.successNotification(res.message);
       this.spinner = false;
       this.closeModal();
@@ -170,6 +172,7 @@ export class VerifyParentDataComponent
     phoneNumber: string,
     obj?: { element: HTMLElement | HTMLAnchorElement; text: string }
   ) {
+    
     this.spinner = true;
     try {
       const res = await this.chatapi.dispatchOTP({ phone: phoneNumber || this.newPhoneNumberForm.value.emailOrPhone });
@@ -359,6 +362,10 @@ export class VerifyParentDataComponent
   }
 
   sendActivationCodeToEmail(email: string) {
+    if(!email){
+      this.generalservice.warningNotification('No email found! Please restart the process');
+      return;
+    }
     this.view = "four-digit-pin";
     (this.chatapi.sendEmailOTP({email}, 'observable') as Observable<any>)
     .subscribe(val => {

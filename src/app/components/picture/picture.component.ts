@@ -92,7 +92,13 @@ export class PictureComponent implements OnInit, OnDestroy, AfterViewInit {
   getPictureFromSessionStorage(name: string){
     return new Promise((resolve, reject) => {
       const picture = sessionStorage.getItem(name);
-      resolve(picture);
+      if(typeof picture == 'object'){
+        // reject(picture);
+        throw 'Error picture not found';
+      }else{
+          resolve(picture);
+      }
+      
     })
   }
 
@@ -167,6 +173,7 @@ export class PictureComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   async uploadImage() {
+    // debugger;
     if (this.modifiedFile || this.pictureForUseWhenParentIsTryingToEdit) {
       this.startSpinner.emit(true);
       this.changeUpTheView.emit("done");
@@ -179,26 +186,45 @@ export class PictureComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
   async  tryToPrefillPicture(){
+    let pictureFromStorage;
     if(this.fromWhere == 'child-information-form'){ 
-      const res = await this.getPictureFromSessionStorage('childPicture');
-      res == 'null' ? this.fileFromStore = null : this.fileFromStore = res as string;
+      try {
+        const res = await this.getPictureFromSessionStorage('parentPicture');
+        pictureFromStorage = res;
+        res == 'null' ? this.fileFromStore = null : this.fileFromStore = res as string;
+       } catch (error) {
+        if(this.pictureForUseWhenChildIsTryingToEdit){
+          (document.getElementById('uploadButton') as HTMLButtonElement).disabled = false;
+        }
+         return;
+       }
+
       try{
         (document.getElementById('uploadButton') as HTMLButtonElement).disabled = false;
        }catch(error){
        (document.getElementById('uploadButton') as HTMLButtonElement).disabled = false;
       }
 
-      this.modifiedFile = await this.generalservice.dataUrlToFile(res as string, 'image_1');
+      this.modifiedFile = await this.generalservice.dataUrlToFile(pictureFromStorage as string, 'image_1');
 
     }else{
-      const res = await this.getPictureFromSessionStorage('parentPicture');
-      res == 'null' ? this.fileFromStore = null : this.fileFromStore = res as string;
+      
+      try {
+        const res = await this.getPictureFromSessionStorage('parentPicture');
+        pictureFromStorage = res;
+        res == 'null' ? this.fileFromStore = null : this.fileFromStore = res as string;
+       } catch (error) {
+        if(this.pictureForUseWhenParentIsTryingToEdit){
+          (document.getElementById('uploadButton') as HTMLButtonElement).disabled = false;
+        }
+         return;
+       }
       try{
         (document.getElementById('uploadButton') as HTMLButtonElement).disabled = false;
        }catch(error){
        (document.getElementById('uploadButton') as HTMLButtonElement).disabled = false;
       }
-      this.modifiedFile = await this.generalservice.dataUrlToFile(res as string, 'image_1')
+      this.modifiedFile = await this.generalservice.dataUrlToFile(pictureFromStorage as string, 'image_1')
     }
   }
 

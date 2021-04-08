@@ -48,6 +48,7 @@ export class ChildInformationFormsComponent
     | "summary"
     | "upload-image"
     | "select-books" = "";
+
   pageViews: string[] = [
     "",
     "selectChildren",

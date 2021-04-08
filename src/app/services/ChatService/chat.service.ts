@@ -38,6 +38,7 @@ type repaymentFrequency = "1" | "2" | "3" | string;
 interface GenericResponse {
   message: string;
   status: boolean;
+  parent?: Parent
 }
 
 interface ChildDataSavedResponse extends GenericResponse {
