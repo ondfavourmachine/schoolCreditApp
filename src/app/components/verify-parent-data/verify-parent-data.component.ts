@@ -5,7 +5,8 @@ import {
   EventEmitter,
   Output,
   Input,
-  AfterViewInit
+  AfterViewInit,
+  OnChanges
 } from "@angular/core";
 import { FormGroup, Validators, FormBuilder } from "@angular/forms";
 import { ChatService } from "src/app/services/ChatService/chat.service";
@@ -25,13 +26,14 @@ import { HttpErrorResponse } from "@angular/common/http";
   styleUrls: ["./verify-parent-data.component.css"]
 })
 export class VerifyParentDataComponent
-  implements OnInit, AfterViewInit, OnDestroy {
+  implements OnChanges, OnInit, AfterViewInit, OnDestroy {
   @Output("previousPage") previousPage = new EventEmitter<string>();
   @Input("previous") previous: any;
+  @Output('parentHasVerifiedEmail') parentHasVerifiedEmail = new EventEmitter<string>();
+  @Input('fromBankPartnership') fromBankPartnership: any;
   contactChange: "phone" | "email" = "phone";
   showModal: string = "none";
-  view: "" | "verification" | "email" | "activate-email" | "four-digit-pin" =
-    "email";
+  view: "" | 'preambleTo-email-verification' | "verification" | "email" | "activate-email" | "four-digit-pin" = 'email';
     // email
   pageViews: string[] = [
     "",
@@ -57,6 +59,12 @@ export class VerifyParentDataComponent
     private generalservice: GeneralService
   ) {
     // this.manageGoingBackAndForth = this.manageGoingBackAndForth.bind(this);
+    
+  }
+  
+
+  ngOnChanges(){
+    typeof this.fromBankPartnership == 'object' ? this.view = 'preambleTo-email-verification' : this.view = 'email';
   }
 
   iWantToChangeNumber(contact: "phone" | "email", functionName: string) {
@@ -111,6 +119,7 @@ export class VerifyParentDataComponent
   }
 
   ngOnInit(): void {
+    // console.log(this.fromBankPartnership);
     this.phoneVerificationForm = this.fb.group({
       OTP: ["", Validators.required]
     });
@@ -284,14 +293,14 @@ export class VerifyParentDataComponent
 
   confirmEmailCode(code: string) {
     this.spinner = true;  
-    // form.value.email_activation
     this.chatapi.verifyParentEmailActivationCode({token: code, guardian: this.parentDetails.guardian})
-    .subscribe((val) => {
+    .subscribe((val) => { 
     const refreshedState: Partial<Parent> = { email_verified: 1 };
     this.store.dispatch(new generalActions.addParents(refreshedState));
-    // this.view = "four-digit-pin";
-    // this.previousPage.emit("activate-email");
-    // await this.sendOTPToEmail();
+    if(typeof this.fromBankPartnership == 'object'){
+      this.parentHasVerifiedEmail.emit('done');
+      return;
+    }
     const responseFromParent = new replyGiversOrReceivers(
       `I have verified my email and phone number`,
       "right"

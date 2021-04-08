@@ -70,10 +70,6 @@
     <button (click)="switchToFakeSearchingPage()" class="ui button primary basic mr-3 mb-3">
       Okay
     </button>
-
-    <!-- <button disabled class="ui button primary basic">
-      let's do this later.
-    </button> -->
   </div>
 
   <div *ngIf="spinner" class="spinner-container">
@@ -249,134 +245,9 @@
 
 <!-- Means of identification -->
 
-<div class=" h-100 text-center family-info" *ngIf="page == 'valid-id'">
-  <h1 class="para-title">Select your preferred means of identification?</h1>
 
-  <div class="ui grid justify-center" style="overflow: hidden; margin: 0 auto;">
-    <div
-      (click)="selectThis($event)"
-      class="seven wide column myborder positioned-relative"
-    >
-      <img
-        src="../../../assets/images/svgs/name.svg"
-        alt=""
-        style="max-width: 50px;"
-      />
-      <p
-        class="bolded"
-        style="line-height: 1rem; font-weight: bold; text-align: center;"
-      >
-        Voters ID
-      </p>
-      <i
-        *ngIf="selected == 'Voters ID'"
-        class="fa fa-check positioned-absolute"
-      ></i>
-    </div>
 
-    <div
-      (click)="selectThis($event)"
-      class="six wide column myborder positioned-relative"
-    >
-      <img
-        src="../../../assets/images/svgs/name.svg"
-        style="max-width: 50px;"
-        alt=""
-      />
-      <p
-        class="bolded"
-        style="line-height: 1rem; font-weight: bold; text-align: center;"
-      >
-        National ID
-      </p>
-      <i
-        *ngIf="selected == 'National ID'"
-        class="fa fa-check positioned-absolute"
-      ></i>
-    </div>
 
-    <div
-      (click)="selectThis($event)"
-      class="seven wide column myborder positioned-relative"
-    >
-      <img
-        src="../../../assets/images/svgs/name.svg"
-        style="max-width: 50px;"
-        alt=""
-      />
-      <p
-        style="line-height: 1rem; font-weight: bold; text-align: center;"
-        class="bolded"
-      >
-        International Passport
-      </p>
-      <i
-        *ngIf="selected == 'International Passport'"
-        class="fa fa-check positioned-absolute"
-      ></i>
-    </div>
-
-    <div
-      (click)="selectThis($event)"
-      class="six wide column myborder positioned-relative"
-    >
-      <img
-        src="../../../assets/images/svgs/name.svg"
-        alt=""
-        style="max-width: 50px;"
-      />
-      <p
-        class="bolded"
-        style="line-height: 1rem; font-weight: bold; text-align: center;"
-      >
-        Drivers licence
-      </p>
-      <i
-        *ngIf="selected == 'Drivers licence'"
-        class="fa fa-check positioned-absolute"
-      ></i>
-    </div>
-  </div>
-
-  <button
-    *ngIf="selected"
-    (click)="page = 'enter-id'"
-    class="ui button primary basic mt-4"
-  >
-    Continue
-  </button>
-</div>
-
-<div class=" h-100 text-center family-info" *ngIf="page == 'enter-id'">
-  <h1 class="para-title">Enter {{ selected }}</h1>
-
-  <form [formGroup]="IDForm" class="w-100" style="position: relative">
-    <div class="ui form">
-      <div class="field">
-        <label>{{ selected }} </label>
-        <input formControlName="ID_number" type="tel" placeholder="eg: AA100457u788" />
-        <!-- <div *ngIf="name.touched && name.invalid" class="ng-invalid ng-touched">
-              <small style="color: #f10b0b9d;" *ngIf="nameIsRequired()">
-                Your name is required!</small>
-            </div> -->
-      </div>
-    </div>
-
-    <div class="text-center mt-4">
-      <button
-        [disabled]="!IDForm.valid"
-        type="button"
-        class="ui primary button fluid"
-        (click)="accepted(IDForm)"
-      >
-        Continue
-      </button>
-    </div>
-    <div *ngIf="spinner" class="spinner-container">
-      <i class="fa fa-circle-notch fa-spin fa-3x"></i>
-    </div>
-  </form>
-</div>
 
 <div
   class=" h-100 text-center family-info"
@@ -454,30 +325,12 @@
 
   <!-- (click)="changeToWorkAndLoadWidget('work-form')"  -->
 
-<div
+  <div
   class="flex flex-column justify-center align-center h-100 text-center family-info"
-  *ngIf="page == 'result'"
->
-  <h1 class="para-title">
-    Credit Information
-  </h1>
-  <h5 class="" style="margin: 10px 0; font-weight: 500;"></h5>
-  <p class="para-body">
-    <span class="block-element"
-      >You will pay <strong>N34,000/Monthly </strong> for 10 months</span
-    >
-    <span class="block-element"
-      >You will have pay <strong> N68,000 (first 2 months) in advance </strong>
-    </span>
-  </p>
-
-  <div class="twelve wide column">
-    <button class="ui button primary basic mr-3">
-      Accept
-    </button>
-
-    <button disabled class="ui button primary basic">
-      Review later
-    </button>
-  </div>
+  *ngIf="page == 'verify-data'"
+  >
+  <app-verify-parent-data
+    [fromBankPartnership]="informationForVerifyComp"
+    (parentHasVerifiedEmail)="continueToDataWidget()"></app-verify-parent-data>
 </div>
+

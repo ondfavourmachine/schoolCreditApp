@@ -58,6 +58,7 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
     | "iframe_container"
     | "card_tokenisation"
     | "preambleToForms"
+    | "verify-data"
     | "pre_bankstatement"
     | "sorry-page" = "preambleToForms";
   text: string = "Sending Loan request....";
@@ -78,6 +79,7 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
   loanAmount: string | number;
   offersToShowParent: Array<Partial<Offers>> = [];
   selectedOffer: any;
+  informationForVerifyComp: {heading: string} = undefined;
   constructor(
     private generalservice: GeneralService,
     private chatservice: ChatService,
@@ -219,13 +221,25 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
   selectOffers(index: string) {
     this.selectedOffer = index;
   }
-  changeToWorkAndLoadWidget(page: string, event) {
+  changeToWorkAndLoadWidget(page: string, event?: Event) {
+    if(sessionStorage.getItem('unverified_parent')){
+      this.informationForVerifyComp = {
+        heading: `Your primary contact details is still unverified. Please take a few seconds to verify your email`
+      }
+      this.page = 'verify-data';
+      return;
+    }
+    if(event){
     const button = event.target as HTMLButtonElement;
     button.innerHTML = `<i class="fa fa-circle-notch fa-spin"></i>  Continue application`;
     button.disabled = true;
     const a = document.querySelector(".hiddenWidget") as HTMLElement;
     this.spinner = true;
     this.launchWidget(button);
+    }else{
+    this.spinner = true;
+    this.launchWidget();
+    }
   }
 
   selectThis(event) {
@@ -428,7 +442,7 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
-  async launchWidget(button: HTMLButtonElement) {
+  async launchWidget(button?: HTMLButtonElement) {
     this.spinner = true;
     let totalFees: number = 0;
     const disconnect = this.store
@@ -482,8 +496,10 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
       cc.start(data, forms);
       this.spinner = false;
       disconnect.unsubscribe();
-      button.innerHTML = "continue application";
-      button.disabled = false;
+      if(button){
+        button.innerHTML = "continue application";
+         button.disabled = false;
+      }
     });
     cc.on("request", async data => {
       //  if the request was created successfully
@@ -541,6 +557,12 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
   changeUpView(event: any) {
     // this.generalservice.handleSmartViewLoading({})
     this.page = event;
+  }
+
+  continueToDataWidget(){
+    this.informationForVerifyComp = undefined;
+    sessionStorage.removeItem('unverified_parent');
+    this.changeToWorkAndLoadWidget('work-form');
   }
 
   ngOnDestroy() {
