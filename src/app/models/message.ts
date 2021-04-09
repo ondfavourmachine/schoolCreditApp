@@ -509,6 +509,22 @@ export class Message {
         );
         sessionStorage.setItem("fullpayment", "true");
         break;
+
+      case 'premakefullpayment':
+        this.giverResponsesEvent(
+          "customGiverResponse",
+          new replyGiversOrReceivers(
+            "Are you ready to make full Payment now?",
+            "left",
+            "Yes i am ready",
+            "makefullpayment",
+            "allow"
+          ),
+          new GiverResponse(
+            new replyGiversOrReceivers(`Let's continue.`, "right")
+          )
+        );
+      break;
         // this.giverResponsesEvent(
         //   "customGiverResponse",
         //   new replyGiversOrReceivers(

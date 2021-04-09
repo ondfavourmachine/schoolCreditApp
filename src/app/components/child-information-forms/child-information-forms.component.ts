@@ -482,7 +482,7 @@ export class ChildInformationFormsComponent
             "John Bosco"}, would you like to modify the information about your child?`,
           "left",
           "Yes, No continue",
-          "editchildinfo,makefullpayment",
+          "editchildinfo,premakefullpayment",
           "prevent"
         );
         this.generalservice.responseDisplayNotifier(chatbotResponse);
