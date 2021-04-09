@@ -36,8 +36,8 @@
       </li> -->
     </ul>
 
-    <button (click)="doneSendingMoney()" class="ui button primary basic mt-2">
-      Transfer
+    <button *ngIf="schoolDetails?.account_number" (click)="doneSendingMoney()" class="ui button primary basic mt-2">
+      I have made payment
     </button>
     <a (click)="cancel()" class="mt-3 link"><span  class="mr-2">←</span>Back</a>
   </div>

@@ -241,7 +241,7 @@ export class ContinuingExistingRequestsComponent
       }, err => {
         this.spinner = false;
         this.confirmPhoneOrEmailForm.reset();
-        this.generalservice.errorNotification(`We couldn't send an OTP. Make sure that the email entered is registerd on this service.`);
+        this.generalservice.errorNotification(`We couldn't send an OTP. Make sure that the email entered is registered on this service.`);
         this.otpSent = true;
       })
       return;

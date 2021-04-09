@@ -61,7 +61,7 @@ export class EditChildComponent implements OnInit, OnDestroy {
     this.destroy[1] = this.store
       .select(fromStore.getCurrentChildState)
       .pipe(
-        tap(val => console.log(val)),
+        // tap(val => console.log(val)),
         pluck("child_info")
       )
       .subscribe((val: Map<string, Partial<AChild>>) => {

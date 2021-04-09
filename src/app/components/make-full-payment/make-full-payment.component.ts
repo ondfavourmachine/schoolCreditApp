@@ -56,7 +56,7 @@ export class MakeFullPaymentComponent implements OnInit {
       );
 
       const chatbotResponse = new replyGiversOrReceivers(
-        `Adanma High School will send you a confirmation email, once they receive payment.`,
+        `${this.schoolDetails.name} High School will send you a confirmation email, once they receive payment.`,
         "left",
         "",
         ``,
