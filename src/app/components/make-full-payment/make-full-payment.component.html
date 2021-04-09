@@ -9,16 +9,16 @@
       <li>
         <span>Account name:</span>
         <span>
-         {{ schoolDetails?.account_name }}
+         {{ schoolDetails?.account_name  || 'Not Available'}}
         </span>
       </li>
       <li>
         <span>Bank:</span>
-        <span>  {{ bankName?.name }} </span>
+        <span>  {{ bankName?.name || 'Not Available' }} </span>
       </li>
       <li>
         <span>Account number:</span>
-        <span> {{ schoolDetails?.account_number  }} </span>
+        <span> {{ schoolDetails?.account_number  || 'Not Available' }} </span>
       </li>
       <!-- <li>
         <span>
