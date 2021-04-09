@@ -459,10 +459,10 @@ export class ChildInformationFormsComponent
          Number of Children: ${this.mapOfChildrensInfo.size}
          `,
         "left",
-        "",
-        "",
-        "prevent",
-        { classes: ['harmonize_children_information'] }
+       "testing1,testing2",
+       "hot,stuff",
+      undefined,
+      { classes: ['harmonize_children_information'] }
       );
       this.generalservice.responseDisplayNotifier(responseFromParent);
       this.generalservice.handleFlowController("");
