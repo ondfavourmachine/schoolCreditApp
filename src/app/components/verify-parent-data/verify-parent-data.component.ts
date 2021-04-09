@@ -153,18 +153,21 @@ export class VerifyParentDataComponent
     const { emailOrPhone } = form.value;
     const guardianID = sessionStorage.getItem('guardian')
     let formToSubmit = { guardian: this.parentDetails.guardian || guardianID };
-    if (this.generalservice.emailRegex.test(emailOrPhone)) {
-      formToSubmit["email"] = emailOrPhone;
-      const refreshedState: Partial<Parent>  = {email : emailOrPhone}
-      this.store.dispatch(new generalActions.addParents(refreshedState));
-    } else {
-      formToSubmit["phone"] = emailOrPhone;
-      const refreshedState: Partial<Parent>  = {phone : emailOrPhone}
-      this.store.dispatch(new generalActions.addParents(refreshedState));
-    }
+    // if (this.generalservice.emailRegex.test(emailOrPhone)) {
+    //   formToSubmit["email"] = emailOrPhone;
+    //   const refreshedState: Partial<Parent>  = {email : emailOrPhone}
+    //   this.store.dispatch(new generalActions.addParents(refreshedState));
+    // } else {
+    //   formToSubmit["phone"] = emailOrPhone;
+    //   const refreshedState: Partial<Parent>  = {phone : emailOrPhone}
+    //   this.store.dispatch(new generalActions.addParents(refreshedState));
+    // }
+    this.generalservice.emailRegex.test(emailOrPhone) ? formToSubmit["email"] = emailOrPhone : formToSubmit["phone"] = emailOrPhone;
     try {
       const res = await this.chatapi.changePhoneOrEmail(formToSubmit);
       const {parent} = res;
+      const refreshedState: Partial<Parent>  = {email : emailOrPhone}
+      this.store.dispatch(new generalActions.addParents(refreshedState));
       this.store.dispatch(new generalActions.addParents(parent));
       this.generalservice.successNotification(res.message);
       this.spinner = false;

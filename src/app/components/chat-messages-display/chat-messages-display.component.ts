@@ -28,7 +28,7 @@ import { Router } from "@angular/router";
 import { Store } from "@ngrx/store";
 import * as fromStore from "../../store";
 import { pluck } from "rxjs/operators";
-import { AChild, Parent, SchoolDetailsModel } from "src/app/models/data-models";
+import { AChild, Parent, SchoolClass, SchoolDetailsModel } from "src/app/models/data-models";
 import { TitleCasePipe } from "@angular/common";
 import { ChildrenState } from "src/app/store/reducers/children.reducer";
 
@@ -165,11 +165,11 @@ export class ChatMessagesDisplayComponent
         if(this.tokeniseProcess == 'checking'){
           this.chatservice.checkIfCardHasBeenAddedByParent().subscribe(
             val => {
-                console.log(val);
+                // console.log(val);
             },
             err => {
 
-                console.log(val);
+                // console.log(val);
                 // get the pulsing spinner
                   const pulsingLoader = document.querySelectorAll('.processing_tokenized_card');
                   // console.log(pulsingLoader);
@@ -233,7 +233,7 @@ export class ChatMessagesDisplayComponent
       })
       
       this.selectMottoFromSchool();
-      // this.chatservice.deleteGuardian().then();
+      this.chatservice.deleteGuardian().then();
      
   }
 
@@ -450,7 +450,7 @@ export class ChatMessagesDisplayComponent
 
       if(callBack instanceof Function){
         const nameOfFunctionHere = callBack()[0];
-        console.log(nameOfFunctionHere);
+        // console.log(nameOfFunctionHere);
           this[nameOfFunctionHere]();
       }
 
@@ -482,7 +482,7 @@ export class ChatMessagesDisplayComponent
       this.refillChatBotWithChats();
     }, 1000);
 
-    this.obs = new MutationObserver((mutations: MutationRecord[], observer) => {
+    this.obs = new MutationObserver(async (mutations: MutationRecord[], observer) => {
       for (const mutation of mutations) {
         if (mutation.type === "childList") {
           const { addedNodes } = mutation;
@@ -497,7 +497,7 @@ export class ChatMessagesDisplayComponent
                 1
                   ? (element as HTMLElement).firstElementChild.firstElementChild
                   : (element as HTMLElement).firstElementChild.lastElementChild;
-              // debugger;
+                //  console.log(textWrapper);
               if (textWrapper.classList.contains("bot_helper_message")) {
                 const html = `
                 <div class="mutation-inserted__text">
@@ -571,6 +571,12 @@ export class ChatMessagesDisplayComponent
                   textWrapper.innerHTML = "";
                 textWrapper.insertAdjacentHTML("afterbegin", html);
                 this.manageChangeToInstallmentalPayments()
+               }
+
+               if(textWrapper.classList.contains('harmonize_children_information')){
+                 const html = await this.arrangeSummaryFromChildDetailsSubmission(textWrapper as HTMLElement);
+                 textWrapper.innerHTML = '';
+                 textWrapper.insertAdjacentHTML('afterbegin', (html as HTMLElement).outerHTML);
                }
               
               else if (textWrapper.classList.contains("helper")) {
@@ -1169,6 +1175,149 @@ selectMottoFromSchool(){
     await this.chatservice.fetchWidgetStages(tuitionFeesTotal.toString());
   }
  
+
+  arrangeSummaryFromChildDetailsSubmission(htmlElement: HTMLElement){
+    return new Promise((resolve, reject) => {
+      let arrayOfChildren: Partial<AChild>[] = [];
+      let totalCostOfFees: number = 0;
+      let totalCostOfBooks: number = 0;
+      const button = htmlElement.querySelector('.button-container').firstChild;
+      const schoolClasses: SchoolClass[] = JSON.parse(sessionStorage.getItem('school_classes'));
+      const savedChats: Array<Message> = JSON.parse(sessionStorage.getItem("savedChats"));
+      const found = savedChats.findIndex(element => {
+        if(element.hasOwnProperty('buttonElement')){
+          return element.buttonElement.includes(button.textContent);
+        }
+      });
+      const disconnect = this.store
+      .select(fromStore.getCurrentChildState)
+      .subscribe((val: any) => {
+        const { child_info } = val as ChildrenState;
+        arrayOfChildren = Array.from(child_info.values());
+      });
+      // make sure to check the media query of the device before showing the table
+      // do this later. For now just show the table data.
+
+     totalCostOfBooks = arrayOfChildren.reduce((prev, elem, index, arr) => {
+        let num = 0;
+        if(elem.hasOwnProperty('total_cost_of_books') && elem.total_cost_of_books){
+          num += Number(elem.total_cost_of_books);
+          prev = num;
+        }
+        return prev;
+      }, totalCostOfBooks);
+
+     totalCostOfFees = arrayOfChildren.reduce((prev, elem, index, arr) => {
+        let num = 0;
+        if(elem.hasOwnProperty('tuition_fees') && elem.tuition_fees){
+          num += Number(elem.tuition_fees);
+          prev = num;
+        }
+        return prev;
+      }, totalCostOfFees);
+
+
+      //  generate tableData
+      const produceTableData = (): HTMLTableElement => {
+        let tableContent: HTMLTableElement = document.createElement('table');
+        const tableHeading = document.createElement('thead'); 
+        const tableHeadingRow = document.createElement('tr');
+        const tableBody = document.createElement('tbody');
+        
+       
+        for(let i = 0; i < 1; i++){
+          if(arrayOfChildren[i].hasOwnProperty('full_name')){
+            const tableHeadingInner = document.createElement('th')
+            tableHeadingInner.textContent = 'Name';
+            tableHeadingRow.insertAdjacentElement('beforeend', tableHeadingInner);
+          }
+          if(arrayOfChildren[i].hasOwnProperty('class')){
+           const tableHeadingInner = document.createElement('th')
+           tableHeadingInner.textContent = 'Class';
+           tableHeadingRow.insertAdjacentElement('beforeend', tableHeadingInner);
+
+         }
+         if(arrayOfChildren[i].hasOwnProperty('tuition_fees')){
+             const tableHeadingInner = document.createElement('th')
+             tableHeadingInner.textContent = 'Tuition Fees';
+             tableHeadingRow.insertAdjacentElement('beforeend', tableHeadingInner);
+         }
+
+         tableHeading.insertAdjacentElement('afterbegin', tableHeadingRow)
+        }
+
+
+       
+        tableContent.classList.add('ui', 'celled', 'table');
+        tableContent.insertAdjacentElement('afterbegin', tableHeading);
+
+        // add the contents, i.e data in the table.
+
+        const arrOfTR: Array<HTMLTableRowElement> = arrayOfChildren.map((element, index, arr) => {
+          const tableRow = document.createElement('tr');
+          
+          if(element.hasOwnProperty('full_name')) {
+            const tableData = document.createElement('td');
+            tableData.textContent = element.full_name;
+            tableData.setAttribute('data-label', 'Name');
+            tableRow.insertAdjacentElement('afterbegin', tableData);
+          }
+          if(element.hasOwnProperty('class')){
+            const tableData = document.createElement('td');
+            tableData.setAttribute('data-label', 'Class');
+            const classname = schoolClasses.find(schoolclass => schoolclass.id == element.class);
+            tableData.textContent = classname.name;
+            tableRow.insertAdjacentElement('beforeend', tableData)
+          }
+
+          if(element.hasOwnProperty('tuition_fees')){
+            const tableData = document.createElement('td');
+            tableData.setAttribute('data-label', 'Tuition Fees');
+            tableData.textContent = `₦${new Intl.NumberFormat('en').format(Number(element.tuition_fees))}`;
+            tableRow.insertAdjacentElement('beforeend', tableData)
+          }
+          return tableRow;
+        })
+
+        arrOfTR.forEach(element => {
+          tableBody.insertAdjacentElement('beforeend', element)
+        })
+        tableContent.insertAdjacentElement('beforeend', tableBody)
+        return tableContent;
+      }
+     
+      const div = document.createElement('div');
+      const Atabledata = produceTableData();
+      div.insertAdjacentElement('beforeend', Atabledata);
+      const header = document.createElement('h5');
+      header.classList.add('para-title', 'mb-1');
+      header.insertAdjacentHTML('beforeend', `Summary`);
+      div.insertAdjacentElement('afterbegin', header);
+
+      const footer = document.createElement('p');
+      footer.textContent = totalCostOfBooks > 0 ? `Total Cost of Fees and Books: ₦${totalCostOfBooks + totalCostOfFees}` : `Total Cost of Fees: ₦${totalCostOfFees}`;
+      div.insertAdjacentElement('beforeend', footer);
+      let html = document.createElement('div');
+      html.insertAdjacentElement('afterbegin', div);
+      
+
+
+      const elementZone = savedChats[found].htmlElement;
+      const thisMessageWillReplaceOldMessage: Partial<Message> = 
+      {
+        countForMessage: 0, 
+        direction: 'left',
+        htmlElement: elementZone,
+        text: html.outerHTML
+      }
+
+      savedChats.splice(found, 1, thisMessageWillReplaceOldMessage as Message);
+      sessionStorage.setItem('savedChats', JSON.stringify(savedChats));
+      disconnect.unsubscribe();
+      resolve(html);
+      
+    })
+  }
  
 
 

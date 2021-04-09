@@ -76,7 +76,6 @@ const validatePhoneIsUnique = (
     obj.checkingUniqueness = "done";
     return of(null);
   }
-  console.log(obj.editMode);
   return apiservice
     .checkPhoneUniqueness({
       phone: control.value,
@@ -494,7 +493,7 @@ export class ParentsInformationComponent
       // console.log('i am here');
       let form = new FormData();
       for (let elem in parentInfo) {
-        form.append(elem, `${parentInfo[elem]}`);
+        form.append(elem, parentInfo[elem]);
       }
       try {
         const res = await this.chatapi.editGuardianDetails(
@@ -509,6 +508,7 @@ export class ParentsInformationComponent
           `I have edited my details`,
           "right"
         );
+        sessionStorage.removeItem('parentPicture');
         this.generalservice.nextChatbotReplyToGiver = undefined;
         this.generalservice.responseDisplayNotifier(responseFromParent);
         this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");

@@ -157,7 +157,7 @@ export class ChildInformationFormsComponent
 
     this.destroy[2] = this.store
       .select(fromStore.getCurrentChildInfo)
-      .subscribe(val => console.log(val));
+      .subscribe();
 
     //  this.destroy[2] = this.store
     //   .select(fromStore.getCurrentChildState)
@@ -456,10 +456,13 @@ export class ChildInformationFormsComponent
          You entered a total of ₦${new Intl.NumberFormat().format(
            this.tuitionFeesTotal + this.totalCostOfSchoolBooks
          )} which includes cost of school fees and books.
-         Number of Children: ${this.mapOfChildrensInfo.size}`,
+         Number of Children: ${this.mapOfChildrensInfo.size}
+         `,
         "left",
         "",
-        ``
+        "",
+        "prevent",
+        { classes: ['harmonize_children_information'] }
       );
       this.generalservice.responseDisplayNotifier(responseFromParent);
       this.generalservice.handleFlowController("");
@@ -514,24 +517,19 @@ export class ChildInformationFormsComponent
       }.
        Number of Children: ${this.mapOfChildrensInfo.size}`,
       "left",
-      "",
-      ``
+       "testing1,testing2",
+       "hot,stuff",
+      undefined,
+      { classes: ['harmonize_children_information'] }
     );
     sessionStorage.setItem("editChild", "true");
     this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
     this.generalservice.responseDisplayNotifier(responseFromParent);
     setTimeout(() => {
-      // this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
-      //   `Are you ready to be connected to a financial institution?`,
-      //   "left",
-      //   "Yes, No Later",
-      //   `connectme, notinterested`,
-      //   "allow"
-      // );
       this.generalservice.nextChatbotReplyToGiver = undefined;
       const chatbotResponse = new replyGiversOrReceivers(
         `Thank you ${this.parentDetails.full_name || "John Bosco"}. 
-          Would like to edit or modify ${
+          Would you like to edit or modify ${
             this.mapOfChildrensInfo.size == 1
               ? "your child's information"
               : "your children's information"
@@ -541,13 +539,6 @@ export class ChildInformationFormsComponent
         `editchildinfo,continuetofinancialinstitution`,
         "prevent"
       );
-      // this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
-      //       `Are you ready to be connected to a financial institution?`,
-      //       "left",
-      //       "Yes, No Later",
-      //       `connectme, notinterested`,
-      //       "prevent"
-      //     );
       this.generalservice.responseDisplayNotifier(chatbotResponse);
       this.viewToshow = "";
       this.previousPage.emit("firstPage");
@@ -628,6 +619,8 @@ export class ChildInformationFormsComponent
     });
     this.moveToNextChildOrNot();
   }
+
+
 
   ngOnDestroy() {
     this.destroy.forEach(element => element.unsubscribe());
