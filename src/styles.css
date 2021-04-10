@@ -243,6 +243,14 @@ template {
     0 0.125rem 0.1875rem rgba(4, 9, 20, 0.03);
 }
 
+.modified__header{
+  background: transparent !important;
+  height: auto !important;
+  box-shadow: none;
+  font-weight: bold !important;
+
+}
+
 .header__inner {
   display: flex;
   justify-content: space-between;

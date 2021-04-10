@@ -574,7 +574,14 @@ export class ChatMessagesDisplayComponent
                }
 
                if(textWrapper.classList.contains('harmonize_children_information')){
-                 const html = await this.arrangeSummaryFromChildDetailsSubmission(textWrapper as HTMLElement);
+                 const mediaQuery = window.matchMedia("(max-width: 500px)");
+                 if(mediaQuery.matches){
+                  const html = await this.arrangeSummaryFromChildDetailsForSmallScreen(textWrapper as HTMLElement);
+                  textWrapper.innerHTML = '';
+                  textWrapper.insertAdjacentHTML('afterbegin', html as string);
+                  return;
+                 }
+                 const html = await this.arrangeSummaryFromChildDetailsSubmissionForWideScreen(textWrapper as HTMLElement);
                  textWrapper.innerHTML = '';
                  textWrapper.insertAdjacentHTML('afterbegin', (html as HTMLElement).outerHTML);
                }
@@ -1174,9 +1181,107 @@ selectMottoFromSchool(){
     this.store.dispatch(new generalActions.addParents(updatedParents));
     await this.chatservice.fetchWidgetStages(tuitionFeesTotal.toString());
   }
+
+
+  arrangeSummaryFromChildDetailsForSmallScreen(htmlelement: HTMLElement){
+    return new Promise((resolve, reject)=> {
+      let arrayOfChildren: Partial<AChild>[] = [];
+      const button = htmlelement.querySelector('.button-container').firstChild;
+      const schoolClasses: SchoolClass[] = JSON.parse(sessionStorage.getItem('school_classes'));
+      const savedChats: Array<Message> = JSON.parse(sessionStorage.getItem("savedChats"));
+      const found = savedChats.findIndex(element => {
+        if(element.hasOwnProperty('buttonElement')){
+          return element.buttonElement.includes(button.textContent);
+        }
+      });
+      const disconnect = this.store
+      .select(fromStore.getCurrentChildState)
+      .subscribe((val: any) => {
+        const { child_info } = val as ChildrenState;
+        arrayOfChildren = Array.from(child_info.values());
+      });
+      let totalCostOfBooks = 0;
+      let totalTuitionFees = 0;
+      const html = arrayOfChildren.map((elem, index, arr) => {
+         const className = schoolClasses.find(schoolclass => schoolclass.id == elem.class);
+          const string = `<div class="ui card" style="box-shadow: none !important;border-radius: 0;margin: .5em 0;">
+                <div class="header modified__header" style="padding-left: .5em"> ${elem.full_name}</div>
+            </div>
+      <div class="content" style="padding: .5em .5em;">
+        <div class="ui small feed">
+          <div class="event">
+            <div class="content" >
+              <div class="summary">
+                 <a> Class </a>: <a> ${className.name} </a>
+              </div>
+            </div>
+          </div>
+          <div class="event">
+             <div class="content">
+               <div class="summary">
+                  <a> Tuition Fees </a>: <a> ${elem.tuition_fees} </a>
+               </div>
+             </div>
+           </div>
+
+           ${
+             elem.total_cost_of_books > 0 ? 
+             `<div class="event">
+             <div class="content">
+               <div class="summary">
+                  <a> Cost of books selected </a>: <a> ${elem.total_cost_of_books} </a>
+               </div>
+             </div>
+           </div>` : ''
+           }
+           
+        </div>
+      </div>
+    </div>`
+    return string;
+      }).join('');
+    
+    totalCostOfBooks = arrayOfChildren.reduce((prev, elem, index, arr) => {
+        if(elem.hasOwnProperty('total_cost_of_books') && elem.total_cost_of_books){
+          prev += Number(elem.total_cost_of_books);
+        }
+        return prev;
+    }, totalCostOfBooks)
+
+    totalTuitionFees = arrayOfChildren.reduce((prev, elem, index, arr) => {
+      if(elem.hasOwnProperty('tuition_fees') && elem.tuition_fees){
+        prev += Number(elem.tuition_fees);
+      }
+      return prev;
+    }, totalTuitionFees);
+    
+    const calculatedTotals = `<div class="event mt-2" style="border-top: 1px solid rgba(10, 38, 59, 0.85);padding-top: 6px;">
+      <div class="content">
+        <div class="summary">
+           <a> ${totalCostOfBooks > 0 ? 'Total Cost of fees and books': 'Total Fees'} </a>: <a> ₦${totalCostOfBooks > 0 ? totalCostOfBooks + totalTuitionFees : totalTuitionFees} </a>
+        </div>
+      </div>
+    </div>`
+    
+    const newString = html.concat(calculatedTotals);
+    disconnect.unsubscribe();
+    const elementZone = savedChats[found].htmlElement;
+    const thisMessageWillReplaceOldMessage: Partial<Message> = 
+    {
+      countForMessage: 0, 
+      direction: 'left',
+      htmlElement: elementZone,
+      text: newString
+    }
+
+    savedChats.splice(found, 1, thisMessageWillReplaceOldMessage as Message);
+    sessionStorage.setItem('savedChats', JSON.stringify(savedChats));
+    resolve(newString);
+    })
+  }
  
 
-  arrangeSummaryFromChildDetailsSubmission(htmlElement: HTMLElement){
+  arrangeSummaryFromChildDetailsSubmissionForWideScreen(htmlElement: HTMLElement){
     return new Promise((resolve, reject) => {
       let arrayOfChildren: Partial<AChild>[] = [];
       let totalCostOfFees: number = 0;
@@ -1199,19 +1304,16 @@ selectMottoFromSchool(){
       // do this later. For now just show the table data.
 
      totalCostOfBooks = arrayOfChildren.reduce((prev, elem, index, arr) => {
-        let num = 0;
         if(elem.hasOwnProperty('total_cost_of_books') && elem.total_cost_of_books){
-          num += Number(elem.total_cost_of_books);
-          prev = num;
+          prev += Number(elem.total_cost_of_books);
+          
         }
         return prev;
       }, totalCostOfBooks);
 
      totalCostOfFees = arrayOfChildren.reduce((prev, elem, index, arr) => {
-        let num = 0;
         if(elem.hasOwnProperty('tuition_fees') && elem.tuition_fees){
-          num += Number(elem.tuition_fees);
-          prev = num;
+          prev += Number(elem.tuition_fees);
         }
         return prev;
       }, totalCostOfFees);
@@ -1295,7 +1397,7 @@ selectMottoFromSchool(){
       div.insertAdjacentElement('afterbegin', header);
 
       const footer = document.createElement('p');
-      footer.textContent = totalCostOfBooks > 0 ? `Total Cost of Fees and Books: ₦${totalCostOfBooks + totalCostOfFees}` : `Total Cost of Fees: ₦${totalCostOfFees}`;
+      footer.textContent = totalCostOfBooks > 0 ? `Total Cost of Fees and Books: ₦${new Intl.NumberFormat('en').format(totalCostOfBooks + totalCostOfFees)}` : `Total Cost of Fees: ₦${new Intl.NumberFormat('en').format(totalCostOfFees)}`;
       div.insertAdjacentElement('beforeend', footer);
       let html = document.createElement('div');
       html.insertAdjacentElement('afterbegin', div);
