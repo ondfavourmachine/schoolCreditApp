@@ -568,6 +568,21 @@ export class Message {
           ``,
         );
       break;
+      case 'notinterested':
+        this.giverResponsesEvent(
+          "customGiverResponse",
+          new replyGiversOrReceivers(
+            `Okay, whenever you are ready, please type in 'restart' and follow the instructions.`,
+            "left",
+          ),
+          new GiverResponse(
+            new replyGiversOrReceivers(
+              "I am not interested at the moment",
+              "right"
+            )
+          )
+        ); 
+      break;
       case 'continuetofinancialinstitution':
         this.giverResponsesEvent(
           "customGiverResponse",

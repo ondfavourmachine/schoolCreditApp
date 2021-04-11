@@ -71,14 +71,16 @@
   <div class="w-100 flex justify-center align-center">
     <button
       (click)="iWantToChangeNumber('email', 'lauchModal')"
-      class="ui button primary basic mt-4 mr-2"
+      style="background-color: var(--button_color);"
+      class="btn btn button--no-width  basic mt-4 mr-2"
     >
       I want to change this email
     </button>
 
     <button
       (click)="sendActivationCodeToEmail(parentDetails?.email)"
-      class="ui button primary basic mt-4"
+      style="border: 1px solid var(--button_color); background-color: transparent; color: var(--primary_textColor)"
+      class="btn btn button--no-width  basic mt-4"
     >
       Ok, Continue
     </button>

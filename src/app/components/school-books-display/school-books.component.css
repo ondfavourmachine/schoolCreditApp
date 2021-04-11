@@ -343,7 +343,7 @@ transition: all 0.4s ease-in-out;
 
 .floating_continue .more__button{
     font-weight: bold;
-    background: var(--button_color);
+    background: #7fc7fd;
     color: var(--primary_textColor);
     padding: 10px 15px;
     border-radius: 50px;
@@ -353,9 +353,7 @@ transition: all 0.4s ease-in-out;
     pointer-events: auto;
 }
 
-.floating_continue .more__button:nth-child(1){
-    background: #7fc7fd;
-}
+/* */
 
 .noBooks_selected{
     background: rgb(175, 221, 255, 0.3) !important;

@@ -46,12 +46,18 @@ export class ProfileFormComponent implements OnInit, OnDestroy {
   parentInfo: Partial<Parent> = {}
   parentProfileForm: FormGroup;
   myAge: number;
+  maxBirthDay: string = '';
   parentIsTooYoung: boolean = false;
   constructor(
     private store: Store<fromStore.AllState>,
     private fb: FormBuilder,
     private generalservice: GeneralService
-  ) {}
+  ) {
+   
+    const year = new Date().getFullYear();
+    const lastPossibleBirthday = year - 18;
+    this.maxBirthDay = `${lastPossibleBirthday}-12-31`;
+  }
 
   ngOnInit(): void {
     this.destroy[0] = this.store
