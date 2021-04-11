@@ -343,17 +343,23 @@ transition: all 0.4s ease-in-out;
 
 .floating_continue .more__button{
     font-weight: bold;
-    background: rgb(10, 38, 59);
-    color: white;
+    background: var(--button_color);
+    color: var(--primary_textColor);
     padding: 10px 15px;
     border-radius: 50px;
-    border: 1px solid #0a263b;
+    border: 1px solid var(--button_color);
     cursor: pointer;
+    opacity: 1;
     pointer-events: auto;
 }
 
+.floating_continue .more__button:nth-child(1){
+    background: #7fc7fd;
+}
+
 .noBooks_selected{
-    background: rgba(10, 38, 59, 0.3) !important;
-    border: 1px solid rgba(10, 38, 59, 0.1) !important;
+    background: rgb(175, 221, 255, 0.3) !important;
+    border: 1px solid rgb(175, 221, 255, 0.3) !important;
+    opacity: .3;
     pointer-events: none !important;
 }
