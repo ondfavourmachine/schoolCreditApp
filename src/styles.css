@@ -435,6 +435,10 @@ template {
   padding-top: 0.6rem;
 }
 
+.button-container button:nth-child(2){
+  margin-right: 10px;
+}
+
 .btn[type="submit"] img {
   width: 25px;
   margin-left: 4px;
