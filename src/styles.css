@@ -429,7 +429,7 @@ template {
 
 .button-container {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: flex-start;
   align-items: flex-start;
   padding-top: 0.6rem;
