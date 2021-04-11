@@ -3,6 +3,11 @@
 @import url("../node_modules/angular-notifier/styles/types/type-success.css"); */
 @import url("https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600&display=swap");
 
+:root{
+  --button_color: #afddff;
+  --primary_textColor: #333;
+}
+
 * {
   box-sizing: border-box;
   font-family: "Work Sans", sans-serif;
@@ -461,7 +466,7 @@ template {
 
 .chat-box__text-wrapper {
   /* background: #afddff; */
-  background: rgb(10, 38, 59, 0.85);
+  background: var(--button_color);
   padding: 0.6rem 1rem;
   /* box-shadow: 0px 4px 29px rgba(0, 0, 0, 0.04), 3px 4px 9px rgba(0, 0, 0, 0.1); */
   font-size: 0.9rem;
@@ -469,7 +474,7 @@ template {
   display: inline-block;
   width: 100%;
   line-height: 1.2rem;
-  color: white;
+  color: var(--primary_textColor);
   animation: scaleUp 300ms ease;
   transform-origin: right;
 }
@@ -498,18 +503,17 @@ template {
 }
 
 .chat-box__wrapper.left .btn {
-  color: #fff;
   background-color: transparent;
-  border: 1px solid #0a263b;
-  color: #0a263b;
+  border: 1px solid var(--button_color);
+  color: var(--primary_textColor);
   margin-bottom: 5px;
 }
 
 .button-container .btn:first-child {
   margin-right: 10px;
-  background: rgb(10, 38, 59, 0.85);
+  background: var(--button_color);
   border: 0;
-  color: white;
+  color: var(--primary_textColor);
 }
 
 .chat-box__wrapper.left .chat-box__text-wrapper {
@@ -561,7 +565,7 @@ template {
   height: 0;
   border-top: 10px solid transparent;
   border-bottom: 10px solid transparent;
-  border-right: 10px solid rgb(10, 38, 59, 0.85);
+  border-right: 10px solid var(--button_color);
   position: absolute;
   top: 0.7rem;
   right: -8px;
@@ -1414,7 +1418,7 @@ textarea {
   bottom: 8px;
   right: 8px;
   font-size: 0.6rem;
-  color: white;
+  color: #2a9a0d;
 }
 
 .font-weight-bold {

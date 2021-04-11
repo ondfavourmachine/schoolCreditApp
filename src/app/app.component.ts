@@ -14,6 +14,7 @@ import { Alert } from "./models/Alert";
 import { replyGiversOrReceivers } from "./models/GiverResponse";
 import * as generalActions from "./store/actions/general.action";
 import { Store } from "@ngrx/store";
+declare var $: any;
 
 interface observableAggregator {
   flowControl?: Subscription;
@@ -51,6 +52,7 @@ export class AppComponent
   }
 
   ngOnInit() {
+    // $('.ui.basic.modal').modal('show');
     this.generalservice.controlGlobalNotifier$.subscribe(val => {
       if (val == "on") {
         this.globalOverlay = "flex";
