@@ -612,8 +612,7 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
            
           };
 
-     button.disabled = false;
-     button.innerHTML = 'Continue application';
+    
        this.cc = CreditClan.init({
          key: 'z2BhpgFNUA99G8hZiFNv77mHDYcTlecgjybqDACv',
          banner: 'https://images.unsplash.com/photo-1605902711834-8b11c3e3ef2f?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80',
@@ -682,6 +681,8 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
 
       setTimeout(() => {
         this.cc.open();
+        button.disabled = false;
+        button.innerHTML = 'Continue application';
       }, 200);
       
   }
