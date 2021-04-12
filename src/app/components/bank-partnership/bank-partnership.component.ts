@@ -67,7 +67,8 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
     | "card_tokenisation"
     | "preambleToForms"
     | "verify-data"
-    | "pre_bankstatement"
+    | "pre_bankstatement" 
+    | 'ask_to_make_payment' | 'confirm_upfront_payment_deduction'
     | "sorry-page" = "preambleToForms";
   text: string = "Sending Loan request....";
   pageViews: string[] = ["work-form"];
@@ -592,7 +593,7 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
      const data = {
                   request: { amount: totalFees, tenor: 3 },
                   profile: {
-                    profile_image: pictureForWidget,
+                      profile_image: pictureForWidget,
                       full_name: this.parentDetails.full_name,
                       email: this.parentDetails.email,
                       phone: this.parentDetails.phone,
@@ -612,7 +613,7 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
            
           };
 
-    
+        // console.log(data);
        this.cc = CreditClan.init({
          key: 'z2BhpgFNUA99G8hZiFNv77mHDYcTlecgjybqDACv',
          banner: 'https://images.unsplash.com/photo-1605902711834-8b11c3e3ef2f?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80',
@@ -639,7 +640,11 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
             try {
               // this.page = "card_tokenisation";
               const res = await this.chatservice.checkIfParentHasSavedCardDetails(request_id, user_id);
-              console.log(res)
+              if(res.data.card){
+                this.page = 'ask_to_make_payment';
+              }else{
+                this.page = 'card_tokenisation';
+              }
             } catch (error) {
               this.page = "card_tokenisation";
             }
@@ -661,11 +666,17 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
             const offers = await this.chatservice.getLoanOffers(
               loanRequest["creditclan_request_id"]
             );
-            this.store.dispatch(
+            console.log(offers);
+            try {
+              this.store.dispatch(
               new generalActions.updateParentOffers(
                 offers["offers"][0].amount == 0 ? [] : [].concat(offers["offers"])
               )
             );
+            } catch (error) {
+              console.log(error);
+            }
+            
             this.spinner = false;
             disconnect.unsubscribe();
             schoolSubscription.unsubscribe();

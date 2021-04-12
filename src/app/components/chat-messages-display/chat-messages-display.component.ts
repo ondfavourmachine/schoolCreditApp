@@ -404,12 +404,18 @@ export class ChatMessagesDisplayComponent
       ) {
         this.generalservice.handleFlowController(String(componentToLoad));
         const res = callBack();
-        const stage = this.determineWhatStageToGoNext(res);
-        this.generalservice.communicateNextStage(stage);
+        if(typeof res == 'boolean'){
+          const stage = this.determineWhatStageToGoNext(res);
+          this.generalservice.communicateNextStage(stage);
+        }else{
+          this[res[0]][res[1]]('reset');
+        }
+        
       }
       if (String(componentToLoad).toLowerCase() == "bank-partnership") {
         let res;
         callBack ? (res = callBack()) : undefined;
+        // console.log(res);
         if (res) {
           this.generalservice.handleSmartViewLoading({
             component: "bank-partnership",

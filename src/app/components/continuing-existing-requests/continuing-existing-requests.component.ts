@@ -100,7 +100,7 @@ export class ContinuingExistingRequestsComponent
 
       this.destroy[1] = this.generalservice.reset$.subscribe(
         (val: string) => {
-          console.log(val);
+          // console.log(val);
           if (val.length < 1) return;
             this.view = '';
         }
@@ -340,7 +340,6 @@ export class ContinuingExistingRequestsComponent
       async val => {
         const { stages } = val;
         this.listOfStagesForLater = { ...stages };
-        
         const {
           full_name,
           date_of_birth,

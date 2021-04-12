@@ -98,6 +98,52 @@
 </div>
 
 
+
+
+<div
+  class="flex flex-column justify-center align-center h-100 text-center family-info"
+  *ngIf="page == 'ask_to_make_payment'"
+>
+  <h1 class="para-title">
+    Thank you for adding your card details. Are you ready to make part-payment of your loan offer now? 
+  </h1>
+
+  <div class="twelve wide column">
+    <button (click)="page = 'confirm_upfront_payment_deduction'" class="ui button primary basic mr-3">
+      Yes
+    </button>
+
+    <!-- <button disabled class="ui button primary basic">
+      Cancel
+    </button> -->
+  </div>
+</div>
+
+
+<div
+  class="flex flex-column justify-center align-center h-100 text-center family-info"
+  *ngIf="page ==  'confirm_upfront_payment_deduction'"
+>
+  <h1 class="para-title">
+    Please confirm that we can charge your account the sum of N50000.
+  </h1>
+
+  <div class="twelve wide column">
+    <button (click)="page = 'confirm_upfront_payment_deduction'" class="ui button primary basic mr-3">
+      Yes, charge my card.
+    </button>
+
+    <!-- <button disabled class="ui button primary basic">
+      Cancel
+    </button> -->
+  </div>
+</div>
+
+
+
+
+
+
 <div
   class="flex flex-column justify-center align-center h-100 text-center family-info"
   *ngIf="page == 'pre_bankstatement'"

@@ -149,7 +149,7 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
            Are you sure you want to restart?`,
           `left`,
           "Yes restart now, make new request, Continue existing request",
-          "restart,newrequest,continuingrequest"
+          "restart,newrequest,continuingrequestandreset"
         );
         setTimeout(() => {
           this.generalservice.responseDisplayNotifier(response);

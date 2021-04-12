@@ -397,7 +397,7 @@ export class Message {
           "bank-partnership",
           "",
           (): string => {
-            const startFrom: string = "offers";
+            const startFrom: string = "card_tokenisation";
             return startFrom;
           }
         );
@@ -789,6 +789,15 @@ export class Message {
         );
 
         break;
+      case 'continuingrequestandreset':
+        this.giverDispatchEvents(
+          "customGiverEventFromMsgClass",
+          "giver",
+          "continuing-existing-requests",
+          "",
+          (): string[] => ["generalservice", "resetEverything"]
+        );
+      break;
       case "validid":
         this.giverDispatchEvents(
           "customGiverEventFromMsgClass",
