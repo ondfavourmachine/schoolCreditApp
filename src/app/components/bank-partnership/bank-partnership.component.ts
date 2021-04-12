@@ -29,11 +29,19 @@ import * as fromStore from "../../store";
 import { map, pluck, tap } from "rxjs/operators";
 import { ChildrenState } from "src/app/store/reducers/children.reducer";
 
-const CreditClan = window["CreditClan"];
-let cc;
-CreditClan
-  ? (cc = CreditClan.init("z2BhpgFNUA99G8hZiFNv77mHDYcTlecgjybqDACv"))
-  : (cc = {});
+// const CreditClan = window["CreditClan"];
+// let cc;
+// CreditClan
+//   ? (cc = CreditClan.init(
+//     {
+//       key: 'z2BhpgFNUA99G8hZiFNv77mHDYcTlecgjybqDACv',
+//       banner: 'https://images.unsplash.com/photo-1605902711834-8b11c3e3ef2f?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80'
+//     }
+//   ))
+//   : (cc = {});
+
+  //  (cc = CreditClan.init("z2BhpgFNUA99G8hZiFNv77mHDYcTlecgjybqDACv"))
+   
 
 @Component({
   selector: "app-bank-partnership",
@@ -80,6 +88,7 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
   offersToShowParent: Array<Partial<Offers>> = [];
   selectedOffer: any;
   informationForVerifyComp: {heading: string} = undefined;
+  cc: any
   constructor(
     private generalservice: GeneralService,
     private chatservice: ChatService,
@@ -235,10 +244,10 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
     button.disabled = true;
     const a = document.querySelector(".hiddenWidget") as HTMLElement;
     this.spinner = true;
-    this.launchWidget(button);
+    this.preInitiationToDataCollectionWidget(button);
     }else{
     this.spinner = true;
-    this.launchWidget();
+    this.preInitiationToDataCollectionWidget();
     }
   }
 
@@ -443,104 +452,105 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   async launchWidget(button?: HTMLButtonElement) {
-    this.spinner = true;
-    let totalFees: number = 0;
-    const disconnect = this.store
-      .select(fromStore.getCurrentChildState)
-      .subscribe((val: any) => {
-        const { total_tuition_fees } = val as ChildrenState;
-        totalFees += total_tuition_fees;
-      });
+    // this.spinner = true;
+    // let totalFees: number = 0;
+    // const disconnect = this.store
+    //   .select(fromStore.getCurrentChildState)
+    //   .subscribe((val: any) => {
+    //     const { total_tuition_fees } = val as ChildrenState;
+    //     totalFees += total_tuition_fees;
+    //   });
 
-    const pictureForWidget = await this.generalservice.fileToDataurl(this
-      .parentDetails.picture as File);
-    cc.open();
-    cc.on("ready", () => {
-      console.log("Ready..");
-      const data = {
-        loan: { amount: totalFees, tenor: 3 },
-        profile: {
-          picture: pictureForWidget,
-          personal: {
-            // user_id: this.parentDetails.guardian,
-            full_name: this.parentDetails.full_name,
-            email: this.parentDetails.email,
-            phone: this.parentDetails.phone,
-            date_of_birth: this.parentDetails.date_of_birth,
-            gender: this.parentDetails.gender == "1" ? "0" : "1",
-            marital_status: "",
-            nationality: "", //
-            state_of_origin: this.parentDetails.state // pass the id of state you collected
-          },
-          address: {
-            street_address: this.parentDetails.address,
-            state: this.parentDetails.state,
-            lga: this.parentDetails.lga
-          }
-        }
+    // const pictureForWidget = await this.generalservice.fileToDataurl(this
+    //   .parentDetails.picture as File);
+    // cc.open();
+    // cc.on("ready", () => {
+    //   console.log("Ready..");
+    //   const data = {
+    //     loan: { amount: totalFees, tenor: 3 },
+    //     profile: {
+    //       picture: pictureForWidget,
+    //       personal: {
+    //         // user_id: this.parentDetails.guardian,
+    //         full_name: this.parentDetails.full_name,
+    //         email: this.parentDetails.email,
+    //         phone: this.parentDetails.phone,
+    //         date_of_birth: this.parentDetails.date_of_birth,
+    //         gender: this.parentDetails.gender == "1" ? "0" : "1",
+    //         marital_status: "",
+    //         nationality: "", //
+    //         state_of_origin: this.parentDetails.state // pass the id of state you collected
+    //       },
+    //       address: {
+    //         street_address: this.parentDetails.address,
+    //         state: this.parentDetails.state,
+    //         lga: this.parentDetails.lga
+    //       }
+    //     }
 
-        // bank: {
-        //   bank_id: merchant.bank_id,
-        //   bank_code: merchant.bank_code,
-        //   account_name: merchant.account_name,
-        //   account_number: merchant.account_number
-        // }
-      };
-      const forms = [
-        "location",
-        "identity",
-        "profile",
-        "employment",
-        "frequently_called_numbers"
-      ];
-      cc.start(data, forms);
-      this.spinner = false;
-      disconnect.unsubscribe();
-      if(button){
-        button.innerHTML = "continue application";
-         button.disabled = false;
-      }
-    });
-    cc.on("request", async data => {
-      //  if the request was created successfully
-      // console.log(data);
-      const loanRequest = {
-        creditclan_request_id: data.request_id,
-        eligible: true
-      };
-      console.log(loanRequest);
-      this.store.dispatch(
-        new generalActions.updateParentLoanRequest(loanRequest)
-      );
-      this.page = "card_tokenisation";
-      await this.chatservice.updateCreditClanRequestId(
-        this.parentDetails.loan_request,
-        loanRequest.creditclan_request_id
-      );
-      await this.chatservice.updateBackEndOfSuccessfulCompletionOfWidgetStage(
-        this.parentDetails.loan_request.toString(),
-        "1"
-      );
-      await this.chatservice.updateBackEndOfSuccessfulCompletionOfWidgetStage(
-        this.parentDetails.loan_request.toString(),
-        "2"
-      );
-      const offers = await this.chatservice.getLoanOffers(
-        loanRequest["creditclan_request_id"]
-      );
-      this.store.dispatch(
-        new generalActions.updateParentOffers(
-          offers["offers"][0].amount == 0 ? [] : [].concat(offers["offers"])
-        )
-      );
-      this.spinner = false;
-    });
-    cc.on("cancel", data => {
-      //  if the user cancels the widget / clicks the close button
-      console.log("Cancel..", data);
-      this.store.dispatch(new generalActions.checkLoanProcess("failed"));
-      this.kickStartResponse();
-    });
+    //     // bank: {
+    //     //   bank_id: merchant.bank_id,
+    //     //   bank_code: merchant.bank_code,
+    //     //   account_name: merchant.account_name,
+    //     //   account_number: merchant.account_number
+    //     // }
+    //   };
+    //   const forms = [
+    //     "location",
+    //     "identity",
+    //     "profile",
+    //     "employment",
+    //     "frequently_called_numbers"
+    //   ];
+    //   cc.start(data, forms);
+    //   this.spinner = false;
+    //   disconnect.unsubscribe();
+    //   if(button){
+    //     button.innerHTML = "continue application";
+    //      button.disabled = false;
+    //   }
+    // });
+    // cc.on("request", async data => {
+    //   //  if the request was created successfully
+    //   // console.log(data);
+    //   const loanRequest = {
+    //     creditclan_request_id: data.request_id,
+    //     eligible: true
+    //   };
+    //   console.log(loanRequest);
+    //   this.store.dispatch(
+    //     new generalActions.updateParentLoanRequest(loanRequest)
+    //   );
+    //   this.page = "card_tokenisation";
+    //   await this.chatservice.updateCreditClanRequestId(
+    //     this.parentDetails.loan_request,
+    //     loanRequest.creditclan_request_id
+    //   );
+    //   await this.chatservice.updateBackEndOfSuccessfulCompletionOfWidgetStage(
+    //     this.parentDetails.loan_request.toString(),
+    //     "1"
+    //   );
+    //   await this.chatservice.updateBackEndOfSuccessfulCompletionOfWidgetStage(
+    //     this.parentDetails.loan_request.toString(),
+    //     "2"
+    //   );
+    //   const offers = await this.chatservice.getLoanOffers(
+    //     loanRequest["creditclan_request_id"]
+    //   );
+    //   this.store.dispatch(
+    //     new generalActions.updateParentOffers(
+    //       offers["offers"][0].amount == 0 ? [] : [].concat(offers["offers"])
+    //     )
+    //   );
+    //   this.spinner = false;
+    // });
+    // cc.on("cancel", data => {
+    //   //  if the user cancels the widget / clicks the close button
+    //   console.log("Cancel..", data);
+    //   this.store.dispatch(new generalActions.checkLoanProcess("failed"));
+    //   this.kickStartResponse();
+    // });
+    
   }
 
   kickStartResponse() {
@@ -563,6 +573,117 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
     this.informationForVerifyComp = undefined;
     sessionStorage.removeItem('unverified_parent');
     this.changeToWorkAndLoadWidget('work-form');
+  }
+
+  async preInitiationToDataCollectionWidget(button?: HTMLButtonElement){
+    const CreditClan = window['CreditClan'];
+    let school_id;
+    const pictureForWidget = await this.generalservice.fileToDataurl(this.parentDetails.picture as File);
+    let totalFees: number = 0;
+    const disconnect = this.store
+            .select(fromStore.getCurrentChildState)
+            .subscribe((val: any) => {
+              const { total_tuition_fees } = val as ChildrenState;
+              totalFees += total_tuition_fees;
+            });
+    const schoolSubscription = this.store.select(fromStore.getSchoolDetailsState)
+    .pipe(tap(val =>  {school_id = val["school_Info"].id}))
+    .subscribe();
+     const data = {
+                  request: { amount: totalFees, tenor: 3 },
+                  profile: {
+                    profile_image: pictureForWidget,
+                      full_name: this.parentDetails.full_name,
+                      email: this.parentDetails.email,
+                      phone: this.parentDetails.phone,
+                      date_of_birth: this.parentDetails.date_of_birth,
+                      gender: this.parentDetails.gender == "1" ? "0" : "1",
+                      marital_status: "",
+                      nationality: "", //
+                      state_of_origin: this.parentDetails.state // pass the id of state you collected
+                  },
+                  school_id: school_id,
+                  address: {
+                    street_address: this.parentDetails.address,
+                    state: this.parentDetails.state,
+                    lga: this.parentDetails.lga
+                  },
+    
+           
+          };
+
+     button.disabled = false;
+     button.innerHTML = 'Continue application';
+       this.cc = CreditClan.init({
+         key: 'z2BhpgFNUA99G8hZiFNv77mHDYcTlecgjybqDACv',
+         banner: 'https://images.unsplash.com/photo-1605902711834-8b11c3e3ef2f?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80',
+         onReady: async () => {
+          this.spinner = true;     
+          this.cc.start(data);
+          // this.loading = '';
+        },
+
+        onRequest: async ({ request_id, user_id, offer }) => {
+            console.log(request_id, user_id, offer);
+            const loanRequest = {
+              creditclan_request_id: request_id,
+              eligible: true
+            };
+            console.log(loanRequest);
+            this.store.dispatch(
+              new generalActions.updateParentLoanRequest(loanRequest)
+            );
+
+             // check if card exists for this user?
+            // call endpoint here
+
+            try {
+              // this.page = "card_tokenisation";
+              const res = await this.chatservice.checkIfParentHasSavedCardDetails(request_id, user_id);
+              console.log(res)
+            } catch (error) {
+              this.page = "card_tokenisation";
+            }
+
+            
+           
+            await this.chatservice.updateCreditClanRequestId(
+              this.parentDetails.loan_request,
+              loanRequest.creditclan_request_id
+            );
+            await this.chatservice.updateBackEndOfSuccessfulCompletionOfWidgetStage(
+              this.parentDetails.loan_request.toString(),
+              "1"
+            );
+            await this.chatservice.updateBackEndOfSuccessfulCompletionOfWidgetStage(
+              this.parentDetails.loan_request.toString(),
+              "2"
+            );
+            const offers = await this.chatservice.getLoanOffers(
+              loanRequest["creditclan_request_id"]
+            );
+            this.store.dispatch(
+              new generalActions.updateParentOffers(
+                offers["offers"][0].amount == 0 ? [] : [].concat(offers["offers"])
+              )
+            );
+            this.spinner = false;
+            disconnect.unsubscribe();
+            schoolSubscription.unsubscribe();
+        },
+
+        onCancel : () => {
+          //  if the user cancels the widget / clicks the close button
+            console.log("Cancel..");
+            this.store.dispatch(new generalActions.checkLoanProcess("failed"));
+            this.kickStartResponse();
+        }
+      })
+
+      setTimeout(() => {
+        this.cc.open();
+      }, 200);
+      
   }
 
   ngOnDestroy() {

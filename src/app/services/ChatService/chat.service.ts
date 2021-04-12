@@ -374,6 +374,14 @@ export class ChatService {
       err => console.log(err)
     );
   }
+  
+  // check if card exists
+
+  checkIfParentHasSavedCardDetails(request_id, user_id): Promise<any>{
+    return this.http.post('https://mobile.creditclan.com/api/v3/loan/checklists', { request_id, user_id }, {
+        headers: { 'x-api-key': 'z2BhpgFNUA99G8hZiFNv77mHDYcTlecgjybqDACv' }
+      }).toPromise();
+  }
 
   // confirm account details
   confirmAccountDetailsOfParent(obj: { bank_code: any; account_number: any }) {
