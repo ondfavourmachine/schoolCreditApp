@@ -178,6 +178,7 @@ export class EditChildComponent implements OnInit, OnDestroy {
     for (let [key, value] of this.listOfChildrenParsed) {
       try {
         const obj2 = Object.assign({}, value);
+        // console.log(obj2)
         await this.chatservice.modifyChildData(value.child_id, obj2);
       } catch (error) {
         console.log(error);
@@ -235,7 +236,7 @@ export class EditChildComponent implements OnInit, OnDestroy {
     this.generalservice.handleFlowController("");
     setTimeout(() => {
       const responseFromBot = new replyGiversOrReceivers(
-        `Thank you for editing your child's`,
+        `Thank you for editing your child's information`,
         "left"
       );
       this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(

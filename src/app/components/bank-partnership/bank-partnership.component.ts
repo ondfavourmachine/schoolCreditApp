@@ -68,7 +68,7 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
     | "preambleToForms"
     | "verify-data"
     | "pre_bankstatement" 
-    | 'ask_to_make_payment' | 'confirm_upfront_payment_deduction'
+    | 'ask_to_make_payment' | 'confirm_upfront_payment_deduction' | 'notify-school'
     | "sorry-page" = "preambleToForms";
   text: string = "Sending Loan request....";
   pageViews: string[] = ["work-form"];
@@ -226,6 +226,8 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
         }
       }
     });
+
+    sessionStorage.removeItem('listOfChildren');
   }
 
   selectOffers(index: string) {
@@ -588,8 +590,7 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
               totalFees += total_tuition_fees;
             });
     const schoolSubscription = this.store.select(fromStore.getSchoolDetailsState)
-    .pipe(tap(val =>  {school_id = val["school_Info"].id}))
-    .subscribe();
+    .pipe(tap(val =>  {school_id = val["school_Info"].id})).subscribe();
      const data = {
                   request: { amount: totalFees, tenor: 3 },
                   profile: {
@@ -624,30 +625,30 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
         },
 
         onRequest: async ({ request_id, user_id, offer }) => {
-            console.log(request_id, user_id, offer);
+            // console.log(request_id, user_id, offer);
             const loanRequest = {
               creditclan_request_id: request_id,
               eligible: true
             };
-            console.log(loanRequest);
+            // console.log(loanRequest);
             this.store.dispatch(
               new generalActions.updateParentLoanRequest(loanRequest)
             );
-
+            this.page = 'notify-school';
              // check if card exists for this user?
             // call endpoint here
 
-            try {
-              // this.page = "card_tokenisation";
-              const res = await this.chatservice.checkIfParentHasSavedCardDetails(request_id, user_id);
-              if(res.data.card){
-                this.page = 'ask_to_make_payment';
-              }else{
-                this.page = 'card_tokenisation';
-              }
-            } catch (error) {
-              this.page = "card_tokenisation";
-            }
+            // try {
+            //   // this.page = "card_tokenisation";
+            //   const res = await this.chatservice.checkIfParentHasSavedCardDetails(request_id, user_id);
+            //   if(res.data.card){
+            //     this.page = 'ask_to_make_payment';
+            //   }else{
+            //     this.page = 'card_tokenisation';
+            //   }
+            // } catch (error) {
+            //   this.page = "card_tokenisation";
+            // }
 
             
            
@@ -680,6 +681,21 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
             this.spinner = false;
             disconnect.unsubscribe();
             schoolSubscription.unsubscribe();
+
+            // return from this bank partnership components
+
+          this.generalservice.handleFlowController("");
+          const responseFromParent = new replyGiversOrReceivers(
+            `I have provided all relevant information`,
+            "right"
+          );
+          // console.log(this.tuitionFeesTotal);
+          this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
+            `Thank you for your application. Your School has been notified to review your request.`,
+            "left",
+          );
+          this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
+          this.generalservice.responseDisplayNotifier(responseFromParent);
         },
 
         onCancel : () => {

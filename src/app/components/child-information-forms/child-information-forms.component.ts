@@ -409,6 +409,7 @@ export class ChildInformationFormsComponent
       let formToSubmit = Object.assign({}, value);
       delete formToSubmit.first_name;
       delete formToSubmit.last_name;
+      // console.log(formToSubmit);
       try {
         const res = await this.chatapi.saveChildData(
           formToSubmit,
