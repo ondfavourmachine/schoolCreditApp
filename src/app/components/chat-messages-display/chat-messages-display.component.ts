@@ -711,7 +711,8 @@ selectMottoFromSchool(){
           new MutationObserver((mutations: MutationRecord[], observer) => {
            const buttons =  document.querySelectorAll('.dynamicButton');
            if(buttons.length > 0){
-             resolve(true)
+             resolve(true);
+             observer.disconnect();
            }
           }).observe(document.documentElement, {
               childList: true,
