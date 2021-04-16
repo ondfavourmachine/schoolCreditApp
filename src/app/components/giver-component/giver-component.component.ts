@@ -41,7 +41,7 @@ export class GiverComponentComponent implements OnInit {
             )
         }
       })
-       console.log({continuingrequest, schoolString});
+      //  console.log({continuingrequest, schoolString});
       this.checkWhetherButtonIsAvailableAndReturnIt()
        .then((val ) => {
          const button = val[0] as HTMLButtonElement;
