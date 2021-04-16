@@ -827,7 +827,6 @@ selectMottoFromSchool(){
     options?: { classes: string[] };
   }) {
     let ul: HTMLUListElement;
-    console.trace(ul);
     // back up plan if the above doesnt work;
     if (this.messagePlaceHolder) {
       ul = this.messagePlaceHolder.nativeElement as HTMLUListElement;
