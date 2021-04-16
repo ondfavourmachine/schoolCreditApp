@@ -607,9 +607,6 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
             // } catch (error) {
             //   this.page = "card_tokenisation";
             // }
-
-            
-           
             await this.chatservice.updateCreditClanRequestId(
               this.parentDetails.loan_request,
               loanRequest.creditclan_request_id
@@ -618,10 +615,10 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
               this.parentDetails.loan_request.toString(),
               "1"
             );
-            await this.chatservice.updateBackEndOfSuccessfulCompletionOfWidgetStage(
-              this.parentDetails.loan_request.toString(),
-              "2"
-            );
+            // await this.chatservice.updateBackEndOfSuccessfulCompletionOfWidgetStage(
+            //   this.parentDetails.loan_request.toString(),
+            //   "2"
+            // );
             const offers = await this.chatservice.getLoanOffers(
               loanRequest["creditclan_request_id"]
             );

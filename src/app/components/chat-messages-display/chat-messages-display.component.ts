@@ -965,8 +965,8 @@ selectMottoFromSchool(){
   ) {
     
     setTimeout(() => {
-      const preLoader = document.querySelector('.pre_loader');
-        ul.removeChild(preLoader);
+        const preLoader = document.querySelector('.pre_loader');
+        preLoader ? ul.removeChild(preLoader): null;
         const msgs = Message.welcomeMessagesForGiver;
         let newString = '';
         let userNameOfSchool = schoolDetails ? schoolDetails.name : this.route.url.split('/').slice(-1)[0];

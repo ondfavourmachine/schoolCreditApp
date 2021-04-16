@@ -99,7 +99,7 @@ export class ContinuingExistingRequestsComponent
   
   
       
-    this.store.select(fromStore.getSchoolDetailsState)
+    this.destroy[3] = this.store.select(fromStore.getSchoolDetailsState)
     .pipe(pluck('school_Info'))
     .subscribe(
         val => {
@@ -415,7 +415,7 @@ export class ContinuingExistingRequestsComponent
             this.store.dispatch(new generalActions.updateParentOffers(offers['offers'][0].amount == 0 ? [] : [].concat(offers['offers']))); 
           } catch (error) { // do nothing 
           }
-         
+
           const newStages = this.updateWidgets(res['widgets_to_show'] as Array<string>, stages);
           const returnVal = this.rearrangeStaInOrderFashion(newStages);
           this.checking("stop");

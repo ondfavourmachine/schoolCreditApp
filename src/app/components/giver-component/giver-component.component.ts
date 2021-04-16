@@ -30,7 +30,7 @@ export class GiverComponentComponent implements OnInit {
 
   handleContinuingRequest(schoolString: string): void{
     if(schoolString.includes('?')){
-      const continuingrequest = schoolString.split('?')[0];
+      // const continuingrequest = schoolString.split('?')[0];
       const obs = this.activatedRoute.queryParamMap.subscribe((val) => {
         if(val.get('continuingrequest') == '1'){
           this.store.dispatch(

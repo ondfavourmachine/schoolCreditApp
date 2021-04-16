@@ -909,7 +909,6 @@ export class Message {
 
   saveChats() {
     const savedChats = JSON.parse(sessionStorage.getItem("savedChats"));
-    // save the chats that was passed to this function.
     if (!savedChats) {
       let arrayOfChats = [];
       arrayOfChats.push(
