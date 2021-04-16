@@ -706,18 +706,37 @@ selectMottoFromSchool(){
     if (savedChats.length == 3) return;
     const remainingChats = savedChats.slice(3);
     this.generalservice.nextChatbotReplyToGiver = undefined;
-    remainingChats.forEach((element, index, array) => {
-      this.insertGiversResponseIntoDom(
-        new replyGiversOrReceivers(
-          element.text,
-          element.direction,
-          element.buttonElement,
-          element.extraInfo,
-          index == array.length - 1 ? "prevent" : "allow"
-        ),
-        undefined
-      );
-    });
+    const waitForWelcomeMessages = async (): Promise<boolean> => {
+      return new Promise((resolve, reject)=> {
+          new MutationObserver((mutations: MutationRecord[], observer) => {
+           const buttons =  document.querySelectorAll('.dynamicButton');
+           if(buttons.length > 0){
+             resolve(true)
+           }
+          }).observe(document.documentElement, {
+              childList: true,
+             subtree: true,
+          })
+      })
+    }
+
+    waitForWelcomeMessages()
+    .then(val => {
+      remainingChats.forEach((element, index, array) => {
+        this.insertGiversResponseIntoDom(
+          new replyGiversOrReceivers(
+            element.text,
+            element.direction,
+            element.buttonElement,
+            element.extraInfo,
+            index == array.length - 1 ? "prevent" : "allow"
+          ),
+          undefined
+        );
+      });
+    })
+
+   
   }
 
   // covid relief bot replies to givers
@@ -808,6 +827,7 @@ selectMottoFromSchool(){
     options?: { classes: string[] };
   }) {
     let ul: HTMLUListElement;
+    console.trace(ul);
     // back up plan if the above doesnt work;
     if (this.messagePlaceHolder) {
       ul = this.messagePlaceHolder.nativeElement as HTMLUListElement;
