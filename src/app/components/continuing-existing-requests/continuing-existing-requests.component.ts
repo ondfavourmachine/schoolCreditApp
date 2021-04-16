@@ -20,8 +20,8 @@ import {
 import { Store } from "@ngrx/store";
 import * as fromStore from "../../store";
 import * as generalActions from "../../store/actions/general.action";
-import { pluck } from "rxjs/operators";
-import { Observable, Subscription } from "rxjs";
+import { pluck, tap } from "rxjs/operators";
+import { forkJoin, Observable, Subscription } from "rxjs";
 import { ChildrenState } from "src/app/store/reducers/children.reducer";
 
 
@@ -47,7 +47,8 @@ export class ContinuingExistingRequestsComponent
     | "pin_not_set"
     | "phone_verify"
     | "phone_verify_second"
-    | "phone_verify_first" = "";
+    | "phone_verify_first" 
+    | 'congratulations' | 'after-congrats' = "";
   arrayOfNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 11];
   input: string = "";
   otpSent: boolean = false;
@@ -65,6 +66,8 @@ export class ContinuingExistingRequestsComponent
   phoneOTPForm: FormGroup;
   destroy: Subscription[] = [];
   parentDetails: Partial<Parent>;
+  parentNameBeforeContinuingRequestIsDone: string;
+  nameofSchoolThatApprovedRequest: string;
   loanAmountByParent: number = 0;
   constructor(
     public generalservice: GeneralService,
@@ -93,9 +96,29 @@ export class ContinuingExistingRequestsComponent
       OTP_for_phone: ["", Validators.required]
     });
 
+  
+  
+      
+    this.store.select(fromStore.getSchoolDetailsState)
+    .pipe(pluck('school_Info'))
+    .subscribe(
+        val => {
+          this.nameofSchoolThatApprovedRequest = val['name'];
+        },
+         err => console.log(err),   
+    )
+
     this.destroy[0] = this.store
       .select(fromStore.getParentState)
-      .pipe(pluck("parent_info"))
+      .pipe(
+        tap(val => {
+          if(val['loan_approval_status'].loan_request_has_been_approved == 1){
+            this.parentNameBeforeContinuingRequestIsDone = val['loan_approval_status'].name;
+
+            this.view = 'congratulations';
+          }
+        }),
+        pluck("parent_info"))
       .subscribe(val => (this.parentDetails = val as Partial<Parent>));
 
       this.destroy[1] = this.generalservice.reset$.subscribe(

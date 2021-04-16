@@ -68,23 +68,7 @@
   transition: border 250ms ease;
 }
 
-.sorry__title{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  height: auto;
-}
 
-.sorry__title span{
-    width: 80%;
-    height: 100%;
-}
-
-.sorry__title span img{
-  max-width: 80%;
-  object-fit: cover;
-}
 
 
 

@@ -21,9 +21,15 @@ export const updateWidgetCashflow = "[parents] UPDATE WIDGET CASH FLOW";
 export const updateParentLoanStatus = "[parents] UPDATE LOAN REQUEST";
 export const updateParentAcctInformation = "[parents] UPDATE PARENT ACCOUNT";
 export const updateOffers = "[parents] UPDATE PARENT OFFERS";
+export const updateReturningParent = "[parents] UPDATE RETURNING PARENT"
 // 
 
 // action classes for parent
+export class returningParentHasBeenApproved implements Action{
+  readonly type = updateReturningParent;
+  constructor(public payload: {continuingrequest: string, nameOfParent: string}){}
+}
+
 export class updateParentOffers implements Action {
   readonly type = updateOffers;
   constructor(public payload: Array<Partial<Offers>>) {}
@@ -70,7 +76,8 @@ export type parentsAction =
   | addParents
   | updateParentWidgetCardStage
   | updateParentWidgetCashflowStage | editParentInfo
-  | updateParentWidgetDataStage | updateParentLoanRequest | updateParentAcctInfo | updateParentOffers;
+  | updateParentWidgetDataStage 
+  | updateParentLoanRequest | updateParentAcctInfo | updateParentOffers | returningParentHasBeenApproved;
 
 
 
@@ -195,7 +202,6 @@ export type schoolActions  = updateSchoolBooks |
 loadSchoolDetails | schoolDetailsLoadingIsCompleted | 
 schoolDetailsFailedToLoad | schoolDetailsIsLoaded | 
 schoolDetailsIsLoading
-
 
 
 

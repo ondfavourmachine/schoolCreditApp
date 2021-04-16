@@ -16,7 +16,12 @@ export interface ParentState {
   offers: Array<Partial<Offers>>,
   parent_loan_request_status: Partial<LoanRequest>,
   parent_account_info: Partial<ParentAccountInfo>;
-  editMode: boolean
+  editMode: boolean,
+  loan_approval_status: {
+    name: string,
+    loan_request_has_been_approved: number
+  }
+
 }
 
 // Application state
@@ -28,7 +33,11 @@ export const initialState: ParentState = {
   offers: [],
   parent_loan_request_status: {creditclan_request_id: null, eligible: false},
   parent_account_info: {},
-  editMode: false
+  editMode: false,
+  loan_approval_status: {
+    name: undefined,
+    loan_request_has_been_approved: 0
+  }
 };
 
 export function reducer(
@@ -117,6 +126,18 @@ export function reducer(
       return {
         ...state,
         editMode : action.payload
+      }
+    }
+
+    case generalActions.updateReturningParent: {
+      return {
+        ...state,
+
+        loan_approval_status: {
+          loan_request_has_been_approved: Number(action.payload.continuingrequest),
+          name: action.payload.nameOfParent
+        }
+
       }
     }
     

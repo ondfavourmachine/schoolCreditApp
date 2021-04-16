@@ -252,4 +252,54 @@
     Confirming ...
     <i style="margin-left: 7px" class="fa fa-circle-notch fa-spin"></i>
   </span>
+
+
+  <div
+  class="flex flex-column justify-center align-center h-100 text-center family-info"
+  *ngIf="view == 'congratulations'"
+  style="height: 500px;"
+>
+  
+
+  <h1 class="para-title sorry__title">
+    <span >
+      <img  src="../../../assets/images/winners.svg" alt="">
+    </span>
+     <p>
+       Congrats, {{parentNameBeforeContinuingRequestIsDone}}. <strong>
+        {{ nameofSchoolThatApprovedRequest }}
+       </strong>  has approved your loan request.
+     </p>
+  </h1>
+ 
+  
+  <div class="twelve wide column">
+    <button  (click)="view = 'after-congrats'" class="ui button primary basic mr-3">
+      Proceed
+    </button>
+  
+    
+  </div>
+</div> 
+
+
+
+<div
+class="flex flex-column justify-center align-center h-100 text-center family-info"
+*ngIf="view == 'after-congrats'"
+>
+<h1 class="para-title">
+  Please take a few seconds to verify you are actually you 
+</h1>
+
+<div class="twelve wide column">
+  <button (click)="view = ''" class="ui button primary basic">
+    Ok, verify me
+  </button>
+
+  <!-- <button disabled class="ui button primary basic">
+    let's do it later
+  </button> -->
+</div>
+</div>
 </div>

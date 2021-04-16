@@ -23,7 +23,7 @@ export class Message {
   ];
 
   static welcomeMessagesForGiver = [
-    "Welcome to the payment portal of Adama High School.",
+    "Welcome to the payment portal of Adama.",
     "This Service helps you manage how you pay your child's fees",
     "How do you want to proceed?"
   ];
@@ -599,7 +599,7 @@ export class Message {
               "right"
             )
           ),
-          () => ['notifyBackendOfLoanRequest']
+          // () => ['notifyBackendOfLoanRequest']
         );
       break;
       case 'verifylater':

@@ -17,8 +17,8 @@ import { ChatService } from "src/app/services/ChatService/chat.service";
 import * as generalActions from "../../store/actions/general.action";
 
 // import { TitleCasePipe } from "@angular/common";
-import { Subscription } from "rxjs";
-import { delay, first, tap } from "rxjs/operators";
+import { of, Subscription } from "rxjs";
+import {  delay,  first, takeLast, takeWhile } from "rxjs/operators";
 import {
   replyGiversOrReceivers,
   GiverResponse,
@@ -70,6 +70,7 @@ export class ChatMessagesDisplayComponent
   private tokeniseProcess: string;
   public count: number = 0;
   observableToTrash: Subscription[] = [];
+  
   constructor(
     private generalservice: GeneralService,
     private chatservice: ChatService,
@@ -85,7 +86,11 @@ export class ChatMessagesDisplayComponent
       generalservice.setStage("bank-form", {});
       generalservice.setStage("account-info", {});
     }
+
+    
   }
+
+  
 
   ngOnInit() {
     this.observableToTrash[0] = this.generalservice.congratsOrRegrets$.subscribe(
@@ -254,8 +259,30 @@ export class ChatMessagesDisplayComponent
   ngAfterViewInit(message?: string, direction?: string) {
     // debugger;
     const ul = this.messagePlaceHolder.nativeElement as HTMLUListElement;
+    this.insertProcessingBeforeSchoolDetailsLoad(ul);
     // watch this function below:
-    this.generateWelcomeMsgForReceiverOrGiver(ul);
+    const runWelcome =  () => {
+     this.store.select(fromStore.getSchoolDetailsState) 
+      .pipe(
+         takeWhile((val) => {
+           return val['school_Info_Load_state'] != 'completed'
+         }),
+         takeLast(1),
+         pluck('school_Info')
+         ).subscribe(
+          val => {
+            
+            this.generateWelcomeMsgForReceiverOrGiver(ul, undefined, val as SchoolDetailsModel);
+          },
+          err => {
+            this.generateWelcomeMsgForReceiverOrGiver(ul, undefined, undefined);
+          }
+      )
+    } 
+    
+    runWelcome();
+
+    
 
     ul.addEventListener("customReceiverEventFromMsgClass", (e: CustomEvent) => {
       const { stage, message, text } = e.detail;
@@ -526,6 +553,7 @@ export class ChatMessagesDisplayComponent
                 }
 
                if(textWrapper.classList.contains('processing_tokenized_card')){
+                //  console.log('i am here')
                 const html = `
                 <div class="mutation-inserted__text processing_div" style="height: 22px;">
                     <div class="row">
@@ -779,7 +807,6 @@ selectMottoFromSchool(){
     preventOrAllow?: string;
     options?: { classes: string[] };
   }) {
-    
     let ul: HTMLUListElement;
     // back up plan if the above doesnt work;
     if (this.messagePlaceHolder) {
@@ -851,6 +878,7 @@ selectMottoFromSchool(){
     // debugger;
     try {
       const buttonContainer = document.querySelector(".button-container");
+      if(!buttonContainer) return;
       if (buttonContainer.classList.contains("right")) {
         const buttons: NodeListOf<
           HTMLButtonElement
@@ -935,11 +963,13 @@ selectMottoFromSchool(){
     giverOrReceiver?: string,
     schoolDetails?: Partial<SchoolDetailsModel>
   ) {
-    // console.log(this.receiverIsPresent);
+    
     setTimeout(() => {
+      const preLoader = document.querySelector('.pre_loader');
+        ul.removeChild(preLoader);
         const msgs = Message.welcomeMessagesForGiver;
         let newString = '';
-        let userNameOfSchool = this.route.url.split('/').length > 2 ?  this.route.url.split('/').slice(-1)[0] : undefined
+        let userNameOfSchool = schoolDetails ? schoolDetails.name : this.route.url.split('/').slice(-1)[0];
         let messageToDisplay: Message;
         this.count = 0;
         
@@ -1425,6 +1455,31 @@ selectMottoFromSchool(){
       resolve(html);
       
     })
+  }
+
+  insertProcessingBeforeSchoolDetailsLoad(ul: HTMLElement){
+    const str = `<div class="chat-box__wrapper left pre_loader">  
+    <div class="chat-box__inner-wrapper">
+      <img src="../../../assets/chatbotImages/avatar.png" alt="" class="avatar">
+      <div class="chat-box__text-wrapper">
+              <div class="mutation-inserted__text processing_div" style="height: 22px;">
+              <div class="row">
+              <div class="col-3">
+              <div  data-title=".dot-pulse">
+                <div class="stage" style="display: flex;justify-content: center;align-items: center; height: 20px;">
+                  <div class="dot-pulse"></div>
+                </div>
+              </div>
+            </div>
+              </div>
+            </div>
+       
+      </div>
+    </div>
+  </div>`
+
+   ul.insertAdjacentHTML('afterbegin', str);
+
   }
  
 

@@ -150,50 +150,7 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
         .subscribe(val => {
           this.parentRequestAndAccount = { ...val };
         }));
-    let childArray: Array<Partial<AChild>>;
-    this.destroy[3] = this.store
-      .select(fromStore.getCurrentChildState)
-      .pipe(pluck("child_info"))
-      .subscribe(val => {
-        childArray = Array.from((val as Map<string, Partial<AChild>>).values());
-        this.loanAmount = childArray.reduce((acc, element) => {
-          acc = parseInt(element.tuition_fees) + acc;
-          return acc;
-        }, 0);
-      });
-    const arrayOfChildId: { id: any; amount: string }[] = childArray.map(
-      element => {
-        return {
-          id: element.child_id || element.id,
-          amount: element.tuition_fees
-        };
-      }
-    );
-    // debugger;
-    if (
-      this.parentDetails.loan_request == null &&
-      sessionStorage.getItem("guardian") == "null"
-    ) {
-      const rf = sessionStorage.getItem("repaymentFrequency");
-      try {
-        const res = await this.chatservice.sendLoanRequest({
-          school_id: this.parentDetails.school_id || 1,
-          guardian_id: this.parentDetails.guardian,
-          loan_amount: this.loanAmount as string,
-          child_data: arrayOfChildId,
-          repayment_frequency: rf == "null" ? "3" : rf
-        });
-        const { message } = res;
-        if (message == "request created!")
-          this.text = "Awaiting response from financial institutions....";
-      } catch (error) {
-        this.text = "Sending Loan request ...";
-        // i will come back here!
-        this.generalservice.errorNotification(
-          "An error occured while sending your loan request!"
-        );
-      }
-    }
+    
 
     // this.chatservice.getFinancialInstitution().subscribe(val => {
     //   this.result = val;
@@ -635,6 +592,7 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
               new generalActions.updateParentLoanRequest(loanRequest)
             );
             this.page = 'notify-school';
+            await this.sendLoanRequestToBankEnd();
              // check if card exists for this user?
             // call endpoint here
 
@@ -712,6 +670,53 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
         button.innerHTML = 'Continue application';
       }, 200);
       
+  }
+
+
+  async sendLoanRequestToBankEnd(){
+    let childArray:Array<Partial<AChild>>, parent: Parent, tuitionFeesTotal: number;
+    //  Please refactor this code later
+    // get child
+    let disconnect1 = this.store
+      .select(fromStore.getCurrentChildState)
+      .pipe(pluck("child_info"))
+      .subscribe(val => {
+       childArray = Array.from((val as Map<string, Partial<AChild>>).values())});
+      const arrayOfChildId: {id: any, amount: string}[] = childArray.map(element => {
+        return{
+          id: element.child_id || element.id,
+          amount: element.tuition_fees
+        }
+      })
+      // get parent
+      let disconnect2 =  this.store
+    .select(fromStore.getCurrentParentInfo)
+    .subscribe(val => {
+      parent = val as Parent;
+    });
+
+    // get tuition
+    let disconnect3 = this.store
+      .select(fromStore.getCurrentChildState)
+      .subscribe((val: any) => {
+        const { total_tuition_fees } = val as ChildrenState;
+        tuitionFeesTotal = total_tuition_fees;
+      });
+
+      const rf = sessionStorage.getItem('repaymentFrequency');
+      const res = await this.chatservice.sendLoanRequest({
+      school_id: parent.school_id || 1,
+      guardian_id: parent.guardian,
+      loan_amount: tuitionFeesTotal.toString(),
+      child_data: arrayOfChildId,
+      repayment_frequency : rf == 'null' ? '3' : rf
+    });
+    const updatedParents: Partial<Parent> = {...parent, loan_request: res.request}
+    this.store.dispatch(new generalActions.addParents(updatedParents));
+    await this.chatservice.fetchWidgetStages(tuitionFeesTotal.toString());
+    disconnect1.unsubscribe();
+    disconnect2.unsubscribe();
+    disconnect3.unsubscribe();
   }
 
   ngOnDestroy() {
