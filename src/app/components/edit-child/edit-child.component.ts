@@ -153,7 +153,7 @@ export class EditChildComponent implements OnInit, OnDestroy {
   }
 
   async submitEditedChildToServerAndStore() {
-    if (sessionStorage.getItem("fullpayment")) {
+     
       this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
         `Thank you. Are you ready to make payment now?`,
         "left",
@@ -168,8 +168,7 @@ export class EditChildComponent implements OnInit, OnDestroy {
       this.generalservice.responseDisplayNotifier(chatbotResponse);
       this.generalservice.handleFlowController("");
       sessionStorage.removeItem("fullpayment");
-      return;
-    }
+    
 
     this.makeLoanRequestAndGetLoanOffers();
   }
@@ -219,7 +218,11 @@ export class EditChildComponent implements OnInit, OnDestroy {
   }
 
   userIsDoneEditing() {
-    this.submitEditedChildToServerAndStore();
+    if (sessionStorage.getItem("fullpayment")){
+      this.submitEditedChildToServerAndStore();
+      return;
+    }
+ 
     sessionStorage.removeItem("listOfChildren");
     sessionStorage.removeItem("editChild");
     this.generalservice.nextChatbotReplyToGiver = undefined;
