@@ -15,7 +15,8 @@ import { HttpErrorResponse } from "@angular/common/http";
 import {
   AChild,
   Parent,
-  schoolCreditStage
+  schoolCreditStage,
+  SchoolDetailsModel
 } from "src/app/models/data-models";
 import { Store } from "@ngrx/store";
 import * as fromStore from "../../store";
@@ -159,7 +160,7 @@ export class ContinuingExistingRequestsComponent
       });
       this.spinner = false;
       this.listOfStagesForLater.phone_verified = 1;
-      const returnVal = this.rearrangeStaInOrderFashion(this
+      const returnVal = this.rearrangeStagesInOrderedFashion(this
         .listOfStagesForLater as schoolCreditStage);
         this.continue(returnVal, this.parentDetails);
     } catch (error) {
@@ -417,7 +418,7 @@ export class ContinuingExistingRequestsComponent
           }
 
           const newStages = this.updateWidgets(res['widgets_to_show'] as Array<string>, stages);
-          const returnVal = this.rearrangeStaInOrderFashion(newStages);
+          const returnVal = this.rearrangeStagesInOrderedFashion(newStages);
           this.checking("stop");
           this.continue(returnVal, val.data.guardian_data);
         }
@@ -461,7 +462,7 @@ export class ContinuingExistingRequestsComponent
 
   }
 
-  rearrangeStaInOrderFashion(stages: Partial<schoolCreditStage> | Array<any>): string {
+  rearrangeStagesInOrderedFashion(stages: Partial<schoolCreditStage> | Array<any>): string {
     //  debugger;
     let returnVal = undefined;
     if(Array.isArray(stages)){
@@ -470,7 +471,7 @@ export class ContinuingExistingRequestsComponent
         "email_validated",
         "child_data",
         "widget_data",
-        "widget_cashflow",
+        "request_approved",
         "widget_card",
       ];
       for(let i = 0; i < arrangedStages.length; i++){
@@ -485,7 +486,7 @@ export class ContinuingExistingRequestsComponent
         "email_validated",
         "child_data",
         "widget_data",
-        "widget_cashflow",
+        "request_approved",
         "widget_card",
       ];
       for (let element of arrangedStages) {
@@ -561,13 +562,7 @@ export class ContinuingExistingRequestsComponent
         this.generalservice.handleFlowController("");
         this.generalservice.responseDisplayNotifier(this.response);
         setTimeout(() => {
-          // const chatbotResponse = new replyGiversOrReceivers(
-          //   `The school mandates that you add books required by your child or children`,
-          //   'left',
-          //   `Select Books`,
-          //   `addbooks`,
-          //   `allow`
-          // )
+         
           this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
             `Are you ready to be connected to a financial institution?`,
             "left",
@@ -582,14 +577,7 @@ export class ContinuingExistingRequestsComponent
             ``
           );
 
-          // const chatbotResponse = new replyGiversOrReceivers(
-          //     `The school mandates that you add books required by your child or children`,
-          //   'left',
-          //   `Select Books`,
-          //   `addbooks`,
-          //   `prevent`
-       
-          // )
+         
           this.generalservice.responseDisplayNotifier(chatbotResponse);
         }, 800);
         break;
@@ -660,30 +648,6 @@ export class ContinuingExistingRequestsComponent
           this.generalservice.responseDisplayNotifier(nextresponse);
         }, 500);
         break;
-      // case "widget_cashflow":
-      //   this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
-      //   this.generalservice.handleFlowController("");
-      //   this.generalservice.nextChatbotReplyToGiver = undefined;
-      //   const responseFromParent = new replyGiversOrReceivers(
-      //     `Thanks for this information. A financial institution is preparing your final offer.`,
-      //     "left",
-      //     "",
-      //     "prevent"
-      //   );
-      //   this.generalservice.responseDisplayNotifier(responseFromParent);
-      //   this.spinner = false;
-      //   setTimeout(() => {
-      //     this.generalservice.nextChatbotReplyToGiver = undefined;
-      //     const chatbotResponse = new replyGiversOrReceivers(
-      //       `They will also like to know which account will we be debiting you from?`,
-      //       "left",
-      //       "Add Account",
-      //       `addaccount`,
-      //       "prevent"
-      //     );
-      //     this.generalservice.responseDisplayNotifier(chatbotResponse);
-      //   }, 800);
-      //   break;
       case "widget_cashflow":
       case "widget_card":
         this.response = new replyGiversOrReceivers(
@@ -708,7 +672,34 @@ export class ContinuingExistingRequestsComponent
           this.generalservice.responseDisplayNotifier(chatbotResponse);
         }, 800);
         break;
-    }
+      case 'request_approved':
+        let schoolDetails: SchoolDetailsModel;
+        const disconnect = this.store.select(fromStore.getSchoolDetailsState)
+         .pipe(pluck('school_Info'))
+         .subscribe(val => {
+           schoolDetails = val as SchoolDetailsModel;
+         })
+
+        this.response = new replyGiversOrReceivers(
+          `Thank you for providing your details,${data.full_name}. ${schoolDetails.name} has not approved your request. You will be notified by email when your request has been approved, and then you would be able to continue your loan application process.`,
+          "left",
+          "",
+          ``
+        );
+        this.generalservice.handleFlowController("");
+        this.generalservice.responseDisplayNotifier(this.response);
+        this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
+        setTimeout(() => {
+          this.generalservice.nextChatbotReplyToGiver = undefined;
+          const chatbotResponse = new replyGiversOrReceivers(
+            `If you feel that your request approval is taking too long. Please contact ${schoolDetails.name} for more information.`,
+            "left",
+          );
+          this.generalservice.responseDisplayNotifier(chatbotResponse);
+          disconnect.unsubscribe();
+        }, 800);
+        break;
+      }
   }
 
   ngOnDestroy(){

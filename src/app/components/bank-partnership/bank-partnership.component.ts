@@ -592,7 +592,12 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
               new generalActions.updateParentLoanRequest(loanRequest)
             );
             this.page = 'notify-school';
-            await this.sendLoanRequestToBankEnd();
+            try {
+              await this.sendLoanRequestToBankEnd();
+            } catch (error) {
+              this.page = 'sorry-page';
+            }
+          
              // check if card exists for this user?
             // call endpoint here
 
