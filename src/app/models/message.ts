@@ -39,6 +39,11 @@ export class Message {
     Nigeria.`
   ];
 
+  static questionWelcomeMsgs = [
+    `Thank you for opting to answer to questions.`,
+    `Once you are ready click the buttons below:`
+  ];
+
   static failedRequests = [
     `Sorry, We couldnt process your request at this time.`,
     `You, can try again later`,
@@ -719,6 +724,27 @@ export class Message {
         );
         //  "parents-information"
         break;
+      case 'getout':
+        this.giverResponsesEvent(
+          "customGiverResponse",
+          new replyGiversOrReceivers(
+            "Ok, Noted",
+            "left",
+          ),
+          new GiverResponse(
+            new replyGiversOrReceivers(`I am not interested in answering questions`, "right")
+          )
+        );
+      break;
+
+      case 'answerquestions':
+      this.giverDispatchEvents(
+        "customGiverEventFromMsgClass",
+        "giver",
+        "questions-component",
+        
+      );
+      break;
       case "paymenttypetoinstallments":
         this.giverResponsesEvent(
           "customGiverResponse",
@@ -890,6 +916,7 @@ export class Message {
     reply?: GiverResponse,
     callBack?: Function
   ) {
+
     const event: Event = new CustomEvent(typeOfEvent, {
       detail: { message, typeOfEvent, reply, callBack },
       bubbles: true

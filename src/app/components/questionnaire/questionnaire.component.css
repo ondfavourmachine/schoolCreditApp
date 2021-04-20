@@ -1,0 +1,20 @@
+
+
+.answerBoxes{
+    padding: 10px 0rem 10px 3px !important;
+    display: flex !important;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.answerBoxes span{
+    width: auto;
+    font-weight: bold;
+}
+
+.selected{
+    border: 2px solid #2185d0;
+    
+}

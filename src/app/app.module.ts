@@ -53,6 +53,7 @@ import { VerifyParentDataComponent } from './components/verify-parent-data/verif
 import { SchoolBooksComponent } from "./components/school-books-display/school-books.component";
 import { FilterPipe } from "./pipes/filter.pipe";
 import { EditChildComponent } from './components/edit-child/edit-child.component';
+import { QuestionnaireComponent } from "./components/questionnaire/questionnaire.component";
 
 registerLocaleData(en);
 
@@ -89,7 +90,8 @@ registerLocaleData(en);
     MakeFullPaymentComponent,
     FilterPipe,
     VerifyParentDataComponent,
-    EditChildComponent
+    EditChildComponent,
+    QuestionnaireComponent
   ],
   imports: [
     BrowserModule,

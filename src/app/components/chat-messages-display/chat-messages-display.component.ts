@@ -24,7 +24,7 @@ import {
   GiverResponse,
   ReceiversResponse
 } from "src/app/models/GiverResponse";
-import { Router } from "@angular/router";
+import { ActivatedRoute, NavigationEnd, NavigationStart, Router } from "@angular/router";
 import { Store } from "@ngrx/store";
 import * as fromStore from "../../store";
 import { pluck } from "rxjs/operators";
@@ -75,24 +75,18 @@ export class ChatMessagesDisplayComponent
     private generalservice: GeneralService,
     private chatservice: ChatService,
     private route: Router,
+    private activatedRoute: ActivatedRoute,
     private store: Store,
     private titleCase: TitleCasePipe
 
   ) {
-    const stages = generalservice.getStage();
-    if (!stages) {
-      generalservice.setStage("child-info", []);
-      generalservice.setStage("parent-info", {});
-      generalservice.setStage("bank-form", {});
-      generalservice.setStage("account-info", {});
-    }
-
     
   }
 
   
 
   ngOnInit() {
+    
     this.observableToTrash[0] = this.generalservice.congratsOrRegrets$.subscribe(
       val => {
         if (val.length < 1) {
@@ -257,10 +251,18 @@ export class ChatMessagesDisplayComponent
   }
 
   ngAfterViewInit(message?: string, direction?: string) {
-    // debugger;
+    let dataToUse: string
+    this.activatedRoute.queryParams.subscribe(
+      val => {
+        const {comp} = val;
+        if(comp) dataToUse = comp;
+        console.log(dataToUse);
+      }
+    )
     const ul = this.messagePlaceHolder.nativeElement as HTMLUListElement;
     this.insertProcessingBeforeSchoolDetailsLoad(ul);
     // watch this function below:
+    
     const runWelcome =  () => {
      this.store.select(fromStore.getSchoolDetailsState) 
       .pipe(
@@ -280,7 +282,12 @@ export class ChatMessagesDisplayComponent
       )
     } 
     
-    runWelcome();
+    if(dataToUse){
+      this.generateQuestionWelcomeMsg(ul);
+    }else{
+      runWelcome();
+    }
+    
 
     
 
@@ -383,6 +390,10 @@ export class ChatMessagesDisplayComponent
           component: String(componentToLoad),
           info: "schoolBooks"
         });
+      }
+
+      if(String(componentToLoad).toLowerCase() == "questions-component"){
+        this.generalservice.handleFlowController(String(componentToLoad));
       }
 
       if (String(componentToLoad).toLowerCase() == "make-full-payment") {
@@ -1019,6 +1030,23 @@ selectMottoFromSchool(){
         });
     
     }, 1000);
+  }
+
+  generateQuestionWelcomeMsg(ul: HTMLUListElement) {
+    const msgs = Message.questionWelcomeMsgs;
+    let messageToDisplay: Message;
+    const preLoader = document.querySelector('.pre_loader');
+    preLoader ? ul.removeChild(preLoader): null;
+    msgs.forEach((msg, index) => {
+      if(index == 1){
+        this.count = index;
+        messageToDisplay = new Message(`${msg}`, `left`, ul, 'answer questions,not interested', 'answerquestions,getout');
+        messageToDisplay.makeAndInsertMessage(this.count);
+        return;
+      }
+      messageToDisplay = new Message(`${msg}`, `left`, ul);
+      messageToDisplay.makeAndInsertMessage(index);
+    });
   }
 
   

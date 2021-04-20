@@ -56,3 +56,15 @@
 /* 
   
     */
+
+
+
+.question{
+  height: 50px;
+  cursor: pointer;
+}
+
+.question img{
+  object-fit: cover;
+  max-width: 50px;
+}

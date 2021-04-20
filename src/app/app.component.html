@@ -169,6 +169,13 @@
             <app-make-full-payment></app-make-full-payment>
           </div>
         </div>
+
+        <div *ngSwitchCase="'questions-component'">
+          <div class="takeAPicture">
+            <app-questionnaire></app-questionnaire>
+          </div>
+        </div>
+
         <div *ngSwitchCase="'parent-account-form'">
           <div class="takeAPicture">
             <app-parent-account-form

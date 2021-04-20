@@ -22,6 +22,10 @@ const routes: Routes = [
     path: "school/:name",
     loadChildren: () =>
       import("./modules/givers/giver/giver.module").then(m => m.GiverModule)
+  },
+  {
+    path: 'user',
+    loadChildren: () => import('./modules/user/user.module').then(m => m.UserModule)
   }
 ];
 

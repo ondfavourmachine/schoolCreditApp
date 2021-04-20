@@ -4,9 +4,11 @@ import { GiverComponentComponent } from '../../../components/giver-component/giv
 import { SharedModule } from '../../shared/shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
+import { ReceiverParentComponent } from 'src/app/receiver-parent/receiver-parent.component';
 
 const chatBotGiverRoute: Routes = [
-  { path: "", component: GiverComponentComponent }
+  { path: "", component: GiverComponentComponent },
+  
 ];
 
 @NgModule({

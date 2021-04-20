@@ -1,0 +1,53 @@
+
+
+
+<div
+class=" h-100 text-center family-info"
+*ngIf="view == 'questionnaire'"
+>
+<h1 class="para-title">{{currentQuestion?.question}} </h1>
+
+<div class="ui grid justify-center " style="overflow: hidden; margin: 0 auto;">
+  <div
+    *ngFor="let answer of currentQuestion?.answers; index as i"
+    class="six wide column myborder positioned-relative answerBoxes"
+    (click)="selectAnswer($event, currentQuestion?.question, currentQuestion?.answers)"
+  >
+  <span> {{ answer }} </span>
+   <input type="radio" style="display: none;">
+    
+  </div>
+
+
+  <div class="twelve wide column">
+   
+
+    <button (click)="gotoNextQuestion()" disabled id="nextButton" class="ui button primary basic">
+      Next
+    </button>
+  </div>
+  
+</div>
+</div>
+
+<div
+  class="flex flex-column justify-center align-center h-100 text-center family-info"
+  *ngIf="view == 'done'"
+>
+  <h1 class="para-title sorry__title">
+    <span >
+      <img  src="../../../assets/images/super_thank_you_.svg" alt="">
+    </span>
+     <p>
+     Thank you for answering these questions
+     </p>
+  </h1>
+
+  <div class="twelve wide column mt-3">
+    <button class="ui button primary basic mr-3">
+     Okay
+    </button>
+   
+  </div>
+  
+</div>
