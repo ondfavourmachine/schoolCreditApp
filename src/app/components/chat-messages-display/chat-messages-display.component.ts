@@ -38,6 +38,8 @@ interface GetBvnResponse {
   status?: boolean;
 }
 
+type answerFormat = 1 | 2 | 3 | 4;
+
 @Component({
   selector: "app-chat-messages-display",
   templateUrl: "./chat-messages-display.component.html",
@@ -70,6 +72,19 @@ export class ChatMessagesDisplayComponent
   private tokeniseProcess: string;
   public count: number = 0;
   observableToTrash: Subscription[] = [];
+  // properties for questions
+  // begins here
+
+  questionsToAsk: Map<string, Record<string, any>> = new Map();
+  currentQuestion: {[k: string]: string | any} = {};
+  answeredQuestions: Array<Record<string, string>>= [];
+  iterator: Iterator<any>;
+  iteratorForKeys: Iterator<any>;
+  answerFromUser: Array<Record<string, string>> = [];
+  collectedAnswer: Map<string, Record<string, any>> = new Map();
+  stringIndexOfCurrentQuestion: string;
+
+  //ends here
   
   constructor(
     private generalservice: GeneralService,
@@ -80,6 +95,15 @@ export class ChatMessagesDisplayComponent
     private titleCase: TitleCasePipe
 
   ) {
+    
+    // initialize questions in constructor
+    this.questionsToAsk.set('first', {question: 'Do you know Bukunmi?', answers: ['Yes', 'No', 'Probably', 'I cant remember']});
+    this.questionsToAsk.set('second', {question: 'Does he stay at 21, Tapa street Ijesha Lagos?', answers: ['Yes', 'No', 'i am not sure', 'i think so']});
+    this.questionsToAsk.set('third', {question: 'What is your relationship with him?', answers:['Brother', 'Sister', 'Father', 'Mother']});
+    this.questionsToAsk.set('Fourth', {question: 'How long have you known him?', answers: ['1 year', '2 years', 'More than 2 years', 'I dont know him']});
+    this.iterator = this.questionsToAsk.values();
+    this.iteratorForKeys = this.questionsToAsk.keys();
+    // this.currentQuestion = this.iterator.next().value;
     
   }
 
@@ -233,6 +257,21 @@ export class ChatMessagesDisplayComponent
       
       this.selectMottoFromSchool();
       // this.chatservice.deleteGuardian().then();
+
+      this.observableToTrash[10] = this.generalservice.answersToQuestions$.subscribe(
+        val => {
+          if(!this.stringIndexOfCurrentQuestion){
+            return;
+          }
+          isNaN(Number(val)) ? this.displaySubsequentMessages({
+            message: 'You entered a wrong input. Please type in 1, 2, 3 or 4 as your answer:',
+            direction: 'left'
+          }) : console.log(val);
+          if(val instanceof Number){
+            console.log(val);
+          }
+        }
+      )
      
   }
 
@@ -256,7 +295,7 @@ export class ChatMessagesDisplayComponent
       val => {
         const {comp} = val;
         if(comp) dataToUse = comp;
-        console.log(dataToUse);
+        // console.log(dataToUse);
       }
     )
     const ul = this.messagePlaceHolder.nativeElement as HTMLUListElement;
@@ -525,6 +564,12 @@ export class ChatMessagesDisplayComponent
     setTimeout(() => {
       this.refillChatBotWithChats();
     }, 1000);
+
+
+    ul.addEventListener('customEventsForQuestions', (e: CustomEvent) => {
+      const {message} =  e.detail;
+      this[message]();
+    })
 
     this.obs = new MutationObserver(async (mutations: MutationRecord[], observer) => {
       for (const mutation of mutations) {
@@ -1365,7 +1410,7 @@ selectMottoFromSchool(){
   }
  
 
-  arrangeSummaryFromChildDetailsSubmissionForWideScreen(htmlElement: HTMLElement){
+  arrangeSummaryFromChildDetailsSubmissionForWideScreen(htmlElement: HTMLElement): Promise<HTMLDivElement>{
     return new Promise((resolve, reject) => {
       let arrayOfChildren: Partial<AChild>[] = [];
       let totalCostOfFees: number = 0;
@@ -1528,6 +1573,50 @@ selectMottoFromSchool(){
 
    ul.insertAdjacentHTML('afterbegin', str);
 
+  }
+
+
+  startQuestionnaire(){
+    try {
+      this.stringIndexOfCurrentQuestion = this.iteratorForKeys.next().value;
+      if(!this.stringIndexOfCurrentQuestion){
+        throw 'Questions have finished';
+      }
+      this.currentQuestion = this.iterator.next().value;
+      console.log(this.currentQuestion);
+      this.insertQuestionsIntoDOM()
+    } catch (error) {
+      console.log(error);
+    }
+   
+    
+  }
+
+
+  insertQuestionsIntoDOM(){
+    
+    const string = (this.currentQuestion.answers as Array<any>).reduce((acc, elem, index, arr) => {
+       acc+= `<span class="command"> ${index + 1} <strong> ${elem} </strong> </span> ${index == arr.length - 1 ? '': '<hr />'}`;
+       return acc;
+    }, '')
+    
+    let anotherHtml = `
+            <div data-time="1619036364151" class="chat-box__wrapper left">
+                <div class="chat-box__inner-wrapper">
+                   <div class="chat-box__text-wrapper ">
+                    <br/>
+                     ${this.currentQuestion.question}
+                     <br />
+                     <span>answer by typing 1, 2, 3 or 4: </span>
+                     <br />
+                    <br />
+                     ${string}
+                   
+                  </div>
+                </div>
+              </div>`;
+
+    (this.messagePlaceHolder.nativeElement as HTMLElement).insertAdjacentHTML('beforeend', anotherHtml)
   }
  
 

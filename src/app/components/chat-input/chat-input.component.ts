@@ -75,150 +75,170 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
     status: false
     //restart
   };
+  isAskingQuestions: boolean = false;
   constructor(
     private chatservice: ChatService,
     private generalservice: GeneralService,
     private router: Router
-  ) {}
+  ) {
+    
+  }
 
   ngOnChanges() {}
-  ngOnInit() {}
+  ngOnInit() {
+    window.onpopstate = (event: PopStateEvent) => {
+      sessionStorage.clear();
+    };
+  }
 
   ngAfterViewInit() {
+
+    this.generalservice.questionsHasStarted$.subscribe(
+      (val: boolean) => { 
+        this.isAskingQuestions = val;
+      }
+    )
+
+    
   }
 
   processAndRespondToUserInput(actualText: string, value: string) {
     (this.inputFromUser.nativeElement as HTMLInputElement).value = "";
     const typeOfUser = this.router.url;
     let newresponse: replyGiversOrReceivers;
-    switch (actualText) {
-      case "help":
-        this.generalservice.nextChatbotReplyToGiver = undefined;
-        this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
-          `Here is a list of commands you can type in for quick navigation around the system.`,
-          `left`,
-          "I want to be identified,Stay anonymous",
-          "identify,anonymous",
-          undefined,
-          { classes: ["helper"] }
-        );
-        setTimeout(() => {
-          this.generalservice.responseDisplayNotifier(
-            new replyGiversOrReceivers(`${value}`, "right")
+      switch (actualText) {
+        case "help":
+          this.generalservice.nextChatbotReplyToGiver = undefined;
+          this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
+            `Here is a list of commands you can type in for quick navigation around the system.`,
+            `left`,
+            "I want to be identified,Stay anonymous",
+            "identify,anonymous",
+            undefined,
+            { classes: ["helper"] }
           );
-        }, 300);
+          setTimeout(() => {
+            this.generalservice.responseDisplayNotifier(
+              new replyGiversOrReceivers(`${value}`, "right")
+            );
+          }, 300);
+          break;
+          case "hi":
+          case "go":
+          case "hello":
+          case "start":
+          case "begin":
+          const chatresponse = actualText.toLowerCase() == 'hi' ? 'Hello' : 'Hi' ;
+          newresponse = new replyGiversOrReceivers(`${value}`, "right");
+          this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
+            `${chatresponse}, welcome to this payment service. click any of the buttons below to begin`,
+            `left`,
+            "make a new request, Continue existing request",
+            "newrequest,continuingrequest"
+          );
+          setTimeout(() => {
+            this.generalservice.responseDisplayNotifier(newresponse);
+          }, 400);
         break;
-        case "hi":
-        case "go":
-        case "hello":
-        case "start":
-        case "begin":
-        const chatresponse = actualText.toLowerCase() == 'hi' ? 'Hello' : 'Hi' ;
+        
+        case "school":
+        case "give":
+          if (typeOfUser.includes("school")) {
+            const response = new replyGiversOrReceivers(`${value}`, "right");
+            this.generalservice.nextChatbotReplyToGiver = null;
+            this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
+              `Seems, you want to get right to it. That's the spirit! Please click one of the buttons`,
+              `left`,
+              "I want to be identified,Stay anonymous",
+              "identify,anonymous"
+            );
+            setTimeout(() => {
+              this.generalservice.responseDisplayNotifier(response);
+            }, 700);
+          }
+          break;
+         case "restart":
+          const response = new replyGiversOrReceivers(`${value}`, "right");
+          this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
+            `You asked to restart the process. This will lead to loosing all previous entries.
+             Are you sure you want to restart?`,
+            `left`,
+            "Yes restart now, make new request, Continue existing request",
+            "restart,newrequest,continuingrequestandreset"
+          );
+          setTimeout(() => {
+            this.generalservice.responseDisplayNotifier(response);
+          }, 400);
+          break;
+        case 'register':
         newresponse = new replyGiversOrReceivers(`${value}`, "right");
         this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
-          `${chatresponse}, welcome to this payment service. click any of the buttons below to begin`,
+          `Please click any of the buttons below to begin your registration`,
           `left`,
-          "make a new request, Continue existing request",
+          "New registration, i have previously registered",
           "newrequest,continuingrequest"
         );
         setTimeout(() => {
           this.generalservice.responseDisplayNotifier(newresponse);
-        }, 400);
-      break;
-      
-      case "school":
-      case "give":
-        if (typeOfUser.includes("school")) {
-          const response = new replyGiversOrReceivers(`${value}`, "right");
-          this.generalservice.nextChatbotReplyToGiver = null;
-          this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
-            `Seems, you want to get right to it. That's the spirit! Please click one of the buttons`,
-            `left`,
-            "I want to be identified,Stay anonymous",
-            "identify,anonymous"
-          );
-          setTimeout(() => {
-            this.generalservice.responseDisplayNotifier(response);
-          }, 700);
-        }
+        }, 400); 
         break;
-       case "restart":
-        const response = new replyGiversOrReceivers(`${value}`, "right");
+        case "register child":
+        newresponse = new replyGiversOrReceivers(`${value}`, "right");
         this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
-          `You asked to restart the process. This will lead to loosing all previous entries.
-           Are you sure you want to restart?`,
+          `You asked to register a child. Please click any of the buttons below to begin`,
           `left`,
-          "Yes restart now, make new request, Continue existing request",
-          "restart,newrequest,continuingrequestandreset"
+          "Yes restart now,make a new request, Continue existing request",
+          "restart,newrequest,continuingrequest"
         );
         setTimeout(() => {
-          this.generalservice.responseDisplayNotifier(response);
+          this.generalservice.responseDisplayNotifier(newresponse);
+        }, 400);
+  
+        break;
+        case 'continue request':
+        case "continue previous":
+        newresponse = new replyGiversOrReceivers(`${value}`, "right");
+        this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
+          `To continue an exiting request please click the button below.`,
+          `left`,
+          "Continue existing request",
+          "continuingrequest"
+        );
+        setTimeout(() => {
+          this.generalservice.responseDisplayNotifier(newresponse);
         }, 400);
         break;
-      case 'register':
-      newresponse = new replyGiversOrReceivers(`${value}`, "right");
-      this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
-        `Please click any of the buttons below to begin your registration`,
-        `left`,
-        "New registration, i have previously registered",
-        "newrequest,continuingrequest"
-      );
-      setTimeout(() => {
-        this.generalservice.responseDisplayNotifier(newresponse);
-      }, 400); 
-      break;
-      case "register child":
-      newresponse = new replyGiversOrReceivers(`${value}`, "right");
-      this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
-        `You asked to register a child. Please click any of the buttons below to begin`,
-        `left`,
-        "Yes restart now,make a new request, Continue existing request",
-        "restart,newrequest,continuingrequest"
-      );
-      setTimeout(() => {
-        this.generalservice.responseDisplayNotifier(newresponse);
-      }, 400);
-
-      break;
-      case 'continue request':
-      case "continue previous":
-      newresponse = new replyGiversOrReceivers(`${value}`, "right");
-      this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
-        `To continue an exiting request please click the button below.`,
-        `left`,
-        "Continue existing request",
-        "continuingrequest"
-      );
-      setTimeout(() => {
-        this.generalservice.responseDisplayNotifier(newresponse);
-      }, 400);
-      break;
-      default:
-          this.generalservice.nextChatbotReplyToGiver = undefined;
-          const response2 = new replyGiversOrReceivers(`${value}`, "right");
-          this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
-            `Your entry is invalid! Here are a list of words that could help you quickly navigate the system.
-             `,
-            `left`,
-            "I want to be identified,Stay anonymous", // please these buttons are completely useless and will not be presented in the dom
-            "identify,anonymous",
-            undefined,
-            { classes: ["bot_helper_message"] }
-          );
-          setTimeout(() => {
-            this.generalservice.responseDisplayNotifier(response2);
-          }, 700);
-      
-    }
+        default:
+            this.generalservice.nextChatbotReplyToGiver = undefined;
+            const response2 = new replyGiversOrReceivers(`${value}`, "right");
+            this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
+              `Your entry is invalid! Here are a list of words that could help you quickly navigate the system.
+               `,
+              `left`,
+              "I want to be identified,Stay anonymous", // please these buttons are completely useless and will not be presented in the dom
+              "identify,anonymous",
+              undefined,
+              { classes: ["bot_helper_message"] }
+            );
+            setTimeout(() => {
+              this.generalservice.responseDisplayNotifier(response2);
+            }, 700);
+        
+      }
+   
+    
   }
 
   submit(event: KeyboardEvent) {
     event.preventDefault();
     //  i would remove this later
     event.stopPropagation();
-
     const input = event.srcElement as HTMLInputElement;
     if (event instanceof KeyboardEvent) {
+      if(this.isAskingQuestions){
+        this.generalservice.answerBroadCast(input.value);
+        return;
+      }
       this.crossCheckUserInputWithRegexes(input.value);
     }
   }
@@ -243,6 +263,10 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     } else {
       const input = this.inputFromUser.nativeElement as HTMLInputElement;
+      if(this.isAskingQuestions){
+        this.generalservice.answerBroadCast(input.value);
+        return;
+      }
       this.crossCheckUserInputWithRegexes(input.value);
     }
 
@@ -284,6 +308,7 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
       // this.generalservice.resetChatController("resetChat");
     }, 1000);
   }
+
 
   ngOnDestroy() {
     // this.PreventMemoryLeaks.timeHasElapsed.unsubscribe();

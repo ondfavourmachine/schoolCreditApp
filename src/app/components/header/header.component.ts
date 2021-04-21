@@ -20,7 +20,8 @@ export class HeaderComponent implements OnInit {
   constructor(
     private gs: GeneralService,
     private store: Store,
-    private router: Router
+    private router: Router,
+    private generalservice: GeneralService
   ) { 
     
   }
@@ -39,6 +40,7 @@ export class HeaderComponent implements OnInit {
     sessionStorage.clear();
     this.router.navigate(['user', 'questions'], {queryParams: {comp: typeOfState}})
     this.isQuestions = true;
+    this.generalservice.notifyThatQuestionsHasStartedOrEnded(true);
   }
   // change(event) {}
 }

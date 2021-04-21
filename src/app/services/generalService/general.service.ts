@@ -18,6 +18,7 @@ import { Message } from "../../models/message";
 import { ToastrService } from "ngx-toastr";
 import { schoolCreditStage } from "src/app/models/data-models";
 import * as generalActions from "../../store/actions/general.action";
+import { first } from "rxjs/operators";
 
 @Injectable({
   providedIn: "root"
@@ -63,10 +64,13 @@ export class GeneralService {
   private formToDisplayControllerSubject = new BehaviorSubject("");
   public formControl$ = this.formToDisplayControllerSubject.asObservable();
 
+  private answerSubject = new Subject();
+  public answersToQuestions$ = this.answerSubject.asObservable();
+
   //5.  this observble is used for starting the questioning and controlling display
   // of questions. Multiple components will use it
-  private questionnaireNotificationSubject = new Subject();
-  public startAskingAndChangeQuestions$ = this.questionnaireNotificationSubject.asObservable();
+  private questionnaireNotificationSubject = new BehaviorSubject(false);
+  public questionsHasStarted$ = this.questionnaireNotificationSubject.asObservable().pipe(first());
 
   // 6. this observable is used to control the flow from termsandcondition to forms to questions
   private flowControllerSubject = new Subject();
@@ -129,6 +133,14 @@ export class GeneralService {
 
   public location: any;
   constructor(private toastr: ToastrService) {}
+
+  notifyThatQuestionsHasStartedOrEnded(val: boolean){
+    this.questionnaireNotificationSubject.next(val)
+  }
+
+  answerBroadCast(answer: string){
+    this.answerSubject.next(answer);
+  }
 
   communicateNextStage(stage: string) {
     this.nextStageForUserSubject.next(stage);
@@ -499,4 +511,7 @@ export class GeneralService {
     }
    }) 
   }
+
+
+  
 }

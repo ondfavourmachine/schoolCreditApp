@@ -19,7 +19,6 @@ export class QuestionnaireComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    [ 'How long have you known him?']
     this.questionsToAsk.set('first', {question: 'Do you know Bukunmi?', answers: ['Yes', 'No', 'Probably', 'I cant remember']});
     this.questionsToAsk.set('second', {question: 'Does he stay at 21, Tapa street Ijesha Lagos?', answers: ['Yes', 'No', 'i am not sure', 'i think so']});
     this.questionsToAsk.set('third', {question: 'What is your relationship with him?', answers:['Brother', 'Sister', 'Father', 'Mother']});

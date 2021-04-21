@@ -585,7 +585,8 @@ export class Message {
               "I am not interested at the moment",
               "right"
             )
-          )
+          ),
+          () => ['startShowingQuestions']
         ); 
       break;
       case 'continuetofinancialinstitution':
@@ -738,12 +739,8 @@ export class Message {
       break;
 
       case 'answerquestions':
-      this.giverDispatchEvents(
-        "customGiverEventFromMsgClass",
-        "giver",
-        "questions-component",
         
-      );
+        this.questionsDispatchEvents('customEventsForQuestions', 'startQuestionnaire')
       break;
       case "paymenttypetoinstallments":
         this.giverResponsesEvent(
@@ -862,6 +859,15 @@ export class Message {
         this.giverDispatchEvents("customGiverEventFromMsgClass", "giver", "");
         break;
     }
+  }
+
+
+  questionsDispatchEvents(typeOfEvent, nameOfFuction){
+    const event: Event = new CustomEvent(typeOfEvent, {
+      detail: { message: nameOfFuction },
+      bubbles: true
+    });
+    this.htmlElement.dispatchEvent(event);
   }
 
   receiverDispatchEvents(

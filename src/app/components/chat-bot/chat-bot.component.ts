@@ -65,12 +65,12 @@ export class ChatBotComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     }
 
   ngOnInit() {
-    this.destroyAnything[0] = this.generalservice.startAskingAndChangeQuestions$.subscribe(
-      val => {
-        // do something here
-      },
-      err => console.log(err)
-    );
+    // this.destroyAnything[0] = this.generalservice.startAskingAndChangeQuestions$.subscribe(
+    //   val => {
+    //     // do something here
+    //   },
+    //   err => console.log(err)
+    // );
 
     // this.store.select(fromStore.getSchoolDetailsState).subscribe(val => console.log(val))
 
