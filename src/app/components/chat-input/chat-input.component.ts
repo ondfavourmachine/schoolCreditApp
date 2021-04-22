@@ -17,7 +17,7 @@ import { Subscription, TimeoutError } from "rxjs";
 import { QuestionsAndAnswers } from "../../models/answersInterface";
 import { Message } from "../../models/message";
 import { timeout } from "rxjs/operators";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { replyGiversOrReceivers } from "src/app/models/GiverResponse";
 
 @Component({
@@ -79,7 +79,8 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private chatservice: ChatService,
     private generalservice: GeneralService,
-    private router: Router
+    private router: Router,
+    private activatedRoute: ActivatedRoute
   ) {
     
   }
@@ -88,6 +89,7 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit() {
     window.onpopstate = (event: PopStateEvent) => {
       sessionStorage.clear();
+      // this.generalservice.notifyThatQuestionsHasStartedOrEnded(false);
     };
   }
 
@@ -99,6 +101,13 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     )
 
+    
+    const {url} = this.router;
+    if(url.includes('user/questions')){
+      this.isAskingQuestions = true;
+    }else{
+      this.isAskingQuestions = false;
+    }
     
   }
 
@@ -237,6 +246,7 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
     if (event instanceof KeyboardEvent) {
       if(this.isAskingQuestions){
         this.generalservice.answerBroadCast(input.value);
+        input.value = '';
         return;
       }
       this.crossCheckUserInputWithRegexes(input.value);
@@ -265,6 +275,7 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
       const input = this.inputFromUser.nativeElement as HTMLInputElement;
       if(this.isAskingQuestions){
         this.generalservice.answerBroadCast(input.value);
+        input.value = '';
         return;
       }
       this.crossCheckUserInputWithRegexes(input.value);

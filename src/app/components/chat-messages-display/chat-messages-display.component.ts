@@ -24,7 +24,7 @@ import {
   GiverResponse,
   ReceiversResponse
 } from "src/app/models/GiverResponse";
-import { ActivatedRoute, NavigationEnd, NavigationStart, Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { Store } from "@ngrx/store";
 import * as fromStore from "../../store";
 import { pluck } from "rxjs/operators";
@@ -38,7 +38,6 @@ interface GetBvnResponse {
   status?: boolean;
 }
 
-type answerFormat = 1 | 2 | 3 | 4;
 
 @Component({
   selector: "app-chat-messages-display",
@@ -263,16 +262,62 @@ export class ChatMessagesDisplayComponent
           if(!this.stringIndexOfCurrentQuestion){
             return;
           }
-          isNaN(Number(val)) ? this.displaySubsequentMessages({
-            message: 'You entered a wrong input. Please type in 1, 2, 3 or 4 as your answer:',
-            direction: 'left'
-          }) : console.log(val);
-          if(val instanceof Number){
-            console.log(val);
+          this.displaySubsequentMessages({
+            message: (val as string),
+            direction: 'right'
+          })
+          if(isNaN(Number(val))) {
+            this.displaySubsequentMessages({
+              message: 'You entered a wrong input. Please enter 1, 2, 3 or 4 as your answer:',
+              direction: 'left'
+            })
+          }
+          else{
+            const found = [1, 2, 3, 4].find(num => num == Number(val));
+            if(found){
+              this.arrangeAnswersAndQuestions(found);
+              this.getNextQuestion();
+              return;
+            }
+            this.displaySubsequentMessages({
+              message: 'You entered a wrong number. Enter either 1, 2, 3 or 4',
+              direction: 'left'
+            })
           }
         }
       )
      
+  }
+
+
+  getNextQuestion(){
+    try {
+    this.stringIndexOfCurrentQuestion = this.iteratorForKeys.next().value;
+    if(!this.stringIndexOfCurrentQuestion){
+      throw 'Questions have finished';
+    }
+    this.currentQuestion = this.iterator.next().value;
+    this.insertQuestionsIntoDOM(); 
+    } catch (error) {
+      // console.log(error);
+      this.generalservice.notifyThatQuestionsHasStartedOrEnded(false);
+      console.log(this.collectedAnswer);
+      this.displaySubsequentMessages({
+        message: 'Thank you for answering this questions. We will contact you shortly.',
+        direction: 'left'
+      })
+    }
+    
+  }
+
+
+  arrangeAnswersAndQuestions(answerIndex: number){
+    const whole = this.questionsToAsk.get(this.stringIndexOfCurrentQuestion);
+    const question = whole.question;
+    const text = whole.answers[answerIndex - 1];
+    this.answerFromUser.push({question: question, useranswer: text });
+    this.collectedAnswer.set(this.stringIndexOfCurrentQuestion, this.answerFromUser);
+    this.answerFromUser = [];
   }
 
   
@@ -294,8 +339,8 @@ export class ChatMessagesDisplayComponent
     this.activatedRoute.queryParams.subscribe(
       val => {
         const {comp} = val;
-        if(comp) dataToUse = comp;
-        // console.log(dataToUse);
+        if(comp){ dataToUse = comp;}
+        // this.generalservice.notifyThatQuestionsHasStartedOrEnded(true);
       }
     )
     const ul = this.messagePlaceHolder.nativeElement as HTMLUListElement;
@@ -1577,19 +1622,10 @@ selectMottoFromSchool(){
 
 
   startQuestionnaire(){
-    try {
       this.stringIndexOfCurrentQuestion = this.iteratorForKeys.next().value;
-      if(!this.stringIndexOfCurrentQuestion){
-        throw 'Questions have finished';
-      }
       this.currentQuestion = this.iterator.next().value;
       console.log(this.currentQuestion);
-      this.insertQuestionsIntoDOM()
-    } catch (error) {
-      console.log(error);
-    }
-   
-    
+      this.insertQuestionsIntoDOM(); 
   }
 
 
@@ -1616,7 +1652,17 @@ selectMottoFromSchool(){
                 </div>
               </div>`;
 
-    (this.messagePlaceHolder.nativeElement as HTMLElement).insertAdjacentHTML('beforeend', anotherHtml)
+    (this.messagePlaceHolder.nativeElement as HTMLElement).insertAdjacentHTML('beforeend', anotherHtml);
+    // const scoller = document.querySelector(".chat-box");
+    // const chat = document.querySelector(".chat_window");
+    // chat.addEventListener("DOMNodeInserted", e => {
+    //   scoller.scrollBy({
+    //     left: 0,
+    //     top: scoller.scrollHeight,
+    //     behavior: "smooth"
+    //   });
+    // });
+    this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
   }
  
 

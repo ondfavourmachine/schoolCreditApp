@@ -89,7 +89,7 @@ export class ChatBotComponent implements OnInit, OnChanges, AfterViewInit, OnDes
   }
 
   ngAfterViewInit() {
-    const div = this.parentContainer.nativeElement as HTMLDivElement;
+    // const div = this.parentContainer.nativeElement as HTMLDivElement;
     const scoller = document.querySelector(".chat-box");
     const chat = document.querySelector(".chat_window");
     chat.addEventListener("DOMNodeInserted", e => {
