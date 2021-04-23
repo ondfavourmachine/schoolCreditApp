@@ -96,9 +96,9 @@ export class ChatMessagesDisplayComponent
   ) {
     
     // initialize questions in constructor
-    this.questionsToAsk.set('first', {question: 'Do you know Bukunmi?', answers: ['Yes', 'No', 'Probably', 'I cant remember']});
+    this.questionsToAsk.set('first', {question: 'Do you know Bukunmi?', answers: ['Yes', 'No', 'Probably', 'I cant remember', 'I dont know him or her']});
     this.questionsToAsk.set('second', {question: 'Does he stay at 21, Tapa street Ijesha Lagos?', answers: ['Yes', 'No', 'i am not sure', 'i think so']});
-    this.questionsToAsk.set('third', {question: 'What is your relationship with him?', answers:['Brother', 'Sister', 'Father', 'Mother']});
+    this.questionsToAsk.set('third', {question: 'What is your relationship with him or her?', answers:['Brother', 'Sister', 'Father', 'Mother', 'Friend', 'Distant relative']});
     this.questionsToAsk.set('Fourth', {question: 'How long have you known him?', answers: ['1 year', '2 years', 'More than 2 years', 'I dont know him']});
     this.iterator = this.questionsToAsk.values();
     this.iteratorForKeys = this.questionsToAsk.keys();
@@ -273,7 +273,7 @@ export class ChatMessagesDisplayComponent
             })
           }
           else{
-            const found = [1, 2, 3, 4].find(num => num == Number(val));
+            const found = [1, 2, 3, 4, 5, 6].find(num => num == Number(val));
             if(found){
               this.arrangeAnswersAndQuestions(found);
               this.getNextQuestion();
@@ -291,6 +291,17 @@ export class ChatMessagesDisplayComponent
 
 
   getNextQuestion(){
+   // check if the user answered he doesnt know this person then return immediately;
+   if(this.stringIndexOfCurrentQuestion == 'first'){
+    const questionAndAnswer = this.collectedAnswer.get('first');
+    if((questionAndAnswer as Array<any>)[0].useranswer == 'I dont know him or her'){
+      const answers = [this.collectedAnswer.get('first')[0].useranswer]
+      this.sendQuestionsAndAnswersToServer(answers);
+      this.generalservice.notifyThatQuestionsHasStartedOrEnded(false);
+      return;
+    }
+   }
+      
     try {
     this.stringIndexOfCurrentQuestion = this.iteratorForKeys.next().value;
     if(!this.stringIndexOfCurrentQuestion){
@@ -301,11 +312,8 @@ export class ChatMessagesDisplayComponent
     } catch (error) {
       // console.log(error);
       this.generalservice.notifyThatQuestionsHasStartedOrEnded(false);
-      console.log(this.collectedAnswer);
-      this.displaySubsequentMessages({
-        message: 'Thank you for answering this questions. We will contact you shortly.',
-        direction: 'left'
-      })
+      const arrayofQuestionAndAnswers = Array.from((this.collectedAnswer.values())).map( elem => elem[0].useranswer);
+      this.sendQuestionsAndAnswersToServer(arrayofQuestionAndAnswers)
     }
     
   }
@@ -335,19 +343,23 @@ export class ChatMessagesDisplayComponent
   }
 
   ngAfterViewInit(message?: string, direction?: string) {
-    let dataToUse: string
+    const ul = this.messagePlaceHolder.nativeElement as HTMLUListElement;
+    let dataToUse: string, userID: string
     this.activatedRoute.queryParams.subscribe(
       val => {
         const {comp} = val;
-        if(comp){ dataToUse = comp;}
+        // console.log(val);
+        // this.handleUserIdForQuestions(val['id'], ul);
+        if(comp){ dataToUse = comp; userID = val['id']}
         // this.generalservice.notifyThatQuestionsHasStartedOrEnded(true);
       }
     )
-    const ul = this.messagePlaceHolder.nativeElement as HTMLUListElement;
-    this.insertProcessingBeforeSchoolDetailsLoad(ul);
+   
+    // this.insertProcessingBeforeSchoolDetailsLoad(ul);
     // watch this function below:
     
     const runWelcome =  () => {
+      this.insertProcessingBeforeSchoolDetailsLoad(ul);
      this.store.select(fromStore.getSchoolDetailsState) 
       .pipe(
          takeWhile((val) => {
@@ -367,7 +379,7 @@ export class ChatMessagesDisplayComponent
     } 
     
     if(dataToUse){
-      this.generateQuestionWelcomeMsg(ul);
+      this.generateQuestionWelcomeMsg(ul, userID);
     }else{
       runWelcome();
     }
@@ -1122,19 +1134,21 @@ selectMottoFromSchool(){
     }, 1000);
   }
 
-  generateQuestionWelcomeMsg(ul: HTMLUListElement) {
+  async generateQuestionWelcomeMsg(ul: HTMLUListElement, id: any) {
     const msgs = Message.questionWelcomeMsgs;
     let messageToDisplay: Message;
+    const res = await this.handleUserIdForQuestions(id, ul);
+    const name = res.data.legal_name;
     const preLoader = document.querySelector('.pre_loader');
     preLoader ? ul.removeChild(preLoader): null;
     msgs.forEach((msg, index) => {
-      if(index == 1){
+      if(index == 2){
         this.count = index;
         messageToDisplay = new Message(`${msg}`, `left`, ul, 'answer questions,not interested', 'answerquestions,getout');
         messageToDisplay.makeAndInsertMessage(this.count);
         return;
       }
-      messageToDisplay = new Message(`${msg}`, `left`, ul);
+      messageToDisplay = new Message(`${index == 0 ? msg + ' ' + name + ' has included you as his/her frequently called numbers. Kinldy answer the following questions to confirm.': msg}`, `left`, ul);
       messageToDisplay.makeAndInsertMessage(index);
     });
   }
@@ -1595,7 +1609,7 @@ selectMottoFromSchool(){
     })
   }
 
-  insertProcessingBeforeSchoolDetailsLoad(ul: HTMLElement){
+  insertProcessingBeforeSchoolDetailsLoad(ul: HTMLElement, position?: InsertPosition){
     const str = `<div class="chat-box__wrapper left pre_loader">  
     <div class="chat-box__inner-wrapper">
       <img src="../../../assets/chatbotImages/avatar.png" alt="" class="avatar">
@@ -1616,7 +1630,7 @@ selectMottoFromSchool(){
     </div>
   </div>`
 
-   ul.insertAdjacentHTML('afterbegin', str);
+   ul.insertAdjacentHTML(position ? position: 'afterbegin', str);
 
   }
 
@@ -1624,7 +1638,6 @@ selectMottoFromSchool(){
   startQuestionnaire(){
       this.stringIndexOfCurrentQuestion = this.iteratorForKeys.next().value;
       this.currentQuestion = this.iterator.next().value;
-      console.log(this.currentQuestion);
       this.insertQuestionsIntoDOM(); 
   }
 
@@ -1643,7 +1656,7 @@ selectMottoFromSchool(){
                     <br/>
                      ${this.currentQuestion.question}
                      <br />
-                     <span>answer by typing 1, 2, 3 or 4: </span>
+                     <span>answer by typing 1, 2, 3, 4, 5 etc: </span>
                      <br />
                     <br />
                      ${string}
@@ -1661,8 +1674,38 @@ selectMottoFromSchool(){
     //     top: scoller.scrollHeight,
     //     behavior: "smooth"
     //   });
-    // });
+    // });s
     this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
+  }
+
+  async handleUserIdForQuestions(id: any, ulElement: HTMLElement): Promise<any>{
+    this.insertProcessingBeforeSchoolDetailsLoad(ulElement);
+    sessionStorage.setItem('request_id', id);
+    try {
+     const res = await this.chatservice.fetchQuestions(id);
+     return new Promise((resolve, reject) => resolve(res))
+    } catch (error) {
+      return new Promise((resolve, reject) => resolve({error: 'An error occured!'}))
+    }
+    
+
+  }
+
+  sendQuestionsAndAnswersToServer(answers){
+    const ul = this.messagePlaceHolder.nativeElement;
+    this.insertProcessingBeforeSchoolDetailsLoad(ul, 'beforeend');
+    this.chatservice.submitQuestionAndAnswer(answers).subscribe(
+      val => {
+        const preLoader = document.querySelector('.pre_loader');
+        preLoader ? ul.removeChild(preLoader): null;
+        this.displaySubsequentMessages({
+          message: 'Thank you for answering this questions.',
+          direction: 'left'
+        })
+        sessionStorage.clear();
+      },
+      err => console.log(err)
+    )
   }
  
 

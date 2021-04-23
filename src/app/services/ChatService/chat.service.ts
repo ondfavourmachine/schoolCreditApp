@@ -544,7 +544,27 @@ export class ChatService {
   }
 
 
-  
+   fetchQuestions(id: any): Promise<{data: any, message: string, status: boolean}>{
+     const url= `https://mobile.creditclan.com/api/v3/customer/get_frequently_asked_question_request`;
+     let httpHeaders = new HttpHeaders({
+      "x-api-key": "z2BhpgFNUA99G8hZiFNv77mHDYcTlecgjybqDACv"
+    });
+     return this.http.post<{data: any, message: string, status: boolean}>(url, {request_id: id}, {
+      headers: httpHeaders
+    }).toPromise()
+   }
+
+
+   submitQuestionAndAnswer(answers: Array<string>){
+     const id = sessionStorage.getItem('request_id');
+    const url = 'https://mobile.creditclan.com/api/v3/customer/submit_frequently_asked_question';
+    let httpHeaders = new HttpHeaders({
+      "x-api-key": "z2BhpgFNUA99G8hZiFNv77mHDYcTlecgjybqDACv"
+    });
+     return this.http.post<{data: any, message: string, status: boolean}>(url, {request_id: id, answers}, {
+      headers: httpHeaders
+    })
+   }
   
 }
 

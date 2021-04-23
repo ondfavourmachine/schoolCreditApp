@@ -40,7 +40,8 @@ export class Message {
   ];
 
   static questionWelcomeMsgs = [
-    `Thank you for opting to answer to questions.`,
+    `Welcome,`,
+    `Thank you for opting to answer these questions.`,
     `Once you are ready click the buttons below:`
   ];
 
