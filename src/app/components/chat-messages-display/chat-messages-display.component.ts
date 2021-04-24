@@ -96,9 +96,9 @@ export class ChatMessagesDisplayComponent
   ) {
     
     // initialize questions in constructor
-    this.questionsToAsk.set('first', {question: 'Do you know Bukunmi?', answers: ['Yes', 'No', 'Probably', 'I cant remember', 'I dont know him or her']});
-    this.questionsToAsk.set('second', {question: 'Does he stay at 21, Tapa street Ijesha Lagos?', answers: ['Yes', 'No', 'i am not sure', 'i think so']});
-    this.questionsToAsk.set('third', {question: 'What is your relationship with him or her?', answers:['Brother', 'Sister', 'Father', 'Mother', 'Friend', 'Distant relative']});
+    this.questionsToAsk.set('first', {question: 'Do you know Bukunmi?', answers: ['Yes', 'No', 'Probably', 'I cant remember']});
+    this.questionsToAsk.set('second', {question: 'Does he/She stay at 21, Tapa street Ijesha Lagos?', answers: ['Yes', 'No', 'i am not sure', 'i think so']});
+    this.questionsToAsk.set('third', {question: 'What is your relationship with him or her?', answers:['Sibling', 'Father', 'Mother', 'Friend', 'Distant relative']});
     this.questionsToAsk.set('Fourth', {question: 'How long have you known him?', answers: ['1 year', '2 years', 'More than 2 years', 'I dont know him']});
     this.iterator = this.questionsToAsk.values();
     this.iteratorForKeys = this.questionsToAsk.keys();
@@ -273,7 +273,8 @@ export class ChatMessagesDisplayComponent
             })
           }
           else{
-            const found = [1, 2, 3, 4, 5, 6].find(num => num == Number(val));
+            const theanswerArray = this.questionsToAsk.get(this.stringIndexOfCurrentQuestion).answers;
+            const found = theanswerArray.length == 4 ?  [1, 2, 3, 4].find(num => num == Number(val)) : [1, 2, 3, 4, 5].find(num => num == Number(val));
             if(found){
               this.arrangeAnswersAndQuestions(found);
               this.getNextQuestion();
@@ -294,7 +295,7 @@ export class ChatMessagesDisplayComponent
    // check if the user answered he doesnt know this person then return immediately;
    if(this.stringIndexOfCurrentQuestion == 'first'){
     const questionAndAnswer = this.collectedAnswer.get('first');
-    if((questionAndAnswer as Array<any>)[0].useranswer == 'I dont know him or her'){
+    if((questionAndAnswer as Array<any>)[0].useranswer == 'No'){
       const answers = [this.collectedAnswer.get('first')[0].useranswer]
       this.sendQuestionsAndAnswersToServer(answers);
       this.generalservice.notifyThatQuestionsHasStartedOrEnded(false);
@@ -1148,7 +1149,7 @@ selectMottoFromSchool(){
         messageToDisplay.makeAndInsertMessage(this.count);
         return;
       }
-      messageToDisplay = new Message(`${index == 0 ? msg + ' ' + name + ' has included you as his/her frequently called numbers. Kinldy answer the following questions to confirm.': msg}`, `left`, ul);
+      messageToDisplay = new Message(`${index == 0 ? msg + ' ' + name + ' has included you as his/her frequently called numbers. Kindly answer the following questions to confirm.': msg}`, `left`, ul);
       messageToDisplay.makeAndInsertMessage(index);
     });
   }
@@ -1699,7 +1700,7 @@ selectMottoFromSchool(){
         const preLoader = document.querySelector('.pre_loader');
         preLoader ? ul.removeChild(preLoader): null;
         this.displaySubsequentMessages({
-          message: 'Thank you for answering this questions.',
+          message: `Thank you for answering ${this.collectedAnswer.size == 1 ? 'the': 'these'} questions.`,
           direction: 'left'
         })
         sessionStorage.clear();
