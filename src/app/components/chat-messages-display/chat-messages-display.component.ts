@@ -94,12 +94,12 @@ export class ChatMessagesDisplayComponent
     private titleCase: TitleCasePipe
 
   ) {
-    
+    this.handleAnswerClick = this.handleAnswerClick.bind(this);
     // initialize questions in constructor
-    this.questionsToAsk.set('first', {question: 'Do you know Bukunmi?', answers: ['Yes', 'No', 'Probably', 'I cant remember']});
-    this.questionsToAsk.set('second', {question: 'Does he/She stay at 21, Tapa street Ijesha Lagos?', answers: ['Yes', 'No', 'i am not sure', 'i think so']});
-    this.questionsToAsk.set('third', {question: 'What is your relationship with him or her?', answers:['Sibling', 'Father', 'Mother', 'Friend', 'Distant relative']});
-    this.questionsToAsk.set('Fourth', {question: 'How long have you known him?', answers: ['1 year', '2 years', 'More than 2 years', 'I dont know him']});
+    this.questionsToAsk.set('first', {question: 'Do you know Bukunmi?', answers: ['Yes', 'No']});
+    this.questionsToAsk.set('second', {question: 'Does he/She stay at 21, Tapa street Ijesha Lagos?', answers: ['Yes', 'No']});
+    this.questionsToAsk.set('third', {question: 'What is your relationship with him or her?', answers:['Sibling', 'Parent', 'Friend', 'Relative']});
+    this.questionsToAsk.set('Fourth', {question: 'How long have you known him?', answers: ['6 months', '1 year', '1 - 2 years', '2+ years']});
     this.iterator = this.questionsToAsk.values();
     this.iteratorForKeys = this.questionsToAsk.keys();
     // this.currentQuestion = this.iterator.next().value;
@@ -320,10 +320,10 @@ export class ChatMessagesDisplayComponent
   }
 
 
-  arrangeAnswersAndQuestions(answerIndex: number){
+  arrangeAnswersAndQuestions(answerIndex: number | string){
     const whole = this.questionsToAsk.get(this.stringIndexOfCurrentQuestion);
     const question = whole.question;
-    const text = whole.answers[answerIndex - 1];
+    const text = typeof answerIndex == 'number' ? whole.answers[answerIndex - 1] : answerIndex;
     this.answerFromUser.push({question: question, useranswer: text });
     this.collectedAnswer.set(this.stringIndexOfCurrentQuestion, this.answerFromUser);
     this.answerFromUser = [];
@@ -626,6 +626,7 @@ export class ChatMessagesDisplayComponent
 
     ul.addEventListener('customEventsForQuestions', (e: CustomEvent) => {
       const {message} =  e.detail;
+      console.log(message);
       this[message]();
     })
 
@@ -1152,6 +1153,9 @@ selectMottoFromSchool(){
       messageToDisplay = new Message(`${index == 0 ? msg + ' ' + name + ' has included you as his/her frequently called numbers. Kindly answer the following questions to confirm.': msg}`, `left`, ul);
       messageToDisplay.makeAndInsertMessage(index);
     });
+
+    // Since name is now available replace bukunmi with name from server;
+    this.questionsToAsk.set('first', {question: `Do you know ${name}?`, answers: ['Yes', 'No']})
   }
 
   
@@ -1644,39 +1648,69 @@ selectMottoFromSchool(){
 
 
   insertQuestionsIntoDOM(){
-    
-    const string = (this.currentQuestion.answers as Array<any>).reduce((acc, elem, index, arr) => {
-       acc+= `<span class="command"> ${index + 1} <strong> ${elem} </strong> </span> ${index == arr.length - 1 ? '': '<hr />'}`;
-       return acc;
-    }, '')
-    
+    this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
+    // const string = (this.currentQuestion.answers as Array<any>).reduce((acc, elem, index, arr) => {
+    //    acc+= `<span class="command"> ${index + 1} <strong> ${elem} </strong> </span> ${index == arr.length - 1 ? '': '<hr />'}`;
+    //    return acc;
+    // }, '')
+    const buttonString = this.buttonFactory(this.currentQuestion.answers as Array<string>, this.currentQuestion.question)
     let anotherHtml = `
             <div data-time="1619036364151" class="chat-box__wrapper left">
                 <div class="chat-box__inner-wrapper">
                    <div class="chat-box__text-wrapper ">
-                    <br/>
                      ${this.currentQuestion.question}
                      <br />
-                     <span>answer by typing 1, 2, 3, 4, 5 etc: </span>
-                     <br />
-                    <br />
-                     ${string}
-                   
                   </div>
                 </div>
               </div>`;
 
-    (this.messagePlaceHolder.nativeElement as HTMLElement).insertAdjacentHTML('beforeend', anotherHtml);
-    // const scoller = document.querySelector(".chat-box");
-    // const chat = document.querySelector(".chat_window");
-    // chat.addEventListener("DOMNodeInserted", e => {
-    //   scoller.scrollBy({
-    //     left: 0,
-    //     top: scoller.scrollHeight,
-    //     behavior: "smooth"
-    //   });
-    // });s
-    this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
+    let template = document.createElement('template');
+    anotherHtml = anotherHtml.trim();
+    template.innerHTML = anotherHtml;
+    const converted = template.content.firstElementChild;
+    converted.querySelector('.chat-box__text-wrapper').insertAdjacentElement('beforeend', buttonString);
+
+    (this.messagePlaceHolder.nativeElement as HTMLElement).insertAdjacentElement('beforeend', converted);
+    // const stringInButton = (this.currentQuestion.answers as Array<any>).reduce((acc, elem, index, arr) => {
+    //      acc+=  index == arr.length - 1 ? `${elem},` : `${elem}`;
+    //      return acc;
+    //   }, '')
+    // this.displaySubsequentMessages({
+    //   message: this.currentQuestion.question,
+    //   direction: 'left',
+    //   button: stringInButton,
+    // })
+   
+  }
+
+  buttonFactory(arrayOfStrings: Array<string>, question: string): HTMLElement{
+    const buttonContainer = document.createElement("div");
+      buttonContainer.className = "button-container";
+      for (let i = 0; i < arrayOfStrings.length; i++) {
+        const button = document.createElement("button");
+        button.setAttribute(
+          "data-button",
+          `${question}`
+        );
+        button.className = "btn btn button--no-width dynamicButton";
+        button.textContent = arrayOfStrings[i];
+        // attaches the click listener to the generated button
+        button.onclick = this.handleAnswerClick;
+       
+        buttonContainer.insertAdjacentElement("beforeend", button);
+      }
+      return buttonContainer;
+  }
+
+  handleAnswerClick(event: MouseEvent){
+    const buttonClicked = event.target as HTMLButtonElement;
+    this.displaySubsequentMessages({
+      message: buttonClicked.textContent,
+      direction: 'right'
+    })
+    this.generalservice.ctrlDisableTheButtonsOfPreviousListElement('allow');
+    this.arrangeAnswersAndQuestions(buttonClicked.textContent);
+    this.getNextQuestion();
   }
 
   async handleUserIdForQuestions(id: any, ulElement: HTMLElement): Promise<any>{
@@ -1700,7 +1734,7 @@ selectMottoFromSchool(){
         const preLoader = document.querySelector('.pre_loader');
         preLoader ? ul.removeChild(preLoader): null;
         this.displaySubsequentMessages({
-          message: `Thank you for answering ${this.collectedAnswer.size == 1 ? 'the': 'these'} questions.`,
+          message: `Thank you for answering ${this.collectedAnswer.size == 1 ? 'the': 'these'} question.`,
           direction: 'left'
         })
         sessionStorage.clear();

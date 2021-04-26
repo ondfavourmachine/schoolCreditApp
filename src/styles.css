@@ -1780,3 +1780,14 @@ button.toast-close-button {
   max-width: 80%;
   object-fit: cover;
 }
+
+.dynamicButton:nth-child(odd){
+  background: #afddff !important;
+  margin-right: 10px;
+}
+
+.dynamicButton.disabled:nth-child(odd){
+  background-color: #e7edea !important;
+  color: rgb(208, 208, 208) !important;
+  margin-right: 10px;
+}
