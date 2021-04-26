@@ -245,7 +245,7 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
     const input = event.srcElement as HTMLInputElement;
     if (event instanceof KeyboardEvent) {
       if(this.isAskingQuestions){
-        this.generalservice.answerBroadCast(input.value);
+        // this.generalservice.answerBroadCast(input.value);
         input.value = '';
         return;
       }
@@ -274,7 +274,7 @@ export class ChatInputComponent implements OnInit, AfterViewInit, OnDestroy {
     } else {
       const input = this.inputFromUser.nativeElement as HTMLInputElement;
       if(this.isAskingQuestions){
-        this.generalservice.answerBroadCast(input.value);
+        // this.generalservice.answerBroadCast(input.value);
         input.value = '';
         return;
       }
