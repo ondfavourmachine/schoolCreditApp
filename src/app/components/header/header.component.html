@@ -3,7 +3,8 @@
     <div class="header__item">
       <!-- <img src="../../../assets/chatbotImages/avatar.png" alt="" class="avatar" /> -->
       <div>
-        <h4>{{  schoolDetails?.username  | titlecase }}  School Payment Portal</h4>
+        <h4 [style.display]="showADifferentOnlineName ? 'none':'display'">{{  schoolDetails?.username  | titlecase }}  School Payment Portal</h4>
+        <h4 [style.display]="showADifferentOnlineName ? 'display':'none'"> Ada </h4>
         <span>Online</span>
       </div>
     </div>

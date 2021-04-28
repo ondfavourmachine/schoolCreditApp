@@ -6,7 +6,7 @@ import { Store } from "@ngrx/store";
 import * as fromStore from "../../store";
 import { SchoolDetailsModel } from "src/app/models/data-models";
 import { pluck } from "rxjs/operators";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 
 @Component({
   selector: "app-header",
@@ -17,16 +17,23 @@ export class HeaderComponent implements OnInit {
   destroyAnything: Subscription[] = [];
   schoolDetails: Partial<SchoolDetailsModel> = {}
   isQuestions: boolean = false;
+  showADifferentOnlineName: boolean = false;
   constructor(
     private gs: GeneralService,
     private store: Store,
     private router: Router,
+    private activateRoute: ActivatedRoute,
     private generalservice: GeneralService
   ) { 
     
   }
 
   ngOnInit() {
+    this.destroyAnything[0] = this.activateRoute.queryParams.subscribe(val => {
+      const {id} = val;
+      if(id) this.showADifferentOnlineName = true;
+      else this.showADifferentOnlineName = false;
+    })
     this.destroyAnything[1]= this.store.select(fromStore.getSchoolDetailsState) 
     .pipe(pluck('school_Info'))
     .subscribe((val) => this.schoolDetails = val) 

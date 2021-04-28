@@ -40,9 +40,9 @@ export class Message {
   ];
 
   static questionWelcomeMsgs = [
-    `Welcome,`,
-    `Thank you for opting to answer these questions.`,
-    `Once you are ready click the buttons below:`
+    `Welcome, My name is Ada.`,
+    `has indicated you can help answer questions which will help us evaluate him/her better.`,
+    `Would you like to continue?`
   ];
 
   static failedRequests = [
@@ -531,6 +531,33 @@ export class Message {
           )
         );
       break;
+      case 'yesgoahead':
+        this.giverResponsesEvent(
+          "customGiverResponse",
+          new replyGiversOrReceivers(
+            "Click the button below to start",
+            "left",
+            "Start",
+            "answerquestions",
+            "allow"
+          ),
+          new GiverResponse(
+            new replyGiversOrReceivers(`Yes i am ready. Let's continue`, "right")
+          )
+        );
+      break;
+      case 'goandhugtransformer':
+        this.giverResponsesEvent(
+          "customGiverResponse",
+          new replyGiversOrReceivers(
+            "Okay, thank you for your time.",
+            "left"
+          ),
+          new GiverResponse(
+            new replyGiversOrReceivers(`No i am not interested`, "right")
+          )
+        );
+      break;
         // this.giverResponsesEvent(
         //   "customGiverResponse",
         //   new replyGiversOrReceivers(
@@ -740,7 +767,6 @@ export class Message {
       break;
 
       case 'answerquestions':
-        
         this.questionsDispatchEvents('customEventsForQuestions', 'startQuestionnaire')
       break;
       case "paymenttypetoinstallments":

@@ -266,22 +266,28 @@ export class ChatMessagesDisplayComponent
             message: (val as string),
             direction: 'right'
           })
-          if(isNaN(Number(val))) {
+          const theanswerArray : Array<string> = this.questionsToAsk.get(this.stringIndexOfCurrentQuestion).answers;
+          const isInthere = theanswerArray.some((item) => item.trim().toLowerCase() == (val as string).trim().toLowerCase() );
+          const reducedAnswer = theanswerArray.reduce((acc, elem, index, arr) => {
+            index == arr.length - 1 ?  acc+= ` or ${elem}` : acc+=` ${elem}`;
+            return acc;
+          }, '')
+          if(!isInthere) { 
             this.displaySubsequentMessages({
-              message: 'You entered a wrong input. Please enter 1, 2, 3 or 4 as your answer:',
+              message: `You entered a wrong answer. Please enter ${reducedAnswer} as your answer`,
               direction: 'left'
             })
           }
           else{
-            const theanswerArray = this.questionsToAsk.get(this.stringIndexOfCurrentQuestion).answers;
-            const found = theanswerArray.length == 4 ?  [1, 2, 3, 4].find(num => num == Number(val)) : [1, 2, 3, 4, 5].find(num => num == Number(val));
+            const found = theanswerArray.find(elem => elem.trim().toLowerCase() == (val as string).trim().toLowerCase());
             if(found){
               this.arrangeAnswersAndQuestions(found);
               this.getNextQuestion();
               return;
             }
+            // this is not needed actually just incase the first check fails. I should remove it later!
             this.displaySubsequentMessages({
-              message: 'You entered a wrong number. Enter either 1, 2, 3 or 4',
+              message: `You entered a wrong answer. Please enter ${reducedAnswer} as your answer.`,
               direction: 'left'
             })
           }
@@ -1146,11 +1152,11 @@ selectMottoFromSchool(){
     msgs.forEach((msg, index) => {
       if(index == 2){
         this.count = index;
-        messageToDisplay = new Message(`${msg}`, `left`, ul, 'answer questions,not interested', 'answerquestions,getout');
+        messageToDisplay = new Message(`${msg}`, `left`, ul, 'Yes answer questions,No not interested', 'yesgoahead,goandhugtransformer');
         messageToDisplay.makeAndInsertMessage(this.count);
         return;
       }
-      messageToDisplay = new Message(`${index == 0 ? msg + ' ' + name + ' has included you as his/her frequently called numbers. Kindly answer the following questions to confirm.': msg}`, `left`, ul);
+      messageToDisplay = new Message(`${index == 1 ? name + ' ' + msg: msg}`, `left`, ul);
       messageToDisplay.makeAndInsertMessage(index);
     });
 
