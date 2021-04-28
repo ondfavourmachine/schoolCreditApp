@@ -269,7 +269,7 @@ export class ChatMessagesDisplayComponent
           const theanswerArray : Array<string> = this.questionsToAsk.get(this.stringIndexOfCurrentQuestion).answers;
           const isInthere = theanswerArray.some((item) => item.trim().toLowerCase() == (val as string).trim().toLowerCase() );
           const reducedAnswer = theanswerArray.reduce((acc, elem, index, arr) => {
-            index == arr.length - 1 ?  acc+= ` or ${elem}` : acc+=` ${elem}`;
+            index == arr.length - 1 ?  acc+= ` or ${elem}` : acc+=`${elem},`;
             return acc;
           }, '')
           if(!isInthere) { 
