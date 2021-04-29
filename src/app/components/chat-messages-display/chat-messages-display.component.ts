@@ -98,8 +98,8 @@ export class ChatMessagesDisplayComponent
     // initialize questions in constructor
     this.questionsToAsk.set('first', {question: 'Do you know Bukunmi?', answers: ['Yes', 'No']});
     this.questionsToAsk.set('second', {question: 'Does he/She stay at 21, Tapa street Ijesha Lagos?', answers: ['Yes', 'No']});
-    this.questionsToAsk.set('third', {question: 'What is your relationship with him or her?', answers:['Sibling', 'Parent', 'Friend', 'Relative']});
-    this.questionsToAsk.set('Fourth', {question: 'How long have you known him?', answers: ['6 months', '1 year', '1 - 2 years', '2+ years']});
+    this.questionsToAsk.set('third', {question: 'Is your relationship with him or her that of Family or Colleaue ?', answers:['Yes','No']});
+    this.questionsToAsk.set('Fourth', {question: 'have you known him for more than 1 year?', answers: ['Yes', 'No']});
     this.iterator = this.questionsToAsk.values();
     this.iteratorForKeys = this.questionsToAsk.keys();
     // this.currentQuestion = this.iterator.next().value;

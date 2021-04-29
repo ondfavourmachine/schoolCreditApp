@@ -535,7 +535,7 @@ export class Message {
         this.giverResponsesEvent(
           "customGiverResponse",
           new replyGiversOrReceivers(
-            "Click the button below to start",
+            "Thanks for opting to answer the questions. Click the button below to start",
             "left",
             "Start",
             "answerquestions",
