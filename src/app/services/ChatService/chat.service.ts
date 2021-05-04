@@ -61,7 +61,11 @@ export interface FinancialInstitution {
 })
 export class ChatService {
   generalUrl = `https://covidreliefbackend.covidrelief.com.ng/schoolcredit/public/index.php/api/`;
+  creditClanApi: 'WE4mwadGYqf0jv1ZkdFv1LNPMpZHuuzoDDiJpQQqaes3PzB7xlYhe8oHbxm6J228';
   files: File;
+  httpHeaders = new HttpHeaders({
+    "x-api-key": 'WE4mwadGYqf0jv1ZkdFv1LNPMpZHuuzoDDiJpQQqaes3PzB7xlYhe8oHbxm6J228'
+  });
   httpOptions: HttpHeaders = new HttpHeaders({
     "Content-Type": "application/json"
   });
@@ -200,20 +204,16 @@ export class ChatService {
 
   // get bank statement url for iframe
   getIframeSrcForBankstatement(request_id, account: {account_name: string, account_number: string, bank_id: any}){
-    const headers = new HttpHeaders({
-      'x-api-key': 'z2BhpgFNUA99G8hZiFNv77mHDYcTlecgjybqDACv'
-    })
+    
     return this.http.post<{url: string, status: boolean, token: string, message: string}>
-   (`https://mobile.creditclan.com/api/v3/bankstatement/initiate`, {request_id: request_id || "57487", has_online_banking : '1', account}, {headers}).toPromise()
+   (`https://mobile.creditclan.com/api/v3/bankstatement/initiate`, {request_id: request_id || "57487", has_online_banking : '1', account}, {headers: this.httpHeaders}).toPromise()
   }
   
   // iframe for card tokenisation
   getIframeSrcForCardTokenization(requestid): Promise<{url: string, status: boolean, token: string, message: string}>{
-    const headers = new HttpHeaders({
-      'x-api-key': 'z2BhpgFNUA99G8hZiFNv77mHDYcTlecgjybqDACv'
-    })
+    
     return this.http.post<{url: string, status: boolean, token: string, message: string}>
-    (`https://mobile.creditclan.com/api/v3/card/tokenization`, {request_id: requestid || "57487"}, {headers}).toPromise()
+    (`https://mobile.creditclan.com/api/v3/card/tokenization`, {request_id: requestid || "57487"}, {headers: this.httpHeaders}).toPromise()
   }
 
   // update Nebechi of Parent Widget stages
@@ -338,10 +338,8 @@ export class ChatService {
   // get offers
     getLoanOffers(request_id: any): Promise<any>{
       const url = "https://mobile.creditclan.com/api/v3/schoolportal/offers";
-      const headers = new HttpHeaders({
-        "x-api-key": "z2BhpgFNUA99G8hZiFNv77mHDYcTlecgjybqDACv"
-      });
-      return this.http.post(url, {request_id : request_id || "57487"}, {headers}).toPromise()
+      
+      return this.http.post(url, {request_id : request_id || "57487"}, {headers: this.httpHeaders}).toPromise()
     }
 
     updateBackEndWithBreakpoint(breakPoint: {breakpoint: any, creditclan_request_id: any}){
@@ -370,10 +368,8 @@ export class ChatService {
       return allBanks["data"] as Array<Bank>;
     }
     let url = "https://mobile.creditclan.com/webapi/v1/banks";
-    let httpHeaders = new HttpHeaders({
-      "x-api-key": "z2BhpgFNUA99G8hZiFNv77mHDYcTlecgjybqDACv"
-    });
-    this.http.get(url, { headers: httpHeaders }).subscribe(
+    
+    this.http.get(url, { headers: this.httpHeaders }).subscribe(
       val => {
         // console.log(this.banks);
         sessionStorage.setItem("allBanks", JSON.stringify(val));
@@ -387,19 +383,17 @@ export class ChatService {
 
   checkIfParentHasSavedCardDetails(request_id, user_id): Promise<{status: boolean, data:{card: boolean}}>{
     return this.http.post<any>('https://mobile.creditclan.com/api/v3/loan/checklists', { request_id, user_id }, {
-        headers: { 'x-api-key': 'z2BhpgFNUA99G8hZiFNv77mHDYcTlecgjybqDACv' }
+        headers: this.httpHeaders
       }).toPromise();
   }
 
   // confirm account details
   confirmAccountDetailsOfParent(obj: { bank_code: any; account_number: any }) {
     let url = "https://mobile.creditclan.com/webapi/v1/account/resolve";
-    let httpHeaders = new HttpHeaders({
-      "x-api-key": "z2BhpgFNUA99G8hZiFNv77mHDYcTlecgjybqDACv"
-    });
+   
 
     return this.http
-      .post(url, obj, { headers: httpHeaders })
+      .post(url, obj, { headers: this.httpHeaders })
       .pipe(timeout(50000));
   }
 
@@ -418,14 +412,12 @@ export class ChatService {
     bvn: string;
     dob: string;
   }): Observable<GenericResponse> {
-    let httpHeaders = new HttpHeaders({
-      "x-api-key": "z2BhpgFNUA99G8hZiFNv77mHDYcTlecgjybqDACv"
-    });
+   
     return this.http.post<GenericResponse>(
       `https://mobile.creditclan.com/webapi/v1/verify_bvn_dob`,
       bvnAndDOB,
       {
-        headers: httpHeaders
+        headers: this.httpHeaders
       }
     );
   }
@@ -554,11 +546,9 @@ export class ChatService {
 
    fetchQuestions(id: any): Promise<{data: any, message: string, status: boolean}>{
      const url= `https://mobile.creditclan.com/api/v3/customer/get_frequently_asked_question_request`;
-     let httpHeaders = new HttpHeaders({
-      "x-api-key": "z2BhpgFNUA99G8hZiFNv77mHDYcTlecgjybqDACv"
-    });
+    
      return this.http.post<{data: any, message: string, status: boolean}>(url, {request_id: id}, {
-      headers: httpHeaders
+      headers: this.httpHeaders
     }).toPromise()
    }
 
@@ -566,11 +556,9 @@ export class ChatService {
    submitQuestionAndAnswer(answers: Array<string>){
      const id = sessionStorage.getItem('request_id');
     const url = 'https://mobile.creditclan.com/api/v3/customer/submit_frequently_asked_question';
-    let httpHeaders = new HttpHeaders({
-      "x-api-key": "z2BhpgFNUA99G8hZiFNv77mHDYcTlecgjybqDACv"
-    });
+    
      return this.http.post<{data: any, message: string, status: boolean}>(url, {request_id: id, answers}, {
-      headers: httpHeaders
+      headers: this.httpHeaders
     })
    }
   
