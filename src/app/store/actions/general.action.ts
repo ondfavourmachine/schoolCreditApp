@@ -22,6 +22,7 @@ export const updateParentLoanStatus = "[parents] UPDATE LOAN REQUEST";
 export const updateParentAcctInformation = "[parents] UPDATE PARENT ACCOUNT";
 export const updateOffers = "[parents] UPDATE PARENT OFFERS";
 export const updateReturningParent = "[parents] UPDATE RETURNING PARENT"
+export const editBreakPoint = "[parents] EDITPARENTBREAKPOINT"
 // 
 
 // action classes for parent
@@ -70,6 +71,11 @@ export class editParentInfo implements Action{
   constructor(public payload: boolean) {}
 }
 
+export class updateBreakPoint implements Action{
+  readonly type = editBreakPoint;
+  constructor(public payload: number){}
+}
+
 
 
 export type parentsAction =
@@ -77,7 +83,9 @@ export type parentsAction =
   | updateParentWidgetCardStage
   | updateParentWidgetCashflowStage | editParentInfo
   | updateParentWidgetDataStage 
-  | updateParentLoanRequest | updateParentAcctInfo | updateParentOffers | returningParentHasBeenApproved;
+  | updateParentLoanRequest 
+  | updateBreakPoint
+  | updateParentAcctInfo | updateParentOffers | returningParentHasBeenApproved;
 
 
 

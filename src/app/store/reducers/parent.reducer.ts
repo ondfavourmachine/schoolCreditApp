@@ -17,6 +17,7 @@ export interface ParentState {
   parent_loan_request_status: Partial<LoanRequest>,
   parent_account_info: Partial<ParentAccountInfo>;
   editMode: boolean,
+  breakPoint: number,
   loan_approval_status: {
     name: string,
     loan_request_has_been_approved: number
@@ -31,6 +32,7 @@ export const initialState: ParentState = {
   // widget_cashflow: 0,
   // widget_card: 0,
   offers: [],
+  breakPoint: 0,
   parent_loan_request_status: {creditclan_request_id: null, eligible: false},
   parent_account_info: {},
   editMode: false,

@@ -89,7 +89,8 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
   offersToShowParent: Array<Partial<Offers>> = [];
   selectedOffer: any;
   informationForVerifyComp: {heading: string} = undefined;
-  cc: any
+  cc: any;
+  breakPointInDataWidget: {breakpoint?: number, request_id?: number, offer?: Record<string, string>} = {}
   constructor(
     private generalservice: GeneralService,
     private chatservice: ChatService,
@@ -562,6 +563,14 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
                       state_of_origin: this.parentDetails.state // pass the id of state you collected
                   },
                   school_id: school_id,
+                  request_id: this.parentDetails.loan_request,
+                  // stage: 1
+                  config: {
+                    no_frequently_called_numbers: 0, // Set to 0 if not needed, Max is 2
+                    analyze_bank_statement: false,
+                    tokenize_card: false,
+                    show_offers: false
+                  },
                   address: {
                     street_address: this.parentDetails.address,
                     state: this.parentDetails.state,
@@ -582,7 +591,7 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
         },
 
         onRequest: async ({ request_id, user_id, offer }) => {
-            // console.log(request_id, user_id, offer);
+            console.log(request_id, user_id, offer);
             const loanRequest = {
               creditclan_request_id: request_id,
               eligible: true
@@ -592,11 +601,16 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
               new generalActions.updateParentLoanRequest(loanRequest)
             );
             this.page = 'notify-school';
-            try {
-              await this.sendLoanRequestToBankEnd();
-            } catch (error) {
-              this.page = 'sorry-page';
+
+            if(!this.parentDetails.loan_request){
+              try {
+                await this.sendLoanRequestToBankEnd();
+              } catch (error) {
+                this.page = 'sorry-page';
+              }
             }
+             
+            
           
              // check if card exists for this user?
             // call endpoint here
@@ -620,14 +634,9 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
               this.parentDetails.loan_request.toString(),
               "1"
             );
-            // await this.chatservice.updateBackEndOfSuccessfulCompletionOfWidgetStage(
-            //   this.parentDetails.loan_request.toString(),
-            //   "2"
-            // );
             const offers = await this.chatservice.getLoanOffers(
               loanRequest["creditclan_request_id"]
             );
-            console.log(offers);
             try {
               this.store.dispatch(
               new generalActions.updateParentOffers(
@@ -658,9 +667,50 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
           this.generalservice.responseDisplayNotifier(responseFromParent);
         },
 
-        onCancel : () => {
+        onBreakpoint: async (data) =>{
+          this.breakPointInDataWidget = {...this.breakPointInDataWidget,  ...data};
+          console.log(this.breakPointInDataWidget);
+          if(this.breakPointInDataWidget.breakpoint == 2 && 
+            (this.breakPointInDataWidget as Object).hasOwnProperty('request_id')
+            && !this.parentDetails.loan_request
+            ){
+            const loanRequest = {
+              creditclan_request_id: this.breakPointInDataWidget.request_id,
+              eligible: true
+            };
+            this.store.dispatch(
+              new generalActions.updateParentLoanRequest(loanRequest)
+            );
+            try {
+              await this.sendLoanRequestToBankEnd();
+              await this.chatservice.updateCreditClanRequestId(
+                this.parentDetails.loan_request,
+                this.breakPointInDataWidget.request_id
+              );
+            } catch (error) {
+              this.page = 'sorry-page';
+            }
+          }
+          this.store.dispatch(new generalActions.updateBreakPoint(this.breakPointInDataWidget.breakpoint));
+          await this.chatservice.updateCreditClanRequestId(
+            this.parentDetails.loan_request,
+            this.breakPointInDataWidget.request_id
+          );
+          await this.chatservice.updateBackEndWithBreakpoint({breakpoint: this.breakPointInDataWidget.breakpoint, creditclan_request_id: this.breakPointInDataWidget.request_id})
+          if((this.breakPointInDataWidget as Object).hasOwnProperty('offer')){
+            await this.chatservice.updateBackEndWithOffer({request_id: this.breakPointInDataWidget.request_id, offer: this.breakPointInDataWidget.offer})
+          }
+        },
+
+        onCancel : async () => {
           //  if the user cancels the widget / clicks the close button
+          // update Nebechi of the breakpoint in whihc the user left.
             console.log("Cancel..");
+            if((this.breakPointInDataWidget as Object).hasOwnProperty('breakpoint')){
+              this.store.dispatch(new generalActions.updateBreakPoint(this.breakPointInDataWidget.breakpoint));
+              await this.chatservice.updateBackEndWithBreakpoint({breakpoint: this.breakPointInDataWidget.breakpoint, creditclan_request_id: this.breakPointInDataWidget.request_id})
+            }
+
             this.store.dispatch(new generalActions.checkLoanProcess("failed"));
             this.kickStartResponse();
         }

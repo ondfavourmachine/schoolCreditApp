@@ -344,6 +344,14 @@ export class ChatService {
       return this.http.post(url, {request_id : request_id || "57487"}, {headers}).toPromise()
     }
 
+    updateBackEndWithBreakpoint(breakPoint: {breakpoint: any, creditclan_request_id: any}){
+      return  this.http.patch(`${this.generalUrl}breakpoint`, breakPoint).toPromise();
+    }
+
+    updateBackEndWithOffer(offer: {request_id: any, offer: Record<string, any>}){
+      return  this.http.patch(`${this.generalUrl}offer`, offer).toPromise();
+    }
+
   // get Widget Stages for Parent
   fetchWidgetStages(amount="12000"): Promise<any> {
     return  this.http.post(`${this.generalUrl}offer/stages`, {amount}).toPromise();

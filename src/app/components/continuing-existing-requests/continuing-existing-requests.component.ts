@@ -363,6 +363,7 @@ export class ContinuingExistingRequestsComponent
     this.chatservice.confirmParentPIN(formToSubmit as any).subscribe(
       async val => {
         const { stages } = val;
+        console.log(val);
         this.listOfStagesForLater = { ...stages };
         const {
           full_name,
