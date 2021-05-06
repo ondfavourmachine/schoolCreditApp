@@ -371,7 +371,7 @@
   <form [formGroup]="emailForm" class="w-100" style="position: relative">
     <div class="ui form">
       <div class="field positioned-relative">
-        <label>Email</label>
+        <label>Email**</label>
         <input
           formControlName="email"
           type="email"
@@ -408,6 +408,8 @@
       <small *ngIf="emailIsNotUnique" class="email_exists">
         This email has already been taken
       </small>
+
+      <small style="color: #2185d0">**Please enter a valid email for easy verification. Invalid emails will not receive otp and cannot be verified.</small>
     </div>
 
     <div class="text-center mt-4">

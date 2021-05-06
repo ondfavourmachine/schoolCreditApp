@@ -355,7 +355,7 @@ export class ChatMessagesDisplayComponent
     this.activatedRoute.queryParams.subscribe(
       val => {
         const {comp} = val;
-        // console.log(val);
+  
         // this.handleUserIdForQuestions(val['id'], ul);
         if(comp){ dataToUse = comp; userID = val['id']}
         // this.generalservice.notifyThatQuestionsHasStartedOrEnded(true);

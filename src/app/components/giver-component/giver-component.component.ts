@@ -29,6 +29,7 @@ export class GiverComponentComponent implements OnInit {
 
 
   handleContinuingRequest(schoolString: string): void{
+    let resultOfQueryParamsCheck: any;
     if(schoolString.includes('?')){
       // const continuingrequest = schoolString.split('?')[0];
       const obs = this.activatedRoute.queryParamMap.subscribe((val) => {
@@ -40,15 +41,19 @@ export class GiverComponentComponent implements OnInit {
               })
             )
         }
+        resultOfQueryParamsCheck = val.get('continuingrequest');
       })
       //  console.log({continuingrequest, schoolString});
-      this.checkWhetherButtonIsAvailableAndReturnIt()
-       .then((val ) => {
-         const button = val[0] as HTMLButtonElement;
-         button.click();
-         obs.unsubscribe();
-       })
-       .catch(err => console.log(err))
+      if(resultOfQueryParamsCheck){
+        this.checkWhetherButtonIsAvailableAndReturnIt()
+        .then((val ) => {
+          const button = val[0] as HTMLButtonElement;
+          button.click();
+          obs.unsubscribe();
+        })
+        .catch(err => console.log(err))
+      }
+     
     }else{
       return;
     }
