@@ -418,4 +418,11 @@ export class VerifyParentDataComponent
     //   .getElementById("backspace")
     //   .removeEventListener("click", this.manageGoingBackAndForth);
   }
+
+
+  skipThisEmailVerification(){
+    const button = document.querySelector(`[data-button*=" No later-verifylater"]`);
+    this.generalservice.handleFlowController('');
+    (button as HTMLButtonElement).click();
+  }
 }

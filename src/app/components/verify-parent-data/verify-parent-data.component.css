@@ -23,3 +23,11 @@
   outline: 1px solid #bcbdbd !important;
   outline-offset: -4px !important;
 }
+
+
+.bottom{
+  margin-top: 200px;
+  text-align: center;
+  text-decoration: underline;
+  cursor: pointer;
+}
