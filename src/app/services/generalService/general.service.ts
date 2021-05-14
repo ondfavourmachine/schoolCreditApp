@@ -26,7 +26,7 @@ import { first } from "rxjs/operators";
 export class GeneralService {
   // properties
   public apiUrl =
-    "https://covidreliefbackend.covidrelief.com.ng/covidd/public/index.php/api/";
+    "https://sellbackend.creditclan.com/covidd/public/index.php/api/";
   public totalLengthOfQuestions: number = 0;
   public emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     //  /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;

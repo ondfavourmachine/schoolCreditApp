@@ -60,7 +60,7 @@ export interface FinancialInstitution {
   providedIn: "root"
 })
 export class ChatService {
-  generalUrl = `https://covidreliefbackend.covidrelief.com.ng/schoolcredit/public/index.php/api/`;
+  generalUrl = `https://sellbackend.creditclan.com/schoolcredit/public/index.php/api/`;
   creditClanApi: 'WE4mwadGYqf0jv1ZkdFv1LNPMpZHuuzoDDiJpQQqaes3PzB7xlYhe8oHbxm6J228';
   files: File;
   httpHeaders = new HttpHeaders({
