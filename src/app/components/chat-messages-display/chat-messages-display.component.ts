@@ -1408,9 +1408,10 @@ selectMottoFromSchool(){
       let totalCostOfBooks = 0;
       let totalTuitionFees = 0;
       
-      const childTuition = arrayOfChildren[0].tuition_fees && arrayOfChildren[0].tuition_fees  != ''  ? arrayOfChildren[0].tuition_fees : arrayOfChildren[0].tuition
+     
      
       const html = arrayOfChildren.map((elem, index, arr) => {
+        const childTuition = arrayOfChildren[index].tuition_fees && arrayOfChildren[index].tuition_fees  != ''  ? arrayOfChildren[index].tuition_fees : arrayOfChildren[index].tuition
          const className = schoolClasses.find(schoolclass => schoolclass.id == elem.class);
           const string = `<div class="ui card" style="box-shadow: none !important;border-radius: 0;margin: .5em 0;">
                 <div class="header modified__header" style="padding-left: .5em"> ${elem.full_name}</div>

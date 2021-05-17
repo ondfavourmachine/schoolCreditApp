@@ -3,6 +3,7 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
   Output
@@ -38,7 +39,7 @@ interface checkWhoIsContinuing {
   styleUrls: ["./continuing-existing-requests.component.css"]
 })
 export class ContinuingExistingRequestsComponent
-  implements OnInit, AfterViewInit, OnDestroy {
+  implements OnInit, AfterViewInit, OnChanges ,OnDestroy {
   @Output("previousPage") previousPage = new EventEmitter<string>();
   @Input("previous") previous: any;
   pageViews: string[] = ["", "four-digit-pin"];
@@ -77,6 +78,9 @@ export class ContinuingExistingRequestsComponent
     private store: Store
   ) {
     this.manageGoingBackAndForth = this.manageGoingBackAndForth.bind(this);
+  }
+  ngOnChanges(){
+    console.log(this.previous);
   }
 
   ngOnInit(): void {
@@ -232,6 +236,7 @@ export class ContinuingExistingRequestsComponent
   }
 
   manageGoingBackAndForth() {
+    // debugger;
     if (this.view == this.previous) {
       const num = this.pageViews.indexOf(this.previous);
       const ans = this.pageViews[num - 1];
@@ -253,18 +258,17 @@ export class ContinuingExistingRequestsComponent
 
   collectEntry(): void {
     this.view = "four-digit-pin";
+    this.previousPage.emit("");
     const { phoneOrEmail } = this.confirmPhoneOrEmailForm.value;
     if (this.generalservice.emailRegex.test(phoneOrEmail)) {
       this.checkWhoIsTryingToContinue.email = phoneOrEmail;
       (this.chatservice.sendEmailOTP({email: phoneOrEmail}, 'observable') as Observable<any>)
       .subscribe(val => {
         this.spinner = false;
-        this.previousPage.emit("");
         this.generalservice.successNotification('An OTP has been sent to your email');
         this.otpSent = true;
       }, err => {
         this.spinner = false;
-        this.confirmPhoneOrEmailForm.reset();
         this.generalservice.errorNotification(`We couldn't send an OTP. Make sure that the email entered is registered on this service.`);
         this.otpSent = true;
       })
@@ -288,7 +292,6 @@ export class ContinuingExistingRequestsComponent
         this.otpSent = true;
       }, err => {
          btn.textContent = previousText;
-        this.confirmPhoneOrEmailForm.reset();
         this.generalservice.errorNotification(`We couldn't send an OTP. Make sure that the email entered is registerd on this service.`)
         this.otpSent = true;
       })
@@ -428,7 +431,6 @@ export class ContinuingExistingRequestsComponent
       (err: HttpErrorResponse) => {
         this.generalservice.errorNotification(`${err.error.message}!`);
         this.checking("stop");
-
         console.log(err);
       }
     );

@@ -45,7 +45,7 @@ export class ChildInformationFormsComponent
     | "enterInformation"
     | "select-funding-type"
     | "modifyOrNot"
-    | "summary"
+    | "summary" | 'enterChildCount' 
     | "upload-image"
     | "select-books" = "";
 
@@ -54,6 +54,7 @@ export class ChildInformationFormsComponent
     "selectChildren",
     "enterInformation",
     "select-funding-type",
+    "enterChildCount",
     // "email",
     // "activate-email",
     "upload-image"
