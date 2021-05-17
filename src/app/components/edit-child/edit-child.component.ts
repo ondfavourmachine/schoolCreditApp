@@ -197,7 +197,7 @@ export class EditChildComponent implements OnInit, OnDestroy {
       element => {
         return {
           id: element.child_id || element.id,
-          amount: element.tuition_fees,
+          amount: element.tuition_fees || element.tuition,
           uniform: element.hasOwnProperty('uniform') ? element.uniform : null,
           tuition: element.hasOwnProperty('tuition') ? element.tuition_fees : null,
           transport: element.hasOwnProperty('transport') ? element.transport : null,
@@ -227,7 +227,7 @@ export class EditChildComponent implements OnInit, OnDestroy {
       element => {
         return {
           id: element.child_id || element.id,
-          amount: element.tuition_fees,
+          amount: element.tuition_fees || element.tuition,
           uniform: element.hasOwnProperty('uniform') ? element.uniform : null,
           tuition: element.hasOwnProperty('tuition') ? element.tuition_fees : null,
           transport: element.hasOwnProperty('transport') ? element.transport : null,
