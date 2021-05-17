@@ -474,7 +474,7 @@ export class ParentsInformationComponent
                   "John Bosco"}, would you like to edit the information you provided?`,
                 "left",
                 "Yes, No continue",
-                "editparentinfo,continuetoverification",
+                "editparentinfo,verifylater",
                 "prevent"
               );
               this.generalservice.responseDisplayNotifier(chatbotResponse);

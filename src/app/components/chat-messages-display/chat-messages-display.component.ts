@@ -1403,7 +1403,7 @@ selectMottoFromSchool(){
         const { child_info, total_tuition_fees } = val as ChildrenState;
         totalFeesBackup = total_tuition_fees;
         arrayOfChildren = Array.from(child_info.values());
-        console.log(arrayOfChildren);
+        // console.log(arrayOfChildren);
       });
       let totalCostOfBooks = 0;
       let totalTuitionFees = 0;

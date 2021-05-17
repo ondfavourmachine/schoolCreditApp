@@ -319,6 +319,15 @@ export class VerifyParentDataComponent
     setTimeout(() => {
       this.generalservice.handleFlowController("");
       this.spinner = false;
+      const stages = JSON.parse(sessionStorage.getItem('stages'));
+      if(stages && (stages as Object).hasOwnProperty('request_approved')  && stages.request_approved == 1 ){
+        this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
+          `Thank you for taking time to verify your email.`,
+          "left",
+          );
+        sessionStorage.removeItem('stages');
+          return;
+        }
       this.generalservice.nextChatbotReplyToGiver = new replyGiversOrReceivers(
         `How would you like to pay?`,
         "left",
@@ -327,7 +336,6 @@ export class VerifyParentDataComponent
         "prevent"
       );
       this.spinner = false;
-      // disconnect.unsubscribe();
       const chatbotResponse = new replyGiversOrReceivers(
         `Thank you for taking time to verify your details, ${this
           .parentDetails.full_name || "John Bosco"}`,

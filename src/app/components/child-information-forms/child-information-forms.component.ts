@@ -417,7 +417,7 @@ export class ChildInformationFormsComponent
       ...objectHoldingIndex
     };
     this.mapOfChildrensInfo.set(this.currentChild, value);
-    console.log(this.mapOfChildrensInfo);
+    // console.log(this.mapOfChildrensInfo);
     if (this.mockstore.childrenInformationSubmittedByParent.length < 1) {
       this.mockstore.childrenInformationSubmittedByParent.push(
         this.mapOfChildrensInfo.get(this.currentChild)

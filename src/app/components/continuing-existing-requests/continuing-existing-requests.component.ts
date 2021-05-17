@@ -80,7 +80,7 @@ export class ContinuingExistingRequestsComponent
     this.manageGoingBackAndForth = this.manageGoingBackAndForth.bind(this);
   }
   ngOnChanges(){
-    console.log(this.previous);
+    // console.log(this.previous);
   }
 
   ngOnInit(): void {
@@ -166,7 +166,7 @@ export class ContinuingExistingRequestsComponent
       this.listOfStagesForLater.phone_verified = 1;
       const returnVal = this.rearrangeStagesInOrderedFashion(this
         .listOfStagesForLater as schoolCreditStage);
-        this.continue(returnVal, this.parentDetails);
+        this.continue(returnVal, this.parentDetails, this.listOfStagesForLater);
     } catch (error) {
       console.log(error);
     }
@@ -425,7 +425,7 @@ export class ContinuingExistingRequestsComponent
           const newStages = this.updateWidgets(res['widgets_to_show'] as Array<string>, stages);
           const returnVal = this.rearrangeStagesInOrderedFashion(newStages);
           this.checking("stop");
-          this.continue(returnVal, val.data.guardian_data);
+          this.continue(returnVal, val.data.guardian_data, val.stages);
         }
       },
       (err: HttpErrorResponse) => {
@@ -550,9 +550,9 @@ export class ContinuingExistingRequestsComponent
     }, 800);
   }
 
-  continue(stage: string, data: Partial<Parent>) {
+  continue(stage: string, data: Partial<Parent>, obj: Record<string, any>) {
     this.generalservice.nextChatbotReplyToGiver = undefined;
-    // console.log(stage);
+     console.log(obj);
     switch (stage) {
       case "widget_data":
         this.generalservice.nextChatbotReplyToGiver = undefined;
@@ -620,12 +620,30 @@ export class ContinuingExistingRequestsComponent
         this.generalservice.responseDisplayNotifier(this.response);
         setTimeout(() => {
           this.generalservice.nextChatbotReplyToGiver = undefined;
-          const nextresponse = new replyGiversOrReceivers(
+          if(obj.request_approved == 1){
+            sessionStorage.setItem('stages', JSON.stringify(obj));
+            // `Please, take a minute to verify the information you provided`,
+            //   "left",
+            //   `Ok let's verify it now, No later`,
+            //   `verifynow,verifylater`,
+            //   "prevent"
+            const nextresponse = new replyGiversOrReceivers(
             `Please, take a minute to verify the information you provided`,
               "left",
               `Ok let's verify it now, No later`,
-              `verifynow,verifylater`,
+              `verifynow,`,
               "prevent"
+            );
+            this.generalservice.responseDisplayNotifier(nextresponse);
+            return;
+          }
+          
+          const nextresponse =  new replyGiversOrReceivers(
+            `How would you like to pay?`,
+            "left",
+            "Installmental payments, Full Payment",
+            `installmental,fullpayment`,
+            "prevent"
           );
           this.generalservice.responseDisplayNotifier(nextresponse);
         }, 500);
