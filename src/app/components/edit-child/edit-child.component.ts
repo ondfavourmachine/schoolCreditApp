@@ -193,13 +193,12 @@ export class EditChildComponent implements OnInit, OnDestroy {
 
     if(!sessionStorage.getItem('fullpayment')){
       let childArray = Array.from(this.listOfChildrenParsed.values());
-    const arrayOfChildId: { id: any; amount: string }[] = childArray.map(
+    const arrayOfChildId: { id: any; tuition: string }[] = childArray.map(
       element => {
         return {
           id: element.child_id || element.id,
-          amount: element.tuition_fees || element.tuition,
+          tuition: element.tuition_fees || element.tuition,
           uniform: element.hasOwnProperty('uniform') ? element.uniform : null,
-          tuition: element.hasOwnProperty('tuition') ? element.tuition_fees : null,
           transport: element.hasOwnProperty('transport') ? element.transport : null,
           feeding: element.hasOwnProperty('feeding') ? element.feeding : null
         };
@@ -223,13 +222,12 @@ export class EditChildComponent implements OnInit, OnDestroy {
     }
 
     let childArray = Array.from(this.listOfChildrenParsed.values());
-    const arrayOfChildId: { id: any; amount: string }[] = childArray.map(
+    const arrayOfChildId: { id: any; tuition: string }[] = childArray.map(
       element => {
         return {
           id: element.child_id || element.id,
-          amount: element.tuition_fees || element.tuition,
+          tuition: element.tuition_fees || element.tuition,
           uniform: element.hasOwnProperty('uniform') ? element.uniform : null,
-          tuition: element.hasOwnProperty('tuition') ? element.tuition_fees : null,
           transport: element.hasOwnProperty('transport') ? element.transport : null,
           feeding: element.hasOwnProperty('feeding') ? element.feeding : null
         };

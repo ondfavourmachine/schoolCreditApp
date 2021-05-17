@@ -357,7 +357,7 @@ export class ChatService {
   
   // sendLoanRequest
   sendLoanRequest(obj: {school_id: any,  guardian_id: any, loan_amount: string,
-        child_data: {id: string, amount: string}[], repayment_frequency: repaymentFrequency,}): Promise<{message: string; request: number; status:boolean}>{
+        child_data: {id: string, tuition: string}[], repayment_frequency: repaymentFrequency,}): Promise<{message: string; request: number; status:boolean}>{
     return this.http.post<any>(`${this.generalUrl}loan/request`, obj).toPromise()
   }
 

@@ -360,10 +360,11 @@ export class ContinuingExistingRequestsComponent
     this.checking();
     this.checkWhoIsTryingToContinue.PIN = this.input;
     const formToSubmit = { ...this.checkWhoIsTryingToContinue };
+    // console.log(formToSubmit);
     this.chatservice.confirmParentPIN(formToSubmit as any).subscribe(
       async val => {
         const { stages } = val;
-        console.log(val);
+        // console.log(val);
         this.listOfStagesForLater = { ...stages };
         const {
           full_name,

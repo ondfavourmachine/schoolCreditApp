@@ -255,7 +255,7 @@ export class ChatMessagesDisplayComponent
       })
       
       this.selectMottoFromSchool();
-      // this.chatservice.deleteGuardian().then();
+      this.chatservice.deleteGuardian().then();
 
       this.observableToTrash[10] = this.generalservice.answersToQuestions$.subscribe(
         val => {
@@ -1347,12 +1347,11 @@ selectMottoFromSchool(){
       .pipe(pluck("child_info"))
       .subscribe(val => {
        childArray = Array.from((val as Map<string, Partial<AChild>>).values())});
-      const arrayOfChildId: {id: any, amount: string}[] = childArray.map(element => {
+      const arrayOfChildId: {id: any, tuition: string}[] = childArray.map(element => {
         return{
           id: element.child_id || element.id,
-          amount: element.tuition_fees || element.tuition,
+          tuition: element.tuition_fees || element.tuition,
           uniform: element.hasOwnProperty('uniform') ? element.uniform : null,
-          tuition: element.hasOwnProperty('tuition') ? element.tuition_fees : null,
           transport: element.hasOwnProperty('transport') ? element.transport : null,
           feeding: element.hasOwnProperty('feeding') ? element.feeding : null
         }
