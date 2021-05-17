@@ -191,12 +191,47 @@ export class EditChildComponent implements OnInit, OnDestroy {
       this.store.dispatch(new generalActions.calculateFees());
     }
 
+    if(!sessionStorage.getItem('fullpayment')){
+      let childArray = Array.from(this.listOfChildrenParsed.values());
+    const arrayOfChildId: { id: any; amount: string }[] = childArray.map(
+      element => {
+        return {
+          id: element.child_id || element.id,
+          amount: element.tuition_fees,
+          uniform: element.hasOwnProperty('uniform') ? element.uniform : null,
+          tuition: element.hasOwnProperty('tuition') ? element.tuition_fees : null,
+          transport: element.hasOwnProperty('transport') ? element.transport : null,
+          feeding: element.hasOwnProperty('feeding') ? element.feeding : null
+        };
+      }
+    );
+    const rf = sessionStorage.getItem("repaymentFrequency");
+    try {
+      await this.chatservice.sendLoanRequest({
+        school_id: this.parent.school_id || 1,
+        guardian_id: this.parent.guardian || sessionStorage.getItem("guardian"),
+        loan_amount: this.tuitionFeesTotal.toString(),
+        child_data: arrayOfChildId,
+        repayment_frequency: rf == "null" ? "3" : rf
+      });
+      await this.chatservice.fetchWidgetStages(
+        this.tuitionFeesTotal.toString()
+      );
+    } catch (error) {
+      console.log(error);
+    }
+    }
+
     let childArray = Array.from(this.listOfChildrenParsed.values());
     const arrayOfChildId: { id: any; amount: string }[] = childArray.map(
       element => {
         return {
           id: element.child_id || element.id,
-          amount: element.tuition_fees
+          amount: element.tuition_fees,
+          uniform: element.hasOwnProperty('uniform') ? element.uniform : null,
+          tuition: element.hasOwnProperty('tuition') ? element.tuition_fees : null,
+          transport: element.hasOwnProperty('transport') ? element.transport : null,
+          feeding: element.hasOwnProperty('feeding') ? element.feeding : null
         };
       }
     );
@@ -222,7 +257,7 @@ export class EditChildComponent implements OnInit, OnDestroy {
       this.submitEditedChildToServerAndStore();
       return;
     }
- 
+    this.makeLoanRequestAndGetLoanOffers();
     sessionStorage.removeItem("listOfChildren");
     sessionStorage.removeItem("editChild");
     this.generalservice.nextChatbotReplyToGiver = undefined;

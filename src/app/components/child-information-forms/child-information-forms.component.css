@@ -37,3 +37,17 @@
 .modified-button {
   margin-top: 2rem;
 }
+
+
+.padlock{
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  background-color: rgba(238, 238, 228, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}

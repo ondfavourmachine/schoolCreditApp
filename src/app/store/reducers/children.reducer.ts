@@ -27,6 +27,9 @@ export function reducer(
     case generalActions.calculateChildrenTuitionFees: {
       const childInfoArray = Array.from(state.child_info.values());
       let total = childInfoArray.reduce((acc, current, currentIndex, array) => {
+        if(current.tuition_fees == ''){
+          return acc + current.totalSum;
+        }
         return acc + +current.tuition_fees;
       }, 0);
       return {

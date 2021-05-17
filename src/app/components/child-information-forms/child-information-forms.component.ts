@@ -43,6 +43,7 @@ export class ChildInformationFormsComponent
     | ""
     | "selectChildren"
     | "enterInformation"
+    | "select-funding-type"
     | "modifyOrNot"
     | "summary"
     | "upload-image"
@@ -52,11 +53,13 @@ export class ChildInformationFormsComponent
     "",
     "selectChildren",
     "enterInformation",
+    "select-funding-type",
     // "email",
     // "activate-email",
     "upload-image"
   ];
   selected: string = "";
+  typeOffunding: string = '';
   selectedChildren: Array<number> = [];
   mapOfChildrensInfo: Map<string, Partial<AChild>> = new Map();
   currentChild: string;
@@ -76,6 +79,10 @@ export class ChildInformationFormsComponent
   parentDetails: Partial<Parent>;
   schoolClasses: SchoolClass[] = [];
   schoolBookPages: any;
+  typeOffundingArr: Set<string> = new Set();
+  keysNotToFunding: Set<string> = new Set();
+  arrOfFundingNeeded: Array<any> = [];
+  parentNeedsToEnterTuition: boolean = false;
   constructor(
     private fb: FormBuilder,
     public mockstore: StoreService,
@@ -136,7 +143,7 @@ export class ChildInformationFormsComponent
       first_name: ["", Validators.required],
       last_name: ["", Validators.required],
       class: ["", Validators.required],
-      tuition_fees: ["", Validators.required]
+      tuition_fees: [""]
     });
 
     this.destroy[0] = this.store
@@ -189,7 +196,8 @@ export class ChildInformationFormsComponent
     this.destroy[6] = this.store
       .select(fromStore.getSchoolDetailsState)
       .pipe(pluck("school_Info", "classes"))
-      .subscribe((val: Array<SchoolClass>) => (this.schoolClasses = val));
+      .subscribe((val: Array<SchoolClass>) => {
+        this.schoolClasses = val});
 
     //  reset everything in this component;
     this.destroy[7] = this.generalservice.reset$.subscribe((val: string) => {
@@ -201,6 +209,10 @@ export class ChildInformationFormsComponent
       this.previousPage.emit("firstPage");
       this.selected = "";
       this.selectedChildren = [];
+      this.typeOffundingArr = new Set();
+      this.keysNotToFunding = new Set();
+      this.parentNeedsToEnterTuition = false;
+      this.typeOffunding = '';
       this.mapOfChildrensInfo = new Map();
       this.currentChild = undefined;
       this.tuitionFeesTotal = undefined;
@@ -219,10 +231,15 @@ export class ChildInformationFormsComponent
     });
   }
 
+  get class (){
+    return this.childInfoForm.get('class');
+  }
+
   ngAfterViewInit() {
     document
       .getElementById("backspace")
       .addEventListener("click", this.manageGoingBackAndForth);
+  
   }
 
   addChildPictrue() {
@@ -272,8 +289,11 @@ export class ChildInformationFormsComponent
       })
       .subscribe();
     // console.log(this.selectedChildren);
-    this.startEnteringChildInfo();
+    this.startEnteringChildInfo()
+    // this.goToTypeOfFunding() 
   }
+
+  
 
   fetchGuardianId(): any {
     let guardianID;
@@ -291,6 +311,70 @@ export class ChildInformationFormsComponent
     return this.selectedChildren.length < 1;
   }
 
+  goToTypeOfFunding(){
+    this.viewToshow = "select-funding-type";
+    this.previousPage.emit("enterInformation");
+  }
+
+  updateTuitionValidations(id: string){
+    const found = this.schoolClasses.find(elem => elem.id == id);
+    if(found && found.school_fees){
+      this.parentNeedsToEnterTuition = false;
+      const thingsForFunding = Object.keys(found.school_fees).filter((element) => found.school_fees[element] == null );
+      this.keysNotToFunding  = new Set(thingsForFunding);
+      // this.goToTypeOfFunding();
+      this.childInfoForm.get('tuition_fees').clearValidators();
+      this.childInfoForm.get('tuition_fees').updateValueAndValidity();
+    }else{
+      this.parentNeedsToEnterTuition = true;
+      this.childInfoForm.get('tuition_fees').setValidators(Validators.required);
+      this.childInfoForm.get('tuition_fees').updateValueAndValidity();
+      this.keysNotToFunding = new Set();
+    }
+  }
+
+  carryOn(){
+    // viewToshow = 'upload-image'; previousPage.emit('enterInformation')
+    const found = this.schoolClasses.find(elem => elem.id == this.class.value);
+    if(found && found.school_fees) this.parentNeedsToEnterTuition = false;
+    if(!this.parentNeedsToEnterTuition){
+      // this.parentNeedsToEnterTuition = false;
+      // const thingsForFunding = Object.keys(found.school_fees).filter((element) => found.school_fees[element] == null );
+      // this.keysOfFunding  = new Set(thingsForFunding);
+      this.goToTypeOfFunding();
+      // this.childInfoForm.get('tuition_fees').clearValidators();
+      // this.childInfoForm.get('tuition_fees').updateValueAndValidity();
+    }else{
+      this.viewToshow = 'upload-image'; this.previousPage.emit('enterInformation');
+    }
+  }
+
+  calculateKeyFundingAreas(){
+    // console.log(this.currentChild);
+    const found = this.schoolClasses.find(elem => elem.id == this.class.value);
+    let totalSum = 0;
+    const tempArr = Array.from(this.typeOffundingArr);
+    let obj = {};
+    tempArr.forEach((elem, index, array) => {
+      if(!isNaN(Number(found.school_fees[elem]))){
+        const number = Number(found.school_fees[elem]);
+        totalSum += number;
+      }
+      obj = {...obj, [elem]: found.school_fees[elem]};
+      // this.arrOfFundingNeeded.push(obj);
+    });
+    obj = {...obj, totalSum};
+    for(let elem in found.school_fees){
+      if(!tempArr.includes(elem)) obj = {...obj, [elem] : null}
+    }
+    this.arrOfFundingNeeded.push(obj);
+    let thischild = this.mapOfChildrensInfo.get(this.currentChild);
+    thischild = {...thischild, ...obj};
+    this.mapOfChildrensInfo.set(this.currentChild, thischild);
+    this.viewToshow = 'upload-image'; this.previousPage.emit('enterInformation');
+    this.arrOfFundingNeeded = [];
+  }
+
   startEnteringChildInfo() {
     const number: Number = this.selectedChildren[0];
 
@@ -303,6 +387,7 @@ export class ChildInformationFormsComponent
       this.currentChild = this.iterator.next().value;
       this.viewToshow = "enterInformation";
       this.previousPage.emit("selectChildren");
+      // this.previousPage.emit("select-funding-type");
       return;
     }
     this.iterator = this.mapOfChildrensInfo.keys();
@@ -316,6 +401,7 @@ export class ChildInformationFormsComponent
     let recalibrated = this.childInfoForm.value.tuition_fees
       .split(",")
       .join("");
+    
     this.childInfoForm.value.tuition_fees = recalibrated;
     let value: Partial<AChild> = { ...this.childInfoForm.value };
     const objectHoldingIndex = this.mapOfChildrensInfo.get(
@@ -325,11 +411,12 @@ export class ChildInformationFormsComponent
       ...value,
       full_name: `${value.first_name} ${value.last_name}`,
       picture: this.childPicture,
-      index: objectHoldingIndex.index,
       child_book: schoolBooks ? schoolBooks : [],
-      total_cost_of_books: objectHoldingIndex.total_cost_of_books
+      total_cost_of_books: objectHoldingIndex.total_cost_of_books,
+      ...objectHoldingIndex
     };
     this.mapOfChildrensInfo.set(this.currentChild, value);
+    console.log(this.mapOfChildrensInfo);
     if (this.mockstore.childrenInformationSubmittedByParent.length < 1) {
       this.mockstore.childrenInformationSubmittedByParent.push(
         this.mapOfChildrensInfo.get(this.currentChild)
@@ -384,17 +471,40 @@ export class ChildInformationFormsComponent
   }
 
   onToNextChild(value: string) {
+    // debugger;
+    // console.log(value.trim().toLowerCase());
     if (value.trim().toLowerCase() == "next") {
       this.viewToshow = "summary";
       return;
     }
     this.viewToshow = "enterInformation";
+    // this might need to go elsewhere
+    this.typeOffunding = '';
+    this.typeOffundingArr = new Set();
+    this.parentNeedsToEnterTuition = false;
+    this.keysNotToFunding = new Set();
+    // ends here
     this.childInfoForm.reset();
     this.base64FormOfPicture = "";
+    
   }
 
   async doneAddingChildren() {
     this.spinner = true;
+    this.mapOfChildrensInfo.forEach((value, key, map) => {
+      if(!(value as Object & Partial<AChild>).hasOwnProperty('feeding')){
+        value['feeding'] = null
+      }
+      if(!(value as Object & Partial<AChild>).hasOwnProperty('transport')){
+        value['transport'] = null
+      }
+      if(!(value as Object & Partial<AChild>).hasOwnProperty('tuition')){
+        value['tuition'] = null
+      }
+      if(!(value as Object & Partial<AChild>).hasOwnProperty('uniform')){
+        value['uniform'] = null
+      }
+    })
     this.store.dispatch(new generalActions.addAChild(this.mapOfChildrensInfo));
     this.store.dispatch(new generalActions.calculateFees());
     // this will be removed later
@@ -408,6 +518,9 @@ export class ChildInformationFormsComponent
       let formToSubmit = Object.assign({}, value);
       delete formToSubmit.first_name;
       delete formToSubmit.last_name;
+      if(formToSubmit.tuition_fees == ''){
+        formToSubmit.tuition_fees = formToSubmit.tuition;
+      }
       // console.log(formToSubmit);
       try {
         const res = await this.chatapi.saveChildData(
@@ -618,8 +731,28 @@ export class ChildInformationFormsComponent
       info: "childForms"
     });
     this.moveToNextChildOrNot();
+    // console.log(this.)
   }
 
+  selectTypeOfFunding(event: Event){
+    let textcontent = '';
+    if(event.target instanceof HTMLDivElement){
+      textcontent = (event.target as HTMLDivElement).querySelector('p').textContent;
+    }
+    if(event.target instanceof HTMLImageElement){
+      textcontent = (event.target as HTMLImageElement).nextElementSibling.textContent;
+    }
+    if(event.target instanceof HTMLParagraphElement){
+      textcontent = (event.target as HTMLParagraphElement).textContent
+    }
+    if(this.typeOffundingArr.has(textcontent.toLowerCase())){
+      this.typeOffundingArr.delete(textcontent.toLowerCase())
+    }else{
+       this.typeOffundingArr.add(textcontent.toLowerCase());
+    }
+   
+    // console.log(this.typeOffundingArr);
+  }
 
 
   ngOnDestroy() {
@@ -631,5 +764,6 @@ export class ChildInformationFormsComponent
       .removeEventListener("click", this.manageGoingBackAndForth);
     sessionStorage.removeItem("childPicture");
     sessionStorage.removeItem("parentPicture");
+    this.typeOffundingArr = new Set();
   }
 }

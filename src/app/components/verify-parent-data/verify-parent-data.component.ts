@@ -107,6 +107,7 @@ export class VerifyParentDataComponent
          this.arrayOfvalues.push(value);  
         const stringOfActivationPIN = this.arrayOfvalues.join('');
         this.confirmEmailCode(stringOfActivationPIN);
+        sessionStorage.removeItem('showSkip');
         
      }
   }
@@ -424,5 +425,14 @@ export class VerifyParentDataComponent
     const button = document.querySelector(`[data-button*=" No later-verifylater"]`);
     this.generalservice.handleFlowController('');
     (button as HTMLButtonElement).click();
+  }
+
+  checkForSkipOption(): boolean{
+    if(sessionStorage.getItem('showSkip')) {return false};
+    return true;
+  }
+
+  pasteStuff(event){
+    
   }
 }

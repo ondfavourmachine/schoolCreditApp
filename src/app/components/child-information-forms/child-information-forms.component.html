@@ -103,6 +103,91 @@
   </button> -->
 </div>
 
+<div
+  class=" h-100 text-center family-info"
+  *ngIf="viewToshow == 'select-funding-type'"
+>
+  <h1 class="para-title">Please select what you need funding for</h1>
+
+  <div class="ui grid justify-center" style="overflow: hidden; margin: 0 auto;">
+    <div
+      (click)="selectTypeOfFunding($event)"
+      class="six wide column myborder positioned-relative"
+    >
+      <img src="../../../assets/images/fees_modified.svg" alt="" />
+      <p class="bolded">Tuition</p>
+      <i *ngIf="typeOffundingArr.has('tuition')" class="fa fa-check positioned-absolute"></i>
+      <div *ngIf="keysNotToFunding.has('tuition')" class="padlock">
+        <img src="../../../assets/images/padlock.svg" alt="">
+      </div>
+    </div>
+
+    <div
+      (click)="selectTypeOfFunding($event)"
+      class="six wide column myborder positioned-relative"
+    >
+      <img
+        src="../../../assets/images/bus_modified.svg"
+        style="max-width: 50px;"
+        alt=""
+      />
+      <p class="bolded">Transport</p>
+      <i *ngIf="typeOffundingArr.has('transport')" class="fa fa-check positioned-absolute"></i>
+      <div class="padlock" *ngIf="keysNotToFunding.has('transport')">
+        <img src="../../../assets/images/padlock.svg" alt="">
+      </div>
+    </div>
+
+    <div
+      (click)="selectTypeOfFunding($event)"
+      class="six wide column myborder positioned-relative"
+    >
+      <img
+        src="../../../assets/images/box_modified.svg"
+        style="max-width: 50px;"
+        alt=""
+      />
+      <p class="bolded">Feeding</p>
+      <i *ngIf="typeOffundingArr.has('feeding')" class="fa fa-check positioned-absolute"></i>
+      <div class="padlock" *ngIf="keysNotToFunding.has('feeding')">
+        <img src="../../../assets/images/padlock.svg" alt="">
+      </div>
+    </div>
+
+    <div
+      (click)="selectTypeOfFunding($event)"
+      class="six wide column myborder positioned-relative"
+    >
+      <img
+        src="../../../assets/images/uniform_modified.svg"
+        alt=""
+        style="max-width: 50px;"
+      />
+      <p class="bolded">Uniform</p>
+      <i *ngIf="typeOffundingArr.has('uniform')" class="fa fa-check positioned-absolute"></i>
+      <div class="padlock" *ngIf="keysNotToFunding.has('uniform')">
+        <img src="../../../assets/images/padlock.svg" alt="">
+      </div>
+    </div>
+
+    <button
+    class="ui button primary basic mt-4"
+    *ngIf="typeOffundingArr.size > 0"
+    (click)="calculateKeyFundingAreas()"
+  >
+    Continue
+  </button>
+  </div>
+
+  <!-- <button
+    [disabled]="numberOfSelected"
+    (click)="startEnteringChildInfo()"
+    class="ui button primary basic mt-4"
+  >
+    Continue
+  </button> -->
+</div>
+
   <div
     class=" h-100 text-center family-info"
     *ngIf="viewToshow == 'enterInformation'"
@@ -144,11 +229,12 @@
 
         <div class="field">
           <label>Class</label>
-
+    <!-- (change)="updateTuitionValidations($event.target.value)" -->
           <select
             style="height: auto;"
             class="ui fluid search dropdown"
             formControlName="class"
+            (change)="updateTuitionValidations($event.target.value)"
           >
             <option value="" selected>Select class...</option>
             <option
@@ -160,7 +246,9 @@
           </select>
         </div>
 
-        <div class="field positioned-relative">
+        <div 
+         [style.display]="parentNeedsToEnterTuition ? 'block':'none'"
+         class="field positioned-relative">
           <label>Tuition fees </label>
           <input
             formControlName="tuition_fees"
@@ -169,6 +257,7 @@
             #inputForTuition
             (change)="generalservice.makeReadable($event.target.value, inputForTuition)"
             placeholder="Enter tuition fees"
+
           />
           <!-- <small
             *ngIf="childInfoForm.get('tuition_fees').value"
@@ -188,7 +277,7 @@
           [disabled]="!childInfoForm.valid"
           type="submit"
           class="ui primary button fluid"
-          (click)="viewToshow = 'upload-image'; previousPage.emit('enterInformation')"
+          (click)="carryOn()"
         >
           Continue
         </button>

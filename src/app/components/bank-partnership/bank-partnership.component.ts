@@ -193,6 +193,7 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
   }
   changeToWorkAndLoadWidget(page: string, event?: Event) {
     if(sessionStorage.getItem('unverified_parent')){
+      sessionStorage.setItem('showSkip', 'false');
       this.informationForVerifyComp = {
         heading: `Your primary contact details is still unverified. Please take a few seconds to verify your email`
       }
@@ -571,13 +572,11 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
                     tokenize_card: false,
                     show_offers: false
                   },
-                  address: {
-                    street_address: this.parentDetails.address,
-                    state: this.parentDetails.state,
-                    lga: this.parentDetails.lga
+                  home_address: {
+                    address: this.parentDetails.address,
+                    state_id: this.parentDetails.state,
+                    lga_id: this.parentDetails.lga
                   },
-    
-           
           };
 
         // console.log(data);
@@ -737,7 +736,11 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
       const arrayOfChildId: {id: any, amount: string}[] = childArray.map(element => {
         return{
           id: element.child_id || element.id,
-          amount: element.tuition_fees
+          amount: element.tuition_fees,
+          uniform: element.hasOwnProperty('uniform') ? element.uniform : null,
+          tuition: element.hasOwnProperty('tuition') ? element.tuition_fees : null,
+          transport: element.hasOwnProperty('transport') ? element.transport : null,
+          feeding: element.hasOwnProperty('feeding') ? element.feeding : null
         }
       })
       // get parent

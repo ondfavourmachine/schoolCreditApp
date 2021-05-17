@@ -91,7 +91,7 @@
   </div>
 
 
-  <div  (click)="skipThisEmailVerification()" class="bottom">
+  <div *ngIf="checkForSkipOption()"  (click)="skipThisEmailVerification()" class="bottom">
     <span>Skip for later</span>
   </div>
 </div>
@@ -137,6 +137,7 @@
              font-weight: bold !important;"
              type="tel" minlength="0"
              (input)="changeFocus(input, $event.target.value)"
+             (paste)="pasteStuff($event)"
              [id]="input"
              maxlength="1" placeholder="" />
         </ng-container>

@@ -1350,7 +1350,11 @@ selectMottoFromSchool(){
       const arrayOfChildId: {id: any, amount: string}[] = childArray.map(element => {
         return{
           id: element.child_id || element.id,
-          amount: element.tuition_fees
+          amount: element.tuition_fees,
+          uniform: element.hasOwnProperty('uniform') ? element.uniform : null,
+          tuition: element.hasOwnProperty('tuition') ? element.tuition_fees : null,
+          transport: element.hasOwnProperty('transport') ? element.transport : null,
+          feeding: element.hasOwnProperty('feeding') ? element.feeding : null
         }
       })
       // get parent
@@ -1393,14 +1397,20 @@ selectMottoFromSchool(){
           return element.buttonElement.includes(button.textContent);
         }
       });
+      let totalFeesBackup = 0;
       const disconnect = this.store
       .select(fromStore.getCurrentChildState)
       .subscribe((val: any) => {
-        const { child_info } = val as ChildrenState;
+        const { child_info, total_tuition_fees } = val as ChildrenState;
+        totalFeesBackup = total_tuition_fees;
         arrayOfChildren = Array.from(child_info.values());
+        console.log(arrayOfChildren);
       });
       let totalCostOfBooks = 0;
       let totalTuitionFees = 0;
+      
+      const childTuition = arrayOfChildren[0].tuition_fees && arrayOfChildren[0].tuition_fees  != ''  ? arrayOfChildren[0].tuition_fees : arrayOfChildren[0].tuition
+     
       const html = arrayOfChildren.map((elem, index, arr) => {
          const className = schoolClasses.find(schoolclass => schoolclass.id == elem.class);
           const string = `<div class="ui card" style="box-shadow: none !important;border-radius: 0;margin: .5em 0;">
@@ -1418,7 +1428,30 @@ selectMottoFromSchool(){
           <div class="event">
              <div class="content">
                <div class="summary">
-                  <a> Tuition Fees </a>: <a> ${elem.tuition_fees} </a>
+                  <a> Tuition Fees </a>: <a> ₦${new Intl.NumberFormat('en').format(Number(childTuition))} </a>
+               </div>
+             </div>
+           </div>
+           <div class="event">
+             <div class="content">
+               <div class="summary">
+                  <a> Feeding </a>: <a> ₦${new Intl.NumberFormat('en').format(Number(elem.feeding)) || Number('0').toFixed(2) } </a>
+               </div>
+             </div>
+           </div>
+
+           <div class="event">
+             <div class="content">
+               <div class="summary">
+                  <a> Uniforms </a>: <a> ₦${new Intl.NumberFormat('en').format(Number(elem.uniform)) || Number('0').toFixed(2) } </a>
+               </div>
+             </div>
+           </div>
+
+           <div class="event">
+             <div class="content">
+               <div class="summary">
+                  <a> Transport </a>: <a> ₦${new Intl.NumberFormat('en').format(Number(elem.transport)) || Number('0').toFixed(2) } </a>
                </div>
              </div>
            </div>
@@ -1428,7 +1461,7 @@ selectMottoFromSchool(){
              `<div class="event">
              <div class="content">
                <div class="summary">
-                  <a> Cost of books selected </a>: <a> ${elem.total_cost_of_books} </a>
+                  <a> Cost of books selected </a>: <a> ₦${elem.total_cost_of_books} </a>
                </div>
              </div>
            </div>` : ''
@@ -1448,8 +1481,10 @@ selectMottoFromSchool(){
     }, totalCostOfBooks)
 
     totalTuitionFees = arrayOfChildren.reduce((prev, elem, index, arr) => {
-      if(elem.hasOwnProperty('tuition_fees') && elem.tuition_fees){
+      if(elem.hasOwnProperty('tuition_fees') && elem.tuition_fees && elem.tuition_fees != ''){
         prev += Number(elem.tuition_fees);
+      }else{
+        prev+= totalFeesBackup;
       }
       return prev;
     }, totalTuitionFees);
@@ -1457,7 +1492,9 @@ selectMottoFromSchool(){
     const calculatedTotals = `<div class="event mt-2" style="border-top: 1px solid rgba(10, 38, 59, 0.85);padding-top: 6px;">
       <div class="content">
         <div class="summary">
-           <a> ${totalCostOfBooks > 0 ? 'Total Cost of fees and books': 'Total Fees'} </a>: <a> ₦${totalCostOfBooks > 0 ? totalCostOfBooks + totalTuitionFees : totalTuitionFees} </a>
+           <a> ${totalCostOfBooks > 0 ? 'Total Cost of fees and books': 'Total Fees'} </a>: <a> ₦${
+             totalCostOfBooks > 0 ? new Intl.NumberFormat('en').format( totalFeesBackup + totalCostOfBooks + totalTuitionFees ): 
+             new Intl.NumberFormat('en').format( totalTuitionFees ) || new Intl.NumberFormat('en').format( totalFeesBackup)} </a>
         </div>
       </div>
     </div>`
@@ -1485,6 +1522,7 @@ selectMottoFromSchool(){
       let arrayOfChildren: Partial<AChild>[] = [];
       let totalCostOfFees: number = 0;
       let totalCostOfBooks: number = 0;
+      let totalFeesBackup: number = 0;
       const button = htmlElement.querySelector('.button-container').firstChild;
       const schoolClasses: SchoolClass[] = JSON.parse(sessionStorage.getItem('school_classes'));
       const savedChats: Array<Message> = JSON.parse(sessionStorage.getItem("savedChats"));
@@ -1496,7 +1534,8 @@ selectMottoFromSchool(){
       const disconnect = this.store
       .select(fromStore.getCurrentChildState)
       .subscribe((val: any) => {
-        const { child_info } = val as ChildrenState;
+        const { child_info, total_tuition_fees } = val as ChildrenState;
+        totalFeesBackup = total_tuition_fees;
         arrayOfChildren = Array.from(child_info.values());
       });
       // make sure to check the media query of the device before showing the table
@@ -1505,14 +1544,15 @@ selectMottoFromSchool(){
      totalCostOfBooks = arrayOfChildren.reduce((prev, elem, index, arr) => {
         if(elem.hasOwnProperty('total_cost_of_books') && elem.total_cost_of_books){
           prev += Number(elem.total_cost_of_books);
-          
         }
         return prev;
       }, totalCostOfBooks);
 
      totalCostOfFees = arrayOfChildren.reduce((prev, elem, index, arr) => {
-        if(elem.hasOwnProperty('tuition_fees') && elem.tuition_fees){
+        if(elem.hasOwnProperty('tuition_fees') && elem.tuition_fees && elem.tuition_fees != ''){
           prev += Number(elem.tuition_fees);
+        }else{
+          prev+= totalFeesBackup;
         }
         return prev;
       }, totalCostOfFees);
@@ -1544,6 +1584,24 @@ selectMottoFromSchool(){
              tableHeadingRow.insertAdjacentElement('beforeend', tableHeadingInner);
          }
 
+         if(arrayOfChildren[i].hasOwnProperty('feeding')){
+          const tableHeadingInner = document.createElement('th')
+          tableHeadingInner.textContent = 'Feeding';
+          tableHeadingRow.insertAdjacentElement('beforeend', tableHeadingInner);
+      }
+          if(arrayOfChildren[i].hasOwnProperty('transport')){
+            const tableHeadingInner = document.createElement('th')
+            tableHeadingInner.textContent = 'Transport';
+            tableHeadingRow.insertAdjacentElement('beforeend', tableHeadingInner);
+        }
+
+        if(arrayOfChildren[i].hasOwnProperty('uniform')){
+          const tableHeadingInner = document.createElement('th')
+          tableHeadingInner.textContent = 'Uniform';
+          tableHeadingRow.insertAdjacentElement('beforeend', tableHeadingInner);
+      }
+
+
          tableHeading.insertAdjacentElement('afterbegin', tableHeadingRow)
         }
 
@@ -1570,11 +1628,32 @@ selectMottoFromSchool(){
             tableData.textContent = classname.name;
             tableRow.insertAdjacentElement('beforeend', tableData)
           }
-
+          
           if(element.hasOwnProperty('tuition_fees')){
             const tableData = document.createElement('td');
             tableData.setAttribute('data-label', 'Tuition Fees');
-            tableData.textContent = `₦${new Intl.NumberFormat('en').format(Number(element.tuition_fees))}`;
+            tableData.textContent = `₦${new Intl.NumberFormat('en').format(Number(element.tuition_fees || element.tuition))}`;
+            tableRow.insertAdjacentElement('beforeend', tableData)
+          }
+
+          if(element.hasOwnProperty('feeding')){
+            const tableData = document.createElement('td');
+            tableData.setAttribute('data-label', 'Feeding');
+            tableData.textContent = `₦${new Intl.NumberFormat('en').format(Number(element.feeding || 0))}`;
+            tableRow.insertAdjacentElement('beforeend', tableData)
+          }
+
+          if(element.hasOwnProperty('transport')){
+            const tableData = document.createElement('td');
+            tableData.setAttribute('data-label', 'Transport');
+            tableData.textContent = `₦${new Intl.NumberFormat('en').format(Number(element.transport || 0))}`;
+            tableRow.insertAdjacentElement('beforeend', tableData)
+          }
+
+          if(element.hasOwnProperty('uniform')){
+            const tableData = document.createElement('td');
+            tableData.setAttribute('data-label', 'Uniform');
+            tableData.textContent = `₦${new Intl.NumberFormat('en').format(Number(element.uniform || 0))}`;
             tableRow.insertAdjacentElement('beforeend', tableData)
           }
           return tableRow;
@@ -1594,6 +1673,7 @@ selectMottoFromSchool(){
       header.classList.add('para-title', 'mb-1');
       header.insertAdjacentHTML('beforeend', `Summary`);
       div.insertAdjacentElement('afterbegin', header);
+      div.style.overflowX = 'auto';
 
       const footer = document.createElement('p');
       footer.textContent = totalCostOfBooks > 0 ? `Total Cost of Fees and Books: ₦${new Intl.NumberFormat('en').format(totalCostOfBooks + totalCostOfFees)}` : `Total Cost of Fees: ₦${new Intl.NumberFormat('en').format(totalCostOfFees)}`;

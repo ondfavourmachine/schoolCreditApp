@@ -81,9 +81,14 @@ export interface AChild {
   last_name?: string;
   class: string;
   tuition_fees: string;
+  uniform?: string;
+  transport?: string;
+  feeding?: string;
   picture: File;
   index?: number;
+  tuition?: any,
   id?: any;
+  totalSum?: number,
   child_id: null | string | number;
   child_book: Array<SchoolBook>;
   total_cost_of_books: number;
@@ -164,7 +169,15 @@ username: string
 
 export interface SchoolClass{
   id: string,
-  name: string
+  name: string,
+  school_fees: null | FundingNeeds
+}
+
+export interface FundingNeeds{
+  feeding: null
+  transport: string
+  tuition: string
+  uniform: string
 }
 
 export interface SchoolBookStructure {
