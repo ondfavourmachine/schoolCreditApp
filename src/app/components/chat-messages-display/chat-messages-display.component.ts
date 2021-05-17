@@ -255,7 +255,7 @@ export class ChatMessagesDisplayComponent
       })
       
       this.selectMottoFromSchool();
-      this.chatservice.deleteGuardian().then();
+      // this.chatservice.deleteGuardian().then();
 
       this.observableToTrash[10] = this.generalservice.answersToQuestions$.subscribe(
         val => {
