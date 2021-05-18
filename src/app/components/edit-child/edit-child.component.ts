@@ -219,6 +219,7 @@ export class EditChildComponent implements OnInit, OnDestroy {
     } catch (error) {
       console.log(error);
     }
+    return;
     }
 
     let childArray = Array.from(this.listOfChildrenParsed.values());
