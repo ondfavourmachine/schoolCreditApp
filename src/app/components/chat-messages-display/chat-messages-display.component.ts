@@ -1479,15 +1479,15 @@ selectMottoFromSchool(){
         }
         return prev;
     }, totalCostOfBooks)
-
-    totalTuitionFees = arrayOfChildren.reduce((prev, elem, index, arr) => {
-      if(elem.hasOwnProperty('tuition_fees') && elem.tuition_fees && elem.tuition_fees != ''){
-        prev += Number(elem.tuition_fees);
-      }else{
-        prev+= totalFeesBackup;
-      }
-      return prev;
-    }, totalTuitionFees);
+    totalTuitionFees = totalFeesBackup;
+    //   arrayOfChildren.reduce((prev, elem, index, arr) => {
+    //   if(elem.hasOwnProperty('tuition_fees') && elem.tuition_fees && elem.tuition_fees != ''){
+    //     prev += Number(elem.tuition_fees);
+    //   }else{
+    //     prev+= totalFeesBackup;
+    //   }
+    //   return prev;
+    // }, totalTuitionFees);
     
     const calculatedTotals = `<div class="event mt-2" style="border-top: 1px solid rgba(10, 38, 59, 0.85);padding-top: 6px;">
       <div class="content">
@@ -1547,17 +1547,16 @@ selectMottoFromSchool(){
         }
         return prev;
       }, totalCostOfBooks);
+    //  totalCostOfFees = arrayOfChildren.reduce((prev, elem, index, arr) => {
+    //     if(elem.hasOwnProperty('tuition_fees') && elem.tuition_fees && elem.tuition_fees != ''){
+    //       prev += Number(elem.tuition_fees);
+    //     }else{
+    //       prev+= totalFeesBackup;
+    //     }
+    //     return prev;
+    //   }, totalCostOfFees);
 
-     totalCostOfFees = arrayOfChildren.reduce((prev, elem, index, arr) => {
-        if(elem.hasOwnProperty('tuition_fees') && elem.tuition_fees && elem.tuition_fees != ''){
-          prev += Number(elem.tuition_fees);
-        }else{
-          prev+= totalFeesBackup;
-        }
-        return prev;
-      }, totalCostOfFees);
-
-
+      totalCostOfFees = totalFeesBackup;
       //  generate tableData
       const produceTableData = (): HTMLTableElement => {
         let tableContent: HTMLTableElement = document.createElement('table');

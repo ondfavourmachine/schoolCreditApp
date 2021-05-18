@@ -103,6 +103,39 @@
   </button> -->
 </div>
 
+
+<div
+  class=" h-100 text-center family-info"
+  *ngIf="viewToshow == 'enterChildCount'"
+>
+  <h1 class="para-title">Please enter the number of children</h1>
+
+  <form class="w-100">
+    <div class="ui form">
+      <div class="field">
+        <label>Number</label>
+        <input [(ngModel)]="countOfChild" name="countOfChild" type="number" placeholder="Fullname" />
+      
+      </div>
+
+      
+    </div>
+    
+    <div class="text-center mt-4">
+      <button
+        [disabled]="countOfChild < 1"
+        type="button"
+        class="ui primary button fluid"
+        (click)="addCountOfChild()"
+      >
+        Continue
+      </button>
+    </div>
+  </form>
+
+ 
+</div>
+
 <div
   class=" h-100 text-center family-info"
   *ngIf="viewToshow == 'select-funding-type'"

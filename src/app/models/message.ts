@@ -649,7 +649,7 @@ export class Message {
           ),
           new GiverResponse(
             new replyGiversOrReceivers(
-              "I don't want to verify my information now",
+              "No my information is correct.",
               "right"
             )
           )

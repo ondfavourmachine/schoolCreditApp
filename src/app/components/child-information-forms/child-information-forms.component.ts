@@ -39,6 +39,7 @@ export class ChildInformationFormsComponent
   @Input("back") back: any;
   @ViewChild("inputForTuition") inputForTuition: ElementRef;
   schoolID: string;
+  countOfChild: number = 0;
   viewToshow:
     | ""
     | "selectChildren"
@@ -279,19 +280,32 @@ export class ChildInformationFormsComponent
       ? this.selectedChildren.length == 0
         ? this.selectedChildren.push(+p.textContent)
         : this.selectedChildren.splice(0, 1, +p.textContent)
-      : "";
+      : this.viewToshow = 'enterChildCount';
 
     guardianID = this.fetchGuardianId();
 
-    this.chatapi
+    if(p.textContent != '3+') {this.chatapi
       .updateChildrenCount({
         guardian: guardianID || sessionStorage.getItem("guardian"),
-        children_count: p.textContent != "3+" ? parseInt(p.textContent) : 4
+        children_count: parseInt(p.textContent)
       })
       .subscribe();
-    // console.log(this.selectedChildren);
-    this.startEnteringChildInfo()
+      this.startEnteringChildInfo();
+    } ;
+    
+    
     // this.goToTypeOfFunding() 
+  }
+
+  addCountOfChild(){
+   let guardianID = this.fetchGuardianId();
+    this.selectedChildren.splice(0, 1, +this.countOfChild);
+    this.chatapi.updateChildrenCount({
+      guardian: guardianID || sessionStorage.getItem("guardian"),
+      children_count: +this.countOfChild
+    })
+    .subscribe();
+    this.startEnteringChildInfo();
   }
 
   
@@ -386,24 +400,27 @@ export class ChildInformationFormsComponent
     if (this.mapOfChildrensInfo.size > 1) {
       this.iterator = this.mapOfChildrensInfo.keys();
       this.currentChild = this.iterator.next().value;
-      this.viewToshow = "enterInformation";
+      this.viewToshow =  "enterInformation";
       this.previousPage.emit("selectChildren");
       // this.previousPage.emit("select-funding-type");
       return;
     }
     this.iterator = this.mapOfChildrensInfo.keys();
     this.currentChild = this.iterator.next().value;
-    this.viewToshow = "enterInformation";
+    this.viewToshow =  "enterInformation";
     this.previousPage.emit("selectChildren");
   }
 
   moveToNextChildOrNot(schoolBooks?: Array<SchoolBook>) {
     this.spinner = true;
-    let recalibrated = this.childInfoForm.value.tuition_fees
+    let recalibrated;
+    if(this.childInfoForm.value.tuition_fees || this.childInfoForm.value.tuition_fees == ''){
+      recalibrated =  this.childInfoForm.value.tuition_fees
       .split(",")
       .join("");
+      this.childInfoForm.value.tuition_fees = recalibrated;
+    } 
     
-    this.childInfoForm.value.tuition_fees = recalibrated;
     let value: Partial<AChild> = { ...this.childInfoForm.value };
     const objectHoldingIndex = this.mapOfChildrensInfo.get(
       this.currentChild ? this.currentChild : this.previous
