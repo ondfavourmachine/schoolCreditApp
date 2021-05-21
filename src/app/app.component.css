@@ -339,3 +339,23 @@ small {
 }
 
 
+@media (min-width: 900px){
+  /* .overlay{ background-color: red;} */
+    .preamble{
+      font-size: 4vw !important;
+    }
+
+    .continuation{
+      font-size: 2.5vw !important;
+    }
+
+    .date{
+      font-size: 7vw !important;
+    }
+
+    .date_heading{
+      font-size: 1rem !important;
+    }
+}
+
+

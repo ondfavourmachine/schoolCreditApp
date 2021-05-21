@@ -49,10 +49,9 @@ export class AppComponent
     private router: Router,
     public generalservice: GeneralService,
     private store: Store,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
   ) {
     this.intervalID = setInterval(() => this.startCountDownTimer(), 1000);
-    // console.log(this.intervalID);
   }
 
   startCountDownTimer(){
@@ -76,7 +75,16 @@ export class AppComponent
   }
 
   ngOnInit() {
-    // $('.ui.basic.modal').modal('show');
+    this.router.events.subscribe(
+      event => {
+        if(event instanceof NavigationStart){
+          if(event.url.includes('user')){
+            (document.querySelector('.overlay') as HTMLElement).style.zIndex = '-1';
+          }
+        }
+      }
+    )
+    
     this.generalservice.controlGlobalNotifier$.subscribe(val => {
       if (val == "on") {
         this.globalOverlay = "flex";
