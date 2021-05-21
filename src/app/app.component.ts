@@ -52,6 +52,17 @@ export class AppComponent
     private cd: ChangeDetectorRef,
   ) {
     this.intervalID = setInterval(() => this.startCountDownTimer(), 1000);
+    router.events.subscribe(
+      event => {
+        if(event instanceof NavigationStart){
+          if(event.url.includes('user')){
+            (document.querySelector('.overlay') as HTMLElement).style.display = 'none';
+            (document.querySelector('.overlay') as HTMLElement).style.zIndex = '-1';
+            clearInterval(this.intervalID);
+          }
+        }
+      }
+    )
   }
 
   startCountDownTimer(){
@@ -75,15 +86,15 @@ export class AppComponent
   }
 
   ngOnInit() {
-    this.router.events.subscribe(
-      event => {
-        if(event instanceof NavigationStart){
-          if(event.url.includes('user')){
-            (document.querySelector('.overlay') as HTMLElement).style.zIndex = '-1';
-          }
-        }
-      }
-    )
+    // this.router.events.subscribe(
+    //   event => {
+    //     if(event instanceof NavigationStart){
+    //       if(event.url.includes('user')){
+    //         (document.querySelector('.overlay') as HTMLElement).style.zIndex = '-1';
+    //       }
+    //     }
+    //   }
+    // )
     
     this.generalservice.controlGlobalNotifier$.subscribe(val => {
       if (val == "on") {

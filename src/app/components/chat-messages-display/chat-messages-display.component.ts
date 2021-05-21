@@ -73,7 +73,7 @@ export class ChatMessagesDisplayComponent
   observableToTrash: Subscription[] = [];
   // properties for questions
   // begins here
-
+  addressForQuestionnaire: string;
   questionsToAsk: Map<string, Record<string, any>> = new Map();
   currentQuestion: {[k: string]: string | any} = {};
   answeredQuestions: Array<Record<string, string>>= [];
@@ -97,8 +97,8 @@ export class ChatMessagesDisplayComponent
     this.handleAnswerClick = this.handleAnswerClick.bind(this);
     // initialize questions in constructor
     this.questionsToAsk.set('first', {question: 'Do you know Bukunmi?', answers: ['Yes', 'No']});
-    this.questionsToAsk.set('second', {question: 'Does he/She stay at 21, Tapa street Ijesha Lagos?', answers: ['Yes', 'No']});
-    this.questionsToAsk.set('third', {question: 'Is your relationship with him or her that of Family or Colleaue ?', answers:['Yes','No']});
+    this.questionsToAsk.set('second', {question: `Does he/She stay at ${this.addressForQuestionnaire}?`, answers: ['Yes', 'No']});
+    this.questionsToAsk.set('third', {question: 'Is your relationship with him or her that of Family or Colleague ?', answers:['Yes','No']});
     this.questionsToAsk.set('Fourth', {question: 'have you known him for more than 1 year?', answers: ['Yes', 'No']});
     this.iterator = this.questionsToAsk.values();
     this.iteratorForKeys = this.questionsToAsk.keys();
@@ -1147,6 +1147,7 @@ selectMottoFromSchool(){
     let messageToDisplay: Message;
     const res = await this.handleUserIdForQuestions(id, ul);
     const name = res.data.legal_name;
+    this.addressForQuestionnaire = res.data.address
     const preLoader = document.querySelector('.pre_loader');
     preLoader ? ul.removeChild(preLoader): null;
     msgs.forEach((msg, index) => {
@@ -1162,6 +1163,7 @@ selectMottoFromSchool(){
 
     // Since name is now available replace bukunmi with name from server;
     this.questionsToAsk.set('first', {question: `Do you know ${name}?`, answers: ['Yes', 'No']})
+    this.questionsToAsk.set('second', {question: `Does he/She stay at ${this.addressForQuestionnaire}?`, answers: ['Yes', 'No']});
   }
 
   
