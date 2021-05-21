@@ -36,6 +36,12 @@ export class AppComponent
   private observableAggregator: observableAggregator = {};
   public globalOverlay: string = "none";
   public confirmationDialog = false;
+  days: number = 0;
+  hours: number = 0;
+  minutes: number = 0;
+  seconds: number = 0;
+  countDownDate: Date | number;
+  intervalID: any;
   goBack: string = "firstPage";
   errorHouse: { error: Alert } = { error: new Alert(false, "") };
   changeStyles: boolean = false;
@@ -44,7 +50,26 @@ export class AppComponent
     public generalservice: GeneralService,
     private store: Store,
     private cd: ChangeDetectorRef
-  ) {}
+  ) {
+    this.intervalID = setInterval(() => this.startCountDownTimer(), 1000);
+    // console.log(this.intervalID);
+  }
+
+  startCountDownTimer(){
+    this.countDownDate = new Date('August 9, 2021 00:00:00').getTime();
+    const now = Date.now();
+    const diff = this.countDownDate - now;
+    const second = 1000;
+    const minutes = second * 60;
+    const hours = minutes * 60;
+    const days = hours * 24;
+
+    this.days = Math.floor(diff / days);
+    this.hours = Math.floor( (diff % days) / hours);  
+    this.minutes = Math.floor(( diff  % hours) /minutes);
+    this.seconds = Math.floor(( diff % minutes) / second);
+
+  }
 
   setPageToGoBackTo(event) {
     this.goBack = event;
@@ -199,6 +224,7 @@ export class AppComponent
   ngOnDestroy() {
     this.observableAggregator.flowControl.unsubscribe();
     this.observableAggregator.intermediateResponse.unsubscribe();
+    clearInterval(this.intervalID);
   }
 
   fakeButtonForUserOnly() {

@@ -15,14 +15,33 @@
         </span>
 
         <span class="continuation">
-          will be available for first term registration on
+          will be available for first term registration in
         </span>
 
         <br>
 
-        <span class="date">
-          8th August 2021
-        </span>
+        <div class="date mt-3">
+          <span class="days">
+              <small class="date_heading">Days</small>
+              <small>{{ days }}</small>
+              
+          </span>
+            :
+          <span class="hours">
+            <small class="date_heading">Hours</small>
+             <small> {{ hours }}</small>
+          </span>
+          :
+          <span class="minutes">
+              <small class="date_heading">Minutes</small>
+              <small>{{ minutes }}</small>
+          </span>
+          :
+          <span class="seconds">
+             <small class="date_heading">Seconds</small>
+             <small> {{ seconds }} </small>
+          </span>
+        </div>
     </div>
   </div>
 </div>

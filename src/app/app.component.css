@@ -292,6 +292,31 @@ div.selectBeneficiary {
 
 .date{
   font-size: 12vw !important;
+  display: flex !important;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+}
+
+.days, .hours, .minutes, .seconds{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+/* .days:first-child, .hours:first-child, .minutes:first-child, .seconds:first-child{
+  font-size: 2rem;
+} */
+
+
+.date_heading{
+  font-size: .8rem;
+  line-height: .7;
+}
+
+small {
+  color: white !important;
 }
 
 @media (min-width: 700px){
@@ -306,6 +331,10 @@ div.selectBeneficiary {
 
     .date{
       font-size: 9vw !important;
+    }
+
+    .date_heading{
+      font-size: 1.5rem !important;
     }
 }
 
