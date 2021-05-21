@@ -1,18 +1,35 @@
-<!-- NG-ZORRO -->
-<!-- <a href="https://github.com/NG-ZORRO/ng-zorro-antd" target="_blank" style="display: flex;align-items: center;justify-content: center;height: 100%;width: 100%;">
-  <img height="300" src="https://img.alicdn.com/tfs/TB1X.qJJgHqK1RjSZFgXXa7JXXa-89-131.svg">
-</a> -->
 
-<!-- <app-general-forms></app-general-forms> -->
 
-<router-outlet></router-outlet>
+<div style="position: relative;">
+    <router-outlet></router-outlet>
 
-<!-- Button trigger modal -->
-<!-- style="position: fixed; top: 10px; left: 3px;" -->
+  <div class="overlay">
+    <div class="child">
+        <span class="preamble">
+          Thank you for using this school service
+        </span>
+        <br>
+        <br>
+        <span class="continuation">
+          This service is currently closed for third term and  
+        </span>
 
-<!-- <div class="loaderWindow">
-  <nz-spin nzSimple [nzSize]="'large'"></nz-spin>
-</div> -->
+        <span class="continuation">
+          will be available for first term registration on
+        </span>
+
+        <br>
+
+        <span class="date">
+          8th August 2021
+        </span>
+    </div>
+  </div>
+</div>
+
+
+
+
 <div
   *ngIf="errorHouse?.error?.errorBool"
   class="alert alert-danger customised alert-dismissible fade show"
@@ -25,16 +42,7 @@
   </button>
 </div>
 
-<!-- <button
-  hidden
-  type="button"
-  id="btnTrigger"
-  class="btn btn-primary"
-  data-toggle="modal"
-  data-target="#exampleModalLong"
->
-  Launch demo modal
-</button> -->
+
 
 <button
   (click)="lauchModal()"
@@ -267,22 +275,3 @@
 
 
 
-<!-- <div class="ui basic modal">
-  <div class="ui icon header">
-    <i class="archive icon"></i>
-    Archive Old Messages
-  </div>
-  <div class="content">
-    <p>Your inbox is getting full, would you like us to enable automatic archiving of old messages?</p>
-  </div>
-  <div class="actions">
-    <div class="ui red basic cancel inverted button">
-      <i class="remove icon"></i>
-      No
-    </div>
-    <div class="ui green ok inverted button">
-      <i class="checkmark icon"></i>
-      Yes
-    </div>
-  </div>
-</div> -->
