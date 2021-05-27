@@ -55,6 +55,11 @@ export class AppComponent
     router.events.subscribe(
       event => {
         if(event instanceof NavigationStart){
+          if(event.url.includes('greatgenesis')){
+            (document.querySelector('.overlay') as HTMLElement).style.display = 'none';
+            (document.querySelector('.overlay') as HTMLElement).style.zIndex = '-1';
+            clearInterval(this.intervalID);
+          }
           if(event.url.includes('user')){
             (document.querySelector('.overlay') as HTMLElement).style.display = 'none';
             (document.querySelector('.overlay') as HTMLElement).style.zIndex = '-1';
