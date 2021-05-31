@@ -28,6 +28,7 @@ export class PictureComponent implements OnInit, OnDestroy, AfterViewInit {
   croppedImage: any;
   fileFromStore: string;
   destroy: Subscription[] =[];
+  imageHasBeenLoadedInCropper: 'yes' | 'no' | 'inactive' = 'inactive';
   pictureForUseWhenParentIsTryingToEdit: File | string;
  
   constructor(
@@ -117,14 +118,22 @@ export class PictureComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   imageCropped(event: ImageCroppedEvent) {
+    // this.imageHasBeenLoadedInCropper = true;
+    
     this.croppedImage = event.base64;
+    if(this.croppedImage ){
+      this.imageHasBeenLoadedInCropper = 'yes';
+    }
   }
 
   fileToBeCropped(event: Event) {
     this.modifiedFile = undefined;
     this.imageChangedEvent = event;
     this.rawFile = event.target["files"][0];
+    // console.log(this.rawFile.size);
     this.modifiedFile = undefined;
+    // this.startSpinner.emit(true);
+    this.imageHasBeenLoadedInCropper = 'no';
     this.lauchModal();
   }
 

@@ -420,6 +420,7 @@ export class ParentsInformationComponent
       address,
       state
     } = parentInfo;
+    // debugger;
     if (!this.editMode) {
       this.chatapi
         .registerParent({
@@ -436,6 +437,7 @@ export class ParentsInformationComponent
         })
         .subscribe(
           async val => {
+            // console.log((picture as File).size)
             await this.chatapi.uploadParentPicture({
               picture: picture as File,
               guardian: val.guardian

@@ -37,14 +37,23 @@
 <div
   id="myModal2"
   class="modal"
-  style="z-index: 2000"
+  style="z-index: 2000;"
   [style.display]="showModal"
 >
   <!-- Modal content -->
+  
   <div class="modal-content" style="position: relative">
     <button style="display: none" class="modal-close">
       &times;
     </button>
+
+    <div class="cover" 
+     *ngIf="imageHasBeenLoadedInCropper == 'no'"
+      >
+      <app-loader>
+  
+      </app-loader>
+    </div>
 
     <!-- <button  class="fakeButton inner">
       &times;
