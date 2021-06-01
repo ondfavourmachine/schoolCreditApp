@@ -55,7 +55,7 @@ export class AppComponent
     router.events.subscribe(
       event => {
         if(event instanceof NavigationStart){
-          if(event.url.includes('greatgenesis')){
+          if(event.url.includes('royale')){
             (document.querySelector('.overlay') as HTMLElement).style.display = 'none';
             (document.querySelector('.overlay') as HTMLElement).style.zIndex = '-1';
             clearInterval(this.intervalID);
