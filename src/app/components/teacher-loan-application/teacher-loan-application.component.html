@@ -1,0 +1,129 @@
+
+
+ <div
+ class="flex flex-column justify-center align-center h-100 text-center family-info"
+ style="height: 500px;"
+>
+ 
+
+<ng-container *ngIf="page == 'selection'">
+    <h1 class="para-title sorry__title">
+  
+        <p>
+           Please choose the desired Loan amount
+        </p>
+     </h1>
+    
+     
+    
+     <div
+       class="ui grid justify-center "
+       style="overflow: hidden; margin: 0 auto; cursor: pointer; z-index: 30;"
+       
+     >
+       <div
+         (click)="page = 'address'"
+         class="twelve wide column myborder mt-3 addFlexBehavior"
+       >
+         <p class="bolded">
+           
+           <span class="housing_for_loan_amount">  Loan: <span class="loan_amount"> ₦20,000 </span>  </span>
+           
+           
+           
+         </p>
+        
+         
+    
+       </div>
+    
+       <div
+       (click)="page = 'address'"
+         class="twelve wide column myborder mt-3 addFlexBehavior"
+       >
+         <p class="bolded">
+           
+           <span class="housing_for_loan_amount">  Loan: <span class="loan_amount"> ₦15,000 </span>  </span>
+           
+           
+           
+         </p>
+        
+         
+    
+       </div>
+    
+       <div
+       (click)="page = 'address'"
+         class="twelve wide column myborder mt-3 addFlexBehavior"
+       >
+         <p class="bolded">
+           
+           <span class="housing_for_loan_amount">  Loan: <span class="loan_amount"> ₦10,000 </span>  </span>
+           
+           
+           
+         </p>
+        
+         
+    
+       </div>
+    
+    
+       <!-- <button [disabled]="selectedOffer == undefined" (click)="page = 'card_tokenisation'"  class="ui button primary basic">
+         Continue
+       </button> -->
+     </div>
+</ng-container>
+
+
+<ng-container *ngIf="page == 'address'">
+    <h1 class="para-title">Please enter your residential address</h1>
+    <div
+    class="w-100 text-center family-info"
+      
+       
+     >
+    <app-address-form
+    (doneAddingAddress)="page = 'offer'"
+    ></app-address-form>
+    </div>
+</ng-container>
+
+<ng-container *ngIf="page == 'offer'">
+    <h1 class="para-title">
+       Summary of Offer
+    </h1>
+
+  
+    <div>
+      <div class="ui fluid vertical menu">
+        <a  class=" item flexed">
+          Amount
+          <div class="ui  label">₦15,000</div>
+        </a>
+        <a class="item flexed">
+          Duration
+          <div class="ui label">3 months</div>
+        </a>
+        <a class="item flexed">
+          Monthly
+          <div class="ui label">₦5,000</div>
+        </a>
+
+        <a class="item flexed">
+          First Repayment
+          <div class="ui label">June 22nd 2021 </div>
+        </a>
+        
+    </div>
+
+      <button  (click)="endOfLoanApplicationProcess()"   class="ui button primary basic">
+        Accept
+      </button>
+    </div>
+        
+  
+</ng-container>
+ 
+</div> 

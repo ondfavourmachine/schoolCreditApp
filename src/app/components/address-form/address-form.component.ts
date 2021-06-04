@@ -22,6 +22,7 @@ interface LGA extends State {}
 })
 export class AddressFormComponent implements OnInit, OnDestroy {
   @Output() changeUpTheViewThree = new EventEmitter<string>();
+  @Output() doneAddingAddress = new EventEmitter<string>();
   NigerianStates: State[] = [];
   stateLgas: LGA[] = [];
   lgaData: any = {};
@@ -40,12 +41,10 @@ export class AddressFormComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.parentAddressInfoForm = this.fb.group({
-      address: ["", Validators.required],
-      bus_stop: ["", Validators.required],
-      city: ["", Validators.required],
+      address: ["", Validators.required],  
       state: ["", Validators.required],
       lga: ["", Validators.required],
-      post_code: ["", Validators.required]
+      resident_years: ["", Validators.required]
     });
 
     this.destroy[0] = this.store
@@ -71,22 +70,20 @@ export class AddressFormComponent implements OnInit, OnDestroy {
 
   submitThisForm(form: FormGroup) {
     // changeUpTheViewThree.emit('bvn')
-    this.spinner = true;
-    let formToSubmit = { ...form.value };
-    formToSubmit.guardian = this.guardianID;
-    this.chatservice.saveParentAddressInformation(formToSubmit).subscribe(
-      val => {
-        // console.log(val);
-        const { state, bus_stop, city, address, lga, post_code } = val.data;
-        let objToStore = { state, bus_stop, city, address, lga, post_code };
-        // this.store.dispatch(
-        //   new generalActions.updateParentAddressInfo(objToStore)
-        // );
-        this.spinner = false;
-        this.changeUpTheViewThree.emit("bvn");
-      },
-      err => console.log(err)
-    );
+    this.doneAddingAddress.emit('done');
+    // this.spinner = true;
+    // let formToSubmit = { ...form.value };
+    // formToSubmit.guardian = this.guardianID;
+    // this.chatservice.saveParentAddressInformation(formToSubmit).subscribe(
+    //   val => {
+    //     const { state, bus_stop, city, address, lga, post_code } = val.data;
+    //     let objToStore = { state, bus_stop, city, address, lga, post_code };
+      
+    //     this.spinner = false;
+    //     this.changeUpTheViewThree.emit("bvn");
+    //   },
+    //   err => console.log(err)
+    // );
   }
 
   ngOnDestroy(){

@@ -7,15 +7,7 @@
     <div class="field">
       <!-- -->
 
-      <div class="field">
-        <label>Nearest Bustop</label>
-        <input formControlName="bus_stop" name="class" type="text" placeholder="Eg: Cassette Bustop" />
-      </div>
-
-      <div class="field">
-        <label>City</label>
-        <input formControlName="city" name="class" type="text" placeholder="Eg: Lagos" />
-      </div>
+      
 
       <div class="field">
         <label>State</label>
@@ -52,8 +44,8 @@
       </div>
 
       <div class="field">
-        <label>Post Code</label>
-        <input  formControlName="post_code" name="class" type="text" placeholder="Eg: 101025" />
+        <label>Number of years in current residence</label>
+        <input  formControlName="resident_years" name="class" type="number" placeholder="Eg: 2" />
       </div>
     </div>
   </div>
@@ -62,7 +54,6 @@
     <button
       (click)="submitThisForm(parentAddressInfoForm)"
       type="button"
-      [disabled]="!parentAddressInfoForm.valid"
       class="ui primary button fluid"
     >
       Next

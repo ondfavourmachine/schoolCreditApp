@@ -15,18 +15,19 @@ export class Message {
   extraInfo: string;
   countForMessage: number = 0;
   options: { classes: string[] } = undefined;
-  static timeOutMessages = [
-    "You ran out of time! Try to answer as fast as possible",
-    "Oops, didnt get a response! Try to answer as fast as possible",
-    "Time waits for no one! Try to answer as fast as possible",
-    "You can do it! Answer the next question faster!"
-  ];
+  
 
   static welcomeMessagesForGiver = [
     "Welcome to the payment portal of Adama.",
     "This Service helps you manage how you pay your child's fees",
     "How do you want to proceed?"
   ];
+
+  static welcomeMessagesForTeacher = [
+    "Welcome, Soji. Greate a genesis has added you as a staff in their platform.",
+    "You have access to loan facilities",
+     "Would you like to proceed."
+  ]
 
   static successfulRequestsMade = [
     `We have procesed your request and sent it for
@@ -294,10 +295,10 @@ export class Message {
       parentDiv.insertAdjacentElement("afterbegin", avatar);
     }
   }
-  static GenerateMessagesForTimeOutScenarios(): string {
-    let number = Math.floor(Math.random() * this.timeOutMessages.length);
-    return this.timeOutMessages[number];
-  }
+  // static GenerateMessagesForTimeOutScenarios(): string {
+  //   let number = Math.floor(Math.random() * this.timeOutMessages.length);
+  //   return this.timeOutMessages[number];
+  // }
 
   // static welcomeMessagesGenerator(): string {
   //   let number = Math.floor(Math.random() * this.welcomeMessages.length);
@@ -528,6 +529,36 @@ export class Message {
           ),
           new GiverResponse(
             new replyGiversOrReceivers(`Let's continue.`, "right")
+          )
+        );
+      break;
+      case 'interestedinloan':
+      this.giverDispatchEvents(
+          "customGiverEventFromMsgClass",
+          "giver",
+          "teacher-loan-application"
+        );
+        this.giverResponsesEvent(
+          "customGiverResponse",
+          new replyGiversOrReceivers(
+            "Yes, I want a loan",
+            "right"
+          )
+        );
+      break;
+      case 'notinterestedinloan':
+        this.giverResponsesEvent(
+          "customGiverResponse",
+          new replyGiversOrReceivers(
+            "Thank you for your time.",
+            "left",
+            
+          ),
+          new GiverResponse(
+            new replyGiversOrReceivers(
+              "I am not interested",
+              "right"
+            )
           )
         );
       break;

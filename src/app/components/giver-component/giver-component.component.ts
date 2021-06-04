@@ -12,7 +12,8 @@ import * as generalActions from "../../store/actions/general.action";
 
 export class GiverComponentComponent implements OnInit {
   name: string;
-  constructor(private generalservice: GeneralService, 
+  constructor(
+    
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private store: Store
@@ -22,7 +23,8 @@ export class GiverComponentComponent implements OnInit {
 
   ngOnInit(): void {
     sessionStorage.removeItem("userLatLng");
-    const userNameOfSchool = this.router.url.split('/').length > 2 ?  this.router.url.split('/').slice(-1)[0] : undefined;
+    // this.router.url.split('/').length > 2 ?  this.router.url.split('/').slice(-1)[0] : undefined;
+    const userNameOfSchool = this.activatedRoute.snapshot.paramMap.get('name');
     this.handleContinuingRequest(userNameOfSchool);
     this.name = userNameOfSchool;
   }

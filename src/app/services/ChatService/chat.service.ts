@@ -317,6 +317,7 @@ export class ChatService {
 
   // getschoolDetails
   fetchSchoolDetails(nameOfSchool: string): Promise<{data: {school: SchoolDetailsModel}, message: string, status: boolean}>{
+    // console.log(nameOfSchool);
     return this.http.get<any>(`${this.generalUrl}user/${nameOfSchool}`).toPromise();
   }
 

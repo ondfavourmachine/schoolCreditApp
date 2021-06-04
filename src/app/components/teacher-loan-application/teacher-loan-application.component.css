@@ -1,0 +1,21 @@
+
+
+.housing_for_loan_amount{
+    
+}
+
+.addFlexBehavior{
+    transition: all 0.5s ease;
+    transform: scale(1) translateY(0);
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
+
+.addFlexBehavior:hover{
+    transform: scale(1.05) translateY(-5px);
+}
+
+.flexed{
+    display: flex !important;
+    justify-content: space-between !important;
+}

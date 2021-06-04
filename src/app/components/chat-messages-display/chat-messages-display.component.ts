@@ -364,7 +364,7 @@ export class ChatMessagesDisplayComponent
    
     // this.insertProcessingBeforeSchoolDetailsLoad(ul);
     // watch this function below:
-    
+  
     const runWelcome =  () => {
       this.insertProcessingBeforeSchoolDetailsLoad(ul);
      this.store.select(fromStore.getSchoolDetailsState) 
@@ -376,15 +376,14 @@ export class ChatMessagesDisplayComponent
          pluck('school_Info')
          ).subscribe(
           val => {
-            
-            this.generateWelcomeMsgForReceiverOrGiver(ul, undefined, val as SchoolDetailsModel);
+            const urlArray = this.route.url.split('/');
+            urlArray.includes('teacher') ? this.generateWelcomeMsgForTeacher(ul, val as SchoolDetailsModel) : this.generateWelcomeMsgForReceiverOrGiver(ul, undefined, val as SchoolDetailsModel);
           },
           err => {
             this.generateWelcomeMsgForReceiverOrGiver(ul, undefined, undefined);
           }
       )
     } 
-    
     if(dataToUse){
       this.generateQuestionWelcomeMsg(ul, userID);
     }else{
@@ -483,6 +482,10 @@ export class ChatMessagesDisplayComponent
         // this.route.navigate(["school"]);
       }
       if (String(componentToLoad).toLowerCase() == "child-information-forms") {
+        this.generalservice.handleFlowController(String(componentToLoad));
+      }
+
+      if(String(componentToLoad).toLowerCase() == 'teacher-loan-application'){
         this.generalservice.handleFlowController(String(componentToLoad));
       }
 
@@ -1097,6 +1100,47 @@ selectMottoFromSchool(){
       this.generalservice.typeOfPerson = str;
       this.receiverIsPresent = false;
     }
+  }
+
+  generateWelcomeMsgForTeacher
+  (ul: HTMLUListElement, schoolDetails: Partial<SchoolDetailsModel>)
+  {
+    setTimeout(() => {
+      const preLoader = document.querySelector('.pre_loader');
+      preLoader ? ul.removeChild(preLoader): null;
+      const msgs = Message.welcomeMessagesForTeacher;
+      let newString = '';
+      let userNameOfSchool = schoolDetails ? schoolDetails.name : this.route.url.split('/').slice(-1)[0];
+      let messageToDisplay: Message;
+      this.count = 0;
+      
+      msgs.forEach((msg, index) => {
+        if (index == 2) {
+          this.count = index;
+       
+          // Continue existing request
+          messageToDisplay = new Message(
+            `${msg}`,
+            `left`,
+            ul,
+            "Yes, No",
+            "interestedinloan,notinterestedinloan"
+          );
+          messageToDisplay.makeAndInsertMessage(this.count);
+          return;
+        }
+        //  /[&\/\\#,+()$~%.'":*?<>{}]/g
+        // const arr = userNameOfSchool.split('%20');
+        // userNameOfSchool = arr.join(' ');
+        // newString = msg.replace('Adama', userNameOfSchool ? this.titleCase.transform(userNameOfSchool) : 'Adanma'); 
+        // newString = newString.split('?')[0];
+        // newString+=  this.modifyMotto(index);
+        // messageToDisplay = new Message(`${newString ? newString : 'Adama'}`, `left`, ul);
+        messageToDisplay = new Message(msg, 'left', ul);
+        messageToDisplay.makeAndInsertMessage(index);
+      });
+  
+      }, 500);
   }
 
    generateWelcomeMsgForReceiverOrGiver(

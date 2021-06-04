@@ -54,6 +54,7 @@ import { SchoolBooksComponent } from "./components/school-books-display/school-b
 import { FilterPipe } from "./pipes/filter.pipe";
 import { EditChildComponent } from './components/edit-child/edit-child.component';
 import { QuestionnaireComponent } from "./components/questionnaire/questionnaire.component";
+import { TeacherLoanApplicationComponent } from './components/teacher-loan-application/teacher-loan-application.component';
 
 registerLocaleData(en);
 
@@ -91,7 +92,8 @@ registerLocaleData(en);
     FilterPipe,
     VerifyParentDataComponent,
     EditChildComponent,
-    QuestionnaireComponent
+    QuestionnaireComponent,
+    TeacherLoanApplicationComponent
   ],
   imports: [
     BrowserModule,
