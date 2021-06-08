@@ -3,6 +3,7 @@ import * as fromChildrenReducerFile from "./children.reducer";
 import * as fromTokenizeCardReducerFile from "./tokenize-card.reducer";
 import * as fromSchoolInfoReducerFile from "./schoolDetails.reducer"
 import * as fromLoanApplicationReducerFile from './loanApplication.reducer'
+import * as fromTeacherReducerFile from './teachers.reducer';
 import {
   ActionReducerMap,
   createFeatureSelector,
@@ -15,6 +16,7 @@ export interface AllState {
   tokenize_process: fromTokenizeCardReducerFile.tokenizeCardState
   schoolDetails: fromSchoolInfoReducerFile.SchoolDetails,
   loanApplicationProcess: fromLoanApplicationReducerFile.loanApplicationState
+  teacherDetails: fromTeacherReducerFile.TeacherState
 }
 
 export const reducers: ActionReducerMap<AllState> = {
@@ -23,6 +25,7 @@ export const reducers: ActionReducerMap<AllState> = {
   tokenize_process: fromTokenizeCardReducerFile.reducer,
   schoolDetails: fromSchoolInfoReducerFile.reducer,
   loanApplicationProcess: fromLoanApplicationReducerFile.reducer,
+  teacherDetails: fromTeacherReducerFile.reducer
 };
 
 // building Selectors for Children
@@ -38,6 +41,8 @@ export const getCardTokenState = createFeatureSelector<AllState>("manageCardToke
 export const getLoanApplicationState = createFeatureSelector<AllState>('manageLoanApplicationProcess')
 
 export const getSchoolDetailsState = createFeatureSelector<AllState>("schoolDetails");
+
+export const teacherDetailsState = createFeatureSelector<AllState>('manageTeacherDetails');
 
 
 

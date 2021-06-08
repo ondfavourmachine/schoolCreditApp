@@ -15,7 +15,8 @@ import {
   ContinuingExistingRequestResponse,
   SchoolDetailsModel,
   SchoolBook,
-  SchoolBookStructure
+  SchoolBookStructure,
+  TeacherDetails
 } from "src/app/models/data-models";
 import { timeout } from "rxjs/operators";
 // import { retry } from "rxjs/operators";
@@ -564,6 +565,28 @@ export class ChatService {
      return this.http.post<{data: any, message: string, status: boolean}>(url, {request_id: id, answers}, {
       headers: this.httpHeaders
     })
+   }
+
+   getTeachersNameAndOffers(teacher: string): Promise<{code: number, data: Partial<TeacherDetails>, message: string, status: boolean}>{
+     return this.http.get<any>(`${this.generalUrl}teacher/${teacher}/offers`).toPromise();
+   }
+
+   getTeacherSummaryPage(obj: Object): Promise<any>{
+     const url = 'https://mobile.creditclan.com/api/v3/school/teacher/summary';
+      return this.http.post(url, obj, {headers: this.httpHeaders}).toPromise();
+   }
+
+   getCreditClanRequestIdForTeachers(obj: Object): Promise<any>{
+    const url = 'https://mobile.creditclan.com/api/v3/school/teacher/request';
+    return this.http.post(url, obj, {headers: this.httpHeaders}).toPromise();
+   }
+
+   sendTeacherAcceptedLoansToBackend(obj: {loan_amount, teacher_id, school_id}): Promise<any>{
+     return this.http.post(`${this.generalUrl}teacher/loan`, obj).toPromise();
+   }
+
+   updateTeacherIDWithCreditclanId(creditclanid: string, loanRequestId: string){
+     return this.http.patch(`${this.generalUrl}teacher/loan/${loanRequestId}`, {creditclan_request_id: creditclanid}).toPromise()
    }
   
 }

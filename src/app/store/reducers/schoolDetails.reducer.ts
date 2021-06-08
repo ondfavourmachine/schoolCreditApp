@@ -1,6 +1,4 @@
 
-
-
   import { SchoolBook, SchoolDetailsModel } from "src/app/models/data-models";
 import * as generalActions from "../actions/general.action";
   

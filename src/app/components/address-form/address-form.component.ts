@@ -24,6 +24,7 @@ export class AddressFormComponent implements OnInit, OnDestroy {
   @Output() changeUpTheViewThree = new EventEmitter<string>();
   @Output() doneAddingAddress = new EventEmitter<string>();
   NigerianStates: State[] = [];
+  fetchingSummary: boolean =false;
   stateLgas: LGA[] = [];
   lgaData: any = {};
   parentAddressInfoForm: FormGroup;
@@ -70,7 +71,9 @@ export class AddressFormComponent implements OnInit, OnDestroy {
 
   submitThisForm(form: FormGroup) {
     // changeUpTheViewThree.emit('bvn')
-    this.doneAddingAddress.emit('done');
+    this.fetchingSummary = true;
+    // form.disable();
+    this.doneAddingAddress.emit(form.value);
     // this.spinner = true;
     // let formToSubmit = { ...form.value };
     // formToSubmit.guardian = this.guardianID;

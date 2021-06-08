@@ -1,8 +1,10 @@
 import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute, Params, Router } from "@angular/router";
 import { GeneralService } from "src/app/services/generalService/general.service";
 import { Store } from "@ngrx/store";
 import * as generalActions from "../../store/actions/general.action";
+import { ChatService } from "src/app/services/ChatService/chat.service";
+import { TeacherDetails } from "src/app/models/data-models";
 
 @Component({
   selector: "app-giver-component",
@@ -16,7 +18,8 @@ export class GiverComponentComponent implements OnInit {
     
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private store: Store
+    private store: Store,
+    private chatservice: ChatService
     ) {
 
   }
@@ -25,6 +28,15 @@ export class GiverComponentComponent implements OnInit {
     sessionStorage.removeItem("userLatLng");
     // this.router.url.split('/').length > 2 ?  this.router.url.split('/').slice(-1)[0] : undefined;
     const userNameOfSchool = this.activatedRoute.snapshot.paramMap.get('name');
+    if(this.activatedRoute.snapshot.paramMap.get('extra')){
+       this.activatedRoute.queryParamMap.subscribe(
+         (val : Params)=> {
+           const {id} = val.params;
+           console.log(id);
+           this.fetchTeachersDetails(id);
+         }
+       )
+    };
     this.handleContinuingRequest(userNameOfSchool);
     this.name = userNameOfSchool;
   }
@@ -82,5 +94,25 @@ export class GiverComponentComponent implements OnInit {
           subtree: true
         })
     })
+  }
+
+  async fetchTeachersDetails(teacher: string){
+    this.store.dispatch(new generalActions.teacherDetailsIsLoading());
+    try {
+      const res = await this.chatservice.getTeachersNameAndOffers(teacher);
+      const { id, name, salary,phone, offers } = res.data;
+      const objToStore: Partial<TeacherDetails> = {
+        id,
+        name,
+        salary,
+        offers,
+        phone
+      }
+      // console.log(res);
+      this.store.dispatch(new generalActions.teacherDetailsHasLoaded(objToStore));
+    } catch (error) {
+      console.log(error);
+      this.store.dispatch(new generalActions.teacherDetailsFailedToLoad())
+    }
   }
 }

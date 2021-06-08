@@ -24,7 +24,7 @@ const routes: Routes = [
       import("./modules/givers/giver/giver.module").then(m => m.GiverModule)
   },
   {
-    path: "school/:name/teacher",
+    path: "school/:name/:extra",
     loadChildren: () =>
       import("./modules/givers/giver/giver.module").then(m => m.GiverModule)
   },

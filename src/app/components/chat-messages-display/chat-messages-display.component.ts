@@ -28,7 +28,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { Store } from "@ngrx/store";
 import * as fromStore from "../../store";
 import { pluck } from "rxjs/operators";
-import { AChild, Parent, SchoolClass, SchoolDetailsModel } from "src/app/models/data-models";
+import { AChild, Parent, SchoolClass, SchoolDetailsModel, TeacherDetails } from "src/app/models/data-models";
 import { TitleCasePipe } from "@angular/common";
 import { ChildrenState } from "src/app/store/reducers/children.reducer";
 
@@ -377,7 +377,9 @@ export class ChatMessagesDisplayComponent
          ).subscribe(
           val => {
             const urlArray = this.route.url.split('/');
-            urlArray.includes('teacher') ? this.generateWelcomeMsgForTeacher(ul, val as SchoolDetailsModel) : this.generateWelcomeMsgForReceiverOrGiver(ul, undefined, val as SchoolDetailsModel);
+            // run a function here that will take generateWelcomeMsg as callback;
+          
+            urlArray[urlArray.length - 1].includes('teacher') ? this.generateWelcomeMsgForTeacher(ul, val as SchoolDetailsModel) : this.generateWelcomeMsgForReceiverOrGiver(ul, undefined, val as SchoolDetailsModel);
           },
           err => {
             this.generateWelcomeMsgForReceiverOrGiver(ul, undefined, undefined);
@@ -1105,42 +1107,45 @@ selectMottoFromSchool(){
   generateWelcomeMsgForTeacher
   (ul: HTMLUListElement, schoolDetails: Partial<SchoolDetailsModel>)
   {
-    setTimeout(() => {
-      const preLoader = document.querySelector('.pre_loader');
-      preLoader ? ul.removeChild(preLoader): null;
-      const msgs = Message.welcomeMessagesForTeacher;
-      let newString = '';
-      let userNameOfSchool = schoolDetails ? schoolDetails.name : this.route.url.split('/').slice(-1)[0];
-      let messageToDisplay: Message;
-      this.count = 0;
-      
-      msgs.forEach((msg, index) => {
-        if (index == 2) {
-          this.count = index;
-       
-          // Continue existing request
-          messageToDisplay = new Message(
-            `${msg}`,
-            `left`,
-            ul,
-            "Yes, No",
-            "interestedinloan,notinterestedinloan"
-          );
-          messageToDisplay.makeAndInsertMessage(this.count);
-          return;
-        }
-        //  /[&\/\\#,+()$~%.'":*?<>{}]/g
-        // const arr = userNameOfSchool.split('%20');
-        // userNameOfSchool = arr.join(' ');
-        // newString = msg.replace('Adama', userNameOfSchool ? this.titleCase.transform(userNameOfSchool) : 'Adanma'); 
-        // newString = newString.split('?')[0];
-        // newString+=  this.modifyMotto(index);
-        // messageToDisplay = new Message(`${newString ? newString : 'Adama'}`, `left`, ul);
-        messageToDisplay = new Message(msg, 'left', ul);
-        messageToDisplay.makeAndInsertMessage(index);
-      });
-  
-      }, 500);
+    this.store.select(fromStore.teacherDetailsState)
+    .pipe(
+      takeWhile(
+        val => val['teacher_Info_Load_state']  != 'loading'
+        ),
+      pluck('teacher_Info')
+    )
+    .subscribe(
+      (val: TeacherDetails) => {
+        const preLoader = document.querySelector('.pre_loader');
+        preLoader ? ul.removeChild(preLoader): null;
+        const msgs = Message.welcomeMessagesForTeacher;
+        let userNameOfSchool = schoolDetails ? schoolDetails.name : this.route.url.split('/').slice(-1)[0];
+        msgs[0] = `Welcome, ${val.name}. ${userNameOfSchool} has added you as a staff in their platform.,`
+        let messageToDisplay: Message;
+        this.count = 0;
+        msgs.forEach((msg, index) => {
+          if (index == 2) {
+            this.count = index;
+         
+            // Continue existing request
+            messageToDisplay = new Message(
+              `${msg}`,
+              `left`,
+              ul,
+              "Yes, No",
+              "interestedinloan,notinterestedinloan"
+            );
+            messageToDisplay.makeAndInsertMessage(this.count);
+            return;
+          }
+          messageToDisplay = new Message(msg, 'left', ul);
+          messageToDisplay.makeAndInsertMessage(index);
+        });
+      }
+    )
+     
+     
+
   }
 
    generateWelcomeMsgForReceiverOrGiver(

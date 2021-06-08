@@ -1,7 +1,26 @@
 
 
+.bolded{
+    display: flex;
+    justify-content: center;
+}
+
+.loan_information{
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
+}
+
 .housing_for_loan_amount{
-    
+    display: block;
+}
+
+.housing_for_loan_amount:first-child{
+    align-self: flex-start;
+}
+
+.loan_amount{
+    font-weight: 500;
 }
 
 .addFlexBehavior{
@@ -18,4 +37,8 @@
 .flexed{
     display: flex !important;
     justify-content: space-between !important;
+}
+
+.sorry__title > p{
+    font-weight: bold;
 }

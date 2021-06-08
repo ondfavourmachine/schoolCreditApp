@@ -8,7 +8,8 @@ import {
  
   SchoolBookStructure,
   LoanRequest,
-  Offers
+  Offers,
+  TeacherDetails
 } from "src/app/models/data-models";
 
 // add Parent information
@@ -161,6 +162,8 @@ export enum schoolLoadingState{
   completed = '[school] completed'
 }
 
+
+
 // school actions start here
 export const updateSchoolInformation = "[school] UPDATE SCHOOL";
 export const AddSchoolBooks = "[school] ADD SCHOOL BOOKS";
@@ -213,6 +216,32 @@ schoolDetailsIsLoading
 
 
 
+
+// actions for teacher
+export enum teacherLoadingState{
+  loading = '[teacher] Loading',
+  loaded = '[teacher] loaded',
+  failed = '[school] failed',
+}
+
+export class teacherDetailsIsLoading implements Action{
+  readonly type = teacherLoadingState.loading;
+  constructor(){}
+}
+
+export class teacherDetailsHasLoaded implements Action{
+  readonly type= teacherLoadingState.loaded;
+  constructor(public payload: Partial<TeacherDetails> ){}
+}
+
+export class teacherDetailsFailedToLoad implements Action{
+  readonly type = teacherLoadingState.failed;
+  constructor(){
+  }
+}
+
+
+export type teacherActions = teacherDetailsHasLoaded | teacherDetailsFailedToLoad | teacherDetailsIsLoading;
 
 
 

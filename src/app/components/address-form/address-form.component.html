@@ -52,11 +52,12 @@
 
   <div class="text-center mt-4">
     <button
+      [disabled]="!parentAddressInfoForm.valid"
       (click)="submitThisForm(parentAddressInfoForm)"
       type="button"
       class="ui primary button fluid"
     >
-      Next
+     <i *ngIf="fetchingSummary" class="fa fa-circle-notch fa-spin mr-2"></i> Next
     </button>
   </div>
 

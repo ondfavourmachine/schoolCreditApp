@@ -199,3 +199,19 @@ publisher_price: string
 school_id: number
 updated_at: string
 }
+
+export interface TeacherDetails{
+ id: number,
+ name: string,
+ salary: string,
+ offers: Array<TeacherOffer>,
+ phone: string
+}
+
+export interface TeacherOffer{
+  duration: number;
+  monthly_amount: number | string,
+  total_repayment: number | string,
+  principal: number | string
+  first_repayment_date?: string
+}
