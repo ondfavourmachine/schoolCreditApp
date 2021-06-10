@@ -6,7 +6,9 @@ export const userRoutes: Routes = [
   {
     path: "",
     children: [
-      { path: 'questions', component: ReceiverParentComponent }
+      { path: 'questions', component: ReceiverParentComponent },
+      { path: 'onboard', component: ReceiverParentComponent}
+      // { path: 'agents', component: ReceiverParentComponent }
     ]
   },
 

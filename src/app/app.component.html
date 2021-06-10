@@ -170,6 +170,13 @@
           </div>
         </div>
         
+        <div *ngSwitchCase="'agent-profile'">
+          <div class="takeAPicture">
+            <!-- <app-picture-component></app-picture-component> -->
+            <app-agent-profile></app-agent-profile>
+          </div>
+        </div>
+
         <div *ngSwitchCase="'verify-parent-data'">
           <!-- [previous]="goBack"
               (previousPage)="setPageToGoBackTo($event)" -->

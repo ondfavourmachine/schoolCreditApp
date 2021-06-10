@@ -24,7 +24,7 @@ import {
   GiverResponse,
   ReceiversResponse
 } from "src/app/models/GiverResponse";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute, NavigationStart, Router } from "@angular/router";
 import { Store } from "@ngrx/store";
 import * as fromStore from "../../store";
 import { pluck } from "rxjs/operators";
@@ -349,18 +349,16 @@ export class ChatMessagesDisplayComponent
     }
   }
 
-  ngAfterViewInit(message?: string, direction?: string) {
+  ngAfterViewInit() {
     const ul = this.messagePlaceHolder.nativeElement as HTMLUListElement;
     let dataToUse: string, userID: string
     this.activatedRoute.queryParams.subscribe(
       val => {
         const {comp} = val;
-  
-        // this.handleUserIdForQuestions(val['id'], ul);
         if(comp){ dataToUse = comp; userID = val['id']}
-        // this.generalservice.notifyThatQuestionsHasStartedOrEnded(true);
       }
     )
+    const onboard = this.activatedRoute.snapshot.url[0].path;
    
     // this.insertProcessingBeforeSchoolDetailsLoad(ul);
     // watch this function below:
@@ -388,7 +386,11 @@ export class ChatMessagesDisplayComponent
     } 
     if(dataToUse){
       this.generateQuestionWelcomeMsg(ul, userID);
-    }else{
+    }
+    if(onboard){
+      this.generateWelcomeMsgForOnboardingAgent(ul);
+    }
+    else{
       runWelcome();
     }
     
@@ -480,12 +482,15 @@ export class ChatMessagesDisplayComponent
       // debugger;
       if (String(message).includes( 'giver')) {
         sessionStorage.setItem("route", String(message));
-        // this.generalservice.receiver = "school";
-        // this.route.navigate(["school"]);
       }
       if (String(componentToLoad).toLowerCase() == "child-information-forms") {
         this.generalservice.handleFlowController(String(componentToLoad));
       }
+
+      if (String(componentToLoad).toLowerCase() == "agent-profile") {
+        this.generalservice.handleFlowController(String(componentToLoad));
+      }
+      
 
       if(String(componentToLoad).toLowerCase() == 'teacher-loan-application'){
         this.generalservice.handleFlowController(String(componentToLoad));
@@ -1143,10 +1148,41 @@ selectMottoFromSchool(){
         });
       }
     )
-     
-     
-
   }
+
+  
+
+  generateWelcomeMsgForOnboardingAgent(ul: HTMLUListElement){
+    setTimeout(() => {
+      const preLoader = document.querySelector('.pre_loader');
+      preLoader ? ul.removeChild(preLoader): null;
+      const msgs = Message.welcomeMessagesForAgents;
+      let messageToDisplay: Message;
+      this.count = 0;
+      
+      msgs.forEach((msg, index) => {
+        if (index == 2) {
+          this.count = index;
+       
+          // Continue existing request
+          messageToDisplay = new Message(
+            `${msg}`,
+            `left`,
+            ul,
+            "Continue, not interested",
+            "profileagent,endofonboarding"
+          );
+          messageToDisplay.makeAndInsertMessage(this.count);
+          return;
+        }
+       
+        messageToDisplay = new Message(msg, 'left', ul);
+        messageToDisplay.makeAndInsertMessage(index);
+      });
+  
+  }, 500);
+  }
+
 
    generateWelcomeMsgForReceiverOrGiver(
     ul: HTMLUListElement,

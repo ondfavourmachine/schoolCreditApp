@@ -27,15 +27,22 @@ export class Message {
     "Welcome, Soji. Greate a genesis has added you as a staff in their platform.",
     "You have access to loan facilities",
      "Would you like to proceed."
+  ];
+
+
+  static welcomeMessagesForAgents = [
+    'Welcome Akiba',
+    'We will like to ask some questions before you can join the team',
+    "Please click any of the buttons below to continue:",
   ]
+ 
 
   static successfulRequestsMade = [
     `We have procesed your request and sent it for
     assistance.`,
     `Our target is to send you someone who can give
     you some money to buy food items during this
-    lockdown.
-    `,
+    lockdown.`,
     `God bless you and your family. God bless
     Nigeria.`
   ];
@@ -665,6 +672,35 @@ export class Message {
             )
           ),
           // () => ['notifyBackendOfLoanRequest']
+        );
+      break;
+      case 'profileagent':
+        this.giverDispatchEvents(
+          "customGiverEventFromMsgClass",
+          "giver",
+          "agent-profile"
+        );
+        this.giverResponsesEvent(
+          "customGiverResponse",
+          new replyGiversOrReceivers(
+            `Ok let's continue`,
+            "right"
+          )
+        );
+      break;
+      case 'endofonboarding':
+        this.giverResponsesEvent(
+          "customGiverResponse",
+          new replyGiversOrReceivers(
+            `Ok, thank you for your time.`,
+            "left",
+          ),
+          new GiverResponse(
+            new replyGiversOrReceivers(
+              "No, i am not interested.",
+              "right"
+            )
+          )
         );
       break;
       case 'verifylater':

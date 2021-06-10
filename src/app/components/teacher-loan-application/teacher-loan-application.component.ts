@@ -51,14 +51,7 @@ export class TeacherLoanApplicationComponent implements OnInit {
 
 
  async endOfLoanApplicationProcess(){
-    //  send loan request to soji
-    // get response containing creditclan_request_id 
-    // send to nebechi
-    // this.reqPayload['school_id'] = this.school_id,
-    // this.reqPayload['profile'] = {fullname: this.teacherInfo.name, phone: this.teacherInfo.phone};
-    // this.reqPayload['request'] = {amount: this.selectedOffer.monthly_amount, duration: this.selectedOffer.duration};
    this.submittingOffer = true;
-    // console.log(this.reqPayload);
     const res = await this.chatservice.getCreditClanRequestIdForTeachers(this.reqPayload);
     const {school_id, teacher_id} = this.reqPayload;
     const {principal} = this.selectedOffer;
@@ -66,9 +59,7 @@ export class TeacherLoanApplicationComponent implements OnInit {
     const formToSubmit = {school_id, loan_amount: (principal as string).split(',').join(''), teacher_id};
     const secondRes = await this.chatservice.sendTeacherAcceptedLoansToBackend(formToSubmit);
     await this.chatservice.updateTeacherIDWithCreditclanId(request_id, secondRes.data.id);
-    // console.log(secondRes);
     this.generalservice.handleFlowController("");
-          // this.spinner = false;
          const chatbotResponse = new replyGiversOrReceivers(
             `Thank you, we will get back to you.`,
             "left",

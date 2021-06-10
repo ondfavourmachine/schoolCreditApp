@@ -55,6 +55,7 @@ import { FilterPipe } from "./pipes/filter.pipe";
 import { EditChildComponent } from './components/edit-child/edit-child.component';
 import { QuestionnaireComponent } from "./components/questionnaire/questionnaire.component";
 import { TeacherLoanApplicationComponent } from './components/teacher-loan-application/teacher-loan-application.component';
+import { AgentProfileComponent } from './components/agent-profile/agent-profile.component';
 
 registerLocaleData(en);
 
@@ -93,7 +94,8 @@ registerLocaleData(en);
     VerifyParentDataComponent,
     EditChildComponent,
     QuestionnaireComponent,
-    TeacherLoanApplicationComponent
+    TeacherLoanApplicationComponent,
+    AgentProfileComponent
   ],
   imports: [
     BrowserModule,

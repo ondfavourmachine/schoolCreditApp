@@ -1,0 +1,68 @@
+
+
+<div class=" h-100 text-center family-info" >
+    <h1 class="para-title">
+      Please fill the form below:
+    </h1>
+  
+
+    <form
+[formGroup]="agentProfileForm"
+class="w-100"
+style="position: relative"
+>
+<div class="ui form">
+  <div class="field">
+    <label>Name</label>
+    <input
+      formControlName="name"
+      type="text"
+      placeholder="eg: Chukwudi"
+    />
+  </div>
+  <div class="field">
+    <label>Email</label>
+    <input
+      formControlName="email"
+      type="email"
+      placeholder="eg: johndoe@gmail.com"
+    />
+  </div>
+
+  <div class="field">
+    <label>Phone</label>
+    <input
+      formControlName="phone"
+      type="tel"
+      maxlength="11"
+      (keypress)="numberOnly($event)"
+      pattern="[0-9]{11}"
+      placeholder="Eg: 09093345678"
+    />
+  </div>
+
+  <div class="field">
+    <label>Address</label>
+    <input
+      formControlName="address"
+      type="text"
+      placeholder="Eg: 21, Tapa street Ijesha"
+    />
+  </div>
+  
+</div>
+
+<div class="text-center mt-4">
+  <button
+    [disabled]="!agentProfileForm.valid"
+    type="submit"
+    class="ui primary button fluid"
+  >
+    Next
+  </button>
+</div>
+</form>
+   
+  </div>
+
+
