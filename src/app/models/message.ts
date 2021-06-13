@@ -31,7 +31,7 @@ export class Message {
 
 
   static welcomeMessagesForAgents = [
-    'Welcome Akiba',
+    'Hi, there!',
     'We will like to ask some questions before you can join the team',
     "Please click any of the buttons below to continue:",
   ]
