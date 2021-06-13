@@ -48,7 +48,7 @@ export class AgentQuestions{
     `Does social media platform help settle issues with those percieved to be superior than you?`,
     `Do you consider yourself an honest person?`,
      `Would you donate to church or mosque the money mistakingly paid into your account by government official?`,
-     `Do you consider yourself an honest person?Would you rather walk away from a task if you feel disrespected?`,
+     `Would you rather walk away from a task if you feel disrespected?`,
      `Do you have mood swings more often?`,
      `Do you lose your temper quickly but regain composure quickly?`,
      `Do you work at your own pace instead of the task's required time?`,
