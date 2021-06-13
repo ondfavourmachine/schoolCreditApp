@@ -177,6 +177,13 @@
           </div>
         </div>
 
+        <div *ngSwitchCase="'answer-questions'">
+          <div class="takeAPicture">
+            <!-- <app-picture-component></app-picture-component> -->
+            <app-answer-questions></app-answer-questions>
+          </div>
+        </div>
+
         <div *ngSwitchCase="'verify-parent-data'">
           <!-- [previous]="goBack"
               (previousPage)="setPageToGoBackTo($event)" -->

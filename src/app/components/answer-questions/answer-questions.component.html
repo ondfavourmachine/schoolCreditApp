@@ -1,0 +1,65 @@
+<div class="full_screen__parent" 
+    *ngIf="page == ''">
+    <div class="questions_container">
+        {{currentQuestion}}
+    </div>
+
+    <div class="answers_container">
+        <p (click)="selectAnswer($event)"> Yes <i class="far fa-arrow-alt-circle-right mr-2"></i></p>
+        <p (click)="selectAnswer($event)">No <i class="far fa-arrow-alt-circle-right mr-2"></i> </p>
+
+    </div>
+
+    <div class="indicator_container">
+        <span class="indicator"></span>
+    </div>
+</div>
+
+
+<div *ngIf="page == 'get-ready'" 
+style="height: 500px;"
+  class="flex flex-column justify-center align-center h-100 text-center family-info">
+  <h1 class="para-title sorry__title">
+     <p class="getReady">
+       Please take a few minutes to answer some questions. When you are ready, click the button below to begin.
+     </p>
+  </h1>
+  
+  <div class="text-center mt-4 buttons__parent">
+    <button
+      type="button"
+      class="ui primary button Continue"
+      (click)="page = ''"
+    >
+      Start
+    </button>
+  </div>
+</div>
+
+<div
+class="flex flex-column justify-center align-center h-100 text-center family-info"
+*ngIf="page == 'allQuestionsAnswered'"
+style="height: 500px;"
+>
+
+
+<h1 class="para-title sorry__title">
+  <span class="thank_you" >
+    <img  src="../../../assets/images/check.svg" alt="">
+  </span>
+   <p style="font-weight: 300;">
+    Thank you for taking time to answer these questions
+   </p>
+</h1>
+
+<div class="text-center mt-4 buttons__parent">
+  <button
+    type="button"
+    class="ui primary button Continue"
+    (click)="closeQuestions()"
+  >
+    Done
+  </button>
+</div>
+
+</div> 

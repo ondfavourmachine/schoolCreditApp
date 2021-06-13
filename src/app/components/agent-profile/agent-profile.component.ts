@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { GeneralService } from 'src/app/services/generalService/general.service';
 
 @Component({
   selector: 'app-agent-profile',
@@ -7,8 +8,11 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./agent-profile.component.css']
 })
 export class AgentProfileComponent implements OnInit {
-  agentProfileForm: FormGroup
-  constructor(private fb: FormBuilder) { }
+  agentProfileForm: FormGroup;
+  
+  constructor(
+    private generalservice: GeneralService,
+    private fb: FormBuilder) { }
 
   ngOnInit(): void {
     this.agentProfileForm = this.fb.group({
@@ -26,6 +30,15 @@ export class AgentProfileComponent implements OnInit {
       return false;
     }
     return true;
+  }
+
+
+  submitAgentProfile(form: FormGroup){
+    sessionStorage.setItem('agent_details', JSON.stringify(form.value));
+    this.generalservice.handleFlowController('');
+    setTimeout(() => {
+      this.generalservice.handleFlowController('answer-questions');
+    }, 0);
   }
 
 }

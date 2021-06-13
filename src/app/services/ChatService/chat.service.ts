@@ -588,6 +588,10 @@ export class ChatService {
    updateTeacherIDWithCreditclanId(creditclanid: string, loanRequestId: string){
      return this.http.patch(`${this.generalUrl}teacher/loan/${loanRequestId}`, {creditclan_request_id: creditclanid}).toPromise()
    }
+
+   sendAnsweredQuestionsToServer(answers: Object): Promise<any>{
+    return this.http.post(`https://sellbackend.creditclan.com/merchantclan/public/index.php/api/agent/profile`, answers).toPromise();
+   }
   
 }
 

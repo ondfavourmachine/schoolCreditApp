@@ -54,16 +54,21 @@ export class AppComponent
     this.intervalID = setInterval(() => this.startCountDownTimer(), 1000);
     router.events.subscribe(
       event => {
-        (document.querySelector('.overlay') as HTMLElement).style.display = 'none';
+       
+        if(event instanceof NavigationStart){
+          if(event.url.includes('agents')){
+            (document.querySelector('.overlay') as HTMLElement).style.display = 'none';
             (document.querySelector('.overlay') as HTMLElement).style.zIndex = '-1';
-        // if(event instanceof NavigationStart){
-          
-        //   if(event.url.includes('user')){
-        //     (document.querySelector('.overlay') as HTMLElement).style.display = 'none';
-        //     (document.querySelector('.overlay') as HTMLElement).style.zIndex = '-1';
-        //     clearInterval(this.intervalID);
-        //   }
-        // }
+            clearInterval(this.intervalID);
+            return;
+          }
+          if(event.url.includes('user')){
+            (document.querySelector('.overlay') as HTMLElement).style.display = 'none';
+            (document.querySelector('.overlay') as HTMLElement).style.zIndex = '-1';
+            clearInterval(this.intervalID);
+            return;
+          }
+        }
       }
     )
   }

@@ -56,6 +56,7 @@ import { EditChildComponent } from './components/edit-child/edit-child.component
 import { QuestionnaireComponent } from "./components/questionnaire/questionnaire.component";
 import { TeacherLoanApplicationComponent } from './components/teacher-loan-application/teacher-loan-application.component';
 import { AgentProfileComponent } from './components/agent-profile/agent-profile.component';
+import { AnswerQuestionsComponent } from './components/answer-questions/answer-questions.component';
 
 registerLocaleData(en);
 
@@ -95,7 +96,8 @@ registerLocaleData(en);
     EditChildComponent,
     QuestionnaireComponent,
     TeacherLoanApplicationComponent,
-    AgentProfileComponent
+    AgentProfileComponent,
+    AnswerQuestionsComponent
   ],
   imports: [
     BrowserModule,
