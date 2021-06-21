@@ -357,12 +357,13 @@ export class ChatMessagesDisplayComponent
         const {comp} = val;
         if(comp){ dataToUse = comp; userID = val['id']}
       }
+
     )
-    const onboard = this.activatedRoute.snapshot.url[0].path;
+
+    const onboard = this.activatedRoute.snapshot.url.length > 0 ?  this.activatedRoute.snapshot.url[0].path : null;
    
     // this.insertProcessingBeforeSchoolDetailsLoad(ul);
     // watch this function below:
-  
     const runWelcome =  () => {
       this.insertProcessingBeforeSchoolDetailsLoad(ul);
      this.store.select(fromStore.getSchoolDetailsState) 
@@ -375,8 +376,7 @@ export class ChatMessagesDisplayComponent
          ).subscribe(
           val => {
             const urlArray = this.route.url.split('/');
-            // run a function here that will take generateWelcomeMsg as callback;
-          
+            
             urlArray[urlArray.length - 1].includes('teacher') ? this.generateWelcomeMsgForTeacher(ul, val as SchoolDetailsModel) : this.generateWelcomeMsgForReceiverOrGiver(ul, undefined, val as SchoolDetailsModel);
           },
           err => {
@@ -384,8 +384,10 @@ export class ChatMessagesDisplayComponent
           }
       )
     } 
+
     if(dataToUse){
       this.generateQuestionWelcomeMsg(ul, userID);
+      return;
     }
     if(onboard){
       this.generateWelcomeMsgForOnboardingAgent(ul);
