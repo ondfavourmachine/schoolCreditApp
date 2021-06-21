@@ -56,7 +56,7 @@ export class AppComponent
       event => {
        
         if(event instanceof NavigationStart){
-          if(event.url.includes('agents')){
+          if(event.url.includes('teacher')){
             (document.querySelector('.overlay') as HTMLElement).style.display = 'none';
             (document.querySelector('.overlay') as HTMLElement).style.zIndex = '-1';
             clearInterval(this.intervalID);
