@@ -538,7 +538,8 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   async preInitiationToDataCollectionWidget(button?: HTMLButtonElement){
-    const CreditClan = window['CreditClan'];
+    // const CreditClan = window['CreditClan'];
+    const CreditClan = window['EligibilityWidget'];
     let school_id;
     const pictureForWidget = await this.generalservice.fileToDataurl(this.parentDetails.picture as File);
     let totalFees: number = 0;
