@@ -538,7 +538,6 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   async preInitiationToDataCollectionWidget(button?: HTMLButtonElement){
-    // const CreditClan = window['CreditClan'];
     const CreditClan = window['EligibilityWidget'];
     let school_id;
     const pictureForWidget = await this.generalservice.fileToDataurl(this.parentDetails.picture as File);
@@ -552,6 +551,7 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
     const schoolSubscription = this.store.select(fromStore.getSchoolDetailsState)
     .pipe(tap(val =>  {school_id = val["school_Info"].id})).subscribe();
      const data = {
+                  banner: 'https://images.unsplash.com/photo-1605902711834-8b11c3e3ef2f?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80',
                   request: { amount: totalFees, tenor: 3 },
                   profile: {
                       profile_image: pictureForWidget,
@@ -564,7 +564,6 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
                       nationality: "", //
                       state_of_origin: this.parentDetails.state // pass the id of state you collected
                   },
-                  school_id: school_id,
                   request_id: this.parentDetails.loan_request,
                   // stage: 1
                   config: {
@@ -578,16 +577,16 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
                     state_id: this.parentDetails.state,
                     lga_id: this.parentDetails.lga
                   },
+                  extra: {
+                    school_id,
+                  }
           };
 
         // console.log(data);
        this.cc = CreditClan.init({
-         key: 'z2BhpgFNUA99G8hZiFNv77mHDYcTlecgjybqDACv',
-         banner: 'https://images.unsplash.com/photo-1605902711834-8b11c3e3ef2f?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80',
+         data,
          onReady: async () => {
-          this.spinner = true;     
-          this.cc.start(data);
-          // this.loading = '';
+          this.spinner = true;
         },
 
         onRequest: async ({ request_id, user_id, offer }) => {
