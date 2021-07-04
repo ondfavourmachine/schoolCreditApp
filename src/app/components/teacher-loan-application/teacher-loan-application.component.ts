@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { TeacherDetails, TeacherOffer } from 'src/app/models/data-models';
 import { replyGiversOrReceivers } from 'src/app/models/GiverResponse';
 import { GeneralService } from 'src/app/services/generalService/general.service';
@@ -13,17 +13,50 @@ import { ChatService } from 'src/app/services/ChatService/chat.service';
   styleUrls: ['./teacher-loan-application.component.css']
 })
 export class TeacherLoanApplicationComponent implements OnInit {
- page : 'selection' | 'address' | 'offer' = 'selection'; 
+  @Output("previousPage") previousPage = new EventEmitter<string>();
+  @Input("previous") previous: any;
+ page : 'selection' | 'address' | 'offer' | '' = 'selection'; 
  teacherInfo: Partial<TeacherDetails> = {};
  selectedOffer: Partial<TeacherOffer> = {}
  school_id: any;
  submittingOffer: boolean = false;
+ pageViews: string[] = [
+  "",
+  "selection",
+  "address",
+  "offer"
+];
  
  reqPayload: any = {};
  offersFromCreditClan: TeacherOffer[] = [];
   constructor(
     private chatservice: ChatService,
-    private generalservice: GeneralService,private store: Store ) { }
+    private generalservice: GeneralService,private store: Store ) 
+    { 
+      this.manageGoingBackAndForth = this.manageGoingBackAndForth.bind(this);
+    }
+
+
+    manageGoingBackAndForth() {
+      if (this.page == this.previous) {
+        const num = this.pageViews.indexOf(this.previous);
+        const ans = this.pageViews[num - 1];
+        this.page = ans as any;
+        // this.previousPage.emit(this.pageViews[this.pageViews.indexOf(ans) - 1]);
+        this.page == 'selection' ? this.previousPage.emit('firstPage') : this.previousPage.emit(this.pageViews[this.pageViews.indexOf(ans) - 1]);
+
+        return;
+      }
+      if (this.previous == "") {
+        this.page = "";
+        this.previousPage.emit("firstPage");
+        this.page = "";
+      } else {
+        this.page = this.previous;
+        this.page == 'selection' ? this.previousPage.emit('firstPage') : null;
+      }
+    }
+
 
   ngOnInit(): void {
     this.store.select(fromStore.getSchoolDetailsState)
@@ -49,6 +82,12 @@ export class TeacherLoanApplicationComponent implements OnInit {
     )
   }
 
+  ngAfterViewInit() {
+    document
+      .getElementById("backspace")
+      .addEventListener("click", this.manageGoingBackAndForth);
+  }
+
 
  async endOfLoanApplicationProcess(){
    this.submittingOffer = true;
@@ -61,7 +100,7 @@ export class TeacherLoanApplicationComponent implements OnInit {
     await this.chatservice.updateTeacherIDWithCreditclanId(request_id, secondRes.data.id);
     this.generalservice.handleFlowController("");
          const chatbotResponse = new replyGiversOrReceivers(
-            `Thank you, we will get back to you.`,
+            `Thank you for showing interest in School Credit. Your request has been sent to the school for confirmation.`,
             "left",
             ``,
             ``,
@@ -75,6 +114,7 @@ export class TeacherLoanApplicationComponent implements OnInit {
   selectAnOffer(teacherOffer){
     this.page = 'address';
     this.selectedOffer = teacherOffer;
+    this.previousPage.emit('selection');
    }
 
   async receivedAddress(event){
@@ -87,7 +127,11 @@ export class TeacherLoanApplicationComponent implements OnInit {
     const res = await this.chatservice.getTeacherSummaryPage(this.reqPayload);
      this.selectedOffer['first_repayment_date'] = res.data.first_repayment_date
     this.page = 'offer';
+    this.previousPage.emit('address');
 
   }
+
+
+ 
 
 }

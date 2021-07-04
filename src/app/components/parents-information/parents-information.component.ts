@@ -92,15 +92,10 @@ const validatePhoneIsUnique = (
         return null;
       }),
       catchError(err => {
-        // console.log(err);
         obj.checkingUniqueness = "not-unique";
         return of({ phoneExists: true });
       })
     );
-
-  //  return off(null)
-  // return httpClient.post<any>('url', {email: control.value})
-  // .pipe(map(val: any[]) => val.length == 1 ? {emailExists: true}: null)
 };
 
 @Component({
@@ -166,7 +161,6 @@ export class ParentsInformationComponent
     this.lgaData = { ...LgaData() };
 
     this.selectLgaInState(this.localGovtArea);
-    // this is necessary for the addEventListener
     this.manageGoingBackAndForth = this.manageGoingBackAndForth.bind(this);
   }
 

@@ -10,7 +10,7 @@
     <h1 class="para-title sorry__title">
   
         <p>
-           Please choose the desired Loan amount
+          Select loan amount
         </p>
      </h1>
     
@@ -73,24 +73,24 @@
     </h1>
 
   
-    <div>
+    <div style="width: 100%">
       <div class="ui fluid vertical menu">
-        <a  class=" item flexed">
+        <a  class=" item flexed"  style="font-weight: bold;">
           Amount
-          <div class="ui  label">₦{{selectedOffer?.principal}}</div>
+          <div class="ui ">₦{{selectedOffer?.principal}}</div>
         </a>
-        <a class="item flexed">
+        <a class="item flexed" style="font-weight: bold;">
           Duration
-          <div class="ui label"> {{selectedOffer?.duration}} months</div>
+          <div class="ui "> {{selectedOffer?.duration}} months</div>
         </a>
-        <a class="item flexed">
+        <a class="item flexed" style="font-weight: bold;">
           Monthly
-          <div class="ui label">₦{{selectedOffer?.monthly_amount}}</div>
+          <div class="ui ">₦{{selectedOffer?.monthly_amount}}</div>
         </a>
 
-        <a class="item flexed">
+        <a class="item flexed" style="font-weight: bold;">
           First Repayment
-          <div class="ui label"> {{ selectedOffer?.first_repayment_date | date}} </div>
+          <div class="ui "> {{ selectedOffer?.first_repayment_date | date}} </div>
         </a>
         
     </div>

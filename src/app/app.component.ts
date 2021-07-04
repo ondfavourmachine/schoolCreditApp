@@ -98,6 +98,7 @@ export class AppComponent
   }
 
   setPageToGoBackTo(event) {
+    console.log(event);
     this.goBack = event;
   }
 

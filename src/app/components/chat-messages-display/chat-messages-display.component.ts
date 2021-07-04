@@ -1127,7 +1127,7 @@ selectMottoFromSchool(){
         preLoader ? ul.removeChild(preLoader): null;
         const msgs = Message.welcomeMessagesForTeacher;
         let userNameOfSchool = schoolDetails ? schoolDetails.name : this.route.url.split('/').slice(-1)[0];
-        msgs[0] = `Welcome, ${val.name}. ${userNameOfSchool} has added you as a staff in their platform.,`
+        msgs[0] = `Welcome, ${val.name}. You have been recommended by ${userNameOfSchool} school to access credit facility.`
         let messageToDisplay: Message;
         this.count = 0;
         msgs.forEach((msg, index) => {

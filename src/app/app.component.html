@@ -165,8 +165,11 @@
 
         <div *ngSwitchCase="'teacher-loan-application'">
           <div class="takeAPicture">
-            <!-- <app-picture-component></app-picture-component> -->
-            <app-teacher-loan-application></app-teacher-loan-application>
+         
+            <app-teacher-loan-application
+            [previous]="goBack"
+            (previousPage)="setPageToGoBackTo($event)"
+            ></app-teacher-loan-application>
           </div>
         </div>
         
