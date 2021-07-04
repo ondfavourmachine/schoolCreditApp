@@ -548,8 +548,8 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
               const { total_tuition_fees } = val as ChildrenState;
               totalFees += total_tuition_fees;
             });
-    const schoolSubscription = this.store.select(fromStore.getSchoolDetailsState)
-    .pipe(tap(val =>  {school_id = val["school_Info"].id})).subscribe();
+    const schoolSubscription = this.store.select(fromStore.getSchoolDetailsState).pipe(tap(val =>  {school_id = val["school_Info"].id})).subscribe();
+    const teacher = this.store.select(fromStore.teacherDetailsState).pipe(pluck('teacher_Info'),tap(val => val['id'])).subscribe()
      const data = {
                   banner: 'https://images.unsplash.com/photo-1605902711834-8b11c3e3ef2f?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80',
                   request: { amount: totalFees, tenor: 3 },
@@ -579,6 +579,8 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
                   },
                   extra: {
                     school_id,
+                    parent_id: this.parentDetails.guardian,
+                    teacher_id: teacher
                   }
           };
 
