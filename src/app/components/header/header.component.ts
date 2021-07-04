@@ -32,7 +32,10 @@ export class HeaderComponent implements OnInit {
     this.destroyAnything[0] = this.activateRoute.queryParams.subscribe(val => {
       const {id} = val;
       if(id) this.showADifferentOnlineName = true;
-      if(this.activateRoute.snapshot.url[0].path == 'onboard') this.showADifferentOnlineName = true;
+      if(this.activateRoute.snapshot.url.length > 0){
+        if(this.activateRoute.snapshot.url[0].path == 'onboard') this.showADifferentOnlineName = true;
+      }
+      
       else this.showADifferentOnlineName = false;
     })
     this.destroyAnything[1]= this.store.select(fromStore.getSchoolDetailsState) 
