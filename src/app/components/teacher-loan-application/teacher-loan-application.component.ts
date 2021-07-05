@@ -154,8 +154,8 @@ export class TeacherLoanApplicationComponent implements OnInit {
                   // request: { amount: totalFees, tenor: 3 },
                   profile: {
                       // profile_image: pictureForWidget,
-                      full_name: this.reqPayload.profile.full_name,
-                      // email: this.parentDetails.email,
+                      full_name: this.reqPayload.profile.fullname,
+                      email: `${this.reqPayload.profile.fullname.split(' ').join('.')}@clan.cc`,
                       phone: this.reqPayload.profile.phone,
                       // date_of_birth: this.parentDetails.date_of_birth,
                       // gender: this.parentDetails.gender == "1" ? "0" : "1",
