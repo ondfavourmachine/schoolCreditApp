@@ -1620,6 +1620,8 @@ selectMottoFromSchool(){
           return element.buttonElement.includes(button.textContent);
         }
       });
+
+      // debugger
       const disconnect = this.store
       .select(fromStore.getCurrentChildState)
       .subscribe((val: any) => {
