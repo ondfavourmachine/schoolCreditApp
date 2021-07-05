@@ -611,22 +611,6 @@ export class BankPartnershipComponent implements OnInit, OnDestroy, OnChanges {
               }
             }
              
-            
-          
-             // check if card exists for this user?
-            // call endpoint here
-
-            // try {
-            //   // this.page = "card_tokenisation";
-            //   const res = await this.chatservice.checkIfParentHasSavedCardDetails(request_id, user_id);
-            //   if(res.data.card){
-            //     this.page = 'ask_to_make_payment';
-            //   }else{
-            //     this.page = 'card_tokenisation';
-            //   }
-            // } catch (error) {
-            //   this.page = "card_tokenisation";
-            // }
             await this.chatservice.updateCreditClanRequestId(
               this.parentDetails.loan_request,
               loanRequest.creditclan_request_id
