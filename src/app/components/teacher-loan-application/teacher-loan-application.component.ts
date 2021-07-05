@@ -144,7 +144,7 @@ export class TeacherLoanApplicationComponent implements OnInit {
     this.store.select(fromStore.teacherDetailsState).pipe(pluck('teacher_Info')).subscribe(
       val => teacher = val,
     );
-    console.log(teacher, reqId)
+    // console.log(teacher, reqId)
     
  
     // const schoolSubscription = this.store.select(fromStore.getSchoolDetailsState).pipe(tap(val =>  {school_id = val["school_Info"].id})).subscribe();
