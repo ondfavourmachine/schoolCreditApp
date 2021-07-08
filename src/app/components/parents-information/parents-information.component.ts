@@ -151,7 +151,7 @@ export class ParentsInformationComponent
     "done";
   editMode: boolean = false;
   constructor(
-    private generalservice: GeneralService,
+    public generalservice: GeneralService,
     private store: Store<fromStore.AllState>,
     private fb: FormBuilder,
     private httpclient: HttpClient,
@@ -159,6 +159,8 @@ export class ParentsInformationComponent
   ) {
     this.NigerianStates = sandBoxData().data.states;
     this.lgaData = { ...LgaData() };
+
+    
 
     this.selectLgaInState(this.localGovtArea);
     this.manageGoingBackAndForth = this.manageGoingBackAndForth.bind(this);
@@ -235,13 +237,7 @@ export class ParentsInformationComponent
     }, 500);
   }
 
-  numberOnly(event): boolean {
-    const charCode = event.which ? event.which : event.keyCode;
-    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-      return false;
-    }
-    return true;
-  }
+  
 
   get phone(): AbstractControl {
     return this.phoneForm.get("phone");

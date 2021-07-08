@@ -45,7 +45,7 @@
 
       <div class="field">
         <label>Number of years in current residence</label>
-        <input  formControlName="resident_years" name="class" type="number" placeholder="Eg: 2" />
+        <input  formControlName="resident_years" name="class" type="tel" (keypress)="generalservice.numberOnly($event)" placeholder="Eg: 2" />
       </div>
     </div>
   </div>

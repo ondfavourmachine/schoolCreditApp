@@ -8,6 +8,7 @@ import * as fromStore from "../../store";
 import { Store } from "@ngrx/store";
 import { ChatService } from "src/app/services/ChatService/chat.service";
 import { Parent } from "src/app/models/data-models";
+import { GeneralService } from "src/app/services/generalService/general.service";
 
 interface State {
   id: string;
@@ -34,6 +35,7 @@ export class AddressFormComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private store: Store,
+    public generalservice: GeneralService,
     private chatservice: ChatService
   ) {
     this.NigerianStates = sandBoxData().data.states;
@@ -70,23 +72,8 @@ export class AddressFormComponent implements OnInit, OnDestroy {
   }
 
   submitThisForm(form: FormGroup) {
-    // changeUpTheViewThree.emit('bvn')
     this.fetchingSummary = true;
-    // form.disable();
     this.doneAddingAddress.emit(form.value);
-    // this.spinner = true;
-    // let formToSubmit = { ...form.value };
-    // formToSubmit.guardian = this.guardianID;
-    // this.chatservice.saveParentAddressInformation(formToSubmit).subscribe(
-    //   val => {
-    //     const { state, bus_stop, city, address, lga, post_code } = val.data;
-    //     let objToStore = { state, bus_stop, city, address, lga, post_code };
-      
-    //     this.spinner = false;
-    //     this.changeUpTheViewThree.emit("bvn");
-    //   },
-    //   err => console.log(err)
-    // );
   }
 
   ngOnDestroy(){

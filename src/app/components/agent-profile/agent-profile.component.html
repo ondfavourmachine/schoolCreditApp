@@ -36,7 +36,7 @@ style="position: relative"
       formControlName="phone"
       type="tel"
       maxlength="11"
-      (keypress)="numberOnly($event)"
+      (keypress)="generalservice.numberOnly($event)"
       pattern="[0-9]{11}"
       placeholder="Eg: 09093345678"
     />

@@ -11,7 +11,7 @@ export class AgentProfileComponent implements OnInit {
   agentProfileForm: FormGroup;
   
   constructor(
-    private generalservice: GeneralService,
+    public generalservice: GeneralService,
     private fb: FormBuilder) { }
 
   ngOnInit(): void {
@@ -24,13 +24,7 @@ export class AgentProfileComponent implements OnInit {
   }
 
 
-  numberOnly(event): boolean {
-    const charCode = event.which ? event.which : event.keyCode;
-    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-      return false;
-    }
-    return true;
-  }
+  
 
 
   submitAgentProfile(form: FormGroup){
