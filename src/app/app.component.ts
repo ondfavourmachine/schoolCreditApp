@@ -55,12 +55,12 @@ export class AppComponent
     router.events.subscribe(
       event => {  
         if(event instanceof NavigationStart){
-          if(event.url.includes('school')){
-            (document.querySelector('.overlay') as HTMLElement).style.display = 'none';
-            (document.querySelector('.overlay') as HTMLElement).style.zIndex = '-1';
-            clearInterval(this.intervalID);
-            return;
-          }
+          // if(event.url.includes('school')){
+          //   (document.querySelector('.overlay') as HTMLElement).style.display = 'none';
+          //   (document.querySelector('.overlay') as HTMLElement).style.zIndex = '-1';
+          //   clearInterval(this.intervalID);
+          //   return;
+          // }
           if(event.url.includes('teacher')){
             (document.querySelector('.overlay') as HTMLElement).style.display = 'none';
             (document.querySelector('.overlay') as HTMLElement).style.zIndex = '-1';
@@ -79,7 +79,7 @@ export class AppComponent
   }
 
   startCountDownTimer(){
-    this.countDownDate = new Date('July 12, 2021 00:00:00').getTime();
+    this.countDownDate = new Date('July 31, 2021 00:00:00').getTime();
     const now = Date.now();
     const diff = this.countDownDate - now;
     const second = 1000;
