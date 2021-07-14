@@ -55,12 +55,12 @@ export class AppComponent
     router.events.subscribe(
       event => {  
         if(event instanceof NavigationStart){
-          if(event.url.includes('school')){
-            (document.querySelector('.overlay') as HTMLElement).style.display = 'none';
-            (document.querySelector('.overlay') as HTMLElement).style.zIndex = '-1';
-            clearInterval(this.intervalID);
-            return;
-          }
+          // if(event.url.includes('school')){
+          //   (document.querySelector('.overlay') as HTMLElement).style.display = 'none';
+          //   (document.querySelector('.overlay') as HTMLElement).style.zIndex = '-1';
+          //   clearInterval(this.intervalID);
+          //   return;
+          // }
           if(event.url.includes('teacher')){
             (document.querySelector('.overlay') as HTMLElement).style.display = 'none';
             (document.querySelector('.overlay') as HTMLElement).style.zIndex = '-1';
