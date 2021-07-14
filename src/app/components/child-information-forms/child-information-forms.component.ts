@@ -334,10 +334,11 @@ export class ChildInformationFormsComponent
   updateTuitionValidations(id: string){
     const found = this.schoolClasses.find(elem => elem.id == id);
     if(found && found.school_fees){
+      this.typeOffundingArr.clear();
+      this.keysNotToFunding.clear();
       this.parentNeedsToEnterTuition = false;
-      const thingsForFunding = Object.keys(found.school_fees).filter((element) => found.school_fees[element] == null );
+      const thingsForFunding = Object.keys(found.school_fees).filter((element) => found.school_fees[element] == null || found.school_fees[element] == '0.00');
       this.keysNotToFunding  = new Set(thingsForFunding);
-      // this.goToTypeOfFunding();
       this.childInfoForm.get('tuition_fees').clearValidators();
       this.childInfoForm.get('tuition_fees').updateValueAndValidity();
     }else{
