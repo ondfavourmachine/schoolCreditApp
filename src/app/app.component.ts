@@ -95,21 +95,11 @@ export class AppComponent
   }
 
   setPageToGoBackTo(event) {
-    console.log(event);
+    // console.log(event);
     this.goBack = event;
   }
 
-  ngOnInit() {
-    // this.router.events.subscribe(
-    //   event => {
-    //     if(event instanceof NavigationStart){
-    //       if(event.url.includes('user')){
-    //         (document.querySelector('.overlay') as HTMLElement).style.zIndex = '-1';
-    //       }
-    //     }
-    //   }
-    // )
-    
+  ngOnInit() { 
     this.generalservice.controlGlobalNotifier$.subscribe(val => {
       if (val == "on") {
         this.globalOverlay = "flex";
@@ -321,7 +311,7 @@ export class AppComponent
 
         break;
       case "parent-account-form":
-        // if( document.getElementById('divforIframe')){
+      
         this.generalservice.nextChatbotReplyToGiver = undefined;
         this.generalservice.ctrlDisableTheButtonsOfPreviousListElement("allow");
         chatbotResponse = new replyGiversOrReceivers(

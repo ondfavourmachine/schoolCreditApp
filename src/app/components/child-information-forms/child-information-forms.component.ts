@@ -339,6 +339,7 @@ export class ChildInformationFormsComponent
       this.parentNeedsToEnterTuition = false;
       const thingsForFunding = Object.keys(found.school_fees).filter((element) => found.school_fees[element] == null || found.school_fees[element] == '0.00');
       this.keysNotToFunding  = new Set(thingsForFunding);
+      //  feeding, transport, tuition, uniform
       this.childInfoForm.get('tuition_fees').clearValidators();
       this.childInfoForm.get('tuition_fees').updateValueAndValidity();
     }else{
@@ -354,12 +355,13 @@ export class ChildInformationFormsComponent
     const found = this.schoolClasses.find(elem => elem.id == this.class.value);
     if(found && found.school_fees) this.parentNeedsToEnterTuition = false;
     if(!this.parentNeedsToEnterTuition){
-      // this.parentNeedsToEnterTuition = false;
-      // const thingsForFunding = Object.keys(found.school_fees).filter((element) => found.school_fees[element] == null );
-      // this.keysOfFunding  = new Set(thingsForFunding);
       this.goToTypeOfFunding();
-      // this.childInfoForm.get('tuition_fees').clearValidators();
-      // this.childInfoForm.get('tuition_fees').updateValueAndValidity();
+      const arr: string[] = Object.keys(found.school_fees).filter((element) => found.school_fees[element] != null || found.school_fees[element] != '0.00');
+      setTimeout(() => {
+        let arrOfEle: HTMLDivElement[];
+        arrOfEle = arr.filter(str => str != 'id').map(str =>  document.getElementById(str) as HTMLDivElement);
+        arrOfEle.forEach(ele => ele.click());
+      }, 400);
     }else{
       this.viewToshow = 'upload-image'; this.previousPage.emit('enterInformation');
     }
@@ -765,7 +767,7 @@ export class ChildInformationFormsComponent
       textcontent = (event.target as HTMLParagraphElement).textContent
     }
     if(this.typeOffundingArr.has(textcontent.toLowerCase())){
-      this.typeOffundingArr.delete(textcontent.toLowerCase())
+      textcontent.includes('Tuition') ? null : this.typeOffundingArr.delete(textcontent.toLowerCase());
     }else{
        this.typeOffundingArr.add(textcontent.toLowerCase());
     }

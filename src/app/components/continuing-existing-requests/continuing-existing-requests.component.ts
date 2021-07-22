@@ -552,7 +552,7 @@ export class ContinuingExistingRequestsComponent
 
   continue(stage: string, data: Partial<Parent>, obj: Record<string, any>) {
     this.generalservice.nextChatbotReplyToGiver = undefined;
-     console.log(obj);
+    //  console.log(obj);
     switch (stage) {
       case "widget_data":
         this.generalservice.nextChatbotReplyToGiver = undefined;
